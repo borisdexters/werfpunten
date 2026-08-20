@@ -54,6 +54,7 @@
   }
   h1{margin:0;font-size:17px;font-weight:650;letter-spacing:-.01em}
   .meta{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink-faint);margin-left:auto}
+  .versie{font:10px ui-monospace,Menlo,monospace;color:var(--ink-faint);opacity:.6;margin-left:6px}
 
   .dagboek{display:grid;grid-template-columns:auto 1fr;gap:6px 8px;padding:10px 14px;
     background:var(--surface-2);border-bottom:1px solid var(--line-soft);align-items:center}
@@ -138,7 +139,7 @@
 <div class="wrap">
   <header>
     <h1>Werfpunten</h1>
-    <span class="meta" id="teller">0 punten</span>
+    <span class="meta" id="teller">0 punten</span><span class="versie" id="versie"></span>
   </header>
 
   <div class="dagboek">
@@ -180,6 +181,7 @@
 <script>
 const ZONES=["N3","N4","N5","DAK","KAPEL","KELDER","STELLING","BUITEN"];
 const SLEUTEL="werfpunten-v1";
+const VERSIE="v3";
 let staat={datum:new Date().toISOString().slice(0,10),weer:"",bezetting:"",zone:"N3",punten:[]};
 let wachtendeFoto=null;
 
@@ -211,6 +213,10 @@ function bewaarStaat(){try{localStorage.setItem(SLEUTEL,JSON.stringify(staat))}c
 function laadStaat(){
   try{const r=localStorage.getItem(SLEUTEL);if(r){const s=JSON.parse(r);
     if(s.datum===staat.datum)staat=s;}}catch(e){}
+  // opschonen van punten uit een eerdere versie die "(enkel foto)" als tekst kregen
+  let gewijzigd=false;
+  (staat.punten||[]).forEach(p=>{ if(p.tekst==="(enkel foto)"){p.tekst="";gewijzigd=true;} });
+  if(gewijzigd) bewaarStaat();
 }
 
 function melding(t){const el=document.getElementById("toast");el.textContent=t;el.classList.add("aan");
@@ -372,7 +378,10 @@ async function haalWeer(stil){
     k.classList.add("klaar"); k.textContent="✓";
   }catch(e){
     if(!stil) melding("Weer niet opgehaald: "+(e.message||"geen netwerk"));
-    document.getElementById("weerinfo").textContent="weer nog niet opgehaald — knop rechts van W:";
+    // bestaande gegevens laten staan; alleen melden als er nog niets is
+    if(!staat.weerdata){
+      document.getElementById("weerinfo").textContent="weer nog niet opgehaald — knop rechts van W: (lukt zodra er netwerk is)";
+    }
   }finally{ k.classList.remove("bezig"); }
 }
 document.getElementById("weerknop").onclick=()=>haalWeer(false);
@@ -443,6 +452,7 @@ document.getElementById("weer").value=staat.weer||"";
 document.getElementById("bezetting").value=staat.bezetting||"";
 tekenZones();
 tekenLijst();
+document.getElementById("versie").textContent=VERSIE;
 if(staat.weerdata){
   const w=staat.weerdata.dag;
   document.getElementById("weerinfo").textContent="dag: "+w.min+"–"+w.max+"°C · neerslag "+w.neerslag+" mm · max wind "+w.windmax+" km/u";
