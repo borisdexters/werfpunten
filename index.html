@@ -254,7 +254,7 @@
 <script>
 const ZONES=["N3","N4","N5","DAK","KAPEL","KELDER","STELLING","BUITEN"];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v7";
+const VERSIE="v8";
 let staat={datum:new Date().toISOString().slice(0,10),weer:"",bezetting:"",zone:"N3",punten:[]};
 let wachtendeFoto=null;
 let wachtendeBijlage=null;
@@ -522,7 +522,15 @@ function verkleinFoto(file){return new Promise(res=>{
   r.readAsDataURL(file);
 });}
 
-document.getElementById("fotoknop").onclick=()=>document.getElementById("foto").click();
+/* Eerste tik maakt de foto; is er al een foto, dan opent dezelfde knop het tekenscherm.
+   Zo kun je meteen aanduiden wat je bedoelt, vóór het punt bewaard is. */
+document.getElementById("fotoknop").onclick=()=>{
+  if(wachtendeFoto && (!wachtendeBijlage || wachtendeBijlage.beeld!==false)){
+    openTekenscherm(wachtendeFoto,"nieuw");
+  }else{
+    document.getElementById("foto").click();
+  }
+};
 document.getElementById("docknop").onclick=()=>document.getElementById("doc").click();
 
 /* Scans en documenten: de knop opent de keuze van iOS — fotheek, Bestanden, of camera.
@@ -540,7 +548,7 @@ document.getElementById("doc").onchange=async e=>{
 document.getElementById("foto").onchange=async e=>{
   const f=e.target.files[0];if(!f)return;
   wachtendeFoto=await verkleinFoto(f);
-  const k=document.getElementById("fotoknop");k.classList.add("heeft");k.textContent="✓ Foto";
+  const k=document.getElementById("fotoknop");k.classList.add("heeft");k.textContent="✏️ Aanduiden";
   document.getElementById("bewaar").disabled=false;
 };
 
@@ -716,6 +724,8 @@ document.getElementById("tk-klaar").onclick=()=>{
       if(tk.doel==="nieuw"){
         wachtendeFoto=b; wachtendeBijlage={naam:"schets",type:"image/jpeg",beeld:true,grootte:Math.round(b.size/1024)};
         const k=document.getElementById("schetsknop");k.classList.add("heeft");k.textContent="✓ Schets";
+        const kf=document.getElementById("fotoknop");
+        if(kf.classList.contains("heeft")) kf.textContent="✏️ Aanduiden";
         document.getElementById("bewaar").disabled=false;
       }else{
         await zetFoto(tk.doel,b);
