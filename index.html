@@ -96,6 +96,7 @@
   .tijd{font:11px ui-monospace,Menlo,monospace;color:var(--ink-faint)}
   .spreker{font:11px ui-monospace,Menlo,monospace;color:var(--accent);font-weight:600}
   .punt p{margin:0;font-size:15px;word-wrap:break-word;overflow-wrap:anywhere}
+  .punt p.leegnotitie{color:var(--ink-faint);font-style:italic}
   .wis{background:none;border:none;color:var(--ink-faint);font-size:19px;line-height:1;padding:2px 4px;cursor:pointer}
   .wis:hover{color:var(--warn)}
 
@@ -246,7 +247,12 @@ async function tekenLijst(){
     if(p.spreker){const s=document.createElement("span");s.className="spreker";s.textContent=p.spreker+":";kop.appendChild(s);}
     const t=document.createElement("span");t.className="tijd";t.textContent=p.tijd;kop.appendChild(t);
     body.appendChild(kop);
-    const pp=document.createElement("p");pp.textContent=p.tekst;body.appendChild(pp);
+    const pp=document.createElement("p");
+    if(p.tekst){pp.textContent=p.tekst}
+    else{pp.textContent="notitie toevoegen…";pp.className="leegnotitie"}
+    body.appendChild(pp);
+    body.style.cursor="text";
+    body.onclick=()=>bewerkPunt(p.id);
     d.appendChild(body);
     const w=document.createElement("button");w.className="wis";w.type="button";w.textContent="×";
     w.setAttribute("aria-label","Punt verwijderen");
@@ -254,6 +260,18 @@ async function tekenLijst(){
     d.appendChild(w);
     m.appendChild(d);
   }
+}
+
+function bewerkPunt(id){
+  const p=staat.punten.find(x=>x.id===id); if(!p) return;
+  const huidig=(p.spreker?p.spreker+": ":"")+(p.tekst||"");
+  const nieuw=prompt("Notitie bij dit punt ("+p.zone+", "+p.tijd+"):", huidig);
+  if(nieuw===null) return;
+  let tekst=nieuw.trim(), spreker=null;
+  const m=tekst.match(/^(CB|P|LA|BW|S10)\s*:\s*(.*)$/i);
+  if(m){spreker=m[1].toUpperCase();tekst=m[2].trim();}
+  p.tekst=tekst; p.spreker=spreker;
+  bewaarStaat(); tekenLijst();
 }
 
 function verkleinFoto(file){return new Promise(res=>{
@@ -293,7 +311,7 @@ document.getElementById("bewaar").onclick=async()=>{
   const m=tekst.match(/^(CB|P|LA|BW|S10)\s*:\s*(.*)$/i);
   if(m){spreker=m[1].toUpperCase();tekst=m[2].trim();}
   const id="p"+Date.now();
-  const punt={id,zone:staat.zone,tekst:tekst||"(enkel foto)",spreker,
+  const punt={id,zone:staat.zone,tekst:tekst,spreker,
     tijd:new Date().toTimeString().slice(0,5),foto:!!wachtendeFoto};
   if(wachtendeFoto)await zetFoto(id,wachtendeFoto);
   staat.punten.push(punt);bewaarStaat();
@@ -368,7 +386,7 @@ function maakTekst(){
   let vorige=null;
   staat.punten.forEach(p=>{
     if(p.zone!==vorige){r.push("-");r.push(p.zone);vorige=p.zone;}
-    let l=(p.foto?"F ":"")+(p.spreker?p.spreker+": ":"")+p.tekst;
+    let l=(p.foto?"F ":"")+(p.spreker?p.spreker+": ":"")+(p.tekst||"[nog geen notitie — "+p.tijd+"]");
     r.push(l);
   });
   return r.join("\n");
