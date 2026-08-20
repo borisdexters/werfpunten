@@ -164,12 +164,58 @@
   .teken-balk{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#1c1c1e;
     padding-top:calc(10px + env(safe-area-inset-top,0px))}
   .teken-balk button{background:#2c2c2e;color:#f2f2f7;border:1px solid #3a3a3c;font-size:14px;padding:9px 12px}
+  /* het planscherm heeft vijf knoppen; op 375px moeten die krapper om te passen */
+  #plandlg .teken-balk{gap:6px;padding-left:8px;padding-right:8px;padding-top:calc(7px + env(safe-area-inset-top,0px));padding-bottom:7px}
+  #plandlg .teken-balk button{font-size:13px;padding:9px 9px;white-space:nowrap}
   .teken-balk .tk-klaar{margin-left:auto;background:var(--accent);border-color:var(--accent);color:#fff;font-weight:650}
   .tk-kleuren{display:flex;gap:6px}
   .tk-kleur{width:26px;height:26px;border-radius:50%;border:2px solid #48484a;padding:0;cursor:pointer}
   .tk-kleur.actief{border-color:#fff;transform:scale(1.12)}
   .teken-vlak{flex:1;display:flex;align-items:center;justify-content:center;height:calc(100dvh - 60px);background:#111}
   #tekencanvas{max-width:100%;max-height:100%;touch-action:none;background:#fff}
+  /* plan: zelfde schermvullende opzet als het tekenscherm */
+  #plandlg{width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;margin:0;background:#111;border-radius:0}
+  #plandlg::backdrop{background:#000}
+  .plan-vlak{position:relative;height:calc(100dvh - 56px);background:#111;overflow:hidden}
+  #plancanvas{display:block;width:100%;height:100%;touch-action:none}
+  /* display:flex zou het hidden-attribuut overstemmen */
+  .plan-leeg[hidden],.plan-voet[hidden]{display:none}
+  .plan-leeg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:14px;color:#c7cbd0;font-size:14px;text-align:center;padding:24px;line-height:1.6}
+  .plan-leeg button{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:650}
+  .plan-voet{position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column;gap:8px;
+    padding:10px 12px calc(10px + var(--safe-b));background:rgba(28,28,30,.96);color:#f2f2f7;font-size:13px}
+  .plan-kop{display:flex;align-items:center;gap:10px}
+  .plan-teller{flex:0 0 auto;font:11px ui-monospace,Menlo,monospace;color:#8e949b}
+  .plan-vouw{flex:0 0 auto;background:none!important;border:none!important;color:#8e949b!important;
+    font-size:18px!important;padding:4px 8px!important;line-height:1}
+  /* ingeklapt: alleen de regel met het lokaal, de rest van het scherm is kaart */
+  .plan-voet.klein .plan-buren,.plan-voet.klein .plan-invoer{display:none}
+  .plan-voet.klein{gap:0}
+  .plan-zoom{position:absolute;top:10px;right:10px;display:flex;flex-direction:column;gap:6px;z-index:2}
+  .plan-zoom button{width:38px;height:38px;padding:0;font-size:19px;line-height:1;
+    background:rgba(28,28,30,.9);color:#f2f2f7;border:1px solid #3a3a3c;border-radius:9px}
+  /* de buren: als de gok ernaast zit, is de juiste ruimte bijna altijd een van de dichtstbijzijnde */
+  .plan-buren{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+  .plan-buren::-webkit-scrollbar{display:none}
+  .plan-buren button{flex:0 0 auto;background:#2c2c2e;color:#c9ced4;border:1px solid #3a3a3c;
+    font:12px ui-monospace,Menlo,monospace;padding:7px 10px}
+  .plan-buren button.actief{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:650}
+  .plan-invoer{display:flex;flex-direction:column;gap:7px}
+  .plan-invoer textarea{width:100%;background:#1c1c1e;color:#f2f2f7;border:1px solid #3a3a3c;
+    border-radius:9px;padding:9px 10px;font:15px/1.35 inherit;resize:none}
+  .plan-invoer textarea::placeholder{color:#7c828a}
+  .plan-knoppen{display:flex;gap:7px}
+  .plan-knoppen button{background:#2c2c2e;color:#f2f2f7;border:1px solid #3a3a3c;font-size:14px;padding:10px 12px}
+  .plan-knoppen .tk-klaar{flex:1;margin-left:0}
+  .plan-knoppen button.heeft{border-color:var(--ok);color:var(--ok)}
+  .plan-lokaal{flex:1;min-width:0;font:13px ui-monospace,Menlo,monospace;line-height:1.35;cursor:pointer}
+  .plan-lokaal b{font-size:15px;letter-spacing:.02em}
+  .plan-lokaal span{color:#a0a6ad;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .plan-voet button{background:#2c2c2e;color:#f2f2f7;border:1px solid #3a3a3c;font-size:13px;padding:9px 11px}
+  .planknop.heeft{border-color:var(--ok);color:var(--ok);font-weight:600}
+  .plek{font:11px/1 ui-monospace,Menlo,monospace;letter-spacing:.04em;padding:4px 7px;border-radius:5px;
+    background:var(--surface-2);color:var(--ink-soft);border:1px solid var(--line-soft)}
   @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
 </head>
@@ -211,10 +257,12 @@
       <button class="fotoknop" id="fotoknop" type="button">📷 Foto</button>
       <button class="docknop" id="docknop" type="button">📄 Doc</button>
       <button class="docknop" id="schetsknop" type="button">✏️ Schets</button>
+      <button class="docknop planknop" id="planknop" type="button">📍 Plan</button>
       <button class="bewaar" id="bewaar" type="button" disabled>Punt bewaren</button>
     </div>
     <input type="file" id="foto" accept="image/*" capture="environment">
     <input type="file" id="doc" accept="image/*,application/pdf">
+    <input type="file" id="planbestand" accept=".werfplan,application/json">
   </div>
 </div>
 
@@ -242,6 +290,46 @@
   <div class="teken-vlak"><canvas id="tekencanvas"></canvas></div>
 </dialog>
 
+<dialog id="plandlg">
+  <div class="teken-balk">
+    <button type="button" id="pl-plan">Plan</button>
+    <button type="button" id="pl-wis">Wis pin</button>
+    <button type="button" id="pl-nummer">Nummer</button>
+    <button type="button" id="pl-bewaar">Bewaar</button>
+    <button type="button" id="pl-klaar" class="tk-klaar">Lijst</button>
+  </div>
+  <div class="plan-vlak">
+    <canvas id="plancanvas"></canvas>
+    <div class="plan-zoom">
+      <button type="button" id="pl-in" aria-label="Inzoomen">+</button>
+      <button type="button" id="pl-uit" aria-label="Uitzoomen">−</button>
+      <button type="button" id="pl-heel" aria-label="Hele plan" style="font-size:13px">⤢</button>
+    </div>
+    <div class="plan-leeg" id="pl-leeg" hidden>
+      <div>Nog geen plan op dit toestel.<br>Laad een <code>.werfplan</code>-bestand;
+        het blijft daarna offline beschikbaar.</div>
+      <button type="button" id="pl-laad">Plan laden</button>
+    </div>
+    <div class="plan-voet" id="pl-voet" hidden>
+      <div class="plan-kop">
+        <button type="button" class="plan-vouw" id="pl-vouw" aria-label="Invoer in- of uitklappen">▾</button>
+        <div class="plan-lokaal" id="pl-lokaal"></div>
+        <span class="plan-teller" id="pl-teller"></span>
+        <button type="button" id="pl-benoem">Benoem</button>
+      </div>
+      <div class="plan-buren" id="pl-buren"></div>
+      <div class="plan-invoer" id="pl-invoer" hidden>
+        <textarea id="pl-tekst" rows="2" placeholder="Wat zie je hier?"></textarea>
+        <div class="plan-knoppen">
+          <button type="button" id="pl-foto">📷</button>
+          <button type="button" id="pl-schets" title="Op het plan tekenen">✏️</button>
+          <button type="button" id="pl-punt" class="tk-klaar">Punt bewaren</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</dialog>
+
 <dialog id="dlg">
   <div class="dlg-kop"><h2 id="dlg-titel">Verslagtekst</h2></div>
   <div class="dlg-body" id="dlg-body"></div>
@@ -254,7 +342,7 @@
 <script>
 const ZONES=["N3","N4","N5","DAK","KAPEL","KELDER","STELLING","BUITEN"];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v8";
+const VERSIE="v18";
 let staat={datum:new Date().toISOString().slice(0,10),weer:"",bezetting:"",zone:"N3",punten:[]};
 let wachtendeFoto=null;
 let wachtendeBijlage=null;
@@ -266,8 +354,12 @@ function opendb(){return new Promise(res=>{
   const af=v=>{if(!klaar){klaar=true;res(v)}};
   setTimeout(()=>af(null),1500);           // nooit blijven hangen
   try{
-    const q=indexedDB.open("werfpunten",1);
-    q.onupgradeneeded=()=>{try{q.result.createObjectStore("fotos")}catch(e){}};
+    const q=indexedDB.open("werfpunten",2);
+    q.onupgradeneeded=()=>{
+      // versie 2 voegt de plannen toe; bestaande toestellen houden hun foto's
+      try{if(!q.result.objectStoreNames.contains("fotos"))q.result.createObjectStore("fotos")}catch(e){}
+      try{if(!q.result.objectStoreNames.contains("plannen"))q.result.createObjectStore("plannen")}catch(e){}
+    };
     q.onsuccess=()=>{db=q.result;af(db)};
     q.onerror=()=>af(null);
     q.onblocked=()=>af(null);
@@ -424,6 +516,12 @@ async function tekenLijst(){
     const body=document.createElement("div");body.className="body";
     const kop=document.createElement("div");kop.className="kop";
     const chip=document.createElement("span");chip.className="chip";chip.textContent=p.zone;kop.appendChild(chip);
+    if(p.plek){
+      const pk=document.createElement("span");pk.className="plek";
+      pk.textContent="📍 "+(p.plek.lokaal||plaatsKort(p.plek));
+      pk.title=p.plek.naam||("coördinaat "+p.plek.x+","+p.plek.y+" op plan "+p.plek.zone);
+      kop.appendChild(pk);
+    }
     if(p.spreker){const s=document.createElement("span");s.className="spreker";s.textContent=p.spreker+":";kop.appendChild(s);}
     const t=document.createElement("span");t.className="tijd";t.textContent=p.tijd;kop.appendChild(t);
     body.appendChild(kop);
@@ -550,6 +648,9 @@ document.getElementById("foto").onchange=async e=>{
   wachtendeFoto=await verkleinFoto(f);
   const k=document.getElementById("fotoknop");k.classList.add("heeft");k.textContent="✏️ Aanduiden";
   document.getElementById("bewaar").disabled=false;
+  // ook op de kaart moet je zien dat er een foto klaarstaat
+  const pf=document.getElementById("pl-foto");
+  if(pf){pf.classList.add("heeft");pf.textContent="📷 ✓";}
 };
 
 const tekstEl=document.getElementById("tekst");
@@ -558,27 +659,40 @@ tekstEl.oninput=()=>{
   tekenSprekers();
 };
 
-document.getElementById("bewaar").onclick=async()=>{
-  let tekst=tekstEl.value.trim();
-  if(!tekst&&!wachtendeFoto)return;
+/* Eén plek waar een punt ontstaat, aangeroepen vanuit het hoofdscherm én vanaf de kaart.
+   `bron` bepaalt alleen waar de tekst vandaan komt; de rest is identiek, zodat een punt van de
+   kaart in niets verschilt van een punt uit de lijst. */
+async function bewaarPunt(veld){
+  const el=veld||tekstEl;
+  let tekst=el.value.trim();
+  if(!tekst&&!wachtendeFoto)return false;
   let spreker=null;
   const m=tekst.match(/^([A-Za-z0-9]{1,4})\s*:\s*(.*)$/);
   if(m){spreker=m[1].toUpperCase();tekst=m[2].trim();}
   const id="p"+Date.now();
   const punt={id,zone:staat.zone,tekst:tekst,spreker,
-    tijd:new Date().toTimeString().slice(0,5),foto:!!wachtendeFoto,bijlage:wachtendeBijlage};
+    tijd:new Date().toTimeString().slice(0,5),foto:!!wachtendeFoto,bijlage:wachtendeBijlage,
+    plek:wachtendePlek};
   if(wachtendeFoto)await zetFoto(id,wachtendeFoto);
   staat.punten.push(punt);bewaarStaat();
-  tekstEl.value="";wachtendeFoto=null;wachtendeBijlage=null;
+  el.value=""; if(el!==tekstEl)tekstEl.value="";
+  wachtendeFoto=null;wachtendeBijlage=null;
+  // De plek blijft staan. Je zegt één keer waar je bent en elk volgend punt landt daar, tot je
+  // iets anders zegt — op een werf komen vaststellingen in trossen per ruimte. Zolang de plek
+  // geldt staat ze op de knop, zodat je ziet dat ze meegaat.
+  merkPlanknop();
   const k=document.getElementById("fotoknop");k.classList.remove("heeft");k.textContent="📷 Foto";
   const kd=document.getElementById("docknop");kd.classList.remove("heeft");kd.textContent="📄 Doc";
   const ks=document.getElementById("schetsknop");ks.classList.remove("heeft");ks.textContent="✏️ Schets";
   document.getElementById("bewaar").disabled=true;
   document.getElementById("foto").value="";document.getElementById("doc").value="";
   await tekenLijst();
-  melding("Punt "+staat.punten.length+" bewaard");
+  if(document.getElementById("plandlg").open) planVoet();
+  melding("Punt "+staat.punten.length+" bewaard"+(wachtendePlek?(" in "+(wachtendePlek.lokaal||"deze plek")):""));
   if(!staat.weerdata) haalWeer(true);
-};
+  return true;
+}
+document.getElementById("bewaar").onclick=()=>bewaarPunt();
 
 ["weer","bezetting"].forEach(k=>{
   const el=document.getElementById(k);
@@ -653,10 +767,574 @@ function vraagTekst(titel, uitleg, waarde){
   });
 }
 
+/* ---- plan: één tik levert de plek ----
+   De pin bewaart altijd zijn coördinaat op het plan. Het lokaalnummer is een etiket dat de app
+   erbij zoekt; klopt het niet, of draagt het plan geen nummers, dan verandert dat niets aan de
+   bruikbaarheid van de coördinaat. Je kunt een plek ook zelf benoemen — die naam gaat het plan
+   in en geldt vanaf dan voor elk volgend punt op die plek. */
+let planLijst=[];        // welke plannen op dit toestel staan: [{zone, ...}]
+let plan=null;           // het plan dat nu open staat
+let planBeeld=null;      // het ingeladen beeld
+let wachtendePlek=null;  // de plek die geldt: blijft staan tot je hem wist of verlegt
+const pl={schaal:1,dx:0,dy:0,pin:null,wijzers:new Map(),start:null,knijp:null,nummeren:false};
+
+function zetPlan(zone,data){return new Promise(res=>{
+  if(!db)return res(false);
+  const t=db.transaction("plannen","readwrite");t.objectStore("plannen").put(data,zone);
+  t.oncomplete=()=>res(true);t.onerror=()=>res(false);
+});}
+function haalPlan(zone){return new Promise(res=>{
+  if(!db)return res(null);
+  const q=db.transaction("plannen","readonly").objectStore("plannen").get(zone);
+  q.onsuccess=()=>res(q.result||null);q.onerror=()=>res(null);
+});}
+function planZones(){return new Promise(res=>{
+  if(!db)return res([]);
+  const q=db.transaction("plannen","readonly").objectStore("plannen").getAllKeys();
+  q.onsuccess=()=>res(Array.from(q.result||[]));q.onerror=()=>res([]);
+});}
+
+function laadBeeld(src){return new Promise((res,rej)=>{
+  const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=src;
+});}
+
+/* Welk lokaal hoort bij deze pin? Het dichtstbijzijnde label, mits het niet absurd ver ligt —
+   anders liever niets dan een verkeerd lokaal in een verslag. */
+function lokaalBij(x,y){
+  if(!plan||!plan.lokalen||!plan.lokalen.length)return null;
+  const verh=plan.hoogte/plan.breedte;   // procenten zijn per as; y terugschalen voor echte afstand
+  let best=null,bd=1e9;
+  for(const l of plan.lokalen){
+    const dx=l.x-x, dy=(l.y-y)*verh;
+    const d=Math.hypot(dx,dy);
+    if(d<bd){bd=d;best=l;}
+  }
+  return bd<=14?best:null;
+}
+
+/* ---- zelf nummeren ----
+   Het plan komt binnen met een voorstel: nummers die het voorbereidingsscript herkend heeft, of
+   rastervakken als er niets te herkennen viel. Klopt dat niet, of ontbreekt er een lokaal, dan
+   tik je ze er hier zelf bij — oplopend, zonder tussenvraag, want dat is het enige tempo dat op
+   een werf haalbaar is. Het nummer mag je daarna aanpassen met Benoem.
+
+   Standaardvorm: niveau_lokaal_index, bijvoorbeeld N3_01_1. */
+function volgendNummer(){
+  const patroon=new RegExp("^"+plan.zone+"_(\\d+)_(\\d+)$");
+  let hoogste=0;
+  (plan.lokalen||[]).forEach(l=>{
+    const m=patroon.exec(l.nr);
+    if(m) hoogste=Math.max(hoogste, +m[1]);
+  });
+  return plan.zone+"_"+String(hoogste+1).padStart(2,"0")+"_1";
+}
+
+async function nummerHier(x,y){
+  const nieuw={nr:volgendNummer(), naam:"", x:+x.toFixed(2), y:+y.toFixed(2)};
+  plan.lokalen=(plan.lokalen||[]).concat([nieuw]);
+  await zetPlan(plan.zone,plan);
+  pl.pin={x,y,lokaal:nieuw};
+  planTeken(); planVoet();
+  melding(nieuw.nr+" toegevoegd — Benoem past het aan");
+}
+
+function planTeken(){
+  const c=document.getElementById("plancanvas");
+  const dpr=Math.min(devicePixelRatio||1,2);
+  const b=c.getBoundingClientRect();
+  if(c.width!==Math.round(b.width*dpr)||c.height!==Math.round(b.height*dpr)){
+    c.width=Math.round(b.width*dpr);c.height=Math.round(b.height*dpr);
+  }
+  const x=c.getContext("2d");
+  x.setTransform(dpr,0,0,dpr,0,0);
+  x.fillStyle="#111";x.fillRect(0,0,b.width,b.height);
+  if(!planBeeld)return;
+  x.imageSmoothingQuality="high";
+  x.drawImage(planBeeld,pl.dx,pl.dy,plan.breedte*pl.schaal,plan.hoogte*pl.schaal);
+  if(pl.nummeren&&plan.lokalen){
+    x.fillStyle="rgba(217,116,6,.85)";
+    plan.lokalen.forEach(l=>{
+      const lx=pl.dx+l.x/100*plan.breedte*pl.schaal, ly=pl.dy+l.y/100*plan.hoogte*pl.schaal;
+      x.beginPath();x.arc(lx,ly,4,0,7);x.fill();
+    });
+  }
+  if(!pl.pin)return;
+  const px=pl.dx+pl.pin.x/100*plan.breedte*pl.schaal;
+  const py=pl.dy+pl.pin.y/100*plan.hoogte*pl.schaal;
+  x.lineWidth=2.5;x.strokeStyle="#fff";x.fillStyle="#d92b06";
+  x.beginPath();x.arc(px,py,11,0,7);x.fill();x.stroke();
+  x.beginPath();x.arc(px,py,3,0,7);x.fillStyle="#fff";x.fill();
+}
+
+function planPasIn(){
+  const c=document.getElementById("plancanvas");
+  const b=c.getBoundingClientRect();
+  if(!plan||!b.width)return;
+  pl.schaal=Math.min(b.width/plan.breedte,b.height/plan.hoogte);
+  pl.dx=(b.width-plan.breedte*pl.schaal)/2;
+  pl.dy=(b.height-plan.hoogte*pl.schaal)/2;
+}
+
+/* Zoomt naar een plek toe. `factor` bepaalt hoe strak: strak voor een punt waar je mee bezig
+   bent, ruimer voor een herinnering — een werfrondgang springt van hak op tak, dus de vorige
+   plek is géén voorspelling van de volgende. Te strak inzoomen op een gok kost een uitzoombeweging
+   in plaats van er een te sparen. */
+function planNaarPlek(x,y,factor){
+  const c=document.getElementById("plancanvas");
+  const b=c.getBoundingClientRect();
+  if(!plan||!b.width)return;
+  pl.schaal=Math.min(b.width/plan.breedte,b.height/plan.hoogte)*factor;
+  pl.dx=b.width/2-x/100*plan.breedte*pl.schaal;
+  pl.dy=b.height/2-y/100*plan.hoogte*pl.schaal;
+}
+function planNaarPin(){ if(pl.pin) planNaarPlek(pl.pin.x,pl.pin.y,4); }
+
+/* Springen naar een lokaal. Op een werf die van verdieping naar verdieping springt is dit de
+   enige navigatie die altijd werkt: niet pannen tot je het vindt, maar zeggen waar je bent. */
+function toonLokalenlijst(){
+  if(!plan||!(plan.lokalen||[]).length){melding("Dit plan heeft geen lokalen");return;}
+  const dlg=document.getElementById("dlg");
+  document.getElementById("dlg-titel").textContent="Naar welk lokaal?";
+  const body=document.getElementById("dlg-body");
+  body.innerHTML="";
+  const zoek=document.createElement("input");
+  zoek.type="search";zoek.placeholder="filter op nummer of naam";
+  zoek.style.cssText="width:100%;padding:10px;font-size:16px;border:1px solid var(--line);"+
+    "border-radius:8px;margin-bottom:10px;background:var(--surface);color:var(--ink)";
+  body.appendChild(zoek);
+  const lijst=document.createElement("div");
+  lijst.style.cssText="display:flex;flex-wrap:wrap;gap:6px";
+  body.appendChild(lijst);
+  const teken=filter=>{
+    lijst.innerHTML="";
+    (plan.lokalen||[])
+      .filter(l=>!filter||(l.nr+" "+(l.naam||"")).toLowerCase().includes(filter))
+      .forEach(l=>{
+        const b=document.createElement("button");
+        b.type="button";b.style.cssText="font:13px ui-monospace,Menlo,monospace;padding:9px 11px";
+        b.textContent=l.nr;
+        b.title=l.naam||"";
+        b.onclick=()=>{
+          dlg.close();
+          planNaarPlek(l.x,l.y,4);
+          planTeken();
+          melding("Naar "+l.nr+(l.naam?" — "+l.naam:""));
+        };
+        lijst.appendChild(b);
+      });
+    if(!lijst.children.length)lijst.innerHTML='<span class="aw-leeg">niets gevonden</span>';
+  };
+  teken("");
+  zoek.oninput=()=>teken(zoek.value.trim().toLowerCase());
+  document.getElementById("dlg-kopieer").style.display="none";
+  dlg.showModal();
+}
+
+/* De dichtstbijzijnde lokalen rond een punt. Zit de gok ernaast, dan staat de juiste ruimte
+   bijna altijd hiertussen — één tik, geen zoektocht. De app schat, jij beslist, en fout zijn
+   kost één tik; daarom mag ze schatten. */
+function burenBij(x,y,hoeveel){
+  if(!plan||!plan.lokalen)return [];
+  const verh=plan.hoogte/plan.breedte;
+  return plan.lokalen
+    .map(l=>({l,d:Math.hypot(l.x-x,(l.y-y)*verh)}))
+    .sort((a,b)=>a.d-b.d).slice(0,hoeveel).map(o=>o.l);
+}
+
+function tekenBuren(){
+  const box=document.getElementById("pl-buren");
+  box.innerHTML="";
+  if(!plan||!pl.pin||pl.nummeren)return;
+  const buren=burenBij(pl.pin.x,pl.pin.y,5);
+  if(buren.length<2)return;
+  buren.forEach(l=>{
+    const b=document.createElement("button");
+    b.type="button";b.textContent=l.nr;b.title=l.naam||"";
+    if(pl.pin.lokaal&&pl.pin.lokaal.nr===l.nr&&Math.abs(pl.pin.lokaal.x-l.x)<0.01)b.className="actief";
+    b.onclick=()=>{pl.pin.lokaal=l;planTeken();planVoet();};
+    box.appendChild(b);
+  });
+}
+
+function planVoet(){
+  const voet=document.getElementById("pl-voet");
+  const el=document.getElementById("pl-lokaal");
+  voet.hidden=!plan;
+  document.getElementById("pl-invoer").hidden=!(plan&&pl.pin&&!pl.nummeren);
+  tekenBuren();
+  if(!plan)return;
+  const teller=document.getElementById("pl-teller");
+  if(teller) teller.textContent=staat.punten.length+" punt"+(staat.punten.length===1?"":"en");
+  if(pl.nummeren&&!pl.pin){
+    el.innerHTML="<b>nummeren</b><span>tik elk lokaal aan; ze lopen vanzelf op ("+
+      ((plan.lokalen||[]).length)+" op dit plan)</span>";
+    return;
+  }
+  if(!pl.pin){
+    el.innerHTML="<b>—</b><span>tik waar je staat, of hier voor de lokalenlijst</span>";
+    return;
+  }
+  const l=pl.pin.lokaal;
+  el.innerHTML="<b>"+(l?l.nr:plan.zone)+"</b><span>"+
+    (l?(l.naam||"lokaal "+l.nr):"geen lokaal in de buurt — coördinaat "+
+       Math.round(pl.pin.x)+","+Math.round(pl.pin.y))+"</span>";
+}
+
+async function toonPlan(zone){
+  const data=await haalPlan(zone);
+  document.getElementById("pl-leeg").hidden=!!data;
+  if(!data){plan=null;planBeeld=null;planTeken();planVoet();return;}
+  plan=data;
+  try{planBeeld=await laadBeeld(plan.beeld);}catch(e){planBeeld=null;melding("Plan kon niet geladen worden");}
+  pl.pin=wachtendePlek&&wachtendePlek.zone===plan.zone
+    ?{x:wachtendePlek.x,y:wachtendePlek.y,lokaal:wachtendePlek.lokaal?{nr:wachtendePlek.lokaal,naam:wachtendePlek.naam||""}:null}
+    :null;
+  // Waar je was is de beste gok voor waar je bent: op een werf loop je van ruimte naar ruimte,
+  // niet kriskras. Het plan opent daarom ingezoomd op je vorige punt in plaats van uitgezoomd op
+  // het hele blad — schelen twee knijpbewegingen per punt.
+  if(pl.pin)planNaarPin();
+  else if(plan.laatst) planNaarPlek(plan.laatst.x,plan.laatst.y,2);
+  else planPasIn();
+  try{document.getElementById("pl-voet").classList.toggle("klein",
+      localStorage.getItem(VOUWSLEUTEL)==="1");
+      document.getElementById("pl-vouw").textContent=
+        localStorage.getItem(VOUWSLEUTEL)==="1"?"▴":"▾";}catch(e){}
+  planTeken();planVoet();
+}
+
+async function openPlan(gevraagd){
+  const dlg=document.getElementById("plandlg");
+  if(!dlg.open)dlg.showModal();
+  planLijst=await planZones();
+  // het gevraagde plan, anders dat van de huidige zone, anders het enige dat er is
+  const zone=(gevraagd&&planLijst.includes(gevraagd))?gevraagd
+            :planLijst.includes(staat.zone)?staat.zone:(planLijst[0]||staat.zone);
+  await toonPlan(zone);
+  document.getElementById("pl-plan").textContent=planLijst.length>1?("Plan: "+zone):"Plan";
+}
+
+/* Bij het openen van de app: welk niveau? En dan meteen de kaart.
+   Dat is de volgorde waarin een rondgang begint — je staat ergens, je zegt waar, en je werkt
+   verder op de kaart. De lijst is er voor achteraf, niet om mee te beginnen. */
+function vraagNiveau(){
+  if(!planLijst.length)return;
+  const dlg=document.getElementById("dlg");
+  document.getElementById("dlg-titel").textContent="Op welk niveau sta je?";
+  const body=document.getElementById("dlg-body");
+  body.innerHTML="";
+  const rij=document.createElement("div");
+  rij.style.cssText="display:flex;flex-wrap:wrap;gap:8px";
+  planLijst.forEach(z=>{
+    const b=document.createElement("button");
+    b.type="button";
+    b.style.cssText="font-size:17px;font-weight:650;padding:16px 22px;background:var(--zone-soft);"+
+      "color:var(--zone);border-color:var(--zone-soft)";
+    b.textContent=z;
+    b.onclick=async()=>{
+      dlg.close();
+      if(ZONES.includes(z)){staat.zone=z;bewaarStaat();tekenZones();}
+      await openPlan(z);
+    };
+    rij.appendChild(b);
+  });
+  body.appendChild(rij);
+  const uitleg=document.createElement("p");
+  uitleg.className="inv-uitleg";
+  uitleg.style.marginTop="12px";
+  uitleg.textContent="Of sluit dit om zonder plan te werken — de zonebalk blijft gewoon staan.";
+  body.appendChild(uitleg);
+  document.getElementById("dlg-kopieer").style.display="none";
+  dlg.showModal();
+}
+
+/* Pannen met één vinger, zoomen met twee. Een tik zonder verschuiving zet de pin. */
+function planBedrading(){
+  const c=document.getElementById("plancanvas");
+  const punt=e=>{const b=c.getBoundingClientRect();return{x:e.clientX-b.left,y:e.clientY-b.top};};
+
+  c.addEventListener("pointerdown",e=>{
+    if(!plan)return;
+    try{c.setPointerCapture(e.pointerId);}catch(err){}
+    pl.wijzers.set(e.pointerId,punt(e));
+    if(pl.wijzers.size===1){
+      pl.start={...punt(e),tijd:Date.now(),bewogen:0};
+    }else if(pl.wijzers.size===2){
+      const [a,b]=[...pl.wijzers.values()];
+      pl.knijp={afstand:Math.hypot(a.x-b.x,a.y-b.y),mx:(a.x+b.x)/2,my:(a.y+b.y)/2};
+      pl.start=null;   // knijpen is geen tik meer
+    }
+  });
+
+  c.addEventListener("pointermove",e=>{
+    if(!plan||!pl.wijzers.has(e.pointerId))return;
+    const vorig=pl.wijzers.get(e.pointerId), nu=punt(e);
+    pl.wijzers.set(e.pointerId,nu);
+    if(pl.wijzers.size===1){
+      pl.dx+=nu.x-vorig.x; pl.dy+=nu.y-vorig.y;
+      if(pl.start)pl.start.bewogen+=Math.hypot(nu.x-vorig.x,nu.y-vorig.y);
+      planTeken();
+    }else if(pl.wijzers.size===2&&pl.knijp){
+      const [a,b]=[...pl.wijzers.values()];
+      const af=Math.hypot(a.x-b.x,a.y-b.y), mx=(a.x+b.x)/2, my=(a.y+b.y)/2;
+      const f=af/(pl.knijp.afstand||af);
+      const nieuw=Math.max(0.05,Math.min(40,pl.schaal*f));
+      const echt=nieuw/pl.schaal;
+      // zoom om het midden tussen de vingers, en volg dat midden als het verschuift
+      pl.dx=mx-(pl.knijp.mx-pl.dx)*echt+(mx-pl.knijp.mx)*0;
+      pl.dy=my-(pl.knijp.my-pl.dy)*echt;
+      pl.schaal=nieuw;
+      pl.knijp={afstand:af,mx,my};
+      planTeken();
+    }
+  });
+
+  const los=e=>{
+    if(!plan)return;
+    pl.wijzers.delete(e.pointerId);
+    if(pl.wijzers.size<2)pl.knijp=null;
+    if(pl.wijzers.size===0&&pl.start&&pl.start.bewogen<8&&Date.now()-pl.start.tijd<400){
+      const x=(pl.start.x-pl.dx)/(plan.breedte*pl.schaal)*100;
+      const y=(pl.start.y-pl.dy)/(plan.hoogte*pl.schaal)*100;
+      if(x>=0&&x<=100&&y>=0&&y<=100){
+        if(pl.nummeren){ nummerHier(x,y); }
+        else{
+          pl.pin={x,y,lokaal:lokaalBij(x,y)};
+          planTeken();planVoet();
+        }
+      }
+    }
+    pl.start=null;
+  };
+  c.addEventListener("pointerup",los);
+  c.addEventListener("pointercancel",los);
+
+  c.addEventListener("wheel",e=>{           // op de Mac: zoomen met het scrollwiel
+    if(!plan)return;
+    e.preventDefault();
+    const b=c.getBoundingClientRect(), mx=e.clientX-b.left, my=e.clientY-b.top;
+    const f=Math.exp(-e.deltaY*0.0022);
+    const nieuw=Math.max(0.05,Math.min(40,pl.schaal*f)), echt=nieuw/pl.schaal;
+    pl.dx=mx-(mx-pl.dx)*echt; pl.dy=my-(my-pl.dy)*echt; pl.schaal=nieuw;
+    planTeken();
+  },{passive:false});
+
+  addEventListener("resize",()=>{if(document.getElementById("plandlg").open)planTeken();});
+}
+
+document.getElementById("planknop").onclick=openPlan;
+document.getElementById("pl-laad").onclick=()=>document.getElementById("planbestand").click();
+
+/* Meerdere plannen: de knop wisselt er doorheen. Twee niveaus is de praktijk; een lijst zou
+   meer schermruimte kosten dan ze oplevert. */
+document.getElementById("pl-plan").onclick=async()=>{
+  if(planLijst.length<2){document.getElementById("planbestand").click();return;}
+  const i=plan?planLijst.indexOf(plan.zone):-1;
+  const volgende=planLijst[(i+1)%planLijst.length];
+  await toonPlan(volgende);
+  document.getElementById("pl-plan").textContent="Plan: "+volgende;
+};
+
+document.getElementById("pl-wis").onclick=()=>{pl.pin=null;planTeken();planVoet();};
+document.getElementById("pl-lokaal").onclick=toonLokalenlijst;
+
+/* Inklappen: op een telefoon telt elke vierkante centimeter kaart. De keuze blijft bewaard,
+   want wie inklapt wil dat morgen ook. */
+const VOUWSLEUTEL="werfpunten-planvouw";
+function zetVouw(klein){
+  document.getElementById("pl-voet").classList.toggle("klein",klein);
+  document.getElementById("pl-vouw").textContent=klein?"▴":"▾";
+  try{localStorage.setItem(VOUWSLEUTEL,klein?"1":"0")}catch(e){}
+  planTeken();
+}
+document.getElementById("pl-vouw").onclick=()=>
+  zetVouw(!document.getElementById("pl-voet").classList.contains("klein"));
+
+/* Zoomen met knoppen in plaats van alleen met de vingers: op een grote iPad knijp je niet
+   comfortabel met één hand, en een knop kent geen vertraging — bij dubbeltikken zou elke pin
+   moeten wachten of er een tweede tik komt. */
+function zoomStap(factor){
+  const c=document.getElementById("plancanvas");
+  const b=c.getBoundingClientRect();
+  if(!plan||!b.width)return;
+  const mx=b.width/2,my=b.height/2;
+  const nieuw=Math.max(0.02,Math.min(60,pl.schaal*factor)), echt=nieuw/pl.schaal;
+  pl.dx=mx-(mx-pl.dx)*echt; pl.dy=my-(my-pl.dy)*echt; pl.schaal=nieuw;
+  planTeken();
+}
+document.getElementById("pl-in").onclick=()=>zoomStap(1.6);
+document.getElementById("pl-uit").onclick=()=>zoomStap(1/1.6);
+document.getElementById("pl-heel").onclick=()=>{planPasIn();planTeken();};
+
+/* Punt bewaren zonder de kaart te verlaten. Dat is de kern van kaartgericht werken: je ziet iets,
+   tikt waar het is, typt wat het is, en gaat door. Het plan blijft de hele tijd open. */
+document.getElementById("pl-punt").onclick=async()=>{
+  if(!pl.pin){melding("Tik eerst waar het is");return;}
+  wachtendePlek={zone:plan.zone,x:+pl.pin.x.toFixed(2),y:+pl.pin.y.toFixed(2),
+    lokaal:pl.pin.lokaal?pl.pin.lokaal.nr:null, naam:pl.pin.lokaal?pl.pin.lokaal.naam:""};
+  plan.laatst={x:pl.pin.x,y:pl.pin.y};
+  zetPlan(plan.zone,plan);
+  if(plan.zone!==staat.zone&&ZONES.includes(plan.zone)){staat.zone=plan.zone;bewaarStaat();tekenZones();}
+  const veld=document.getElementById("pl-tekst");
+  if(!await bewaarPunt(veld))melding("Typ eerst iets, of maak een foto");
+  const f=document.getElementById("pl-foto");f.classList.remove("heeft");f.textContent="📷";
+};
+
+/* Tekenen op het plan zelf. Niet alleen vastleggen wat er is, maar aangeven wat er anders moet:
+   een muurtje wegstrepen, een lamp verplaatsen, een pijl waar het licht beter valt. Wat je krijgt
+   is een uitsnede van het plan zoals je hem nu voor je hebt, met jouw lijnen erop — precies wat
+   je anders op een afdruk zou krabbelen. */
+document.getElementById("pl-schets").onclick=()=>{
+  const c=document.getElementById("plancanvas");
+  if(!plan){melding("Laad eerst een plan");return;}
+  c.toBlob(b=>{
+    if(!b){melding("Tekenen op het plan lukt niet in deze browser");return;}
+    tk.naam="plandetail "+(plan.zone||"")+(pl.pin&&pl.pin.lokaal?" "+pl.pin.lokaal.nr:"");
+    openTekenscherm(b,"nieuw");
+  },"image/jpeg",0.92);
+};
+
+document.getElementById("pl-foto").onclick=()=>{
+  // staat er al een foto klaar, dan opent dezelfde knop het tekenscherm om erop aan te duiden
+  if(wachtendeFoto){tk.naam="schets";openTekenscherm(wachtendeFoto,"nieuw");}
+  else document.getElementById("foto").click();
+};
+
+/* Het plan met jouw nummering weer als bestand, anders blijft werk op één toestel steken.
+   Zo werkt de route: op de Mac inladen en nummeren, hier bewaren, naar de telefoon sturen. En
+   omgekeerd na de rondgang: wat je op de werf hebt rechtgezet gaat mee terug als nieuwe basis. */
+document.getElementById("pl-bewaar").onclick=()=>{
+  if(!plan){melding("Laad eerst een plan");return;}
+  const naam=plan.zone+"-plan.json";
+  try{
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(new Blob([JSON.stringify(plan)],{type:"application/json"}));
+    a.download=naam;
+    document.body.appendChild(a);a.click();
+    setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1000);
+    melding(naam+" bewaard — "+(plan.lokalen||[]).length+" lokalen");
+  }catch(e){melding("Bewaren lukte niet in deze browser");}
+};
+
+document.getElementById("pl-nummer").onclick=()=>{
+  if(!plan){melding("Laad eerst een plan");return;}
+  pl.nummeren=!pl.nummeren;
+  const k=document.getElementById("pl-nummer");
+  k.textContent=pl.nummeren?"Stop":"Nummer";
+  k.style.background=pl.nummeren?"var(--accent)":"";
+  k.style.borderColor=pl.nummeren?"var(--accent)":"";
+  if(!pl.nummeren)pl.pin=null;
+  planTeken();planVoet();
+  // Deugt het voorstel in het geheel niet, dan wil je met een schone lei beginnen. Als aanbod,
+  // niet als vraag: negeer je het, dan verdwijnt het vanzelf en tik je gewoon lokalen bij.
+  if(pl.nummeren&&(plan.lokalen||[]).length){
+    meldingMetActie((plan.lokalen.length)+" lokalen uit het voorstel","alles wissen",async()=>{
+      plan.lokalen=[];
+      await zetPlan(plan.zone,plan);
+      pl.pin=null;planTeken();planVoet();
+      melding("Voorstel gewist — tik de lokalen zelf aan");
+    });
+  }
+};
+
+document.getElementById("pl-benoem").onclick=async()=>{
+  if(!plan||!pl.pin){melding("Zet eerst een pin");return;}
+  const l=pl.pin.lokaal;
+  const antwoord=await vraagTekst("Plek benoemen",
+    "Eén regel: nummer en naam, bijvoorbeeld “1.02 vergaderzaal”.\n"+
+    "Leeg laten koppelt het lokaal los van dit punt; een streepje (-) haalt het uit het plan.\n"+
+    "De naam blijft bewaard en geldt vanaf nu voor elk punt op deze plek.",
+    l?(l.nr+" "+(l.naam||"")).trim():"");
+  if(antwoord===null)return;
+  const tekst=antwoord.trim();
+
+  // hetzelfde lokaal terugvinden in het plan: nummer én plaats moeten kloppen
+  const zelfde=o=>l&&o.nr===l.nr&&Math.abs(o.x-l.x)<0.01&&Math.abs(o.y-l.y)<0.01;
+
+  if(!tekst){
+    // leeg = het foute lokaal loskoppelen van dit punt; het plan blijft ongemoeid
+    pl.pin.lokaal=null;planTeken();planVoet();return;
+  }
+  if(tekst==="-"){
+    if(l){plan.lokalen=(plan.lokalen||[]).filter(o=>!zelfde(o));await zetPlan(plan.zone,plan);}
+    pl.pin.lokaal=null;planTeken();planVoet();
+    melding(l?(l.nr+" uit het plan gehaald"):"Er stond hier geen lokaal");
+    return;
+  }
+  const m=tekst.match(/^(\S+)\s*(.*)$/);
+  const nieuw={nr:m[1],naam:(m[2]||"").trim(),x:pl.pin.x,y:pl.pin.y};
+  // Alleen verplaatsen wat je écht bijwerkt. Zet je hier een ánder nummer, dan hoort dat lokaal
+  // gewoon bij dit punt en blijft het oude staan waar het stond — anders wist je met een
+  // correctie een lokaal uit dat verderop misschien perfect klopt.
+  plan.lokalen=(plan.lokalen||[]).filter(o=>!(zelfde(o)&&o.nr===nieuw.nr));
+  // stond dit nummer al ergens anders? Dan is er nu een dubbel, en dat hoor je te weten:
+  // één van de twee is fout, en welke kun jij zien en de app niet.
+  const elders=plan.lokalen.some(o=>o.nr===nieuw.nr);
+  plan.lokalen.push(nieuw);
+  pl.pin.lokaal=nieuw;
+  await zetPlan(plan.zone,plan);
+  planTeken();planVoet();
+  melding(elders ? (nieuw.nr+" stond al elders — nu twee keer; haal er één weg met “-”")
+        : l&&l.nr!==nieuw.nr ? (nieuw.nr+" toegevoegd; "+l.nr+" bleef staan")
+        : "Plek bewaard in het plan");
+};
+
+document.getElementById("pl-klaar").onclick=()=>{
+  if(pl.pin){
+    wachtendePlek={zone:plan.zone,x:+pl.pin.x.toFixed(2),y:+pl.pin.y.toFixed(2),
+      lokaal:pl.pin.lokaal?pl.pin.lokaal.nr:null, naam:pl.pin.lokaal?pl.pin.lokaal.naam:""};
+    plan.laatst={x:pl.pin.x,y:pl.pin.y};
+    zetPlan(plan.zone,plan);
+    if(plan.zone!==staat.zone&&ZONES.includes(plan.zone)){staat.zone=plan.zone;bewaarStaat();tekenZones();}
+  }else wachtendePlek=null;
+  merkPlanknop();
+  document.getElementById("plandlg").close();
+};
+
+function merkPlanknop(){
+  const k=document.getElementById("planknop");
+  k.classList.toggle("heeft",!!wachtendePlek);
+  k.textContent=wachtendePlek?("📍 "+(wachtendePlek.lokaal||plaatsKort(wachtendePlek))):"📍 Plan";
+  k.title=wachtendePlek?("Elk punt landt in "+(wachtendePlek.lokaal||"deze plek")
+    +" tot je iets anders kiest — lang indrukken om los te laten"):"Plek op het plan aanduiden";
+}
+
+/* Lang indrukken laat de plek los, zonder het plan te moeten openen. Korte tik opent het plan,
+   zoals altijd. */
+(function(){
+  const k=document.getElementById("planknop");
+  let t=null;
+  const start=()=>{ t=setTimeout(()=>{
+      t=null;
+      if(!wachtendePlek){melding("Er geldt nu geen plek");return;}
+      const was=wachtendePlek.lokaal||plaatsKort(wachtendePlek);
+      wachtendePlek=null;merkPlanknop();
+      melding(was+" losgelaten");
+    },550); };
+  const stop=e=>{ if(t===null){e.preventDefault();e.stopPropagation();} clearTimeout(t); };
+  k.addEventListener("pointerdown",start);
+  k.addEventListener("pointerup",stop,true);
+  k.addEventListener("pointercancel",()=>clearTimeout(t));
+  k.addEventListener("pointerleave",()=>clearTimeout(t));
+})();
+function plaatsKort(p){return Math.round(p.x)+","+Math.round(p.y);}
+
+document.getElementById("planbestand").onchange=async e=>{
+  const f=e.target.files[0]; e.target.value="";
+  if(!f)return;
+  let data;
+  try{data=JSON.parse(await f.text());}catch(err){melding("Geen leesbaar .werfplan-bestand");return;}
+  if(!data||!data.beeld||!data.zone||!data.breedte){melding("Dit bestand mist plan of zone");return;}
+  if(!await zetPlan(data.zone,data)){melding("Plan kon niet bewaard worden");return;}
+  planLijst=await planZones();
+  await toonPlan(data.zone);
+  document.getElementById("pl-plan").textContent=planLijst.length>1?("Plan: "+data.zone):"Plan";
+  melding("Plan "+data.zone+" geladen — "+((data.lokalen||[]).length)+" lokalen");
+};
+
 /* ---- tekenen: aanduiden op een foto, of een losse schets ----
    Alles gebeurt op een canvas in de app zelf; er is geen netwerk voor nodig. */
 const KLEUREN=["#e02020","#f5a623","#1f7ae0","#111111"];
-let tk={canvas:null,ctx:null,lijnen:[],kleur:KLEUREN[0],basis:null,doel:null,schaal:1};
+let tk={canvas:null,ctx:null,lijnen:[],kleur:KLEUREN[0],basis:null,doel:null,schaal:1,naam:"schets"};
 
 function tkHerteken(){
   const c=tk.canvas,x=tk.ctx;
@@ -722,10 +1400,12 @@ document.getElementById("tk-klaar").onclick=()=>{
   tk.canvas.toBlob(async b=>{
     if(b){
       if(tk.doel==="nieuw"){
-        wachtendeFoto=b; wachtendeBijlage={naam:"schets",type:"image/jpeg",beeld:true,grootte:Math.round(b.size/1024)};
+        wachtendeFoto=b; wachtendeBijlage={naam:tk.naam||"schets",type:"image/jpeg",beeld:true,grootte:Math.round(b.size/1024)};
         const k=document.getElementById("schetsknop");k.classList.add("heeft");k.textContent="✓ Schets";
         const kf=document.getElementById("fotoknop");
         if(kf.classList.contains("heeft")) kf.textContent="✏️ Aanduiden";
+        const pf=document.getElementById("pl-foto");
+        if(pf){pf.classList.add("heeft");pf.textContent="✏️";}
         document.getElementById("bewaar").disabled=false;
       }else{
         await zetFoto(tk.doel,b);
@@ -753,7 +1433,10 @@ function maakTekst(){
   staat.punten.forEach(p=>{
     if(p.zone!==vorige){r.push("-");r.push(p.zone);vorige=p.zone;}
     const merk = p.foto ? ((p.bijlage && !p.bijlage.beeld) ? "D " : "F ") : "";
-    let l=merk+(p.spreker?p.spreker+": ":"")+(p.tekst||"[nog geen notitie — "+p.tijd+"]");
+    // @-marker: het lokaal als het bekend is, anders de coördinaat op het plan. De coördinaat
+    // staat er altijd bij, zodat het verwerkingsscript de punten terug op het plan kan tekenen.
+    const plek = p.plek ? "@"+(p.plek.lokaal?p.plek.lokaal+" ":"")+p.plek.x+","+p.plek.y+" " : "";
+    let l=merk+plek+(p.spreker?p.spreker+": ":"")+(p.tekst||"[nog geen notitie — "+p.tijd+"]");
     if(p.bijlage && !p.bijlage.beeld) l+=" ["+p.bijlage.naam+"]";
     r.push(l);
   });
@@ -830,12 +1513,25 @@ if(staat.weerdata){
   document.getElementById("weerknop").classList.add("klaar");
   document.getElementById("weerknop").textContent="✓";
 }
-opendb().then(d=>{
+planBedrading();
+opendb().then(async d=>{
   if(!d){
     const k=document.getElementById("fotoknop");
     k.disabled=true;k.textContent="📷 n.v.t.";k.title="Fotoopslag niet beschikbaar in deze weergave";
+    const p=document.getElementById("planknop");
+    p.disabled=true;p.textContent="📍 n.v.t.";p.title="Planopslag niet beschikbaar in deze weergave";
+  }else{
+    planLijst=await planZones();
   }
   tekenLijst();
+  // Bij een verse dag begint een rondgang met de vraag waar je staat. Hervat je een dag waarin
+  // al punten staan, dan onderbreken we niet — dan weet je zelf wel waar je gebleven was.
+  // De kaart is de werkplek, niet een omweg. Was je daar gebleven, dan kom je daar terug —
+  // en dan hoeft de vraag naar het niveau niet nog eens.
+  if(planLijst.length){
+    if(planLijst.includes(staat.zone) && staat.punten.length) setTimeout(()=>openPlan(staat.zone),300);
+    else setTimeout(vraagNiveau,350);
+  }
 });
 </script>
 
