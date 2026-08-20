@@ -98,8 +98,13 @@
   .spreker{font:11px ui-monospace,Menlo,monospace;color:var(--accent);font-weight:600}
   .punt p{margin:0;font-size:15px;word-wrap:break-word;overflow-wrap:anywhere}
   .punt p.leegnotitie{color:var(--ink-faint);font-style:italic}
-  .wis{background:none;border:none;color:var(--ink-faint);font-size:19px;line-height:1;padding:2px 4px;cursor:pointer}
-  .wis:hover{color:var(--warn)}
+  .punt-wrap{position:relative;overflow:hidden;border-radius:var(--radius);touch-action:pan-y}
+  .wisknop{position:absolute;top:0;right:0;bottom:0;width:96px;border:none;border-radius:0;
+    background:var(--warn);color:#fff;font-size:14px;font-weight:600;padding:0}
+  .punt{position:relative;transition:transform .18s ease;will-change:transform;touch-action:pan-y}
+  .punt.open{transform:translateX(-96px)}
+  .toast{display:flex;align-items:center;gap:14px}
+  .toast-actie{background:none;border:none;color:var(--accent);font-weight:650;font-size:14px;padding:0;cursor:pointer}
 
   .invoer{position:sticky;bottom:0;background:var(--surface);border-top:1px solid var(--line);
     padding:10px 14px calc(10px + var(--safe-b));display:flex;flex-direction:column;gap:8px;z-index:6}
@@ -110,7 +115,12 @@
   .rij{display:flex;gap:8px}
   button{font:inherit;cursor:pointer;border-radius:var(--radius);border:1px solid var(--line);
     background:var(--surface-2);color:var(--ink);padding:13px 14px;font-size:15px}
-  .fotoknop{flex:0 0 auto;min-width:92px;display:flex;align-items:center;justify-content:center;gap:6px}
+  .fotoknop,.docknop{flex:0 0 auto;min-width:80px;display:flex;align-items:center;justify-content:center;gap:5px;font-size:14px}
+  .docknop.heeft{border-color:var(--ok);color:var(--ok);font-weight:600}
+  .bijlage{width:52px;height:52px;flex:0 0 auto;border-radius:7px;border:1px solid var(--line);
+    background:var(--surface-2);display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:2px;font:9px ui-monospace,Menlo,monospace;color:var(--ink-soft);text-align:center;padding:3px;overflow:hidden}
+  .bijlage span:first-child{font-size:19px;line-height:1}
   .fotoknop.heeft{border-color:var(--ok);color:var(--ok);font-weight:600}
   .bewaar{flex:1;background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:650}
   .bewaar:disabled{opacity:.4}
@@ -154,16 +164,18 @@
 
   <div class="acties">
     <button id="kopieer">Kopieer verslagtekst</button>
-    <button id="fotos">Foto's tonen</button>
+    <button id="fotos">Bijlagen tonen</button>
   </div>
 
   <div class="invoer">
     <textarea id="tekst" placeholder="Vaststelling… — begin met CB: P: of LA: om toe te wijzen" rows="2"></textarea>
     <div class="rij">
       <button class="fotoknop" id="fotoknop" type="button">📷 Foto</button>
+      <button class="docknop" id="docknop" type="button">📄 Doc</button>
       <button class="bewaar" id="bewaar" type="button" disabled>Punt bewaren</button>
     </div>
     <input type="file" id="foto" accept="image/*" capture="environment">
+    <input type="file" id="doc" accept="image/*,application/pdf">
   </div>
 </div>
 
@@ -181,9 +193,10 @@
 <script>
 const ZONES=["N3","N4","N5","DAK","KAPEL","KELDER","STELLING","BUITEN"];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v3";
+const VERSIE="v4";
 let staat={datum:new Date().toISOString().slice(0,10),weer:"",bezetting:"",zone:"N3",punten:[]};
 let wachtendeFoto=null;
+let wachtendeBijlage=null;
 
 /* opslag: punten in localStorage, foto's in IndexedDB */
 let db=null;
@@ -220,7 +233,17 @@ function laadStaat(){
 }
 
 function melding(t){const el=document.getElementById("toast");el.textContent=t;el.classList.add("aan");
-  setTimeout(()=>el.classList.remove("aan"),1700);}
+  clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove("aan"),1700);}
+function meldingMetActie(tekst,actietekst,fn){
+  const el=document.getElementById("toast");
+  el.innerHTML="";
+  const s=document.createElement("span");s.textContent=tekst;el.appendChild(s);
+  const b=document.createElement("button");b.className="toast-actie";b.type="button";b.textContent=actietekst;
+  b.onclick=()=>{fn();el.classList.remove("aan");};
+  el.appendChild(b);
+  el.classList.add("aan");
+  clearTimeout(el._t); el._t=setTimeout(()=>{el.classList.remove("aan");laatstVerwijderd=null;},6000);
+}
 
 function tekenZones(){
   const nav=document.getElementById("zones");nav.innerHTML="";
@@ -237,15 +260,31 @@ async function tekenLijst(){
   const m=document.getElementById("lijst");m.innerHTML="";
   document.getElementById("teller").textContent=staat.punten.length+" punt"+(staat.punten.length===1?"":"en");
   if(!staat.punten.length){
-    m.innerHTML='<p class="leeg">Nog geen punten.<br>Kies een zone, typ of dicteer de vaststelling,<br>en bewaar. Een foto is optioneel.</p>';
+    m.innerHTML='<p class="leeg">Nog geen punten.<br>Kies een zone, typ of dicteer de vaststelling,<br>en bewaar. Een foto is optioneel.<br><span style="font-size:12.5px">Veeg een punt naar links om het te verwijderen.</span></p>';
     return;
   }
   for(const p of staat.punten){
+    const wrap=document.createElement("div");wrap.className="punt-wrap";
+    const wis=document.createElement("button");wis.className="wisknop";wis.type="button";
+    wis.textContent="Verwijder";wis.setAttribute("aria-label","Punt verwijderen");
+    wis.onclick=e=>{e.stopPropagation();verwijderPunt(p.id);};
+    wrap.appendChild(wis);
     const d=document.createElement("div");d.className="punt";
     if(p.foto){
-      const img=document.createElement("img");img.className="thumb";img.alt="";
-      const b=await haalFoto(p.id);if(b)img.src=URL.createObjectURL(b);
-      d.appendChild(img);
+      const b=await haalFoto(p.id);
+      if(p.bijlage && !p.bijlage.beeld){
+        const kaart=document.createElement("div");kaart.className="bijlage";
+        const ic=document.createElement("span");ic.textContent="📄";
+        const nm=document.createElement("span");
+        nm.textContent=(p.bijlage.naam||"doc").replace(/\.[^.]+$/,"").slice(0,12);
+        kaart.appendChild(ic);kaart.appendChild(nm);
+        if(b){kaart.style.cursor="zoom-in";kaart.onclick=ev=>{ev.stopPropagation();window.open(URL.createObjectURL(b),"_blank");};}
+        d.appendChild(kaart);
+      }else{
+        const img=document.createElement("img");img.className="thumb";img.alt="";
+        if(b)img.src=URL.createObjectURL(b);
+        d.appendChild(img);
+      }
     }
     const body=document.createElement("div");body.className="body";
     const kop=document.createElement("div");kop.className="kop";
@@ -260,12 +299,61 @@ async function tekenLijst(){
     body.style.cursor="text";
     body.onclick=()=>bewerkPunt(p.id);
     d.appendChild(body);
-    const w=document.createElement("button");w.className="wis";w.type="button";w.textContent="×";
-    w.setAttribute("aria-label","Punt verwijderen");
-    w.onclick=()=>{staat.punten=staat.punten.filter(x=>x.id!==p.id);bewaarStaat();tekenLijst();};
-    d.appendChild(w);
-    m.appendChild(d);
+    maakVeegbaar(d);
+    wrap.appendChild(d);
+    m.appendChild(wrap);
   }
+}
+
+/* Vegen naar links legt de verwijderknop bloot. Verwijderen vraagt dus altijd een
+   tweede, bewuste handeling - en blijft daarna nog even terug te draaien. */
+const VEEG=96;
+function sluitAlle(behalve){
+  document.querySelectorAll(".punt.open").forEach(el=>{ if(el!==behalve) el.classList.remove("open"); });
+}
+function maakVeegbaar(el){
+  let x0=null,y0=null,dx=0,sleept=false;
+  el.addEventListener("pointerdown",e=>{
+    if(e.target.closest(".wisknop"))return;
+    x0=e.clientX;y0=e.clientY;dx=0;sleept=false;el.style.transition="none";
+  });
+  el.addEventListener("pointermove",e=>{
+    if(x0===null)return;
+    const vx=e.clientX-x0, vy=e.clientY-y0;
+    if(!sleept && Math.abs(vx)>8 && Math.abs(vx)>Math.abs(vy)){sleept=true;sluitAlle(el);}
+    if(!sleept)return;
+    dx=Math.max(-VEEG,Math.min(0,vx + (el.classList.contains("open")?-VEEG:0)));
+    el.style.transform="translateX("+dx+"px)";
+  });
+  const eind=()=>{
+    if(x0===null)return;
+    el.style.transition="";el.style.transform="";
+    if(sleept) el.classList.toggle("open", dx < -VEEG/2);
+    x0=null;sleept=false;
+  };
+  el.addEventListener("pointerup",eind);
+  el.addEventListener("pointercancel",eind);
+  el.addEventListener("pointerleave",eind);
+  el.addEventListener("click",e=>{
+    if(sleept||el.classList.contains("open")){e.stopPropagation();sluitAlle(null);}
+  },true);
+}
+
+let laatstVerwijderd=null;
+async function verwijderPunt(id){
+  const idx=staat.punten.findIndex(x=>x.id===id); if(idx<0)return;
+  const p=staat.punten[idx];
+  const blob=p.foto?await haalFoto(id):null;
+  laatstVerwijderd={punt:p,index:idx,blob};
+  staat.punten.splice(idx,1);
+  bewaarStaat(); await tekenLijst();
+  meldingMetActie("Punt verwijderd","Ongedaan maken",async()=>{
+    if(!laatstVerwijderd)return;
+    const g=laatstVerwijderd;
+    staat.punten.splice(Math.min(g.index,staat.punten.length),0,g.punt);
+    if(g.blob) await zetFoto(g.punt.id,g.blob);
+    laatstVerwijderd=null;bewaarStaat();tekenLijst();
+  });
 }
 
 function bewerkPunt(id){
@@ -298,6 +386,20 @@ function verkleinFoto(file){return new Promise(res=>{
 });}
 
 document.getElementById("fotoknop").onclick=()=>document.getElementById("foto").click();
+document.getElementById("docknop").onclick=()=>document.getElementById("doc").click();
+
+/* Scans en documenten: de knop opent de keuze van iOS — fotheek, Bestanden, of camera.
+   Een plan, een papier of een bon scan je met de scanner van Notities of Bestanden
+   (die maakt een PDF) en kies je hier; de app bewaart hem bij het punt. */
+document.getElementById("doc").onchange=async e=>{
+  const f=e.target.files[0];if(!f)return;
+  const isBeeld=f.type.startsWith("image/");
+  wachtendeFoto = isBeeld ? await verkleinFoto(f) : f;
+  wachtendeBijlage = {naam:f.name||"document", type:f.type||"onbekend", beeld:isBeeld,
+                      grootte:Math.round((f.size||0)/1024)};
+  const k=document.getElementById("docknop");k.classList.add("heeft");k.textContent="✓ Doc";
+  document.getElementById("bewaar").disabled=false;
+};
 document.getElementById("foto").onchange=async e=>{
   const f=e.target.files[0];if(!f)return;
   wachtendeFoto=await verkleinFoto(f);
@@ -318,13 +420,14 @@ document.getElementById("bewaar").onclick=async()=>{
   if(m){spreker=m[1].toUpperCase();tekst=m[2].trim();}
   const id="p"+Date.now();
   const punt={id,zone:staat.zone,tekst:tekst,spreker,
-    tijd:new Date().toTimeString().slice(0,5),foto:!!wachtendeFoto};
+    tijd:new Date().toTimeString().slice(0,5),foto:!!wachtendeFoto,bijlage:wachtendeBijlage};
   if(wachtendeFoto)await zetFoto(id,wachtendeFoto);
   staat.punten.push(punt);bewaarStaat();
-  tekstEl.value="";wachtendeFoto=null;
+  tekstEl.value="";wachtendeFoto=null;wachtendeBijlage=null;
   const k=document.getElementById("fotoknop");k.classList.remove("heeft");k.textContent="📷 Foto";
+  const kd=document.getElementById("docknop");kd.classList.remove("heeft");kd.textContent="📄 Doc";
   document.getElementById("bewaar").disabled=true;
-  document.getElementById("foto").value="";
+  document.getElementById("foto").value="";document.getElementById("doc").value="";
   await tekenLijst();
   melding("Punt "+staat.punten.length+" bewaard");
   if(!staat.weerdata) haalWeer(true);
@@ -395,7 +498,9 @@ function maakTekst(){
   let vorige=null;
   staat.punten.forEach(p=>{
     if(p.zone!==vorige){r.push("-");r.push(p.zone);vorige=p.zone;}
-    let l=(p.foto?"F ":"")+(p.spreker?p.spreker+": ":"")+(p.tekst||"[nog geen notitie — "+p.tijd+"]");
+    const merk = p.foto ? ((p.bijlage && !p.bijlage.beeld) ? "D " : "F ") : "";
+    let l=merk+(p.spreker?p.spreker+": ":"")+(p.tekst||"[nog geen notitie — "+p.tijd+"]");
+    if(p.bijlage && !p.bijlage.beeld) l+=" ["+p.bijlage.naam+"]";
     r.push(l);
   });
   return r.join("\n");
@@ -431,7 +536,7 @@ document.getElementById("kopieer").onclick=async()=>{
 
 document.getElementById("fotos").onclick=async()=>{
   const metFoto=staat.punten.filter(p=>p.foto);
-  document.getElementById("dlg-titel").textContent=metFoto.length+" foto's";
+  document.getElementById("dlg-titel").textContent=metFoto.length+" foto's en documenten";
   const b=document.getElementById("dlg-body");b.innerHTML="";
   if(!metFoto.length){b.innerHTML='<p style="margin:0;color:var(--ink-soft)">Nog geen foto\'s.</p>';}
   for(let i=0;i<metFoto.length;i++){
@@ -440,7 +545,16 @@ document.getElementById("fotos").onclick=async()=>{
     cap.style.cssText="margin:0 0 4px;font:12px ui-monospace,Menlo,monospace;color:var(--ink-soft)";
     cap.textContent=String(i+1).padStart(2,"0")+" · "+p.zone+" · "+p.tijd+" — "+p.tekst;
     b.appendChild(cap);
-    if(blob){const im=document.createElement("img");im.src=URL.createObjectURL(blob);im.alt=p.tekst;b.appendChild(im);}
+    if(blob){
+      if(p.bijlage && !p.bijlage.beeld){
+        const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.target="_blank";
+        a.textContent="📄 "+(p.bijlage.naam||"document")+" openen";
+        a.style.cssText="display:block;margin-bottom:12px;color:var(--accent)";
+        b.appendChild(a);
+      }else{
+        const im=document.createElement("img");im.src=URL.createObjectURL(blob);im.alt=p.tekst||"";b.appendChild(im);
+      }
+    }
   }
   document.getElementById("dlg-kopieer").style.display="none";
   dlg.showModal();

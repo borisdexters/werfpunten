@@ -12,10 +12,13 @@ de vaststelling en één knop voor de foto.
 ## Gebruik
 1. Kies de zone bovenaan. Die blijft actief tot je hem wisselt.
 2. Typ of dicteer de vaststelling. Begin met `CB:`, `P:` of `LA:` om ze aan een partij toe te wijzen.
-3. Optioneel een foto. Bewaar het punt.
+3. Optioneel een foto, of via **Doc** een scan of document — een plan, een papier, een bon.
+   Scan met de scanner van Notities of Bestanden (die maakt een PDF) en kies hem hier.
+4. Bewaar het punt.
    Alleen fotograferen mag ook: **tik later op een punt om de notitie toe te voegen.**
    Vastleggen op de werf, uitschrijven achteraf.
-4. Achteraf: **Kopieer verslagtekst** geeft een gestructureerde tekst per zone, klaar voor verwerking.
+   Een punt verwijderen doe je door het **naar links te vegen**; daarna kan het nog ongedaan gemaakt worden.
+5. Achteraf: **Kopieer verslagtekst** geeft een gestructureerde tekst per zone, klaar voor verwerking.
 
 Weer en bezetting staan als vaste velden bovenaan, omdat die bij werfverslagen doorgaans per
 vergadering genoteerd moeten worden. **Het weer vult zichzelf in**: de app haalt op basis van je
