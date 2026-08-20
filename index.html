@@ -58,6 +58,13 @@
   .dagboek{display:grid;grid-template-columns:auto 1fr;gap:6px 8px;padding:10px 14px;
     background:var(--surface-2);border-bottom:1px solid var(--line-soft);align-items:center}
   .dagboek label{font:11px ui-monospace,Menlo,monospace;color:var(--ink-soft);letter-spacing:.04em}
+  .weerveld{display:flex;gap:6px}
+  .weerveld input{flex:1}
+  #weerknop{padding:6px 10px;font-size:15px;line-height:1;border:1px solid var(--line);
+    background:var(--surface-2);color:var(--ink-soft);border-radius:8px;flex:0 0 auto}
+  #weerknop.bezig{opacity:.5}
+  #weerknop.klaar{border-color:var(--ok);color:var(--ok)}
+  .weerinfo{grid-column:1/-1;font:11px ui-monospace,Menlo,monospace;color:var(--ink-faint);margin:0}
   .dagboek input{
     border:1px solid var(--line);background:var(--surface);color:var(--ink);
     border-radius:8px;padding:7px 9px;font-size:14px;width:100%;
@@ -134,8 +141,9 @@
   </header>
 
   <div class="dagboek">
-    <label for="weer">W:</label><input id="weer" placeholder="droog, 19°, wind matig" autocomplete="off">
+    <label for="weer">W:</label><div class="weerveld"><input id="weer" placeholder="droog, 19°, wind matig" autocomplete="off"><button type="button" id="weerknop" title="Weer ophalen via locatie">☁</button></div>
     <label for="bezetting">BZ:</label><input id="bezetting" placeholder="6 man — 2 dakwerkers, 3 schilders" autocomplete="off">
+    <p class="weerinfo" id="weerinfo"></p>
   </div>
 
   <nav class="zones" id="zones" aria-label="Zone kiezen"></nav>
@@ -295,6 +303,7 @@ document.getElementById("bewaar").onclick=async()=>{
   document.getElementById("foto").value="";
   await tekenLijst();
   melding("Punt "+staat.punten.length+" bewaard");
+  if(!staat.weerdata) haalWeer(true);
 };
 
 ["weer","bezetting"].forEach(k=>{
@@ -303,10 +312,59 @@ document.getElementById("bewaar").onclick=async()=>{
   el.oninput=()=>{staat[k]=el.value;bewaarStaat();};
 });
 
+
+/* ---- weer: automatisch op basis van locatie + tijdstip ---- */
+function weerOmschrijving(bew, neerslag){
+  const lucht = bew < 20 ? "onbewolkt" : bew < 60 ? "halfbewolkt" : "bewolkt";
+  return (neerslag > 0 ? "neerslag, " : "droog, ") + lucht;
+}
+async function haalWeer(stil){
+  const k = document.getElementById("weerknop");
+  const info = document.getElementById("weerinfo");
+  k.classList.add("bezig");
+  try{
+    if(!staat.coords){
+      const pos = await new Promise((res,rej)=>{
+        if(!navigator.geolocation) return rej(new Error("geen locatiedienst"));
+        navigator.geolocation.getCurrentPosition(res,rej,{timeout:9000,maximumAge:900000});
+      });
+      staat.coords={lat:+pos.coords.latitude.toFixed(4), lon:+pos.coords.longitude.toFixed(4)};
+      bewaarStaat();
+    }
+    const {lat,lon}=staat.coords;
+    const u="https://api.open-meteo.com/v1/forecast?latitude="+lat+"&longitude="+lon+
+      "&current=temperature_2m,precipitation,wind_speed_10m,cloud_cover"+
+      "&daily=temperature_2m_min,temperature_2m_max,precipitation_sum,wind_speed_10m_max"+
+      "&forecast_days=1&timezone=Europe%2FBrussels";
+    const d = await (await fetch(u)).json();
+    const c=d.current, g=d.daily;
+    staat.weerdata={
+      moment:{tijd:c.time, temp:c.temperature_2m, neerslag:c.precipitation,
+              wind:c.wind_speed_10m, bewolking:c.cloud_cover},
+      dag:{min:g.temperature_2m_min[0], max:g.temperature_2m_max[0],
+           neerslag:g.precipitation_sum[0], windmax:g.wind_speed_10m_max[0]},
+      coords:staat.coords, opgehaald:new Date().toISOString()
+    };
+    const veld=document.getElementById("weer");
+    const tekst=weerOmschrijving(c.cloud_cover,c.precipitation)+", "+Math.round(c.temperature_2m)+"°C, wind "+Math.round(c.wind_speed_10m)+" km/u";
+    if(!veld.value.trim()){ veld.value=tekst; staat.weer=tekst; }
+    info.textContent="dag: "+g.temperature_2m_min[0]+"–"+g.temperature_2m_max[0]+"°C · neerslag "+
+      g.precipitation_sum[0]+" mm · max wind "+g.wind_speed_10m_max[0]+" km/u  (open-meteo, "+lat+","+lon+")";
+    bewaarStaat();
+    k.classList.add("klaar"); k.textContent="✓";
+  }catch(e){
+    if(!stil) melding("Weer niet opgehaald: "+(e.message||"geen netwerk"));
+    document.getElementById("weerinfo").textContent="weer nog niet opgehaald — knop rechts van W:";
+  }finally{ k.classList.remove("bezig"); }
+}
+document.getElementById("weerknop").onclick=()=>haalWeer(false);
+
 function maakTekst(){
   const r=[];
   if(staat.weer.trim())r.push("W: "+staat.weer.trim());
   if(staat.bezetting.trim())r.push("BZ: "+staat.bezetting.trim());
+  if(staat.weerdata){const w=staat.weerdata.dag;
+    r.push("WD: "+w.min+"-"+w.max+" C, neerslag "+w.neerslag+" mm, max wind "+w.windmax+" km/u (open-meteo)");}
   let vorige=null;
   staat.punten.forEach(p=>{
     if(p.zone!==vorige){r.push("-");r.push(p.zone);vorige=p.zone;}
@@ -367,6 +425,12 @@ document.getElementById("weer").value=staat.weer||"";
 document.getElementById("bezetting").value=staat.bezetting||"";
 tekenZones();
 tekenLijst();
+if(staat.weerdata){
+  const w=staat.weerdata.dag;
+  document.getElementById("weerinfo").textContent="dag: "+w.min+"–"+w.max+"°C · neerslag "+w.neerslag+" mm · max wind "+w.windmax+" km/u";
+  document.getElementById("weerknop").classList.add("klaar");
+  document.getElementById("weerknop").textContent="✓";
+}
 opendb().then(d=>{
   if(!d){
     const k=document.getElementById("fotoknop");

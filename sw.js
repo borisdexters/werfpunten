@@ -19,6 +19,9 @@ self.addEventListener("activate", e => {
    Een nieuwe versie komt binnen zodra er weer netwerk is. */
 self.addEventListener("fetch", e => {
   if (e.request.method !== "GET") return;
+  // Externe verzoeken (weer-API) met rust laten: die moeten bij geen netwerk gewoon falen,
+  // zodat de app zelf kan beslissen het later opnieuw te proberen.
+  if (new URL(e.request.url).origin !== self.location.origin) return;
   e.respondWith(
     caches.match(e.request).then(hit => {
       if (hit) {

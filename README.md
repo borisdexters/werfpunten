@@ -16,7 +16,10 @@ de vaststelling en één knop voor de foto.
 4. Achteraf: **Kopieer verslagtekst** geeft een gestructureerde tekst per zone, klaar voor verwerking.
 
 Weer en bezetting staan als vaste velden bovenaan, omdat die bij werfverslagen doorgaans per
-vergadering genoteerd moeten worden.
+vergadering genoteerd moeten worden. **Het weer vult zichzelf in**: de app haalt op basis van je
+locatie en het tijdstip de actuele waarneming op, plus de dagcijfers (min/max temperatuur, totale
+neerslag, hoogste windsnelheid). Die dagcijfers gaan mee in de export — bruikbaar wanneer achteraf
+moet worden beoordeeld of het weer de werken verhinderde. Bron: open-meteo.com, zonder account.
 
 ## Installeren
 Open de gepubliceerde URL in **Safari** (iOS) of Chrome (Android) → deel-knop → **Zet op beginscherm**.
