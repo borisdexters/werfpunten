@@ -71,6 +71,19 @@
     border-radius:8px;padding:7px 9px;font-size:14px;width:100%;
   }
 
+  .aanwezig{padding:8px 14px;background:var(--surface);border-bottom:1px solid var(--line-soft)}
+  .aanwezig-kop{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .aw-label{font:11px ui-monospace,Menlo,monospace;color:var(--ink-soft);letter-spacing:.04em}
+  .aw-beheer{background:none;border:none;color:var(--accent);font-size:12px;padding:0;margin-left:auto;cursor:pointer}
+  .aw-chips{display:flex;flex-wrap:wrap;gap:6px}
+  .aw-chip{border:1.5px solid var(--line);background:transparent;color:var(--ink-soft);
+    font-size:13px;padding:6px 11px;border-radius:999px;cursor:pointer}
+  .aw-chip[aria-pressed="true"]{background:var(--zone-soft);border-color:var(--zone);color:var(--zone);font-weight:600}
+  .aw-leeg{font-size:12.5px;color:var(--ink-faint)}
+  .sprekers{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:2px}
+  .spreker-knop{border:1px solid var(--line);background:var(--surface-2);color:var(--ink-soft);
+    font:12px ui-monospace,Menlo,monospace;padding:5px 9px;border-radius:7px;cursor:pointer}
+  .spreker-knop.actief{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
   .zones{display:flex;gap:6px;overflow-x:auto;padding:10px 14px;background:var(--surface);
     border-bottom:1px solid var(--line);position:sticky;top:44px;z-index:5;-webkit-overflow-scrolling:touch}
   .zones::-webkit-scrollbar{display:none}
@@ -141,6 +154,17 @@
   .dlg-body img{width:100%;border-radius:8px;margin-bottom:10px;border:1px solid var(--line-soft)}
   .dlg-voet{padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:8px}
   .dlg-voet button{flex:1}
+  #tekendlg{width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;margin:0;background:#111;border-radius:0}
+  #tekendlg::backdrop{background:#000}
+  .teken-balk{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#1c1c1e;
+    padding-top:calc(10px + env(safe-area-inset-top,0px))}
+  .teken-balk button{background:#2c2c2e;color:#f2f2f7;border:1px solid #3a3a3c;font-size:14px;padding:9px 12px}
+  .teken-balk .tk-klaar{margin-left:auto;background:var(--accent);border-color:var(--accent);color:#fff;font-weight:650}
+  .tk-kleuren{display:flex;gap:6px}
+  .tk-kleur{width:26px;height:26px;border-radius:50%;border:2px solid #48484a;padding:0;cursor:pointer}
+  .tk-kleur.actief{border-color:#fff;transform:scale(1.12)}
+  .teken-vlak{flex:1;display:flex;align-items:center;justify-content:center;height:calc(100dvh - 60px);background:#111}
+  #tekencanvas{max-width:100%;max-height:100%;touch-action:none;background:#fff}
   @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
 </head>
@@ -158,6 +182,14 @@
     <p class="weerinfo" id="weerinfo"></p>
   </div>
 
+  <div class="aanwezig">
+    <div class="aanwezig-kop">
+      <span class="aw-label">Aanwezig</span>
+      <button type="button" id="contactbeheer" class="aw-beheer">contacten</button>
+    </div>
+    <div class="aw-chips" id="awchips"></div>
+  </div>
+
   <nav class="zones" id="zones" aria-label="Zone kiezen"></nav>
 
   <main id="lijst"></main>
@@ -168,10 +200,12 @@
   </div>
 
   <div class="invoer">
-    <textarea id="tekst" placeholder="Vaststelling… — begin met CB: P: of LA: om toe te wijzen" rows="2"></textarea>
+    <div class="sprekers" id="sprekers"></div>
+    <textarea id="tekst" placeholder="Vaststelling…" rows="2"></textarea>
     <div class="rij">
       <button class="fotoknop" id="fotoknop" type="button">📷 Foto</button>
       <button class="docknop" id="docknop" type="button">📄 Doc</button>
+      <button class="docknop" id="schetsknop" type="button">✏️ Schets</button>
       <button class="bewaar" id="bewaar" type="button" disabled>Punt bewaren</button>
     </div>
     <input type="file" id="foto" accept="image/*" capture="environment">
@@ -180,6 +214,16 @@
 </div>
 
 <div class="toast" id="toast"></div>
+
+<dialog id="tekendlg">
+  <div class="teken-balk">
+    <button type="button" id="tk-undo">Ongedaan</button>
+    <button type="button" id="tk-wis">Wissen</button>
+    <span class="tk-kleuren" id="tk-kleuren"></span>
+    <button type="button" id="tk-klaar" class="tk-klaar">Klaar</button>
+  </div>
+  <div class="teken-vlak"><canvas id="tekencanvas"></canvas></div>
+</dialog>
 
 <dialog id="dlg">
   <div class="dlg-kop"><h2 id="dlg-titel">Verslagtekst</h2></div>
@@ -193,7 +237,7 @@
 <script>
 const ZONES=["N3","N4","N5","DAK","KAPEL","KELDER","STELLING","BUITEN"];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v4";
+const VERSIE="v6";
 let staat={datum:new Date().toISOString().slice(0,10),weer:"",bezetting:"",zone:"N3",punten:[]};
 let wachtendeFoto=null;
 let wachtendeBijlage=null;
@@ -221,6 +265,77 @@ function haalFoto(id){return new Promise(res=>{
   const q=db.transaction("fotos","readonly").objectStore("fotos").get(id);
   q.onsuccess=()=>res(q.result||null);q.onerror=()=>res(null);
 });}
+
+/* Contacten staan los van de dag: ze blijven bewaard over vergaderingen heen.
+   De lijst zit alleen op dit toestel; er staan geen namen in de app zelf. */
+const CONTACTSLEUTEL="werfpunten-contacten";
+let contacten=[];
+function laadContacten(){
+  try{const r=localStorage.getItem(CONTACTSLEUTEL); if(r) contacten=JSON.parse(r)||[];}catch(e){contacten=[];}
+}
+function bewaarContacten(){try{localStorage.setItem(CONTACTSLEUTEL,JSON.stringify(contacten))}catch(e){}}
+
+function tekenContacten(){
+  const box=document.getElementById("awchips"); box.innerHTML="";
+  if(!contacten.length){
+    const p=document.createElement("span");p.className="aw-leeg";
+    p.textContent="nog geen contacten — tik op ‘contacten’ om ze toe te voegen";
+    box.appendChild(p);
+  }
+  contacten.forEach(c=>{
+    const b=document.createElement("button");b.type="button";b.className="aw-chip";
+    b.textContent=c.naam;
+    const aanwezig=(staat.aanwezig||[]).includes(c.code);
+    b.setAttribute("aria-pressed",String(aanwezig));
+    b.onclick=()=>{
+      staat.aanwezig=staat.aanwezig||[];
+      const i=staat.aanwezig.indexOf(c.code);
+      if(i<0)staat.aanwezig.push(c.code); else staat.aanwezig.splice(i,1);
+      bewaarStaat();tekenContacten();tekenSprekers();
+    };
+    box.appendChild(b);
+  });
+}
+
+/* Alleen wie aanwezig is, verschijnt als snelknop bij de invoer. */
+function tekenSprekers(){
+  const box=document.getElementById("sprekers"); box.innerHTML="";
+  const lijst=contacten.filter(c=>(staat.aanwezig||[]).includes(c.code));
+  lijst.forEach(c=>{
+    const b=document.createElement("button");b.type="button";b.className="spreker-knop";
+    b.textContent=c.code;b.title=c.naam;
+    b.onclick=()=>{
+      const ta=document.getElementById("tekst");
+      const zonder=ta.value.replace(/^\s*(?:[A-Z0-9]{1,4}\s*:\s*)/,"");
+      const zelfde=new RegExp("^\\s*"+c.code+"\\s*:").test(ta.value);
+      ta.value = zelfde ? zonder : (c.code+": "+zonder);
+      ta.dispatchEvent(new Event("input"));
+      tekenSprekers();
+      ta.focus();
+    };
+    const ta=document.getElementById("tekst");
+    if(new RegExp("^\\s*"+c.code+"\\s*:").test(ta.value)) b.classList.add("actief");
+    box.appendChild(b);
+  });
+}
+
+function beheerContacten(){
+  const huidig=contacten.map(c=>c.naam+" = "+c.code).join("\n");
+  const uitleg="Eén contact per regel, als:  Naam = CODE\n\nDe code komt in het verslag voor de uitspraak te staan.\nVoorbeeld:\nJan Peeters = JP\nGemeente = GEM";
+  const nieuw=prompt(uitleg, huidig);
+  if(nieuw===null)return;
+  contacten = nieuw.split("\n").map(r=>r.trim()).filter(Boolean).map(r=>{
+    const d=r.split("=");
+    const naam=(d[0]||"").trim();
+    let code=(d[1]||"").trim().toUpperCase();
+    if(!code) code=naam.split(/\s+/).map(w=>w[0]||"").join("").slice(0,3).toUpperCase();
+    return {naam,code};
+  }).filter(c=>c.naam);
+  bewaarContacten();
+  staat.aanwezig=(staat.aanwezig||[]).filter(code=>contacten.some(c=>c.code===code));
+  bewaarStaat();tekenContacten();tekenSprekers();
+}
+document.getElementById("contactbeheer").onclick=beheerContacten;
 
 function bewaarStaat(){try{localStorage.setItem(SLEUTEL,JSON.stringify(staat))}catch(e){}}
 function laadStaat(){
@@ -283,6 +398,9 @@ async function tekenLijst(){
       }else{
         const img=document.createElement("img");img.className="thumb";img.alt="";
         if(b)img.src=URL.createObjectURL(b);
+        img.title="Aanduiden op deze foto";
+        img.style.cursor="crosshair";
+        img.onclick=ev=>{ev.stopPropagation(); if(b) openTekenscherm(b,p.id);};
         d.appendChild(img);
       }
     }
@@ -362,7 +480,7 @@ function bewerkPunt(id){
   const nieuw=prompt("Notitie bij dit punt ("+p.zone+", "+p.tijd+"):", huidig);
   if(nieuw===null) return;
   let tekst=nieuw.trim(), spreker=null;
-  const m=tekst.match(/^(CB|P|LA|BW|S10)\s*:\s*(.*)$/i);
+  const m=tekst.match(/^([A-Za-z0-9]{1,4})\s*:\s*(.*)$/);
   if(m){spreker=m[1].toUpperCase();tekst=m[2].trim();}
   p.tekst=tekst; p.spreker=spreker;
   bewaarStaat(); tekenLijst();
@@ -410,13 +528,14 @@ document.getElementById("foto").onchange=async e=>{
 const tekstEl=document.getElementById("tekst");
 tekstEl.oninput=()=>{
   document.getElementById("bewaar").disabled=!(tekstEl.value.trim()||wachtendeFoto);
+  tekenSprekers();
 };
 
 document.getElementById("bewaar").onclick=async()=>{
   let tekst=tekstEl.value.trim();
   if(!tekst&&!wachtendeFoto)return;
   let spreker=null;
-  const m=tekst.match(/^(CB|P|LA|BW|S10)\s*:\s*(.*)$/i);
+  const m=tekst.match(/^([A-Za-z0-9]{1,4})\s*:\s*(.*)$/);
   if(m){spreker=m[1].toUpperCase();tekst=m[2].trim();}
   const id="p"+Date.now();
   const punt={id,zone:staat.zone,tekst:tekst,spreker,
@@ -426,6 +545,7 @@ document.getElementById("bewaar").onclick=async()=>{
   tekstEl.value="";wachtendeFoto=null;wachtendeBijlage=null;
   const k=document.getElementById("fotoknop");k.classList.remove("heeft");k.textContent="📷 Foto";
   const kd=document.getElementById("docknop");kd.classList.remove("heeft");kd.textContent="📄 Doc";
+  const ks=document.getElementById("schetsknop");ks.classList.remove("heeft");ks.textContent="✏️ Schets";
   document.getElementById("bewaar").disabled=true;
   document.getElementById("foto").value="";document.getElementById("doc").value="";
   await tekenLijst();
@@ -489,10 +609,98 @@ async function haalWeer(stil){
 }
 document.getElementById("weerknop").onclick=()=>haalWeer(false);
 
+/* ---- tekenen: aanduiden op een foto, of een losse schets ----
+   Alles gebeurt op een canvas in de app zelf; er is geen netwerk voor nodig. */
+const KLEUREN=["#e02020","#f5a623","#1f7ae0","#111111"];
+let tk={canvas:null,ctx:null,lijnen:[],kleur:KLEUREN[0],basis:null,doel:null,schaal:1};
+
+function tkHerteken(){
+  const c=tk.canvas,x=tk.ctx;
+  x.clearRect(0,0,c.width,c.height);
+  if(tk.basis) x.drawImage(tk.basis,0,0,c.width,c.height);
+  else{ x.fillStyle="#fff"; x.fillRect(0,0,c.width,c.height); }
+  x.lineCap="round";x.lineJoin="round";
+  tk.lijnen.forEach(l=>{
+    x.strokeStyle=l.kleur; x.lineWidth=l.dikte;
+    x.beginPath();
+    l.punten.forEach((pt,i)=> i? x.lineTo(pt.x,pt.y) : x.moveTo(pt.x,pt.y));
+    if(l.punten.length===1) x.lineTo(l.punten[0].x+0.1,l.punten[0].y+0.1);
+    x.stroke();
+  });
+}
+
+function tkKleuren(){
+  const box=document.getElementById("tk-kleuren");box.innerHTML="";
+  KLEUREN.forEach(k=>{
+    const b=document.createElement("button");b.type="button";b.className="tk-kleur"+(k===tk.kleur?" actief":"");
+    b.style.background=k;b.setAttribute("aria-label","kleur "+k);
+    b.onclick=()=>{tk.kleur=k;tkKleuren();};
+    box.appendChild(b);
+  });
+}
+
+async function openTekenscherm(bron, doel){
+  const dlg=document.getElementById("tekendlg");
+  tk.canvas=document.getElementById("tekencanvas");
+  tk.ctx=tk.canvas.getContext("2d");
+  tk.lijnen=[];tk.doel=doel;tk.basis=null;
+  if(bron){
+    const img=new Image();
+    await new Promise(res=>{img.onload=res;img.onerror=res;img.src=URL.createObjectURL(bron);});
+    tk.basis=img;
+    tk.canvas.width=img.width||1200; tk.canvas.height=img.height||1600;
+  }else{
+    tk.canvas.width=1200; tk.canvas.height=1600;
+  }
+  tkKleuren(); tkHerteken();
+  dlg.showModal();
+
+  const dikte=Math.max(4, Math.round(tk.canvas.width/220));
+  let bezig=false, huidige=null;
+  const naarCanvas=e=>{
+    const r=tk.canvas.getBoundingClientRect();
+    return {x:(e.clientX-r.left)*(tk.canvas.width/r.width),
+            y:(e.clientY-r.top)*(tk.canvas.height/r.height)};
+  };
+  tk.canvas.onpointerdown=e=>{
+    bezig=true; tk.canvas.setPointerCapture(e.pointerId);
+    huidige={kleur:tk.kleur,dikte,punten:[naarCanvas(e)]};
+    tk.lijnen.push(huidige); tkHerteken();
+  };
+  tk.canvas.onpointermove=e=>{ if(!bezig)return; huidige.punten.push(naarCanvas(e)); tkHerteken(); };
+  const stop=()=>{bezig=false;huidige=null;};
+  tk.canvas.onpointerup=stop; tk.canvas.onpointercancel=stop;
+}
+
+document.getElementById("tk-undo").onclick=()=>{tk.lijnen.pop();tkHerteken();};
+document.getElementById("tk-wis").onclick=()=>{tk.lijnen=[];tkHerteken();};
+document.getElementById("tk-klaar").onclick=()=>{
+  tk.canvas.toBlob(async b=>{
+    if(b){
+      if(tk.doel==="nieuw"){
+        wachtendeFoto=b; wachtendeBijlage={naam:"schets",type:"image/jpeg",beeld:true,grootte:Math.round(b.size/1024)};
+        const k=document.getElementById("schetsknop");k.classList.add("heeft");k.textContent="✓ Schets";
+        document.getElementById("bewaar").disabled=false;
+      }else{
+        await zetFoto(tk.doel,b);
+        const punt=staat.punten.find(x=>x.id===tk.doel);
+        if(punt){punt.geannoteerd=true;bewaarStaat();}
+        tekenLijst();
+      }
+    }
+    document.getElementById("tekendlg").close();
+  },"image/jpeg",0.85);
+};
+document.getElementById("schetsknop").onclick=()=>openTekenscherm(null,"nieuw");
+
 function maakTekst(){
   const r=[];
   if(staat.weer.trim())r.push("W: "+staat.weer.trim());
   if(staat.bezetting.trim())r.push("BZ: "+staat.bezetting.trim());
+  const aw=(staat.aanwezig||[]).map(code=>{
+    const c=contacten.find(x=>x.code===code); return c?(c.naam+" ("+c.code+")"):code;
+  });
+  if(aw.length) r.push("AW: "+aw.join(", "));
   if(staat.weerdata){const w=staat.weerdata.dag;
     r.push("WD: "+w.min+"-"+w.max+" C, neerslag "+w.neerslag+" mm, max wind "+w.windmax+" km/u (open-meteo)");}
   let vorige=null;
@@ -564,6 +772,9 @@ document.getElementById("fotos").onclick=async()=>{
 laadStaat();
 document.getElementById("weer").value=staat.weer||"";
 document.getElementById("bezetting").value=staat.bezetting||"";
+laadContacten();
+tekenContacten();
+tekenSprekers();
 tekenZones();
 tekenLijst();
 document.getElementById("versie").textContent=VERSIE;

@@ -12,8 +12,10 @@ de vaststelling en één knop voor de foto.
 ## Gebruik
 1. Kies de zone bovenaan. Die blijft actief tot je hem wisselt.
 2. Typ of dicteer de vaststelling. Begin met `CB:`, `P:` of `LA:` om ze aan een partij toe te wijzen.
-3. Optioneel een foto, of via **Doc** een scan of document — een plan, een papier, een bon.
-   Scan met de scanner van Notities of Bestanden (die maakt een PDF) en kies hem hier.
+3. Optioneel een foto, via **Doc** een scan of document (plan, papier, bon — scan met de scanner van
+   Notities of Bestanden, die maakt een PDF), of via **Schets** een losse tekening.
+   **Tik op een foto in de lijst om erop te tekenen**: aanduiden wat er aan de hand is, in vier kleuren,
+   met ongedaan maken.
 4. Bewaar het punt.
    Alleen fotograferen mag ook: **tik later op een punt om de notitie toe te voegen.**
    Vastleggen op de werf, uitschrijven achteraf.
@@ -29,6 +31,11 @@ moet worden beoordeeld of het weer de werken verhinderde. Bron: open-meteo.com, 
 ## Installeren
 Open de gepubliceerde URL in **Safari** (iOS) of Chrome (Android) → deel-knop → **Zet op beginscherm**.
 Open de app één keer met netwerk; daarna start ze ook zonder bereik.
+
+## Contacten
+Voeg je vaste gesprekspartners toe met een korte code (bijvoorbeeld `Jan Peeters = JP`). Wie je als
+aanwezig aanvinkt, verschijnt als snelknop bij het invoerveld: één tik zet de code voor je vaststelling,
+zodat in het verslag zichtbaar blijft wie wat gezegd heeft. De lijst staat alleen op je eigen toestel.
 
 ## Techniek
 Eén HTML-bestand, geen afhankelijkheden, geen server. Punten in `localStorage`, foto's in `IndexedDB`,
