@@ -84,6 +84,7 @@
   .spreker-knop{border:1px solid var(--line);background:var(--surface-2);color:var(--ink-soft);
     font:12px ui-monospace,Menlo,monospace;padding:5px 9px;border-radius:7px;cursor:pointer}
   .spreker-knop.actief{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+  .zone-btn.met-plan{border-color:var(--zone);font-weight:650}
   .zones{display:flex;gap:6px;overflow-x:auto;padding:10px 14px;background:var(--surface);
     border-bottom:1px solid var(--line);position:sticky;top:44px;z-index:5;-webkit-overflow-scrolling:touch}
   .zones::-webkit-scrollbar{display:none}
@@ -342,7 +343,7 @@
 <script>
 const ZONES=["N3","N4","N5","DAK","KAPEL","KELDER","STELLING","BUITEN"];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v23";
+const VERSIE="v24";
 let staat={datum:new Date().toISOString().slice(0,10),weer:"",bezetting:"",zone:"N3",punten:[]};
 let wachtendeFoto=null;
 let wachtendeBijlage=null;
@@ -477,9 +478,17 @@ function tekenZones(){
   const nav=document.getElementById("zones");nav.innerHTML="";
   ZONES.forEach(z=>{
     const b=document.createElement("button");
-    b.className="zone-btn";b.textContent=z;b.type="button";
+    const heeftPlan=planLijst.includes(z);
+    b.className="zone-btn"+(heeftPlan?" met-plan":"");
+    // Is er een plan voor deze zone, dan opent de knop het meteen. Dat is wat je verwacht als je
+    // op N3 drukt: het plan van niveau 3 zien, niet alleen een zone instellen.
+    b.textContent=heeftPlan?("📍 "+z):z;
+    b.type="button";
     b.setAttribute("aria-pressed",String(z===staat.zone));
-    b.onclick=()=>{staat.zone=z;bewaarStaat();tekenZones();};
+    b.onclick=()=>{
+      staat.zone=z;bewaarStaat();tekenZones();
+      if(planLijst.includes(z)) openPlan(z);
+    };
     nav.appendChild(b);
   });
 }
@@ -1505,6 +1514,7 @@ document.getElementById("planbestand").onchange=async e=>{
   if(!data||!data.beeld||!data.zone||!data.breedte){melding("Dit bestand mist plan of zone");return;}
   if(!await zetPlan(data.zone,data)){melding("Plan kon niet bewaard worden");return;}
   planLijst=await planZones();
+  tekenZones();
   await toonPlan(data.zone);
   document.getElementById("pl-plan").textContent=planLijst.length>1?("Plan: "+data.zone):"Plan";
   melding("Plan "+data.zone+" geladen — "+((data.lokalen||[]).length)+" lokalen");
@@ -1732,6 +1742,7 @@ opendb().then(async d=>{
   }else{
     planLijst=await planZones();
     archief=await haalDagen();
+    tekenZones();          // nu pas is bekend welke zones een plan hebben
     if(vorigeDag){
       // Alleen wegschrijven als die dag er nog niet in zit: een gearchiveerde dag kan intussen
       // afvinkingen bevatten, en die mogen niet overschreven worden door de oude localStorage.
