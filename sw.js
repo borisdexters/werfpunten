@@ -1,10 +1,23 @@
 /* Werfpunten service worker — alles wat de app nodig heeft staat in de cache,
    zodat ze op de werf ook zonder netwerk opent. */
-const CACHE = "werfpunten-v25";
+const CACHE = "werfpunten-v26";
 const BESTANDEN = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(BESTANDEN)).then(() => self.skipWaiting()));
+  // cache:"reload" is hier niet optioneel: zonder dat haalt addAll de bestanden uit de gewone
+  // browsercache, en die mag ze van GitHub Pages tien minuten oud serveren. Dan stopt een
+  // gloednieuwe service worker de vórige versie in zijn cache en blijft de app hangen, hoe vaak
+  // je ze ook opnieuw opent.
+  e.waitUntil(
+    caches.open(CACHE)
+      .then(c => Promise.all(BESTANDEN.map(u =>
+        fetch(new Request(u, {cache: "reload"})).then(r => {
+          if (!r.ok) throw new Error("kon " + u + " niet ophalen");
+          return c.put(u, r);
+        })
+      )))
+      .then(() => self.skipWaiting())
+  );
 });
 
 self.addEventListener("activate", e => {
