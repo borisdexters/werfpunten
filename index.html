@@ -342,7 +342,7 @@
 <script>
 const ZONES=["N3","N4","N5","DAK","KAPEL","KELDER","STELLING","BUITEN"];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v18";
+const VERSIE="v23";
 let staat={datum:new Date().toISOString().slice(0,10),weer:"",bezetting:"",zone:"N3",punten:[]};
 let wachtendeFoto=null;
 let wachtendeBijlage=null;
@@ -354,11 +354,13 @@ function opendb(){return new Promise(res=>{
   const af=v=>{if(!klaar){klaar=true;res(v)}};
   setTimeout(()=>af(null),1500);           // nooit blijven hangen
   try{
-    const q=indexedDB.open("werfpunten",2);
+    const q=indexedDB.open("werfpunten",3);
     q.onupgradeneeded=()=>{
-      // versie 2 voegt de plannen toe; bestaande toestellen houden hun foto's
+      // versie 2 voegt de plannen toe, versie 3 het archief per dag; bestaande toestellen
+      // houden hun foto's en plannen
       try{if(!q.result.objectStoreNames.contains("fotos"))q.result.createObjectStore("fotos")}catch(e){}
       try{if(!q.result.objectStoreNames.contains("plannen"))q.result.createObjectStore("plannen")}catch(e){}
+      try{if(!q.result.objectStoreNames.contains("dagen"))q.result.createObjectStore("dagen")}catch(e){}
     };
     q.onsuccess=()=>{db=q.result;af(db)};
     q.onerror=()=>af(null);
@@ -447,9 +449,11 @@ async function beheerContacten(){
 document.getElementById("contactbeheer").onclick=beheerContacten;
 
 function bewaarStaat(){try{localStorage.setItem(SLEUTEL,JSON.stringify(staat))}catch(e){}}
+let vorigeDag=null;   // wat er stond toen de app voor het laatst gebruikt werd, op een andere datum
 function laadStaat(){
   try{const r=localStorage.getItem(SLEUTEL);if(r){const s=JSON.parse(r);
-    if(s.datum===staat.datum)staat=s;}}catch(e){}
+    if(s.datum===staat.datum)staat=s;
+    else if((s.punten||[]).length)vorigeDag=s;}}catch(e){}
   // opschonen van punten uit een eerdere versie die "(enkel foto)" als tekst kregen
   let gewijzigd=false;
   (staat.punten||[]).forEach(p=>{ if(p.tekst==="(enkel foto)"){p.tekst="";gewijzigd=true;} });
@@ -776,7 +780,8 @@ let planLijst=[];        // welke plannen op dit toestel staan: [{zone, ...}]
 let plan=null;           // het plan dat nu open staat
 let planBeeld=null;      // het ingeladen beeld
 let wachtendePlek=null;  // de plek die geldt: blijft staan tot je hem wist of verlegt
-const pl={schaal:1,dx:0,dy:0,pin:null,wijzers:new Map(),start:null,knijp:null,nummeren:false};
+let archief=[];          // vorige vergaderdagen, om te tonen wat er nog openstaat
+const pl={schaal:1,dx:0,dy:0,pin:null,wijzers:new Map(),start:null,knijp:null,nummeren:false,gekozen:null};
 
 function zetPlan(zone,data){return new Promise(res=>{
   if(!db)return res(false);
@@ -788,6 +793,21 @@ function haalPlan(zone){return new Promise(res=>{
   const q=db.transaction("plannen","readonly").objectStore("plannen").get(zone);
   q.onsuccess=()=>res(q.result||null);q.onerror=()=>res(null);
 });}
+/* Het archief: één record per vergaderdag. Zonder dit verdwijnt de vorige vergadering zodra de
+   datum omslaat, en dan valt er niets te tonen van wat er nog openstaat. Dat is precies wat een
+   architect wil zien als hij een ruimte binnenkomt. */
+function zetDag(datum,data){return new Promise(res=>{
+  if(!db)return res(false);
+  const t=db.transaction("dagen","readwrite");t.objectStore("dagen").put(data,datum);
+  t.oncomplete=()=>res(true);t.onerror=()=>res(false);
+});}
+function haalDagen(){return new Promise(res=>{
+  if(!db)return res([]);
+  const st=db.transaction("dagen","readonly").objectStore("dagen");
+  const q=st.getAll();
+  q.onsuccess=()=>res(q.result||[]);q.onerror=()=>res([]);
+});}
+
 function planZones(){return new Promise(res=>{
   if(!db)return res([]);
   const q=db.transaction("plannen","readonly").objectStore("plannen").getAllKeys();
@@ -838,6 +858,47 @@ async function nummerHier(x,y){
   melding(nieuw.nr+" toegevoegd — Benoem past het aan");
 }
 
+/* De punten die op dit plan thuishoren, in de volgorde waarin ze genoteerd zijn — dezelfde
+   nummering als plan_verslag.py op de A4-bijlage zet. */
+function puntenOpDitPlan(){
+  if(!plan)return [];
+  return staat.punten.filter(p=>p.plek&&p.plek.zone===plan.zone);
+}
+
+/* Wat er van vorige vergaderingen op dit plan staat. Alleen wat nog openstaat is interessant:
+   afgehandelde punten hoeven de kaart niet vol te zetten, maar blijven wel opvraagbaar. */
+/* Hoelang staat dit al open? Gerekend in hele dagen tussen de vaststelling en vandaag. */
+function dagenOpen(p){
+  const a=Date.parse(p.datum+"T00:00:00"), b=Date.parse(staat.datum+"T00:00:00");
+  if(isNaN(a)||isNaN(b))return 0;
+  return Math.max(0,Math.round((b-a)/86400000));
+}
+
+/* De kleurtrap voor ouderdom. Drie banden, niet meer: een week, een maand, langer. Fijner
+   verdelen zou schijnnauwkeurigheid geven — je leest een kaart met een oogopslag, niet met een
+   meetlat. Kleur is hier de eerste indruk; het getal in de cirkel is de eigenlijke informatie,
+   want kleur alleen leest niet in fel zonlicht en niet voor wie kleurenblind is. */
+const OUDERDOM=[
+  {tot:7,   rand:"#c98a10", tekst:"#8a5c05"},   // deze week nog
+  {tot:30,  rand:"#d97406", tekst:"#a2560a"},   // loopt op
+  {tot:1e9, rand:"#a8341c", tekst:"#7d2413"}    // ouder dan een maand
+];
+function ouderdomskleur(dagen){
+  return OUDERDOM.find(o=>dagen<=o.tot)||OUDERDOM[OUDERDOM.length-1];
+}
+
+function oudePuntenOpDitPlan(){
+  if(!plan)return [];
+  const uit=[];
+  archief.forEach(dag=>{
+    (dag.punten||[]).forEach(p=>{
+      if(p.plek&&p.plek.zone===plan.zone&&p.status!=="klaar")
+        uit.push({...p,datum:dag.datum});
+    });
+  });
+  return uit;
+}
+
 function planTeken(){
   const c=document.getElementById("plancanvas");
   const dpr=Math.min(devicePixelRatio||1,2);
@@ -858,6 +919,53 @@ function planTeken(){
       x.beginPath();x.arc(lx,ly,4,0,7);x.fill();
     });
   }
+
+  /* De punten van vandaag, op de kaart waar ze horen. Dit maakt van het plan een overzicht in
+     plaats van een invoerveld: je ziet in één blik waar je geweest bent en waar niets staat.
+     Genummerd zoals in de verslagbijlage, zodat het plan op je scherm en het blad in het dossier
+     hetzelfde zeggen. */
+  /* Eerst wat er nog openstaat van vorige keren, onder de punten van vandaag. Hol en amber:
+     zichtbaar genoeg om op te vallen, rustig genoeg om niet met vandaag te verwarren. */
+  oudePuntenOpDitPlan().forEach(p=>{
+    const gx=pl.dx+p.plek.x/100*plan.breedte*pl.schaal;
+    const gy=pl.dy+p.plek.y/100*plan.hoogte*pl.schaal;
+    const gekozen=pl.gekozen===p.id;
+    const d=dagenOpen(p), kl=ouderdomskleur(d);
+    // hoe ouder, hoe zwaarder de rand: ook zonder kleur te zien valt het verschil op
+    const straal=gekozen?13:10, dikte=(d>30?3.5:d>7?2.8:2.2)*(gekozen?1.3:1);
+    x.beginPath();x.arc(gx,gy,straal,0,7);
+    x.fillStyle="rgba(255,255,255,.94)";x.fill();
+    x.lineWidth=dikte;x.strokeStyle=kl.rand;x.stroke();
+    x.fillStyle=kl.tekst;
+    x.textAlign="center";x.textBaseline="middle";
+    // het aantal dagen als de cirkel het draagt, anders een uitroepteken
+    const label=d>99?"99+":String(d);
+    if(straal>=10&&label.length<=3){
+      x.font="600 "+(label.length>2?9:11)+"px ui-monospace,Menlo,monospace";
+      x.fillText(label,gx,gy+0.5);
+    }else{
+      x.font="600 11px ui-monospace,Menlo,monospace";
+      x.fillText("!",gx,gy+0.5);
+    }
+  });
+  x.textAlign="start";x.textBaseline="alphabetic";
+
+  const mijne=puntenOpDitPlan();
+  mijne.forEach((p,i)=>{
+    const gx=pl.dx+p.plek.x/100*plan.breedte*pl.schaal;
+    const gy=pl.dy+p.plek.y/100*plan.hoogte*pl.schaal;
+    const gekozen=pl.gekozen===p.id;
+    x.beginPath();x.arc(gx,gy,gekozen?12:9,0,7);
+    x.fillStyle=gekozen?"#1b4f8a":"rgba(27,79,138,.86)";
+    x.fill();
+    x.lineWidth=2;x.strokeStyle="#fff";x.stroke();
+    x.fillStyle="#fff";
+    x.font="600 "+(gekozen?13:11)+"px ui-monospace,Menlo,monospace";
+    x.textAlign="center";x.textBaseline="middle";
+    x.fillText(String(i+1),gx,gy+0.5);
+  });
+  x.textAlign="start";x.textBaseline="alphabetic";
+
   if(!pl.pin)return;
   const px=pl.dx+pl.pin.x/100*plan.breedte*pl.schaal;
   const py=pl.dy+pl.pin.y/100*plan.hoogte*pl.schaal;
@@ -956,6 +1064,41 @@ function tekenBuren(){
   });
 }
 
+/* Welk bestaand punt ligt onder deze tik? In schermpixels gemeten, want een vingertop is
+   even groot ongeacht hoe ver je ingezoomd bent. */
+function puntGeraakt(sx,sy){
+  if(!plan)return null;
+  let best=null,bd=22;
+  puntenOpDitPlan().concat(oudePuntenOpDitPlan()).forEach(p=>{
+    const gx=pl.dx+p.plek.x/100*plan.breedte*pl.schaal;
+    const gy=pl.dy+p.plek.y/100*plan.hoogte*pl.schaal;
+    const d=Math.hypot(gx-sx,gy-sy);
+    if(d<bd){bd=d;best=p;}
+  });
+  return best;
+}
+
+function veilig(t){return String(t).replace(/[<>&]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;"}[c]));}
+function datumKort(d){
+  const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(d||"");
+  return m?(+m[3]+"/"+ +m[2]):(d||"vorige keer");
+}
+
+/* Een punt van vorige keer afvinken. Het verdwijnt van de kaart maar niet uit het archief:
+   dat je het opgelost hebt en wanneer, is zelf een vaststelling. */
+async function merkAfgehandeld(oud){
+  const dag=archief.find(d=>d.datum===oud.datum);
+  if(!dag)return;
+  const p=(dag.punten||[]).find(x=>x.id===oud.id);
+  if(!p)return;
+  p.status="klaar";
+  p.afgehandeld=staat.datum;
+  await zetDag(dag.datum,dag);
+  pl.gekozen=null;
+  planTeken();planVoet();
+  melding("Afgevinkt — stond open sinds "+datumKort(oud.datum));
+}
+
 function planVoet(){
   const voet=document.getElementById("pl-voet");
   const el=document.getElementById("pl-lokaal");
@@ -963,6 +1106,36 @@ function planVoet(){
   document.getElementById("pl-invoer").hidden=!(plan&&pl.pin&&!pl.nummeren);
   tekenBuren();
   if(!plan)return;
+  if(pl.gekozen){
+    const p=staat.punten.find(x=>x.id===pl.gekozen);
+    const oud=p?null:oudePuntenOpDitPlan().find(x=>x.id===pl.gekozen);
+    if(p||oud){
+      document.getElementById("pl-invoer").hidden=true;
+      const box=document.getElementById("pl-buren"); box.innerHTML="";
+      const t=document.getElementById("pl-teller");
+      if(p){
+        el.innerHTML="<b>punt "+(puntenOpDitPlan().indexOf(p)+1)+" · "+(p.plek.lokaal||"")+"</b><span>"+
+          veilig(p.tekst||"(geen notitie)")+" — tik naast het punt om verder te gaan</span>";
+        if(t) t.textContent=p.tijd;
+      }else{
+        // een punt van een vorige vergadering: het enige wat je hier wil doen is zeggen of het
+        // opgelost is. Dat is de reden dat het op de kaart staat.
+        el.innerHTML="<b>"+datumKort(oud.datum)+" · "+(oud.plek.lokaal||"")+"</b><span>"+
+          veilig(oud.tekst||"(geen notitie)")+"</span>";
+        if(t) t.textContent=dagenOpen(oud)+" dagen open";
+        const k=document.createElement("button");
+        k.type="button";k.className="actief";k.textContent="✓ opgelost";
+        k.onclick=()=>merkAfgehandeld(oud);
+        box.appendChild(k);
+        const n=document.createElement("button");
+        n.type="button";n.textContent="blijft open";
+        n.onclick=()=>{pl.gekozen=null;planTeken();planVoet();};
+        box.appendChild(n);
+      }
+      return;
+    }
+    pl.gekozen=null;
+  }
   const teller=document.getElementById("pl-teller");
   if(teller) teller.textContent=staat.punten.length+" punt"+(staat.punten.length===1?"":"en");
   if(pl.nummeren&&!pl.pin){
@@ -1098,8 +1271,14 @@ function planBedrading(){
       if(x>=0&&x<=100&&y>=0&&y<=100){
         if(pl.nummeren){ nummerHier(x,y); }
         else{
-          pl.pin={x,y,lokaal:lokaalBij(x,y)};
-          planTeken();planVoet();
+          // Tik je op een punt dat er al staat, dan wil je dát bekijken, geen nieuw punt ernaast.
+          const raak=puntGeraakt(pl.start.x,pl.start.y);
+          if(raak){ pl.gekozen=raak.id; planTeken(); planVoet(); }
+          else{
+            pl.gekozen=null;
+            pl.pin={x,y,lokaal:lokaalBij(x,y)};
+            planTeken();planVoet();
+          }
         }
       }
     }
@@ -1419,8 +1598,17 @@ document.getElementById("tk-klaar").onclick=()=>{
 };
 document.getElementById("schetsknop").onclick=()=>openTekenscherm(null,"nieuw");
 
+/* Hoeveelste keer komt dit punt in een verslag? Elke gearchiveerde vergaderdag ná de dag waarop
+   het genoteerd werd telt mee, en vandaag ook. Niet in de app bijgehouden maar geteld uit het
+   archief: dan kan het niet uit de pas lopen met wat er werkelijk in de verslagen stond. */
+function vermelding(p){
+  const later=archief.filter(d=>d.datum>p.datum).length;
+  return later+2;   // de eerste vermelding + de tussenliggende dagen + vandaag
+}
+
 function maakTekst(){
   const r=[];
+  r.push("DATUM: "+staat.datum);
   if(staat.weer.trim())r.push("W: "+staat.weer.trim());
   if(staat.bezetting.trim())r.push("BZ: "+staat.bezetting.trim());
   const aw=(staat.aanwezig||[]).map(code=>{
@@ -1440,6 +1628,27 @@ function maakTekst(){
     if(p.bijlage && !p.bijlage.beeld) l+=" ["+p.bijlage.naam+"]";
     r.push(l);
   });
+
+  /* Wat er van vorige keren nog openstaat, hoort in dit verslag herhaald te worden. Wie een
+     vaststelling één keer noteert en daarna zwijgt, verliest ze: de aannemer kan aanvoeren dat
+     ze opgelost was of nooit meer ter sprake kwam. Een herhaling met de datum erbij is het
+     tegendeel — ze toont hoelang iets al loopt. */
+  const open=[];
+  archief.forEach(dag=>{
+    (dag.punten||[]).forEach(p=>{
+      if(p.status!=="klaar") open.push({...p,datum:dag.datum});
+    });
+  });
+  if(open.length){
+    open.sort((a,b)=>(a.datum+a.zone).localeCompare(b.datum+b.zone));
+    r.push("-");
+    r.push("OPEN");
+    open.forEach(p=>{
+      const plek = p.plek ? "@"+(p.plek.lokaal?p.plek.lokaal+" ":"")+p.plek.x+","+p.plek.y+" " : "";
+      r.push("H "+plek+(p.tekst||"[geen notitie]")+
+             " SINDS "+p.datum+" x"+vermelding(p)+(p.zone?" ["+p.zone+"]":""));
+    });
+  }
   return r.join("\n");
 }
 
@@ -1522,6 +1731,17 @@ opendb().then(async d=>{
     p.disabled=true;p.textContent="📍 n.v.t.";p.title="Planopslag niet beschikbaar in deze weergave";
   }else{
     planLijst=await planZones();
+    archief=await haalDagen();
+    if(vorigeDag){
+      // Alleen wegschrijven als die dag er nog niet in zit: een gearchiveerde dag kan intussen
+      // afvinkingen bevatten, en die mogen niet overschreven worden door de oude localStorage.
+      if(!archief.some(d=>d.datum===vorigeDag.datum)){
+        await zetDag(vorigeDag.datum,vorigeDag);
+        archief=await haalDagen();
+      }
+      vorigeDag=null;
+      bewaarStaat();   // de verouderde dag uit localStorage halen, anders komt hij terug
+    }
   }
   tekenLijst();
   // Bij een verse dag begint een rondgang met de vraag waar je staat. Hervat je een dag waarin
