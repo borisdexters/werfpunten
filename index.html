@@ -263,7 +263,9 @@
     </div>
     <input type="file" id="foto" accept="image/*" capture="environment">
     <input type="file" id="doc" accept="image/*,application/pdf">
-    <input type="file" id="planbestand" accept=".werfplan,application/json">
+    <!-- geen accept-filter: iOS grijst bestanden uit waarvan het de soort niet herkent,
+         en dan kun je het plan niet eens aanwijzen -->
+    <input type="file" id="planbestand">
   </div>
 </div>
 
@@ -343,7 +345,7 @@
 <script>
 const ZONES=["N3","N4","N5","DAK","KAPEL","KELDER","STELLING","BUITEN"];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v24";
+const VERSIE="v25";
 let staat={datum:new Date().toISOString().slice(0,10),weer:"",bezetting:"",zone:"N3",punten:[]};
 let wachtendeFoto=null;
 let wachtendeBijlage=null;
@@ -1509,10 +1511,19 @@ function plaatsKort(p){return Math.round(p.x)+","+Math.round(p.y);}
 document.getElementById("planbestand").onchange=async e=>{
   const f=e.target.files[0]; e.target.value="";
   if(!f)return;
+  // Meldingen met het bestand erbij: gaat het mis, dan wil je op de werf kunnen zien wát er
+  // mis is zonder een computer te moeten openen.
+  const kort=(f.name||"bestand").slice(0,22);
+  let tekst;
+  try{tekst=await f.text();}
+  catch(err){melding("Kan "+kort+" niet lezen ("+(err.name||"fout")+")");return;}
+  if(!tekst||!tekst.trim()){melding(kort+" is leeg ("+Math.round(f.size/1000)+" kB)");return;}
   let data;
-  try{data=JSON.parse(await f.text());}catch(err){melding("Geen leesbaar .werfplan-bestand");return;}
-  if(!data||!data.beeld||!data.zone||!data.breedte){melding("Dit bestand mist plan of zone");return;}
-  if(!await zetPlan(data.zone,data)){melding("Plan kon niet bewaard worden");return;}
+  try{data=JSON.parse(tekst);}
+  catch(err){melding(kort+" is geen plan — begint met “"+tekst.trim().slice(0,12)+"…”");return;}
+  if(!data||!data.zone){melding(kort+": geen zone in het bestand");return;}
+  if(!data.beeld||!data.breedte){melding(kort+": geen tekening in het bestand");return;}
+  if(!await zetPlan(data.zone,data)){melding("Opslag weigert — ruimte vol of privémodus?");return;}
   planLijst=await planZones();
   tekenZones();
   await toonPlan(data.zone);
