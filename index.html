@@ -168,6 +168,15 @@
   /* het planscherm heeft vijf knoppen; op 375px moeten die krapper om te passen */
   #plandlg .teken-balk{gap:6px;padding-left:8px;padding-right:8px;padding-top:calc(7px + env(safe-area-inset-top,0px));padding-bottom:7px}
   #plandlg .teken-balk button{font-size:13px;padding:9px 9px;white-space:nowrap}
+  /* Een plan klaarmaken en lokalen nummeren is desktopwerk — op een werf ben je daar een uur
+     mee bezig. Op een smal scherm staan die knoppen daarom achter ⋯: bereikbaar, niet opvallend.
+     Vanaf 700px (iPad, Mac) staan ze gewoon in de balk en verdwijnt de ⋯. */
+  #plandlg .pl-klaarmaak{display:none}
+  #plandlg.klaarmaken .pl-klaarmaak{display:inline-block}
+  @media (min-width:700px){
+    #plandlg .pl-klaarmaak{display:inline-block}
+    #pl-meer{display:none}
+  }
   .teken-balk .tk-klaar{margin-left:auto;background:var(--accent);border-color:var(--accent);color:#fff;font-weight:650}
   .tk-kleuren{display:flex;gap:6px}
   .tk-kleur{width:26px;height:26px;border-radius:50%;border:2px solid #48484a;padding:0;cursor:pointer}
@@ -185,7 +194,9 @@
     gap:14px;color:#c7cbd0;font-size:14px;text-align:center;padding:24px;line-height:1.6}
   .plan-leeg button{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:650}
   .plan-voet{position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column;gap:8px;
-    padding:10px 12px calc(10px + var(--safe-b));background:rgba(28,28,30,.96);color:#f2f2f7;font-size:13px}
+    padding:10px 12px calc(10px + var(--safe-b));color:#f2f2f7;font-size:13px;
+    background:rgba(24,24,26,.72);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    border-top:1px solid rgba(255,255,255,.10)}
   .plan-kop{display:flex;align-items:center;gap:10px}
   .plan-teller{flex:0 0 auto;font:11px ui-monospace,Menlo,monospace;color:#8e949b}
   .plan-vouw{flex:0 0 auto;background:none!important;border:none!important;color:#8e949b!important;
@@ -203,11 +214,19 @@
     font:12px ui-monospace,Menlo,monospace;padding:7px 10px}
   .plan-buren button.actief{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:650}
   .plan-invoer{display:flex;flex-direction:column;gap:7px}
-  .plan-invoer textarea{width:100%;background:#1c1c1e;color:#f2f2f7;border:1px solid #3a3a3c;
-    border-radius:9px;padding:9px 10px;font:15px/1.35 inherit;resize:none}
+  .plan-invoer textarea{width:100%;background:rgba(28,28,30,.85);color:#f2f2f7;
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:9px;padding:9px 10px;font:15px/1.35 -apple-system,BlinkMacSystemFont,sans-serif;
+    resize:none;
+    /* Vast en compact: twee regels. Een veld dat meegroeit klinkt handig maar duwt de kaart weg
+       op het moment dat je typt — precies wanneer je wil blijven zien waar je staat. Langere
+       tekst scrollt gewoon binnen het veld. De algemene textarea-regel legt 64px op, vandaar de
+       eigen min-height. */
+    height:56px;min-height:56px}
   .plan-invoer textarea::placeholder{color:#7c828a}
   .plan-knoppen{display:flex;gap:7px}
-  .plan-knoppen button{background:#2c2c2e;color:#f2f2f7;border:1px solid #3a3a3c;font-size:14px;padding:10px 12px}
+  .plan-knoppen button{background:rgba(44,44,46,.85);color:#f2f2f7;border:1px solid rgba(255,255,255,.18);
+    font-size:14px;padding:10px 12px}
   .plan-knoppen .tk-klaar{flex:1;margin-left:0}
   .plan-knoppen button.heeft{border-color:var(--ok);color:var(--ok)}
   .plan-lokaal{flex:1;min-width:0;font:13px ui-monospace,Menlo,monospace;line-height:1.35;cursor:pointer}
@@ -297,8 +316,9 @@
   <div class="teken-balk">
     <button type="button" id="pl-plan">Plan</button>
     <button type="button" id="pl-wis">Wis pin</button>
-    <button type="button" id="pl-nummer">Nummer</button>
-    <button type="button" id="pl-bewaar">Bewaar</button>
+    <button type="button" id="pl-meer" title="Plan klaarmaken">⋯</button>
+    <button type="button" id="pl-nummer" class="pl-klaarmaak">Nummer</button>
+    <button type="button" id="pl-bewaar" class="pl-klaarmaak">Bewaar</button>
     <button type="button" id="pl-klaar" class="tk-klaar">Lijst</button>
   </div>
   <div class="plan-vlak">
@@ -345,7 +365,7 @@
 <script>
 const ZONES=["N3","N4","N5","DAK","KAPEL","KELDER","STELLING","BUITEN"];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v26";
+const VERSIE="v28";
 let staat={datum:new Date().toISOString().slice(0,10),weer:"",bezetting:"",zone:"N3",punten:[]};
 let wachtendeFoto=null;
 let wachtendeBijlage=null;
@@ -1110,6 +1130,17 @@ async function merkAfgehandeld(oud){
   melding("Afgevinkt — stond open sinds "+datumKort(oud.datum));
 }
 
+/* Tik je onderaan de kaart, dan valt je pin achter de invoer. Dan schuift het plan net genoeg
+   omhoog om hem vrij te houden — niet meer, want elke onnodige verschuiving is verwarrend. */
+function houdPinVrij(){
+  const c=document.getElementById("plancanvas"), voet=document.getElementById("pl-voet");
+  if(!plan||!pl.pin||voet.hidden)return;
+  const b=c.getBoundingClientRect(), v=voet.getBoundingClientRect();
+  const py=pl.dy+pl.pin.y/100*plan.hoogte*pl.schaal;
+  const grens=(v.top-b.top)-26;
+  if(py>grens){ pl.dy-=(py-grens); planTeken(); }
+}
+
 function planVoet(){
   const voet=document.getElementById("pl-voet");
   const el=document.getElementById("pl-lokaal");
@@ -1288,7 +1319,7 @@ function planBedrading(){
           else{
             pl.gekozen=null;
             pl.pin={x,y,lokaal:lokaalBij(x,y)};
-            planTeken();planVoet();
+            planTeken();planVoet();houdPinVrij();
           }
         }
       }
@@ -1336,6 +1367,9 @@ function zetVouw(klein){
   try{localStorage.setItem(VOUWSLEUTEL,klein?"1":"0")}catch(e){}
   planTeken();
 }
+document.getElementById("pl-meer").onclick=()=>
+  document.getElementById("plandlg").classList.toggle("klaarmaken");
+
 document.getElementById("pl-vouw").onclick=()=>
   zetVouw(!document.getElementById("pl-voet").classList.contains("klein"));
 
