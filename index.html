@@ -126,7 +126,10 @@
     width:100%;min-height:64px;resize:none;border:1px solid var(--line);border-radius:var(--radius);
     padding:10px 11px;font:16px/1.4 inherit;background:var(--surface);color:var(--ink)}
   textarea::placeholder{color:var(--ink-faint)}
-  .rij{display:flex;gap:8px}
+  .onaf{font-size:11.5px;font-weight:650;color:var(--accent);border:1px solid var(--accent);
+    border-radius:5px;padding:1px 5px}
+  .rij{display:flex;gap:8px;flex-wrap:wrap}
+  .rij .bewaar{flex:1 0 100%}
   button{font:inherit;cursor:pointer;border-radius:var(--radius);border:1px solid var(--line);
     background:var(--surface-2);color:var(--ink);padding:13px 14px;font-size:15px}
   .fotoknop,.docknop{flex:0 0 auto;min-width:80px;display:flex;align-items:center;justify-content:center;gap:5px;font-size:14px}
@@ -140,8 +143,12 @@
   .bewaar:disabled{opacity:.4}
   input[type=file]{display:none}
 
-  .acties{display:flex;gap:8px;padding:4px 14px 16px}
+  .acties{display:flex;gap:8px;padding:4px 14px 16px;flex-wrap:wrap}
   .acties button{flex:1;font-size:14px;padding:11px}
+  /* Een toast fadet weg; het grootste risico van deze app mag niet met hem meeverdwijnen.
+     Staat er iets te wachten, dan draagt de knop het tot je hem indrukt. */
+  #backup.wacht{border-color:var(--accent);color:var(--accent);font-weight:650}
+  #backup.wacht::before{content:"● ";font-size:10px;vertical-align:2px}
   .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + var(--safe-b));
     background:var(--ink);color:var(--ground);padding:10px 16px;border-radius:8px;font-size:14px;
     opacity:0;pointer-events:none;transition:opacity .2s;z-index:9}
@@ -162,6 +169,62 @@
   #invoerdlg .inv-ok{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:650}
   #tekendlg{width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;margin:0;background:#111;border-radius:0}
   #tekendlg::backdrop{background:#000}
+  /* Snelvastleggen: alles wat niet het beeld of de sluiter is, moet wijken. Geen tussenvraag,
+     geen bevestiging — het gezelschap staat al bij het volgende euvel. */
+  /* De keet: één punt tegelijk, groot genoeg om samen naar te kijken. */
+  #keetdlg{width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;margin:0;background:var(--ground);
+    border-radius:0;display:flex;flex-direction:column}
+  #keetdlg::backdrop{background:#000a}
+  .keet-vlak{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:14px}
+  #keet-foto{width:100%;max-height:38dvh;object-fit:contain;background:#111;border-radius:var(--radius);
+    cursor:crosshair}
+  .keet-voortgang{margin-left:auto;margin-right:auto;font:600 14px ui-monospace,Menlo,monospace;color:#f2f2f7}
+  #keet-tekst{width:100%;border:1px solid var(--line);border-radius:var(--radius);padding:11px;
+    font:16px/1.45 -apple-system,system-ui,sans-serif;background:var(--surface);color:var(--ink);resize:vertical}
+  .keet-blok{display:flex;flex-direction:column;gap:7px}
+  .keet-label{font-size:12.5px;font-weight:650;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em}
+  .keet-knoppen{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+  .keet-knoppen button{font-size:14px;padding:9px 12px}
+  .keet-knoppen select{font-size:15px;padding:9px 10px;border:1px solid var(--line);
+    border-radius:var(--radius);background:var(--surface);color:var(--ink);flex:1;min-width:0}
+  #keet-urgent.actief{background:#b3261e;border-color:#b3261e;color:#fff}
+  .keet-knoppen button.actief{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:650}
+  #keet-verbod.actief{background:#b3261e;border-color:#b3261e;color:#fff}
+  .keet-uitleg{font-size:12.5px;color:var(--ink-soft);font-style:italic;flex-basis:100%}
+  .keet-vouw{align-self:flex-start;font-size:12.5px;font-weight:650;color:var(--ink-soft);
+    background:none;border:none;padding:0;text-transform:uppercase;letter-spacing:.04em}
+  .keet-woorden{display:flex;flex-direction:column;gap:6px}
+  .keet-woorden[hidden]{display:none}
+  .keet-soortkop{font-size:11.5px;font-weight:650;color:var(--ink-faint);text-transform:uppercase;
+    letter-spacing:.05em;margin-top:4px;background:none;border:none;padding:2px 0;
+    align-self:flex-start;text-align:left}
+  .keet-soortkop.actief{color:var(--accent)}
+  .keet-woordrij{display:flex;flex-wrap:wrap;gap:5px}
+  .keet-woordrij button{font-size:13px;padding:6px 10px;border-radius:14px}
+  .keet-woordrij button.actief{background:var(--zone);border-color:var(--zone);color:#fff;font-weight:650}
+  .keet-gevolg{font-size:12.5px;color:var(--ink-soft);font-style:italic;margin-top:-6px}
+  .keet-plek{font-size:13px;color:var(--ink-soft)}
+  .keet-plek button{font-size:13px;padding:6px 10px}
+  #sneldlg{width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;margin:0;background:#000;
+    border-radius:0;overflow:hidden}
+  #sneldlg::backdrop{background:#000}
+  #snelbeeld{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
+  .snel-kop{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;gap:10px;
+    padding:calc(12px + env(safe-area-inset-top,0px)) 14px 12px;color:#fff;z-index:2;
+    background:linear-gradient(#000c,#0000)}
+  .snel-kop button{background:#ffffff22;color:#fff;border:1px solid #ffffff44;font-size:14px;padding:9px 13px}
+  .snel-teller{margin-left:auto;font:600 15px ui-monospace,Menlo,monospace;color:#fff}
+  .snel-voet{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;
+    justify-content:center;gap:22px;padding:20px 14px calc(24px + env(safe-area-inset-bottom,0px));
+    z-index:2;background:linear-gradient(#0000,#000c)}
+  .snel-sluiter{width:78px;height:78px;border-radius:50%;background:#fff;border:5px solid #ffffff66;
+    padding:0;flex:none}
+  .snel-sluiter:active{transform:scale(.93)}
+  .snel-flits{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:3}
+  .snel-flits.aan{animation:snelflits .22s ease-out}
+  @keyframes snelflits{from{opacity:.85}to{opacity:0}}
+  .snel-mislukt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;gap:14px;color:#fff;padding:24px;text-align:center;font-size:15px;z-index:2}
   .teken-balk{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#1c1c1e;
     padding-top:calc(10px + env(safe-area-inset-top,0px))}
   .teken-balk button{background:#2c2c2e;color:#f2f2f7;border:1px solid #3a3a3c;font-size:14px;padding:9px 12px}
@@ -189,7 +252,10 @@
   .plan-vlak{position:relative;height:calc(100dvh - 56px);background:#111;overflow:hidden}
   #plancanvas{display:block;width:100%;height:100%;touch-action:none}
   /* display:flex zou het hidden-attribuut overstemmen */
-  .plan-leeg[hidden],.plan-voet[hidden]{display:none}
+  /* `hidden` verliest het van een klasse die display zet, dus elk van deze drie moet er staan.
+     .plan-invoer ontbrak hier: het invoerveld bleef daardoor altijd zichtbaar, ook zonder pin —
+     terwijl "Punt bewaren" dan toch weigert met "Tik eerst waar het is". */
+  .plan-leeg[hidden],.plan-voet[hidden],.plan-invoer[hidden]{display:none}
   .plan-leeg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
     gap:14px;color:#c7cbd0;font-size:14px;text-align:center;padding:24px;line-height:1.6}
   .plan-leeg button{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:650}
@@ -209,6 +275,9 @@
     background:rgba(28,28,30,.9);color:#f2f2f7;border:1px solid #3a3a3c;border-radius:9px}
   /* de buren: als de gok ernaast zit, is de juiste ruimte bijna altijd een van de dichtstbijzijnde */
   .plan-buren{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+  /* de lokalenknoppen schuiven horizontaal, maar de koppelknoppen zijn handelingen: die mogen
+     niet half buiten beeld vallen omdat je er net niet naast scrolde */
+  .plan-buren.koppel{flex-wrap:wrap;overflow-x:visible}
   .plan-buren::-webkit-scrollbar{display:none}
   .plan-buren button{flex:0 0 auto;background:#2c2c2e;color:#c9ced4;border:1px solid #3a3a3c;
     font:12px ui-monospace,Menlo,monospace;padding:7px 10px}
@@ -236,6 +305,61 @@
   .planknop.heeft{border-color:var(--ok);color:var(--ok);font-weight:600}
   .plek{font:11px/1 ui-monospace,Menlo,monospace;letter-spacing:.04em;padding:4px 7px;border-radius:5px;
     background:var(--surface-2);color:var(--ink-soft);border:1px solid var(--line-soft)}
+  /* ---- het verslagvenster en de doorstuurlijsten ----
+     Eén rij per keuze: links wát het is en hoe groot, rechts de knop. Dit is keetwerk, dus mag
+     er staan wat er meegaat — op de werf zou die uitleg in de weg staan, hier is ze de reden
+     dat je de juiste lijst kiest. */
+  .door-rij{display:flex;align-items:center;gap:12px;padding:11px 0;
+    border-bottom:1px solid var(--line-soft)}
+  .door-rij:last-child{border-bottom:none}
+  .door-wat{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+  .door-wat b{font-size:15px;font-weight:600}
+  .door-wat span{font-size:12.5px;color:var(--ink-soft)}
+  .door-rij button{flex:0 0 auto}
+
+  /* ---- de afdruk ----
+     Op het scherm bestaat dit blok niet; bij het afdrukken is het het enige wat overblijft.
+     Alles staat hier vast in punten en millimeters en in zwart op wit: een verslag is een
+     document en geen scherm, en het mag niet meeveranderen met de donkere modus van het toestel
+     waar het toevallig vandaan komt. */
+  .afdruk{display:none}
+  @page{size:A4;margin:16mm 14mm}
+  @media print{
+    html,body{background:#fff!important;color:#000!important}
+    .wrap,.toast,dialog,dialog[open]{display:none!important}
+    .afdruk{display:block;color:#000;
+      font:10.5pt/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+    .af-hoofd{border-bottom:1.2pt solid #000;padding-bottom:3mm;margin-bottom:6mm}
+    .af-hoofd h1{margin:0;font-size:19pt;font-weight:650;letter-spacing:-.01em}
+    .af-datum{margin:1mm 0 3mm;font-size:12pt}
+    .af-feit{margin:0 0 .8mm;font-size:9.5pt;color:#333}
+    .af-kop{font-size:12.5pt;font-weight:650;margin:9mm 0 1mm;padding-top:2mm;
+      border-top:.6pt solid #999;break-after:avoid;page-break-after:avoid}
+    .af-toelichting{margin:0 0 3mm;font-size:9pt;font-style:italic;color:#444;
+      break-after:avoid;page-break-after:avoid}
+    .af-subkop{margin:5mm 0 1.5mm;font-size:10.5pt;font-weight:650;
+      break-after:avoid;page-break-after:avoid}
+    .af-punt{display:flex;gap:3mm;margin:0 0 2.2mm;break-inside:avoid;page-break-inside:avoid}
+    .af-nr{flex:0 0 7mm;font:9.5pt ui-monospace,Menlo,monospace;color:#555;padding-top:.4mm}
+    .af-wijs{flex:0 0 15mm;font-size:8.8pt}
+    .af-body{flex:1;min-width:0}
+    .af-tekst{margin:0;font-size:10.5pt}
+    .af-meta{margin:.4mm 0 0;font:8.8pt ui-monospace,Menlo,monospace;color:#555}
+    .af-urgent,.af-verbod{font:bold 7.5pt -apple-system,Helvetica,sans-serif;letter-spacing:.06em;
+      border:.7pt solid #000;padding:0 1mm;margin-right:1.6mm;vertical-align:1pt}
+    /* Een verbod is een eigen rechtshandeling van de architect; dat mag je op een blad zien
+       zonder te lezen. */
+    .af-verbod{background:#000;color:#fff}
+    /* Elke bijlage begint op een nieuw blad: het plan en de foto's gaan als aparte stukken het
+       dossier in, en horen dus niet halverwege een lijst te beginnen. */
+    .af-bijlage{break-before:page;page-break-before:always}
+    .af-plan{display:block;width:100%;border:.4pt solid #999;margin-top:2mm}
+    .af-foto{margin:0 0 6mm;break-inside:avoid;page-break-inside:avoid}
+    .af-foto img{display:block;max-width:100%;max-height:105mm;border:.4pt solid #999}
+    .af-foto figcaption{margin-top:1.2mm;font:8.8pt ui-monospace,Menlo,monospace;color:#333}
+    .af-geenbeeld{margin:0;font-size:9.5pt;font-style:italic;color:#555}
+    .af-voet{margin-top:8mm;padding-top:2mm;border-top:.4pt solid #bbb;font-size:8.5pt;color:#666}
+  }
   @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
 </head>
@@ -257,6 +381,9 @@
     <div class="aanwezig-kop">
       <span class="aw-label">Aanwezig</span>
       <button type="button" id="contactbeheer" class="aw-beheer">contacten</button>
+      <button type="button" id="hoofdstukbeheer" class="aw-beheer">hoofdstukken</button>
+      <button type="button" id="woordbeheer" class="aw-beheer">woorden</button>
+      <button type="button" id="profielbeheer" class="aw-beheer">profiel</button>
     </div>
     <div class="aw-chips" id="awchips"></div>
   </div>
@@ -266,9 +393,12 @@
   <main id="lijst"></main>
 
   <div class="acties">
-    <button id="kopieer">Kopieer verslagtekst</button>
+    <button id="keet">🏠 Keet</button>
+    <button id="verslag">📄 Verslag</button>
     <button id="fotos">Bijlagen tonen</button>
+    <button id="backup" title="Alles op dit toestel in één bestand">Back-up</button>
   </div>
+  <input type="file" id="backupbestand" hidden>
 
   <div class="invoer">
     <div class="sprekers" id="sprekers"></div>
@@ -278,6 +408,7 @@
       <button class="docknop" id="docknop" type="button">📄 Doc</button>
       <button class="docknop" id="schetsknop" type="button">✏️ Schets</button>
       <button class="docknop planknop" id="planknop" type="button">📍 Plan</button>
+      <button class="docknop" id="snelknop" type="button" title="Reeks foto's zonder tussenvragen">⚡ Snel</button>
       <button class="bewaar" id="bewaar" type="button" disabled>Punt bewaren</button>
     </div>
     <input type="file" id="foto" accept="image/*" capture="environment">
@@ -287,6 +418,11 @@
     <input type="file" id="planbestand">
   </div>
 </div>
+
+<!-- Het verslag zoals het afgedrukt wordt. Op het scherm bestaat dit niet; bij het afdrukken is
+     het het enige wat overblijft. Zo hoeft er niets van de app zelf afdrukvriendelijk gemaakt te
+     worden, en volgt de afdruk een documentindeling in plaats van een scherm-indeling. -->
+<div class="afdruk" id="afdruk"></div>
 
 <div class="toast" id="toast"></div>
 
@@ -300,6 +436,63 @@
     <button id="inv-annuleer">Annuleren</button>
     <button id="inv-ok" class="inv-ok">Bewaren</button>
   </div>
+</dialog>
+
+<dialog id="keetdlg">
+  <div class="teken-balk">
+    <button type="button" id="keet-vorige" aria-label="Vorige">‹</button>
+    <span class="keet-voortgang" id="keet-voortgang"></span>
+    <button type="button" id="keet-volgende" aria-label="Volgende">›</button>
+    <button type="button" id="keet-klaar" class="tk-klaar">Klaar</button>
+  </div>
+  <div class="keet-vlak">
+    <img id="keet-foto" alt="" hidden>
+    <div class="keet-plek" id="keet-plek"></div>
+    <div class="keet-blok">
+      <span class="keet-label">Bestekhoofdstuk</span>
+      <div class="keet-knoppen">
+        <select id="keet-hoofdstuk"></select>
+        <button type="button" id="keet-hoofdstukbeheer" title="Hoofdstukken aanpassen">⋯</button>
+      </div>
+    </div>
+    <div class="keet-blok">
+      <button type="button" class="keet-vouw" id="keet-vouwwoorden">Vaststelling ▾</button>
+      <button type="button" class="keet-vouw" id="keet-woordbeheer" style="align-self:flex-end;margin-top:-18px">woorden aanpassen</button>
+      <div class="keet-woorden" id="keet-woorden"></div>
+    </div>
+    <textarea id="keet-tekst" rows="3" placeholder="Wat stel je vast?"></textarea>
+    <div class="keet-gevolg" id="keet-gevolg"></div>
+    <div class="keet-blok">
+      <span class="keet-label">Wie moet er iets mee</span>
+      <div class="keet-knoppen" id="keet-aan"></div>
+      <span class="keet-uitleg" id="keet-uitleg"></span>
+    </div>
+    <div class="keet-blok">
+      <span class="keet-label">Aard</span>
+      <div class="keet-knoppen">
+        <button type="button" id="keet-urgent">🔴 Urgent</button>
+        <button type="button" id="keet-verbod">⛔ Verbod</button>
+      </div>
+    </div>
+    <div class="keet-blok">
+      <span class="keet-label">Tegen wanneer</span>
+      <div class="keet-knoppen" id="keet-deadline"></div>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="sneldlg">
+  <video id="snelbeeld" playsinline muted autoplay></video>
+  <div class="snel-flits" id="snelflits"></div>
+  <div class="snel-kop">
+    <button type="button" id="snel-stop">Klaar</button>
+    <button type="button" id="snel-plek">📍 —</button>
+    <span class="snel-teller" id="snel-teller">0</span>
+  </div>
+  <div class="snel-voet">
+    <button type="button" class="snel-sluiter" id="snel-knip" aria-label="Vastleggen"></button>
+  </div>
+  <div class="snel-mislukt" id="snel-mislukt" hidden></div>
 </dialog>
 
 <dialog id="tekendlg">
@@ -318,6 +511,7 @@
     <button type="button" id="pl-wis">Wis pin</button>
     <button type="button" id="pl-meer" title="Plan klaarmaken">⋯</button>
     <button type="button" id="pl-nummer" class="pl-klaarmaak">Nummer</button>
+    <button type="button" id="pl-koppel" class="pl-klaarmaak" title="Dit plan op een omtrek leggen">Koppel</button>
     <button type="button" id="pl-bewaar" class="pl-klaarmaak">Bewaar</button>
     <button type="button" id="pl-klaar" class="tk-klaar">Lijst</button>
   </div>
@@ -345,6 +539,7 @@
         <textarea id="pl-tekst" rows="2" placeholder="Wat zie je hier?"></textarea>
         <div class="plan-knoppen">
           <button type="button" id="pl-foto">📷</button>
+          <button type="button" id="pl-snel" title="Reeks foto's zonder tussenvragen">⚡</button>
           <button type="button" id="pl-schets" title="Op het plan tekenen">✏️</button>
           <button type="button" id="pl-punt" class="tk-klaar">Punt bewaren</button>
         </div>
@@ -365,7 +560,7 @@
 <script>
 const ZONES=["N3","N4","N5","DAK","KAPEL","KELDER","STELLING","BUITEN"];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v28";
+const VERSIE="v48";
 let staat={datum:new Date().toISOString().slice(0,10),weer:"",bezetting:"",zone:"N3",punten:[]};
 let wachtendeFoto=null;
 let wachtendeBijlage=null;
@@ -402,6 +597,472 @@ function haalFoto(id){return new Promise(res=>{
 
 /* Contacten staan los van de dag: ze blijven bewaard over vergaderingen heen.
    De lijst zit alleen op dit toestel; er staan geen namen in de app zelf. */
+/* ---- profielen ----
+   Wat een rol mág en wat een soort betekent, verschilt per beroep. Een architect leidt,
+   controleert, adviseert en kan verbieden. Een veiligheidscoördinator coördineert en noteert,
+   maar geeft geen bevel. Een EPB-verslaggever stelt vast en rapporteert; hij ontwerpt niets en
+   draagt de aangifte niet. Een aannemer voert uit, meldt, en maakt voorbehoud.
+
+   Alles eromheen is beroepsneutraal: de zones, de plek op het plan, de hoofdstukken, ⚡ Snel, de
+   keet, de herhaling van wat openstaat. Alleen deze tabel wisselt. Dezelfde tabel staat als
+   PROFIELEN in werf_verwerk.py, en de app stuurt met een `PROFIEL:`-regel bovenaan de export mee
+   welk profiel geldt; zonder die regel is het de architect, zodat oudere notities blijven werken.
+
+   ⚠️ De drie profielen naast dat van de architect zijn een eerste opzet, opgesteld naar de
+   rechtshandelingen die bij elk beroep horen, en nog niet nagelezen door iemand die dat beroep
+   uitoefent. De woorden zijn bedoeld om vervangen te worden — dat kan al, via **woorden**.
+
+   Wat er bewust níet in staat is een wetsartikel. De regels kloppen, maar een verslag dat een
+   verkeerd artikelnummer citeert geeft de tegenpartij een argument. Dat geldt hier zoals overal. */
+
+const PROFIELEN=[
+{sleutel:"architect", naam:"architect",
+ uitleg:"leiden, controleren, adviseren, verbieden",
+ rest:{kop:"Op te volgen", toelichting:""},
+ // De eigen rechtshandeling van dit beroep: het ene dat geen vaststelling is maar een daad.
+ bijzonder:{knop:"⛔ Verbod", kop:"Verbod",
+   uitleg:"Een eigen rechtshandeling van de architect. Wordt er geen gevolg aan gegeven, dan "+
+     "gebeurt dat op verantwoordelijkheid van de aannemer.",
+   verslag:"De architect verbiedt de hierna vermelde uitvoering. Wordt hieraan geen gevolg "+
+     "gegeven, dan gebeurt dat op verantwoordelijkheid van de aannemer."},
+ rollen:[
+  {sleutel:"aannemer", naam:"aannemer", kop:"Aanwijzingen aan de aannemer",
+   toelichting:"uit te voeren binnen de aanneming; meerwerk pas na akkoord van de opdrachtgever"},
+  {sleutel:"opdrachtgever", naam:"opdrachtgever", kop:"Ter beslissing van de opdrachtgever",
+   toelichting:"de architect adviseert, de opdrachtgever beslist"},
+  {sleutel:"studiebureau", naam:"studiebureau", kop:"Ter advies",
+   toelichting:"gevraagd advies, geen uitvoeringsopdracht"},
+  {sleutel:"architect", naam:"architect", kop:"Op te volgen door de architect", toelichting:""}],
+ soorten:[
+  {sleutel:"gebrek", kop:"Gebrek",
+   uitleg:"het uitgevoerde werk deugt niet — herstel binnen de aanneming",
+   woorden:["scheur","vocht","lek","uitbloeiing","corrosie","schimmelvorming","verkleuring",
+            "loszittend materiaal","doorbuiging","zetting","open voeg","oneffenheid"]},
+  {sleutel:"nietconform", kop:"Niet conform",
+   uitleg:"wijkt af van plan, bestek of vergunning — ook al is het goed uitgevoerd",
+   blok:"Niet conform plan of bestek",
+   blokuitleg:"afwijking van wat is voorgeschreven, ongeacht de uitvoeringskwaliteit; "+
+              "te herstellen of ter aanvaarding voor te leggen aan de opdrachtgever",
+   woorden:["afwijkend materiaal","afwijkende afmeting","afwijkende plaatsing",
+            "niet volgens detail"]},
+  {sleutel:"beschadiging", kop:"Beschadiging",
+   uitleg:"schade aan werk dat goed was — wie ze veroorzaakte bepaalt wie herstelt",
+   blok:"Beschadigingen",
+   blokuitleg:"schade aan werk dat was uitgevoerd. Vóór herstel binnen de aanneming gevorderd "+
+              "wordt, moet vaststaan wie ze veroorzaakt heeft",
+   woorden:["beschadiging","breuk","vervuiling"]},
+  {sleutel:"onafgewerkt", kop:"Niet afgewerkt",
+   uitleg:"het werk is niet af — dit raakt de termijn, niet de kwaliteit",
+   blok:"Nog uit te voeren",
+   blokuitleg:"niet-voltooiing, geen gebrek; dit raakt de uitvoeringstermijn en de oplevering",
+   woorden:["onafgewerkt","ontbrekend materiaal","ontbrekende afdichting"]},
+  {sleutel:"esthetiek", kop:"Esthetiek",
+   uitleg:"beoordeling van de architect, geen technisch gebrek",
+   blok:"Esthetische opmerkingen",
+   blokuitleg:"beoordeling van de architect, geen technisch gebrek",
+   woorden:["kleurverschil","zichtbare naad","onregelmatig voegwerk","zichtbare bevestiging",
+            "scheve plaatsing"]},
+  {sleutel:"veiligheid", kop:"Veiligheid",
+   uitleg:"onveilige toestand — te melden aan de veiligheidscoördinator",
+   blok:"Veiligheid",
+   blokuitleg:"onveilige toestand, vastgesteld en gemeld; de coördinatie ervan behoort tot de "+
+              "opdracht van de veiligheidscoördinator",
+   woorden:["ontbrekende leuning","onbeveiligde sparing","obstakel in doorgang",
+            "ontbrekende afscherming"]},
+  {sleutel:"meerwerk", kop:"Meerwerk",
+   uitleg:"vast te stellen en te adviseren; uitvoering pas na voorafgaand schriftelijk akkoord "+
+          "van de opdrachtgever over aard en prijs",
+   blok:"Meerwerk — voorafgaand akkoord vereist",
+   blokuitleg:"de architect stelt vast en adviseert, hij geeft geen opdracht tot meerwerk. "+
+              "Uitvoering kan pas na voorafgaand en schriftelijk akkoord van de opdrachtgever "+
+              "over aard én prijs",
+   waarschuwtBij:"aannemer",
+   waarschuwing:"⚠️ Meerwerk aan de aannemer toewijzen leest als een opdracht. De architect "+
+     "geeft die niet: uitvoering kan pas na voorafgaand schriftelijk akkoord van de "+
+     "opdrachtgever over aard en prijs. Wijs dit toe aan de opdrachtgever.",
+   woorden:["meerwerk","wijziging gevraagd","onvoorziene toestand"]}]},
+
+{sleutel:"veiligheidscoordinator", naam:"veiligheidscoördinator",
+ uitleg:"vaststellen, coördineren, melden, aanmanen",
+ rest:{kop:"In het coördinatiedagboek", toelichting:""},
+ bijzonder:{knop:"⛔ Aanmaning", kop:"Aanmaning",
+   uitleg:"Vastgesteld én aangemaand. De coördinator geeft geen bevel; wordt er geen gevolg aan "+
+     "gegeven, dan is wat hij nog kan doen dat melden aan de bouwdirectie — en dat is precies "+
+     "waarom het genoteerd staat.",
+   verslag:"De coördinator maant aan de hierna vermelde toestand op te heffen. Wordt hieraan "+
+     "geen gevolg gegeven, dan wordt dat aan de bouwdirectie gemeld."},
+ rollen:[
+  {sleutel:"aannemer", naam:"aannemer", kop:"Aan de aannemer — na te leven",
+   toelichting:"de coördinator stelt vast en coördineert; hij geeft geen bevel. Het naleven van "+
+     "het veiligheids- en gezondheidsplan behoort tot de aannemer zelf"},
+  {sleutel:"opdrachtgever", naam:"bouwdirectie", kop:"Ter beslissing van de bouwdirectie",
+   toelichting:"de coördinator stelt vast en adviseert; de bouwdirectie treft de maatregelen"},
+  {sleutel:"studiebureau", naam:"preventieadviseur", kop:"Ter advies",
+   toelichting:"gevraagd advies, geen uitvoeringsopdracht"},
+  {sleutel:"architect", naam:"ontwerper", kop:"Op te volgen door de ontwerper", toelichting:""}],
+ soorten:[
+  {sleutel:"onveilig", kop:"Onveilige toestand",
+   uitleg:"vastgesteld op de bouwplaats — op te heffen vóór de werken daar verdergaan",
+   blok:"Onveilige toestand",
+   blokuitleg:"vastgesteld op de bouwplaats; op te heffen vóór de werken op die plaats verdergaan",
+   woorden:["ontbrekende leuning","onbeveiligde sparing","ontbrekende afscherming",
+            "onstabiele stelling","ongeschikte ladder","onbeveiligde kant"]},
+  {sleutel:"vgp", kop:"Niet volgens het VGP",
+   uitleg:"afwijking van wat in het veiligheids- en gezondheidsplan is afgesproken",
+   blok:"Niet volgens het veiligheids- en gezondheidsplan",
+   blokuitleg:"afwijking van wat is afgesproken; ofwel de uitvoering ofwel het plan moet mee",
+   woorden:["afwijking van het VGP","niet-gemelde werkwijze","ontbrekende risicoanalyse"]},
+  {sleutel:"pbm", kop:"Beschermingsmiddelen",
+   uitleg:"vastgesteld en gemeld — het toezicht ligt bij de werkgever van wie het draagt",
+   blok:"Persoonlijke beschermingsmiddelen",
+   blokuitleg:"vastgesteld en gemeld; het toezicht op het dragen ervan behoort tot de werkgever "+
+              "van wie het draagt",
+   woorden:["geen helm","geen valbeveiliging","geen veiligheidsschoenen","geen gehoorbescherming"]},
+  {sleutel:"gelijktijdig", kop:"Gelijktijdige werken",
+   uitleg:"risico dat ontstaat doordat aannemers tegelijk werken — het eigenlijke voorwerp van "+
+          "de coördinatie",
+   blok:"Gelijktijdige werken",
+   blokuitleg:"risico dat ontstaat doordat aannemers tegelijk werken — het eigenlijke voorwerp "+
+              "van de coördinatie",
+   woorden:["werken boven elkaar","gedeelde stelling","gedeelde toegang","gedeelde hijszone"]},
+  {sleutel:"inrichting", kop:"Inrichting",
+   uitleg:"toegang, doorgang, opslag en signalisatie",
+   blok:"Inrichting van de bouwplaats",
+   blokuitleg:"toegang, doorgang, opslag en signalisatie",
+   woorden:["doorgang versperd","opslag in doorgang","ontbrekende signalisatie",
+            "ontbrekende verlichting","afval in doorgang"]},
+  {sleutel:"pid", kop:"Voor het PID",
+   uitleg:"vast te leggen voor het latere onderhoud — geen tekortkoming",
+   blok:"Voor het postinterventiedossier",
+   blokuitleg:"vast te leggen voor het latere onderhoud van het bouwwerk; geen tekortkoming",
+   woorden:["verankering vast te leggen","leidingtracé vast te leggen","gegevens ontbreken"]}]},
+
+{sleutel:"epb", naam:"EPB-verslaggever",
+ uitleg:"vaststellen, staven, rapporteren",
+ rest:{kop:"Op te volgen", toelichting:""},
+ // Een EPB-verslaggever verbiedt niets en maant niemand aan; hij legt vast wat gestaafd is en
+ // wat niet. Daarom draagt dit profiel geen eigen rechtshandeling, en verdwijnt die knop.
+ bijzonder:null,
+ rollen:[
+  {sleutel:"opdrachtgever", naam:"aangifteplichtige", kop:"Ter beslissing van de aangifteplichtige",
+   toelichting:"de verslaggever stelt vast en rapporteert; de aangifteplichtige blijft "+
+     "verantwoordelijk voor de aangifte en beslist"},
+  {sleutel:"architect", naam:"ontwerper", kop:"Ter aanpassing door de ontwerper",
+   toelichting:"de uitvoering wijkt af van wat in de berekening is aangenomen; ofwel de "+
+     "uitvoering ofwel de berekening moet mee"},
+  {sleutel:"aannemer", naam:"aannemer", kop:"Aan de aannemer — uit te voeren of te staven",
+   toelichting:"de verslaggever geeft geen opdracht; hij legt vast wat gestaafd is en wat niet"},
+  {sleutel:"studiebureau", naam:"studiebureau", kop:"Ter advies",
+   toelichting:"gevraagd advies, geen uitvoeringsopdracht"}],
+ soorten:[
+  {sleutel:"staving", kop:"Staving ontbreekt",
+   uitleg:"zonder bewijsstuk kan de waarde niet aangenomen worden",
+   blok:"Staving ontbreekt",
+   blokuitleg:"zonder bewijsstuk kan de waarde niet aangenomen worden en geldt de ongunstige "+
+              "waarde bij ontstentenis",
+   woorden:["technische fiche ontbreekt","leveringsbon ontbreekt","foto van de uitvoering "+
+            "ontbreekt","productgegevens ontbreken"]},
+  {sleutel:"afwijking", kop:"Afwijking",
+   uitleg:"wat er ligt is niet wat er berekend is",
+   blok:"Afwijking van de aangenomen waarde",
+   blokuitleg:"wat er ligt is niet wat er berekend is; de berekening volgt de uitvoering, niet "+
+              "omgekeerd",
+   woorden:["andere isolatiedikte","ander materiaal","ander glas","ander toestel",
+            "andere plaatsing"]},
+  {sleutel:"bouwknoop", kop:"Bouwknoop",
+   uitleg:"onderbreking van de isolatieschil — vast te leggen nu ze nog zichtbaar is",
+   blok:"Bouwknopen",
+   blokuitleg:"onderbreking van de isolatieschil, vast te leggen op het ogenblik dat ze nog "+
+              "zichtbaar is",
+   woorden:["isolatie onderbroken","lagen sluiten niet aan","doorgaande draagvloer"]},
+  {sleutel:"luchtdichtheid", kop:"Luchtdichtheid",
+   uitleg:"vast te leggen vóór afwerking — achteraf is het niet meer vast te stellen",
+   blok:"Luchtdichtheid",
+   blokuitleg:"vast te leggen vóór afwerking; achteraf is het niet meer vast te stellen",
+   woorden:["doorvoer niet afgedicht","folie niet doorgetrokken","naad niet gekleefd",
+            "aansluiting niet dicht"]},
+  {sleutel:"ventilatie", kop:"Ventilatie",
+   uitleg:"debieten, roosters en doorstroomopeningen",
+   blok:"Ventilatie",
+   blokuitleg:"debieten, roosters en doorstroomopeningen",
+   woorden:["debiet niet gehaald","toevoerrooster ontbreekt","doorstroomopening te klein",
+            "kanaal niet geïsoleerd"]}]},
+
+{sleutel:"aannemer", naam:"aannemer",
+ uitleg:"uitvoeren, melden, voorbehoud maken",
+ rest:{kop:"Op te volgen", toelichting:""},
+ bijzonder:{knop:"⛔ Voorbehoud", kop:"Uitdrukkelijk voorbehoud",
+   uitleg:"Uitdrukkelijk voorbehoud, gemaakt op het ogenblik zelf. Achteraf gemaakt voorbehoud "+
+     "weegt niet — dat is de hele reden dat dit nú genoteerd wordt.",
+   verslag:"De aannemer maakt uitdrukkelijk voorbehoud bij het hierna vermelde, op het ogenblik "+
+     "van de vaststelling."},
+ rollen:[
+  {sleutel:"opdrachtgever", naam:"opdrachtgever", kop:"Ter beslissing van de opdrachtgever",
+   toelichting:"vastgesteld en gemeld; wijziging en meerwerk pas na schriftelijk akkoord over "+
+     "aard én prijs"},
+  {sleutel:"architect", naam:"architect", kop:"Ter verduidelijking door de architect",
+   toelichting:"gevraagde toelichting bij plan of bestek; uitvoeren zonder opheldering legt het "+
+     "risico bij de aannemer"},
+  {sleutel:"aannemer", naam:"onderaannemer", kop:"Aan de onderaannemer",
+   toelichting:"uit te voeren binnen zijn onderaanneming"},
+  {sleutel:"studiebureau", naam:"studiebureau", kop:"Ter advies",
+   toelichting:"gevraagd advies, geen uitvoeringsopdracht"}],
+ soorten:[
+  {sleutel:"eigen", kop:"Eigen werk",
+   uitleg:"de eigen restlijst — wat er nog moet gebeuren of nagezien worden",
+   woorden:["onafgewerkt","na te zien","herstel uit te voeren","nog te reinigen"]},
+  {sleutel:"voorbehoud", kop:"Voorbehoud bij aanvang",
+   uitleg:"de toestand zoals aangetroffen vóór de eigen werken",
+   blok:"Voorbehoud bij aanvang",
+   blokuitleg:"de toestand zoals aangetroffen vóór de eigen werken. Wat hier niet staat, wordt "+
+              "achteraf als eigen werk gezien",
+   woorden:["bestaande schade","ondergrond niet vlak","maatafwijking bestaand werk",
+            "vocht in ondergrond"]},
+  {sleutel:"hinder", kop:"Hinder en wachttijd",
+   uitleg:"raakt de uitvoeringstermijn — te melden op het ogenblik zelf",
+   blok:"Hinder en wachttijd",
+   blokuitleg:"raakt de uitvoeringstermijn; te melden op het ogenblik zelf, niet achteraf",
+   woorden:["werkzone niet vrij","geen toegang","wachten op voorgaande aannemer",
+            "nutsvoorziening ontbreekt","weerverlet"]},
+  {sleutel:"onduidelijk", kop:"Onduidelijk of strijdig",
+   uitleg:"gevraagde opheldering bij plan of bestek",
+   blok:"Onduidelijk of strijdig in plan of bestek",
+   blokuitleg:"gevraagde opheldering; uitvoeren zonder antwoord legt het risico bij de aannemer",
+   woorden:["plan en bestek strijdig","maat ontbreekt","detail ontbreekt"]},
+  {sleutel:"schade", kop:"Schade door derden",
+   uitleg:"schade aan werk dat goed was — wie ze veroorzaakte bepaalt wie herstelt",
+   blok:"Schade door derden",
+   blokuitleg:"schade aan uitgevoerd werk; vóór herstel moet vaststaan wie ze veroorzaakte",
+   woorden:["beschadiging door derden","breuk","vervuiling"]},
+  {sleutel:"meerwerk", kop:"Meerwerk",
+   uitleg:"vast te stellen en te melden; uit te voeren pas na schriftelijk akkoord",
+   blok:"Meerwerk — voorafgaand akkoord vereist",
+   blokuitleg:"vastgesteld en gemeld; uit te voeren pas na schriftelijk akkoord van de "+
+              "opdrachtgever over aard én prijs",
+   waarschuwtBij:"aannemer",
+   waarschuwing:"⚠️ Meerwerk dat je aan je onderaannemer opdraagt vóór de opdrachtgever "+
+     "schriftelijk akkoord ging, voer je voor eigen rekening uit. Meld het eerst.",
+   woorden:["meerwerk","wijziging gevraagd","onvoorziene toestand"]}]}
+];
+
+const PROFIELSLEUTEL="werfpunten-profiel";
+let profiel=null;
+let ROLLEN=[];
+let SOORTEN=[];
+
+function laadProfiel(sleutel){
+  let s=sleutel;
+  if(!s){try{s=localStorage.getItem(PROFIELSLEUTEL)||""}catch(e){s=""}}
+  profiel=PROFIELEN.find(p=>p.sleutel===s)||PROFIELEN[0];
+  ROLLEN=profiel.rollen;
+  SOORTEN=profiel.soorten;
+  STANDAARDWOORDEN=null;      // de standaardlijst hoort bij dít profiel, niet bij het vorige
+  laadGebrekwoorden();
+}
+
+/* Het profiel wisselen laat de punten staan. Dat is niet vrijblijvend: een punt draagt de
+   sleutel van zijn soort, en die sleutel bestaat in het andere profiel meestal niet. Zo'n punt
+   verliest daarmee zijn blok in het verslag — niet zijn tekst, niet zijn plek, niet zijn
+   toewijzing. Dat is de zachte degradatie die overal in deze app geldt, maar ze moet wel gezegd
+   worden vóór je kiest, en niet achteraf blijken. */
+function kiesProfiel(){
+  const anders=(staat.punten||[]).filter(p=>p.soort).length;
+  const regels=PROFIELEN.map(p=>
+    "<b>"+veilig(p.naam)+"</b> — "+veilig(p.uitleg)+
+    (p.sleutel===profiel.sleutel?" · <i>nu actief</i>":""));
+  regels.unshift("Het profiel bepaalt wat een rol mág en wat een soort betekent. De rest van de "+
+    "app verandert niet: de zones, het plan, de hoofdstukken en de keet blijven zoals ze zijn.");
+  if(anders)regels.push("⚠️ "+stuks(anders,"punt draagt","punten dragen")+" een soort uit het "+
+    "huidige profiel. Wissel je, dan houden ze hun tekst, hun plek en hun toewijzing, maar valt "+
+    "hun soort weg uit de indeling van het verslag — kies ze daar opnieuw.");
+  regels.push("De woordenlijsten zijn per profiel; wat je bij <b>woorden</b> aanpaste blijft "+
+    "bewaard en komt terug als je terugwisselt.");
+  const dlg=document.getElementById("dlg");
+  document.getElementById("dlg-titel").textContent="Profiel";
+  const body=document.getElementById("dlg-body");
+  body.innerHTML=regels.map(t=>'<p class="inv-uitleg" style="margin:0 0 10px">'+t+"</p>").join("");
+  const rij=document.createElement("div");
+  rij.style.cssText="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px";
+  PROFIELEN.forEach(p=>{
+    const b=document.createElement("button");
+    b.type="button";
+    b.style.cssText="font-size:15px;font-weight:650;padding:12px 16px;background:var(--zone-soft);"+
+      "color:var(--zone);border-color:var(--zone-soft)";
+    if(p.sleutel===profiel.sleutel)b.style.borderColor="var(--accent)";
+    b.textContent=p.naam;
+    // De keuze doet haar werk hier en niet in een afhandelaar op het sluiten van het venster:
+    // één handeling, één plaats.
+    b.onclick=()=>{
+      dlg.close();
+      if(p.sleutel===profiel.sleutel)return;
+      try{localStorage.setItem(PROFIELSLEUTEL,p.sleutel)}catch(e){}
+      laadProfiel(p.sleutel);
+      merkProfiel();
+      tekenLijst();
+      melding("Profiel: "+profiel.naam);
+    };
+    rij.appendChild(b);
+  });
+  body.appendChild(rij);
+  document.getElementById("dlg-kopieer").style.display="none";
+  dlg.showModal();
+}
+
+function merkProfiel(){
+  const k=document.getElementById("profielbeheer");
+  if(k)k.textContent=profiel.sleutel==="architect"?"profiel":profiel.naam;
+  const b=document.getElementById("keet-verbod");
+  if(b){
+    b.hidden=!profiel.bijzonder;
+    if(profiel.bijzonder)b.textContent=profiel.bijzonder.knop;
+  }
+}
+
+function rolVan(code){
+  const c=contacten.find(x=>x.code===code);
+  return c&&c.rol?ROLLEN.find(r=>r.sleutel===c.rol)||null:null;
+}
+function leesRol(t){
+  const w=(t||"").trim().toLowerCase();
+  if(!w)return "";
+  // Zowel op de sleutel als op de naam die dit profiel eraan geeft: in het contactenvenster
+  // staan de namen, dus die typt men over. "bouwdirectie" is de opdrachtgever van een
+  // veiligheidscoördinator, en hoort dus in dezelfde rol te vallen.
+  const past=o=>[o.sleutel,o.naam].some(n=>{
+    const k=n.toLowerCase();
+    return k.startsWith(w)||w.startsWith(k.slice(0,4));
+  });
+  const r=ROLLEN.find(past);
+  return r?r.sleutel:"";
+}
+
+/* ---- de bestekhoofdstukken ----
+   De hoofdindeling van een verslag is niet waar je stond maar wélk deel van het werk het betreft.
+   Dat is precies de indeling van het bestek, en dat is geen toeval: het bestek is het contract, en
+   een vaststelling die naar een hoofdstuk verwijst staat op contractuele grond in plaats van op
+   een mening. Het maakt bovendien doorsturen mogelijk — de dakwerker krijgt hoofdstuk dak.
+
+   Deze lijst hoort dus bij het project, niet bij de app. Wat hieronder staat is een vertrekpunt;
+   vervang het door de hoofdstukken van jóuw bestek, met hun eigen nummers. */
+/* ---- de woorden per soort ----
+   De zeven soorten liggen vast: ze dragen elk hun juridische betekenis, en dat is de ruggengraat
+   van het verslag. Wie "beschadiging" zelf tot "gebrek" kan herbenoemen, haalt de bescherming er
+   meteen uit.
+
+   De wóórden binnen elke soort liggen niet vast. Die zijn vakgebonden en werfgebonden — wat op een
+   restauratie elke week terugkomt, zie je op een kantoorgebouw nooit. Er staat een bruikbare lijst
+   klaar zodat het dag één werkt; vervang ze door wat jij werkelijk tegenkomt.
+
+   Kort houden blijft wel de bedoeling: hoe minder bijna-synoniemen, hoe groter de kans dat
+   hetzelfde gebrek twee vergaderingen na elkaar dezelfde naam krijgt — en dat is wat het blok
+   "Nog steeds open" laat werken. */
+const WOORDSLEUTEL="werfpunten-gebrekwoorden";
+let STANDAARDWOORDEN=null;
+
+/* Per profiel een eigen bewaarplaats: de soorten van een veiligheidscoördinator zijn andere
+   soorten, en wat je voor het ene beroep aanpaste hoort niet in het andere te verschijnen.
+   Het profiel van de architect houdt de oude sleutel, zodat wat er al stond gewoon blijft. */
+function woordsleutel(){
+  return profiel.sleutel==="architect"?WOORDSLEUTEL:(WOORDSLEUTEL+":"+profiel.sleutel);
+}
+
+function laadGebrekwoorden(){
+  if(!STANDAARDWOORDEN)
+    STANDAARDWOORDEN=Object.fromEntries(SOORTEN.map(s=>[s.sleutel,s.woorden.slice()]));
+  let eigen=null;
+  try{const r=localStorage.getItem(woordsleutel()); if(r)eigen=JSON.parse(r);}catch(e){}
+  SOORTEN.forEach(s=>{
+    s.woorden = eigen && Array.isArray(eigen[s.sleutel])
+      ? eigen[s.sleutel] : STANDAARDWOORDEN[s.sleutel].slice();
+  });
+}
+
+async function beheerGebrekwoorden(){
+  const huidig=SOORTEN.map(s=>s.kop+": "+s.woorden.join(", ")).join("\n");
+  const uitleg="Eén soort per regel:  Soort: woord, woord, woord\n"+
+    "De soorten van het profiel ‘"+profiel.naam+"’ liggen vast — die dragen elk hun juridische\n"+
+    "betekenis. De woorden erbinnen zijn van jou: vervang ze door wat je op jouw werven\n"+
+    "werkelijk tegenkomt.\n\n"+
+    "Houd ze kort en vermijd bijna-synoniemen. Eén “vocht” in plaats van vochtvlek naast\n"+
+    "waterinsijpeling zorgt dat hetzelfde gebrek twee vergaderingen na elkaar dezelfde naam\n"+
+    "krijgt — en dat is wat “Nog steeds open” laat werken.\n\n"+
+    "Een regel weglaten laat die soort zonder woorden; je typt de tekst dan zelf.\n"+
+    "Alles leeg laten zet de standaardlijsten terug.";
+  const nieuw=await vraagTekst("Woorden per soort", uitleg, huidig);
+  if(nieuw===null)return;
+  if(!nieuw.trim()){
+    try{localStorage.removeItem(woordsleutel())}catch(e){}
+    laadGebrekwoorden();
+    melding("Standaardwoorden teruggezet");
+    return;
+  }
+  const sleutelvan=t=>{
+    const w=(t||"").trim().toLowerCase().replace(/\s+/g,"");
+    const s=SOORTEN.find(o=>o.sleutel===w||o.kop.toLowerCase().replace(/\s+/g,"")===w);
+    return s?s.sleutel:null;
+  };
+  const eigen=Object.fromEntries(SOORTEN.map(s=>[s.sleutel,[]]));
+  nieuw.split("\n").forEach(regel=>{
+    const d=regel.indexOf(":");
+    if(d<0)return;
+    const sl=sleutelvan(regel.slice(0,d));
+    if(!sl)return;
+    eigen[sl]=regel.slice(d+1).split(",").map(w=>w.trim()).filter(Boolean);
+  });
+  try{localStorage.setItem(woordsleutel(),JSON.stringify(eigen))}catch(e){}
+  laadGebrekwoorden();
+  const totaal=Object.values(eigen).reduce((n,a)=>n+a.length,0);
+  melding(totaal+" woorden bewaard");
+}
+
+const HOOFDSTUKSLEUTEL="werfpunten-hoofdstukken";
+const STANDAARDHOOFDSTUKKEN=[
+  {nr:"01", naam:"afbraak en voorbereiding"},
+  {nr:"02", naam:"grondwerken"},
+  {nr:"03", naam:"funderingen"},
+  {nr:"04", naam:"riolering"},
+  {nr:"05", naam:"ruwbouw"},
+  {nr:"06", naam:"gevel"},
+  {nr:"07", naam:"dak"},
+  {nr:"08", naam:"buitenschrijnwerk"},
+  {nr:"09", naam:"binnenschrijnwerk"},
+  {nr:"10", naam:"technieken"},
+  {nr:"11", naam:"pleisterwerk"},
+  {nr:"12", naam:"vloeren"},
+  {nr:"13", naam:"schilderwerk"},
+  {nr:"14", naam:"omgevingsaanleg"}
+];
+let hoofdstukken=[];
+function laadHoofdstukken(){
+  try{const r=localStorage.getItem(HOOFDSTUKSLEUTEL);
+    hoofdstukken=r?(JSON.parse(r)||[]):STANDAARDHOOFDSTUKKEN.slice();}
+  catch(e){hoofdstukken=STANDAARDHOOFDSTUKKEN.slice();}
+}
+function bewaarHoofdstukken(){
+  try{localStorage.setItem(HOOFDSTUKSLEUTEL,JSON.stringify(hoofdstukken))}catch(e){}
+}
+function hoofdstukVan(nr){return hoofdstukken.find(h=>h.nr===nr)||null;}
+
+async function beheerHoofdstukken(){
+  const huidig=hoofdstukken.map(h=>h.nr+" = "+h.naam).join("\n");
+  const uitleg="Eén hoofdstuk per regel:  NUMMER = naam\n"+
+    "Neem de hoofdstukken en nummers over uit het bestek van dit project. Elk punt dat je aan een\n"+
+    "hoofdstuk hangt, verwijst daarmee naar het contract in plaats van naar een mening.\n\n"+
+    "Voorbeeld:\n07 = dak\n12 = vloeren\n\n"+
+    "Leeg laten zet de standaardlijst terug.";
+  const nieuw=await vraagTekst("Bestekhoofdstukken", uitleg, huidig);
+  if(nieuw===null)return;
+  hoofdstukken=nieuw.split("\n").map(r=>r.trim()).filter(Boolean).map(r=>{
+    const d=r.split("=");
+    const nr=(d[0]||"").trim();
+    const naam=(d[1]||"").trim()||nr;
+    return {nr,naam};
+  }).filter(h=>h.nr);
+  if(!hoofdstukken.length)hoofdstukken=STANDAARDHOOFDSTUKKEN.slice();
+  bewaarHoofdstukken();
+  melding(hoofdstukken.length+" hoofdstukken bewaard");
+}
+
 const CONTACTSLEUTEL="werfpunten-contacten";
 let contacten=[];
 function laadContacten(){
@@ -454,8 +1115,15 @@ function tekenSprekers(){
 }
 
 async function beheerContacten(){
-  const huidig=contacten.map(c=>c.naam+" = "+c.code).join("\n");
-  const uitleg="Eén contact per regel:  Naam = CODE\nDe code komt in het verslag voor de uitspraak te staan.\n\nVoorbeeld:\nJan Peeters = JP\nGemeente = GEM";
+  const rolnaam=sl=>{const r=ROLLEN.find(o=>o.sleutel===sl);return r?r.naam:sl;};
+  const huidig=contacten.map(c=>c.naam+" = "+c.code+(c.rol?" = "+rolnaam(c.rol):"")).join("\n");
+  const uitleg="Eén contact per regel:  Naam = CODE = rol\n"+
+    "De code komt in het verslag voor de uitspraak te staan. De rol bepaalt onder welke kop een\n"+
+    "punt belandt dat je aan deze persoon toewijst — dat is wat het verslag laat standhouden.\n\n"+
+    "Rollen in het profiel ‘"+profiel.naam+"’: "+ROLLEN.map(r=>r.naam).join(" · ")+"\n\n"+
+    // Firma's als voorbeeld en geen persoonsnaam: een contact is even vaak een bedrijf, en een
+    // naam in het voorbeeld suggereert dat je er een moet intikken.
+    "Voorbeeld:\nAannemer BV = AB = "+ROLLEN[0].naam+"\nGemeente = GEM = "+ROLLEN[1].naam;
   const nieuw=await vraagTekst("Contacten", uitleg, huidig);
   if(nieuw===null)return;
   contacten = nieuw.split("\n").map(r=>r.trim()).filter(Boolean).map(r=>{
@@ -463,13 +1131,16 @@ async function beheerContacten(){
     const naam=(d[0]||"").trim();
     let code=(d[1]||"").trim().toUpperCase();
     if(!code) code=naam.split(/\s+/).map(w=>w[0]||"").join("").slice(0,3).toUpperCase();
-    return {naam,code};
+    return {naam,code,rol:leesRol(d[2])};
   }).filter(c=>c.naam);
   bewaarContacten();
   staat.aanwezig=(staat.aanwezig||[]).filter(code=>contacten.some(c=>c.code===code));
   bewaarStaat();tekenContacten();tekenSprekers();
 }
 document.getElementById("contactbeheer").onclick=beheerContacten;
+document.getElementById("hoofdstukbeheer").onclick=beheerHoofdstukken;
+document.getElementById("woordbeheer").onclick=beheerGebrekwoorden;
+document.getElementById("profielbeheer").onclick=kiesProfiel;
 
 function bewaarStaat(){try{localStorage.setItem(SLEUTEL,JSON.stringify(staat))}catch(e){}}
 let vorigeDag=null;   // wat er stond toen de app voor het laatst gebruikt werd, op een andere datum
@@ -517,7 +1188,9 @@ function tekenZones(){
 
 async function tekenLijst(){
   const m=document.getElementById("lijst");m.innerHTML="";
-  document.getElementById("teller").textContent=staat.punten.length+" punt"+(staat.punten.length===1?"":"en");
+  const onaf=staat.punten.filter(p=>p.onaf).length;
+  document.getElementById("teller").textContent=staat.punten.length+" punt"+
+    (staat.punten.length===1?"":"en")+(onaf?(" · "+onaf+" onaf"):"");
   if(!staat.punten.length){
     m.innerHTML='<p class="leeg">Nog geen punten.<br>Kies een zone, typ of dicteer de vaststelling,<br>en bewaar. Een foto is optioneel.<br><span style="font-size:12.5px">Veeg een punt naar links om het te verwijderen.</span></p>';
     return;
@@ -551,6 +1224,9 @@ async function tekenLijst(){
     const body=document.createElement("div");body.className="body";
     const kop=document.createElement("div");kop.className="kop";
     const chip=document.createElement("span");chip.className="chip";chip.textContent=p.zone;kop.appendChild(chip);
+    // Snel vastgelegd en nog zonder woorden: in de keet is dit je werklijst.
+    if(p.onaf){const o=document.createElement("span");o.className="onaf";o.textContent="⚡ onaf";
+      o.title="Snel vastgelegd — nog af te werken";kop.appendChild(o);}
     if(p.plek){
       const pk=document.createElement("span");pk.className="plek";
       pk.textContent="📍 "+(p.plek.lokaal||plaatsKort(p.plek));
@@ -635,8 +1311,558 @@ async function bewerkPunt(id){
   const m=tekst.match(/^([A-Za-z0-9]{1,4})\s*:\s*(.*)$/);
   if(m){spreker=m[1].toUpperCase();tekst=m[2].trim();}
   p.tekst=tekst; p.spreker=spreker;
+  if(tekst)delete p.onaf;          // woorden erbij is precies wat "onaf" nog miste
+  raakAan(p);
   bewaarStaat(); tekenLijst();
 }
+
+/* ---- back-up en herstel ----
+   Alles staat op één toestel. Voor een app die zichzelf als bewijsmateriaal aandient is dat het
+   grootste risico dat erin zit — groter dan welke ontbrekende functie ook. Eén verloren telefoon
+   is een verloren dossier, en een vaststelling die je niet meer kunt tonen is geen vaststelling.
+
+   Daarom: één bestand met álles erin, dat je zelf wegzet waar je wil. Geen server, geen account,
+   geen abonnement — dezelfde eigenschap die de app op de werf bruikbaar houdt.
+
+   Het bestand draagt bewust een `toestel` en een tijdstempel, en elk punt krijgt bij elke
+   wijziging een `gewijzigd`. Dat is nu nergens voor nodig; het is het minimum waarmee twee
+   toestellen later samengevoegd kunnen worden zonder dat het formaat op de schop moet.
+
+   Foto's zitten er op ware grootte in, want een back-up die minder bewaart dan het origineel is
+   geen back-up. Dat valt mee: de app verkleint elke foto al bij het maken tot 1400 px, dus een
+   vergadering van dertig foto's weegt een stuk of tien megabyte. Het lichte formaat is voor het
+   verslag, niet voor de kluis. */
+const BACKSLEUTEL="werfpunten-backup";
+const TOESTELSLEUTEL="werfpunten-toestel";
+
+function toestelId(){
+  try{
+    let t=localStorage.getItem(TOESTELSLEUTEL);
+    if(!t){t="t"+Math.random().toString(36).slice(2,10);localStorage.setItem(TOESTELSLEUTEL,t);}
+    return t;
+  }catch(e){return "t?";}
+}
+
+/* Elke wijziging aan een punt krijgt een tijdstempel. Zonder dat kan een latere samenvoeging niet
+   uitmaken welke van twee versies de jongste is, en dan wordt het raden. */
+function raakAan(p){ if(p) p.gewijzigd=new Date().toISOString(); return p; }
+
+function blobNaarTekst(b){return new Promise(res=>{
+  const r=new FileReader();r.onload=()=>res(r.result);r.onerror=()=>res(null);r.readAsDataURL(b);
+});}
+function tekstNaarBlob(s){
+  try{
+    const [kop,data]=s.split(",");
+    const soort=(kop.match(/:(.*?);/)||[])[1]||"application/octet-stream";
+    const bin=atob(data), arr=new Uint8Array(bin.length);
+    for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
+    return new Blob([arr],{type:soort});
+  }catch(e){return null;}
+}
+function alleSleutels(winkel){return new Promise(res=>{
+  if(!db)return res([]);
+  const q=db.transaction(winkel,"readonly").objectStore(winkel).getAllKeys();
+  q.onsuccess=()=>res(Array.from(q.result||[]));q.onerror=()=>res([]);
+});}
+
+async function maakBackup(){
+  const plannen={};
+  for(const z of await alleSleutels("plannen"))plannen[z]=await haalPlan(z);
+  // paren, geen object: een JSON-sleutel is altijd tekst, dus een id die géén tekst is zou bij
+  // het terugzetten stilletjes van soort veranderen en de foto onvindbaar maken
+  const fotos=[];
+  for(const id of await alleSleutels("fotos")){
+    const b=await haalFoto(id);
+    if(b)fotos.push([id,await blobNaarTekst(b)]);
+  }
+  return {
+    formaat:"werfpunten-backup", versie:1,
+    gemaakt:new Date().toISOString(), toestel:toestelId(), app:VERSIE,
+    staat, contacten, plannen, fotos,
+    dagen:await haalDagen()
+  };
+}
+
+async function herstelBackup(d){
+  if(!d||d.formaat!=="werfpunten-backup")throw new Error("geen back-upbestand");
+  if(d.staat){staat=d.staat;bewaarStaat();}
+  if(d.contacten){contacten=d.contacten;bewaarContacten();}
+  for(const [z,p] of Object.entries(d.plannen||{}))if(p)await zetPlan(z,p);
+  for(const dag of d.dagen||[])if(dag&&dag.datum)await zetDag(dag.datum,dag);
+  for(const [id,s] of (Array.isArray(d.fotos)?d.fotos:Object.entries(d.fotos||{}))){
+    const b=tekstNaarBlob(s);
+    if(b)await zetFoto(id,b);
+  }
+  archief=await haalDagen();
+  planLijst=await planZones();
+}
+
+function tel(d){
+  return {punten:(d.staat&&d.staat.punten||[]).length,
+          dagen:(d.dagen||[]).length,
+          plannen:Object.keys(d.plannen||{}).length,
+          fotos:(Array.isArray(d.fotos)?d.fotos:Object.keys(d.fotos||{})).length};
+}
+
+document.getElementById("backup").onclick=async()=>{
+  melding("Back-up wordt gemaakt…");
+  let d;
+  try{d=await maakBackup();}catch(e){melding("Back-up mislukt: "+(e.message||"onbekende fout"));return;}
+  const tekst=JSON.stringify(d);
+  const t=tel(d);
+  const naam="werfpunten-"+staat.datum+".werfback";
+  try{
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(new Blob([tekst],{type:"application/json"}));
+    a.download=naam;
+    document.body.appendChild(a);a.click();
+    setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1000);
+  }catch(e){melding("Bewaren lukte niet in deze browser");return;}
+  try{localStorage.setItem(BACKSLEUTEL,d.gemaakt);}catch(e){}
+  merkBackupknop();
+  meldingMetActie(naam+" — "+t.punten+" punten, "+t.plannen+" plannen, "+t.fotos+" foto's, "+
+    Math.round(tekst.length/1e6*10)/10+" MB","terugzetten",kiesHerstel);
+};
+
+function kiesHerstel(){document.getElementById("backupbestand").click();}
+
+document.getElementById("backupbestand").onchange=async e=>{
+  const f=e.target.files[0];e.target.value="";
+  if(!f)return;
+  let d;
+  try{d=JSON.parse(await f.text());}
+  catch(err){melding((f.name||"bestand")+" is geen back-up");return;}
+  if(!d||d.formaat!=="werfpunten-backup"){melding((f.name||"bestand")+" is geen back-up");return;}
+  const t=tel(d);
+  const eigen=d.toestel===toestelId();
+  // wat er nú staat alleen tellen, niet inpakken: een back-up maken om te kunnen tellen zou
+  // elke foto voor niets omzetten
+  const nu={punten:(staat.punten||[]).length, dagen:archief.length,
+            plannen:(await alleSleutels("plannen")).length};
+  const regels=[
+    "Back-up van <b>"+(d.gemaakt||"").slice(0,10)+"</b>"+(eigen?" van dit toestel":" van een ánder toestel")+
+      ", gemaakt met "+(d.app||"een oudere versie")+".",
+    "Erin: <b>"+t.punten+"</b> punten van die dag, "+t.dagen+" gearchiveerde vergaderingen, "+
+      t.plannen+" plannen en "+t.fotos+" foto's.",
+    "<b>Terugzetten overschrijft wat er nu op dit toestel staat</b> — nu "+nu.punten+" punten, "+
+      nu.dagen+" vergaderingen, "+nu.plannen+" plannen. Wat in de back-up niet voorkomt maar hier "+
+      "wel, blijft staan: plannen en vergaderingen worden aangevuld, de dag zelf wordt vervangen.",
+    "Twijfel je? Maak eerst een back-up van wat er nú staat."
+  ];
+  if(!await vraagJa("Back-up terugzetten",regels,"Terugzetten"))return;
+  try{await herstelBackup(d);}
+  catch(err){melding("Terugzetten mislukt: "+(err.message||"onbekende fout"));return;}
+  await tekenLijst();tekenZones();merkPlanknop();merkBackupknop();
+  melding(t.punten+" punten en "+t.plannen+" plannen teruggezet");
+};
+
+/* Herinneren, niet zeuren: één keer bij het openen, en alleen als er sinds de laatste back-up
+   werkelijk iets bijgekomen is. Wie het negeert, ziet het morgen weer. */
+function merkBackupknop(){
+  const k=document.getElementById("backup");
+  if(k)k.classList.toggle("wacht",backupAchterstand());
+}
+
+function backupAchterstand(){
+  let laatst=null;
+  try{laatst=localStorage.getItem(BACKSLEUTEL);}catch(e){}
+  const jongste=(staat.punten||[]).reduce((m,p)=>{
+    const t=p.gewijzigd||null; return t&&(!m||t>m)?t:m;},null);
+  if(!(staat.punten||[]).length&&!archief.length)return false;
+  if(!laatst)return true;
+  if(jongste&&jongste>laatst)return true;
+  // ook een gearchiveerde vergadering die na de laatste back-up is afgesloten telt
+  return archief.some(d=>d.datum>laatst.slice(0,10));
+}
+
+/* ---- de keet ----
+   Op de werf vang je, in de keet werk je af. Dat zijn twee verschillende handelingen op twee
+   momenten, en de app kende alleen de eerste. Wat er in de keet gebeurt is niet "de notities
+   netjes maken" maar de handeling waar het hele verslag op steunt: beslissen wát elke
+   vaststelling ís. Een verbod is een rechtshandeling van de architect. Een aanwijzing aan de
+   aannemer valt binnen de aanneming. Aan de opdrachtgever leg je voor, je draagt hem niets op.
+   Wie dat door elkaar haalt schrijft zijn eigen aansprakelijkheid op.
+
+   Daarom staat de gevolgtrekking hier voluit op het scherm zodra je iemand kiest. Niet als
+   uitleg achteraf maar op het moment van de keuze, want dat is waar ze telt.
+
+   Eén punt tegelijk en groot, zodat het scherm rond de tafel kan. De foto ernaast is wat het
+   gesprek stuurt: je schrijft de woorden erbij terwijl je ernaar kijkt. */
+/* De woordenlijst waaruit een vaststelling wordt opgebouwd staat in het profiel hierboven.
+   Bewust klein en bewust saai: het zijn de dingen die op elke werf terugkomen, in de taal van een
+   verslag. Tik aan wat je ziet en de zin schrijft zichzelf — sneller dan typen, en het levert
+   elke keer dezelfde formulering, wat in een dossier meer waard is dan variatie.
+
+   Wat er níet in staat is een gevolg: geen "moet hersteld worden", geen "is niet conform". Een
+   vaststelling stelt vast. Wat er moet gebeuren volgt uit aan wie je het punt toewijst, en dat
+   zet het verslag er zelf bij. Twee keer hetzelfde zeggen is twee keer kunnen tegenspreken. */
+let keet={i:0,lijst:[],gebrek:null,woordenOpen:null,hoofdstuk:null};
+
+/* De zin uit wat je aantikte plus wat de app al weet. Niets hiervan is verzonnen: de plaats komt
+   uit de pin, de woorden uit jouw keuze. Daarom kan er ook niets fout in staan wat jij niet zelf
+   hebt aangewezen. */
+function keetZin(p){
+  if(!keet.gebrek)return "";
+  const plek=p.plek&&p.plek.lokaal?("In "+p.plek.lokaal):
+             (p.plek?("Op "+p.zone+" ("+plaatsKort(p.plek)+")"):("Op "+p.zone));
+  return plek+" "+keet.gebrek+" vastgesteld.";
+}
+
+function keetPunt(){return keet.lijst[keet.i]||null;}
+
+function keetDatum(dagen){
+  const d=new Date();d.setDate(d.getDate()+dagen);
+  return String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0");
+}
+
+async function keetToon(){
+  const p=keetPunt();
+  const vg=document.getElementById("keet-voortgang");
+  if(!p){document.getElementById("keetdlg").close();return;}
+  const onaf=keet.lijst.filter(x=>x.onaf).length;
+  vg.textContent=(keet.i+1)+" / "+keet.lijst.length+(onaf?("  ·  "+onaf+" onaf"):"");
+
+  const img=document.getElementById("keet-foto");
+  img.hidden=!p.foto;
+  if(p.foto){
+    const b=await haalFoto(p.id);
+    if(b){img.src=URL.createObjectURL(b);
+      img.onclick=()=>{document.getElementById("keetdlg").close();openTekenscherm(b,p.id);};}
+  }
+
+  const pk=document.getElementById("keet-plek");
+  pk.innerHTML="";
+  const wat=document.createElement("span");
+  wat.textContent=p.zone+" · "+p.tijd+" · "+(p.plek?("📍 "+(p.plek.lokaal||plaatsKort(p.plek))):"geen plek");
+  pk.appendChild(wat);
+  const zet=document.createElement("button");
+  zet.type="button";zet.style.marginLeft="8px";
+  zet.textContent=p.plek?"plek rechtzetten":"plek aanduiden";
+  zet.onclick=()=>{document.getElementById("keetdlg").close();openPlan(p.plek?p.plek.zone:undefined);};
+  pk.appendChild(zet);
+
+  // Het hoofdstuk blijft gelden voor het volgende punt, net als de plek: werk je aan het dak,
+  // dan gaan er meestal meerdere punten na elkaar over het dak. Zo kost het nul tikken.
+  const hs=document.getElementById("keet-hoofdstuk");
+  hs.innerHTML="";
+  const leeg=document.createElement("option");
+  leeg.value="";leeg.textContent="— geen hoofdstuk —";hs.appendChild(leeg);
+  hoofdstukken.forEach(h=>{
+    const o=document.createElement("option");
+    o.value=h.nr;o.textContent=h.nr+" · "+h.naam;hs.appendChild(o);
+  });
+  if(!p.hoofdstuk&&keet.hoofdstuk)p.hoofdstuk=keet.hoofdstuk;
+  hs.value=p.hoofdstuk||"";
+  hs.onchange=()=>{
+    p.hoofdstuk=hs.value||null;
+    keet.hoofdstuk=hs.value||null;
+    raakAan(p);bewaarStaat();keetToon();
+  };
+
+  const ta=document.getElementById("keet-tekst");
+  ta.value=p.tekst||"";
+
+  const wd=document.getElementById("keet-woorden");
+  // open bij een punt zonder woorden — dán heb je hem nodig; anders uit de weg, want de lijst
+  // duwt de rest van het scherm anders ver naar beneden
+  if(keet.woordenOpen===null||keet.woordenOpen===undefined)keet.woordenOpen=!p.tekst;
+  wd.hidden=!keet.woordenOpen;
+  // De kop van de lijst is de gewone gang van zaken van dit beroep — de soort zonder eigen
+  // verslagblok. Heeft het profiel die niet, dan is "Vaststelling" wat er overblijft.
+  const eerste=SOORTEN.find(o=>!o.blok);
+  document.getElementById("keet-vouwwoorden").textContent=
+    ((eerste&&eerste.kop)||"Vaststelling")+" "+(keet.woordenOpen?"▴":"▾");
+  wd.innerHTML="";
+  SOORTEN.forEach(soort=>{
+    // De kop is zelf een knop. Anders is een soort zonder woorden onbereikbaar, en kun je de
+    // soort van een bestaand punt niet wijzigen zonder de tekst opnieuw te laten schrijven.
+    const kop=document.createElement("button");
+    kop.type="button";
+    kop.className="keet-soortkop"+(p.soort===soort.sleutel?" actief":"");
+    kop.textContent=soort.kop;
+    kop.title=soort.uitleg;
+    kop.onclick=()=>{
+      if(p.soort===soort.sleutel)delete p.soort; else p.soort=soort.sleutel;
+      raakAan(p);bewaarStaat();keetToon();
+    };
+    wd.appendChild(kop);
+    const rij=document.createElement("div");rij.className="keet-woordrij";
+    soort.woorden.forEach(g=>{
+      const b=document.createElement("button");
+      b.type="button";b.textContent=g;
+      if(keet.gebrek===g)b.className="actief";
+      b.onclick=()=>{
+        const uit=keet.gebrek===g;               // nog eens tikken zet hem weer af
+        keet.gebrek=uit?null:g;
+        if(uit)delete p.soort; else p.soort=soort.sleutel;
+        const zin=keetZin(p);
+        if(zin){p.tekst=zin;delete p.onaf;}
+        raakAan(p);bewaarStaat();
+        keetToon();
+      };
+      rij.appendChild(b);
+    });
+    wd.appendChild(rij);
+  });
+
+  // wie moet er iets mee — de rol erbij, want die bepaalt wat het wordt
+  const aan=document.getElementById("keet-aan");
+  aan.innerHTML="";
+  const maak=(label,code,titel)=>{
+    const b=document.createElement("button");
+    b.type="button";b.textContent=label;if(titel)b.title=titel;
+    if((p.aan||null)===code)b.className="actief";
+    b.onclick=()=>{p.aan=code;raakAan(p);bewaarStaat();keetToon();};
+    aan.appendChild(b);
+  };
+  maak("niemand",null,"blijft een vaststelling zonder opdracht");
+  const rolnaam=sl=>{const r=ROLLEN.find(o=>o.sleutel===sl);return r?r.naam:sl;};
+  contacten.forEach(c=>maak(c.naam+(c.rol?" · "+rolnaam(c.rol):""),c.code,
+    c.rol?"":"deze contactpersoon heeft nog geen rol — het punt valt dan onder “Op te volgen”"));
+  if(!contacten.length){
+    const w=document.createElement("span");
+    w.className="keet-uitleg";
+    w.textContent="Nog geen contacten. Voeg ze toe op het hoofdscherm; de rol erbij bepaalt onder welke kop een punt belandt.";
+    aan.appendChild(w);
+  }
+
+  // wat de keuze juridisch betekent, op het moment van de keuze
+  const rol=p.aan?rolVan(p.aan):null;
+  const soort=SOORTEN.find(o=>o.sleutel===p.soort);
+  const u=document.getElementById("keet-uitleg");
+  // De soort gaat voor op de rol. Een beschadiging aan de aannemer toewijzen onder "uit te
+  // voeren binnen de aanneming" is precies de fout die het onderscheid moet voorkomen.
+  if(p.verbod&&profiel.bijzonder)
+    u.textContent=profiel.bijzonder.uitleg;
+  // De scherpste soort van een profiel waarschuwt op het moment van de keuze zelf: wijs je die
+  // toe aan de verkeerde rol, dan staat er iets wat je niet kunt waarmaken.
+  else if(soort&&soort.waarschuwing&&rol&&rol.sleutel===soort.waarschuwtBij)
+    u.textContent=soort.waarschuwing;
+  // Een soort zonder eigen blok is de gewone gang van zaken; die loopt via de rol.
+  else if(soort&&soort.blok)u.textContent=soort.kop+" — "+soort.uitleg+
+    (p.aan?"":". Wijs nog aan wie er iets mee moet.");
+  else if(rol)u.textContent=rol.kop+" — "+(rol.toelichting||"geen uitvoeringsopdracht");
+  else if(p.aan)u.textContent="Deze contactpersoon heeft geen rol, dus dit punt komt onder “Op te volgen”.";
+  else u.textContent="Zonder toewijzing blijft dit een vaststelling in het verslag.";
+
+  const vb=document.getElementById("keet-verbod");
+  vb.className=p.verbod?"actief":"";
+  document.getElementById("keet-urgent").className=p.urgent?"actief":"";
+
+  // Wat het verslag er straks zelf bij zet. Zo zie je dat het gevolg gedekt is zonder het in de
+  // zin te herhalen — twee keer hetzelfde zeggen is twee keer kunnen tegenspreken.
+  const gv=document.getElementById("keet-gevolg");
+  const naam=p.aan?((contacten.find(c=>c.code===p.aan)||{}).naam||p.aan):null;
+  const bij=[];
+  if(naam)bij.push("→ "+naam);
+  if(p.deadline)bij.push("tegen "+p.deadline);
+  if(p.verbod)bij.unshift("⛔ verbod");
+  if(p.urgent)bij.unshift("🔴 urgent");
+  const h=p.hoofdstuk?hoofdstukVan(p.hoofdstuk):null;
+  if(h)bij.unshift("hoofdstuk "+h.nr+" "+h.naam);
+  gv.textContent=bij.length?("Het verslag zet hier zelf bij: "+bij.join(", ")+"."):"";
+
+  const dl=document.getElementById("keet-deadline");
+  dl.innerHTML="";
+  const dknop=(label,waarde)=>{
+    const b=document.createElement("button");
+    b.type="button";b.textContent=label;
+    if((p.deadline||null)===waarde)b.className="actief";
+    b.onclick=()=>{p.deadline=waarde;raakAan(p);bewaarStaat();keetToon();};
+    dl.appendChild(b);
+  };
+  dknop("geen",null);
+  dknop("+1 week",keetDatum(7));
+  dknop("+2 weken",keetDatum(14));
+  dknop("+1 maand",keetDatum(30));
+  const eigen=document.createElement("input");
+  eigen.type="date";eigen.style.cssText="font-size:14px;padding:8px";
+  eigen.onchange=()=>{
+    if(!eigen.value)return;
+    const d=new Date(eigen.value);
+    p.deadline=String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0");
+    raakAan(p);bewaarStaat();keetToon();
+  };
+  dl.appendChild(eigen);
+}
+
+/* Elke knop hertekent het scherm, en dat zou de tekst die je net intikte overschrijven met wat
+   er al stond. Dus schrijven we bij elke aanslag door naar het punt zelf; naar de opslag gaan we
+   pas bij het bladeren, want localStorage bij elke letter is zonde. */
+document.getElementById("keet-tekst").oninput=()=>{
+  const p=keetPunt();
+  if(!p)return;
+  p.tekst=document.getElementById("keet-tekst").value;
+  if(p.tekst.trim())delete p.onaf; else p.onaf=true;
+};
+
+function keetBewaarTekst(){
+  const p=keetPunt();
+  if(!p)return;
+  const t=document.getElementById("keet-tekst").value.trim();
+  p.tekst=t;
+  if(t)delete p.onaf; else p.onaf=true;
+  raakAan(p);bewaarStaat();
+}
+
+function keetGa(stap){
+  keetBewaarTekst();
+  const n=keet.i+stap;
+  if(n<0||n>=keet.lijst.length)return;
+  keet.i=n;keet.gebrek=null;keet.woordenOpen=null;keetToon();
+}
+
+function openKeet(){
+  if(!staat.punten.length){melding("Nog geen punten om af te werken");return;}
+  keet.lijst=staat.punten;keet.i=0;
+  const dlg=document.getElementById("keetdlg");
+  if(!dlg.open)dlg.showModal();
+  keetToon();
+}
+
+document.getElementById("keet").onclick=openKeet;
+document.getElementById("keet-vouwwoorden").onclick=()=>{
+  keet.woordenOpen=!keet.woordenOpen;keetToon();
+};
+document.getElementById("keet-vorige").onclick=()=>keetGa(-1);
+document.getElementById("keet-volgende").onclick=()=>keetGa(1);
+document.getElementById("keet-woordbeheer").onclick=async()=>{
+  await beheerGebrekwoorden();keetToon();
+};
+document.getElementById("keet-hoofdstukbeheer").onclick=async()=>{
+  await beheerHoofdstukken();keetToon();
+};
+document.getElementById("keet-urgent").onclick=()=>{
+  const p=keetPunt();if(!p)return;
+  p.urgent=!p.urgent;raakAan(p);bewaarStaat();keetToon();
+};
+document.getElementById("keet-verbod").onclick=()=>{
+  const p=keetPunt();if(!p)return;
+  p.verbod=!p.verbod;raakAan(p);bewaarStaat();keetToon();
+};
+document.getElementById("keet-klaar").onclick=async()=>{
+  keetBewaarTekst();
+  document.getElementById("keetdlg").close();
+  await tekenLijst();merkBackupknop();
+  const onaf=staat.punten.filter(p=>p.onaf).length;
+  melding(onaf?(onaf+" punt"+(onaf===1?"":"en")+" nog zonder woorden")
+             :"Alles afgewerkt — klaar voor het verslag");
+};
+
+/* ---- snelvastleggen ----
+   Het tempo ligt bij het gesprek, niet bij jou. Je loopt met de aannemer en de bouwheer; die
+   wijzen iets aan, zeggen er iets over en stappen door. Elke tussenvraag — "opslaan?", "ok?",
+   "annoteren?" — is een stop, en na drie stops staat het gezelschap al twee euvels verder en
+   noteer je de rest op papier. Dat is niet traagheid maar afhaken, en het is precies waar een
+   verslag in tweeën breekt.
+
+   Dus: de sluiter maakt een punt. Meer niet. Geen voorbeeld, geen bevestiging, geen naam. De foto
+   ís de vaststelling; de woorden komen in de keet, met het beeld erbij. De plek die geldt gaat
+   mee zoals ze is — klopt ze niet precies, dan zet je dat later recht, want een pin een halve
+   meter verleggen terwijl iemand tegen je praat is dezelfde stop.
+
+   Daarom slaan we de camera van het toestel over: die dwingt op iOS een "Retake / Use Photo"
+   tussen elke opname. Een eigen sluiter op de videostroom heeft die stap niet. Lukt dat niet —
+   geen toestemming, geen camera — dan valt het terug op de gewone fotoknop, mét die tussenstap,
+   want een trage weg is nog altijd beter dan geen. */
+let snel={stroom:null,aantal:0,bezig:false};
+
+function snelPlekTekst(){
+  if(!wachtendePlek)return "📍 —";
+  return "📍 "+(wachtendePlek.lokaal||(Math.round(wachtendePlek.x)+","+Math.round(wachtendePlek.y)));
+}
+
+async function openSnel(){
+  const dlg=document.getElementById("sneldlg");
+  const mislukt=document.getElementById("snel-mislukt");
+  snel.aantal=0;
+  document.getElementById("snel-teller").textContent="0";
+  document.getElementById("snel-plek").textContent=snelPlekTekst();
+  mislukt.hidden=true;
+  if(!dlg.open)dlg.showModal();
+  try{
+    snel.stroom=await navigator.mediaDevices.getUserMedia(
+      {video:{facingMode:{ideal:"environment"},width:{ideal:1920},height:{ideal:1440}},audio:false});
+    const v=document.getElementById("snelbeeld");
+    v.srcObject=snel.stroom;
+    await v.play().catch(()=>{});
+  }catch(e){
+    mislukt.hidden=false;
+    mislukt.innerHTML="";
+    const p=document.createElement("p");
+    p.style.margin="0";
+    p.textContent=(e&&e.name==="NotAllowedError")
+      ? "De camera is niet vrijgegeven voor deze app. Zet dat aan bij de instellingen van je browser, of gebruik de gewone fotoknop."
+      : "Geen camera beschikbaar in deze weergave.";
+    mislukt.appendChild(p);
+    const k=document.createElement("button");
+    k.type="button";k.textContent="Gewone fotoknop";
+    k.style.cssText="background:#ffffff22;color:#fff;border:1px solid #ffffff44";
+    k.onclick=()=>{sluitSnel();document.getElementById("foto").click();};
+    mislukt.appendChild(k);
+    return;
+  }
+  // Er ligt een plan maar er geldt geen plek: dan dragen twintig foto's straks geen enkele
+  // coördinaat, en dat is werk dat je in de keet dubbel betaalt. Zeggen, niet tegenhouden —
+  // soms wíl je gewoon schieten en later plaatsen.
+  if(!wachtendePlek&&planLijst.length)
+    melding("Geen plek ingesteld — deze foto's krijgen er geen");
+}
+
+function sluitSnel(){
+  if(snel.stroom){snel.stroom.getTracks().forEach(t=>t.stop());snel.stroom=null;}
+  const v=document.getElementById("snelbeeld");
+  if(v)v.srcObject=null;
+  const dlg=document.getElementById("sneldlg");
+  if(dlg.open)dlg.close();
+}
+
+async function knip(){
+  if(snel.bezig)return;                      // dubbeltik mag geen twee punten maken
+  const v=document.getElementById("snelbeeld");
+  if(!v||!v.videoWidth){melding("Nog geen beeld");return;}
+  snel.bezig=true;
+  try{
+    const max=1400, sc=Math.min(1,max/Math.max(v.videoWidth,v.videoHeight));
+    const c=document.createElement("canvas");
+    c.width=Math.round(v.videoWidth*sc); c.height=Math.round(v.videoHeight*sc);
+    c.getContext("2d").drawImage(v,0,0,c.width,c.height);
+    const blob=await new Promise(r=>c.toBlob(r,"image/jpeg",.75));
+    if(!blob)throw new Error("geen beeld");
+    const id="p"+Date.now()+"-"+snel.aantal;
+    const punt=raakAan({id,zone:staat.zone,tekst:"",spreker:null,
+      tijd:new Date().toTimeString().slice(0,5),foto:true,bijlage:null,
+      plek:wachtendePlek, onaf:true});
+    await zetFoto(id,blob);
+    staat.punten.push(punt); bewaarStaat();
+    snel.aantal++;
+    document.getElementById("snel-teller").textContent=String(snel.aantal);
+    const f=document.getElementById("snelflits");
+    f.classList.remove("aan"); void f.offsetWidth; f.classList.add("aan");
+    merkBackupknop();
+  }catch(e){
+    melding("Vastleggen mislukt");
+  }
+  snel.bezig=false;
+}
+
+document.getElementById("snel-knip").onclick=knip;
+document.getElementById("snel-stop").onclick=async()=>{
+  const n=snel.aantal;
+  sluitSnel();
+  await tekenLijst();
+  if(n)melding(n+(n===1?" foto vastgelegd":" foto's vastgelegd")+" — de woorden komen in de keet");
+};
+document.getElementById("snel-plek").onclick=()=>{
+  // de plek rechtzetten is een andere handeling; die hoort niet tussen twee opnames
+  sluitSnel();
+  openPlan(wachtendePlek?wachtendePlek.zone:undefined);
+};
+document.getElementById("snelknop").onclick=openSnel;
+document.getElementById("pl-snel").onclick=()=>{
+  document.getElementById("plandlg").close();
+  openSnel();
+};
 
 function verkleinFoto(file){return new Promise(res=>{
   const r=new FileReader();
@@ -705,9 +1931,9 @@ async function bewaarPunt(veld){
   const m=tekst.match(/^([A-Za-z0-9]{1,4})\s*:\s*(.*)$/);
   if(m){spreker=m[1].toUpperCase();tekst=m[2].trim();}
   const id="p"+Date.now();
-  const punt={id,zone:staat.zone,tekst:tekst,spreker,
+  const punt=raakAan({id,zone:staat.zone,tekst:tekst,spreker,
     tijd:new Date().toTimeString().slice(0,5),foto:!!wachtendeFoto,bijlage:wachtendeBijlage,
-    plek:wachtendePlek};
+    plek:wachtendePlek});
   if(wachtendeFoto)await zetFoto(id,wachtendeFoto);
   staat.punten.push(punt);bewaarStaat();
   el.value=""; if(el!==tekstEl)tekstEl.value="";
@@ -839,6 +2065,11 @@ function haalDagen(){return new Promise(res=>{
   q.onsuccess=()=>res(q.result||[]);q.onerror=()=>res([]);
 });}
 
+function wisPlan(zone){return new Promise(res=>{
+  if(!db)return res(false);
+  const t=db.transaction("plannen","readwrite");t.objectStore("plannen").delete(zone);
+  t.oncomplete=()=>res(true);t.onerror=()=>res(false);
+});}
 function planZones(){return new Promise(res=>{
   if(!db)return res([]);
   const q=db.transaction("plannen","readonly").objectStore("plannen").getAllKeys();
@@ -851,11 +2082,12 @@ function laadBeeld(src){return new Promise((res,rej)=>{
 
 /* Welk lokaal hoort bij deze pin? Het dichtstbijzijnde label, mits het niet absurd ver ligt —
    anders liever niets dan een verkeerd lokaal in een verslag. */
-function lokaalBij(x,y){
-  if(!plan||!plan.lokalen||!plan.lokalen.length)return null;
-  const verh=plan.hoogte/plan.breedte;   // procenten zijn per as; y terugschalen voor echte afstand
+function lokaalBij(x,y,welk){
+  const pn=welk||plan;                   // meestal het geopende plan, bij overnemen een ander
+  if(!pn||!pn.lokalen||!pn.lokalen.length)return null;
+  const verh=pn.hoogte/pn.breedte;       // procenten zijn per as; y terugschalen voor echte afstand
   let best=null,bd=1e9;
-  for(const l of plan.lokalen){
+  for(const l of pn.lokalen){
     const dx=l.x-x, dy=(l.y-y)*verh;
     const d=Math.hypot(dx,dy);
     if(d<bd){bd=d;best=l;}
@@ -997,12 +2229,610 @@ function planTeken(){
   });
   x.textAlign="start";x.textBaseline="alphabetic";
 
-  if(!pl.pin)return;
-  const px=pl.dx+pl.pin.x/100*plan.breedte*pl.schaal;
-  const py=pl.dy+pl.pin.y/100*plan.hoogte*pl.schaal;
-  x.lineWidth=2.5;x.strokeStyle="#fff";x.fillStyle="#d92b06";
-  x.beginPath();x.arc(px,py,11,0,7);x.fill();x.stroke();
-  x.beginPath();x.arc(px,py,3,0,7);x.fillStyle="#fff";x.fill();
+  if(pl.pin){
+    const px=pl.dx+pl.pin.x/100*plan.breedte*pl.schaal;
+    const py=pl.dy+pl.pin.y/100*plan.hoogte*pl.schaal;
+    x.lineWidth=2.5;x.strokeStyle="#fff";x.fillStyle="#d92b06";
+    x.beginPath();x.arc(px,py,11,0,7);x.fill();x.stroke();
+    x.beginPath();x.arc(px,py,3,0,7);x.fillStyle="#fff";x.fill();
+  }
+  if(kp.aan)tekenKoppelPunten(x);
+  tekenSchaal(x,b);
+}
+
+/* ---- de schaal ----
+   Een ingescand architectenplan is een blad: een pin staat op 53% van de breedte en dat is
+   alles wat je weet. Een omtrek uit het GRB is een kaart — die staat in Lambert 72 en dus in
+   meters, en draagt daarom van nature een ware schaal. Het plan zegt dat zelf via `georef`.
+
+   Draagt het plan die niet, dan tekenen we niets. Een schaalbalk verzinnen bij een blad zonder
+   maat zou beweren wat de app niet weet, en dat is precies wat ze nergens anders doet. */
+const SCHAALMATEN=[0.5,1,2,5,10,20,25,50,100,200,500,1000];
+
+function meterPerPixel(){
+  const g=plan&&plan.georef;
+  // Een plaatselijk raam zegt alleen waar dit blad ligt ten opzichte van zijn voorganger. Dat is
+  // geen maat, dus ook geen schaalbalk — anders zou de app meters beweren die ze niet kent.
+  if(!g||g.plaatselijk||!g.eenheid_m||!pl.schaal)return null;
+  return g.eenheid_m/pl.schaal;
+}
+
+function tekenSchaal(x,b){
+  const mpp=meterPerPixel();
+  if(!mpp)return;
+  // een balk van ongeveer een derde van de breedte, maar altijd op een rond aantal meter:
+  // "22 m" laat zich niet schatten, "20 m" wel
+  const ruimte=Math.min(140,b.width*0.34);
+  const passen=SCHAALMATEN.filter(v=>v/mpp<=ruimte);
+  const m=passen.length?passen[passen.length-1]:SCHAALMATEN[0];
+  const lang=m/mpp;
+  if(lang<18)return;              // te klein om iets te zeggen: dan liever niets
+  const x0=14, y0=34;      // op ooghoogte met de zoomknoppen aan de overkant
+  x.save();
+  x.lineCap="butt";
+  // twee keer trekken, donker eronder: de balk ligt soms op wit papier en soms op de zwarte rand
+  [["rgba(0,0,0,.55)",5],["#fff",2.5]].forEach(([kl,dk])=>{
+    x.strokeStyle=kl;x.lineWidth=dk;
+    x.beginPath();
+    x.moveTo(x0,y0-5);x.lineTo(x0,y0+5);
+    x.moveTo(x0,y0);x.lineTo(x0+lang,y0);
+    x.moveTo(x0+lang,y0-5);x.lineTo(x0+lang,y0+5);
+    x.stroke();
+  });
+  const tekst=m<1?(m*100)+" cm":m+" m";
+  x.font="600 11px ui-monospace,Menlo,monospace";
+  x.textAlign="center";x.textBaseline="bottom";
+  x.lineWidth=3;x.strokeStyle="rgba(0,0,0,.55)";x.strokeText(tekst,x0+lang/2,y0-7);
+  x.fillStyle="#fff";x.fillText(tekst,x0+lang/2,y0-7);
+  x.restore();
+  x.textAlign="start";x.textBaseline="alphabetic";
+}
+
+/* ---- van een plan naar de kaart, en terug ----
+   Een plan met `georef` weet waar het ligt. Twee getallenparen volstaan daarvoor niet: een
+   architectenplan staat zelden met het noorden boven, dus er hoort een draaiing bij.
+
+       u = px/100 * breedte        (beeldeenheden, x naar rechts)
+       v = py/100 * hoogte         (beeldeenheden, y naar beneden)
+       X = x + ( u·cos θ − v·sin θ) · eenheid_m
+       Y = y + (−u·sin θ − v·cos θ) · eenheid_m
+
+   θ is `noord`: het aantal graden waarover je het beeld met de klok mee moet draaien om het
+   noorden boven te krijgen. Bij een GRB-omtrek is dat nul, en dan valt de formule terug op wat
+   ze eerst was — bestaande omtrekplannen blijven dus gewoon werken.
+
+   De matrix erin is orthogonaal én haar eigen omgekeerde (ze spiegelt, want beeld-y wijst
+   omlaag en Lambert-y omhoog). Daarom is de terugweg dezelfde vermenigvuldiging. */
+function naarLambert(p,px,py){
+  const g=p&&p.georef;
+  if(!g||!g.eenheid_m)return null;
+  const u=px/100*p.breedte, v=py/100*p.hoogte;
+  const t=(g.noord||0)*Math.PI/180, c=Math.cos(t), s=Math.sin(t);
+  return {X:g.x+(u*c-v*s)*g.eenheid_m, Y:g.y+(-u*s-v*c)*g.eenheid_m};
+}
+function naarBeeld(p,X,Y){
+  const g=p&&p.georef;
+  if(!g||!g.eenheid_m)return null;
+  const t=(g.noord||0)*Math.PI/180, c=Math.cos(t), s=Math.sin(t);
+  const dx=(X-g.x)/g.eenheid_m, dy=(Y-g.y)/g.eenheid_m;
+  return {x:(dx*c-dy*s)/p.breedte*100, y:(-dx*s-dy*c)/p.hoogte*100};
+}
+
+/* ---- de uitlijning ----
+   Wijs op beide tekeningen dezelfde hoeken aan, en daaruit volgen verschuiving, draaiing en
+   schaal. In het platte vlak is dat één complexe vermenigvuldiging: keer de beeld-y om, en de
+   afbeelding wordt q = t + k·p, waarbij |k| de schaal is en arg(k) de draaiing. Twee hoeken
+   geven een sluitend antwoord; meer hoeken lost dezelfde som op in kleinste kwadraten, en het
+   verschil tussen wat je aanwees en waar het uitkomt is dan meteen de controle.
+
+   Wat hier bewust níet gebeurt is scheeftrekken. Drie punten zouden ook scheefheid kunnen
+   opvangen, maar een affiene afbeelding door precies drie punten past altijd perfect — ze
+   slikt een misgetikte hoek zonder een kik te geven, en je ziet nooit meer dat het mis is.
+   Een gelijkvormigheid kan dat niet: die kan alleen schuiven, draaien en schalen, en wat er
+   dan overblijft aan afwijking is echte informatie. Voor een blad dat werkelijk scheef staat —
+   een foto van een plan aan de muur — helpt dit niet; dat staat in PLANMETHODE.md nog altijd
+   onder wat niet opgelost is, en het hoort daar thuis. */
+function berekenKoppeling(p,paren){
+  const n=paren.length;
+  if(n<2)return null;
+  // beeld-y omkeren: dan is het een gewone gelijkvormigheid zonder spiegeling
+  const P=paren.map(pr=>({re:pr.bron.x/100*p.breedte, im:-pr.bron.y/100*p.hoogte}));
+  const Q=paren.map(pr=>({re:pr.doel.X, im:pr.doel.Y}));
+  const mid=a=>({re:a.reduce((s,z)=>s+z.re,0)/n, im:a.reduce((s,z)=>s+z.im,0)/n});
+  const pm=mid(P), qm=mid(Q);
+  let kr=0,ki=0,noemer=0;
+  for(let i=0;i<n;i++){
+    const a={re:P[i].re-pm.re, im:P[i].im-pm.im};
+    const b={re:Q[i].re-qm.re, im:Q[i].im-qm.im};
+    kr+=b.re*a.re+b.im*a.im;      // Re(b · conj(a))
+    ki+=b.im*a.re-b.re*a.im;      // Im(b · conj(a))
+    noemer+=a.re*a.re+a.im*a.im;
+  }
+  if(noemer<1e-9)return null;     // alle hoeken op één plek: er valt niets af te leiden
+  kr/=noemer; ki/=noemer;
+  const tr=qm.re-(kr*pm.re-ki*pm.im), ti=qm.im-(kr*pm.im+ki*pm.re);
+  const afwijking=paren.map((pr,i)=>{
+    const zr=tr+(kr*P[i].re-ki*P[i].im), zi=ti+(kr*P[i].im+ki*P[i].re);
+    return Math.hypot(zr-Q[i].re, zi-Q[i].im);
+  });
+  // hoe verder de hoeken uit elkaar liggen, hoe minder een tik van een paar pixels uitmaakt.
+  // Vandaar deze verhouding: ze zegt hoe hard een misgetikte hoek doorweegt in de schaal.
+  let spreiding=0;
+  for(let i=0;i<n;i++)for(let j=i+1;j<n;j++)
+    spreiding=Math.max(spreiding,Math.hypot(P[i].re-P[j].re,P[i].im-P[j].im));
+  return {
+    georef:{epsg:31370, eenheid_m:+Math.hypot(kr,ki).toFixed(8),
+            x:+tr.toFixed(3), y:+ti.toFixed(3),
+            noord:+(-Math.atan2(ki,kr)*180/Math.PI).toFixed(3)},
+    afwijking,
+    hefboom:spreiding/Math.hypot(p.breedte,p.hoogte)   // 1 = de hele diagonaal, 0.1 = krap
+  };
+}
+
+/* ---- de koppelstand ----
+   Je wijst om beurten dezelfde hoek aan op twee plannen. Elke aanwijzing wisselt van plan, want
+   dat is de handeling zelf: "die hoek daar" ↔ "die hoek hier". Het zicht van elk plan blijft
+   onthouden, anders zoek je bij elke wissel je plek terug — en je wisselt minstens vier keer. */
+const kp={aan:false,bron:null,doel:null,paren:[],half:null,zicht:{}};
+
+function koppelKnop(){
+  const k=document.getElementById("pl-koppel");
+  if(!k)return;
+  k.textContent=kp.aan?"Stop":"Koppel";
+  k.style.background=kp.aan?"var(--accent)":"";
+  k.style.borderColor=kp.aan?"var(--accent)":"";
+}
+
+function koppelStop(bericht){
+  kp.aan=false;kp.bron=null;kp.doel=null;kp.paren=[];kp.half=null;kp.zicht={};
+  koppelKnop();planTeken();planVoet();
+  if(bericht)melding(bericht);
+}
+
+async function koppelNaar(zone){
+  if(plan)kp.zicht[plan.zone]={schaal:pl.schaal,dx:pl.dx,dy:pl.dy};
+  await toonPlan(zone);
+  pl.pin=null;pl.gekozen=null;
+  const z=kp.zicht[zone];
+  if(z){pl.schaal=z.schaal;pl.dx=z.dx;pl.dy=z.dy;}
+  else planPasIn();
+  document.getElementById("pl-plan").textContent="Plan: "+zone;
+  planTeken();planVoet();
+}
+
+async function koppelTik(x,y){
+  if(!kp.half&&plan.zone===kp.bron){
+    kp.half={x,y};
+    await koppelNaar(kp.doel);
+  }else if(kp.half&&plan.zone===kp.doel){
+    const l=naarLambert(plan,x,y);
+    if(!l){koppelStop("Dat plan draagt geen schaal meer — koppelen gestopt");return;}
+    kp.paren.push({bron:kp.half,doel:{x,y,X:l.X,Y:l.Y}});
+    kp.half=null;
+    await koppelNaar(kp.bron);
+  }else{
+    // je bent op het verkeerde plan beland; breng jezelf terug in plaats van iets te bewaren
+    await koppelNaar(kp.half?kp.doel:kp.bron);
+  }
+}
+
+function tekenKoppelPunten(x){
+  const opDit=[];
+  kp.paren.forEach((pr,i)=>{
+    if(plan.zone===kp.bron)opDit.push({x:pr.bron.x,y:pr.bron.y,n:i+1,vol:true});
+    else if(plan.zone===kp.doel)opDit.push({x:pr.doel.x,y:pr.doel.y,n:i+1,vol:true});
+  });
+  // de halve: aangewezen op het ene plan, nog niet op het andere. Hol, want ze telt nog niet mee
+  if(kp.half&&plan.zone===kp.bron)
+    opDit.push({x:kp.half.x,y:kp.half.y,n:kp.paren.length+1,vol:false});
+  x.save();
+  opDit.forEach(o=>{
+    const gx=pl.dx+o.x/100*plan.breedte*pl.schaal, gy=pl.dy+o.y/100*plan.hoogte*pl.schaal;
+    x.beginPath();x.arc(gx,gy,11,0,7);
+    x.fillStyle=o.vol?"rgba(15,157,118,.92)":"rgba(255,255,255,.92)";x.fill();
+    x.lineWidth=2.5;x.strokeStyle="#0f9d76";x.stroke();
+    // een kruisje: je wijst een hoek aan, geen gebied
+    x.beginPath();x.moveTo(gx-5,gy);x.lineTo(gx+5,gy);x.moveTo(gx,gy-5);x.lineTo(gx,gy+5);
+    x.lineWidth=1.6;x.strokeStyle=o.vol?"#fff":"#0f9d76";x.stroke();
+    x.font="600 11px ui-monospace,Menlo,monospace";
+    x.textAlign="center";x.textBaseline="middle";
+    x.lineWidth=3;x.strokeStyle="rgba(255,255,255,.92)";
+    x.strokeText(String(o.n),gx,gy-18);
+    x.fillStyle="#0b6b51";x.fillText(String(o.n),gx,gy-18);
+  });
+  x.restore();
+  x.textAlign="start";x.textBaseline="alphabetic";
+}
+
+function koppelVoet(){
+  document.getElementById("pl-invoer").hidden=true;
+  const el=document.getElementById("pl-lokaal");
+  const box=document.getElementById("pl-buren"); box.innerHTML="";
+  box.classList.add("koppel");
+  const t=document.getElementById("pl-teller");
+  if(t)t.textContent=kp.paren.length+" hoek"+(kp.paren.length===1?"":"en");
+  el.innerHTML="<b>koppelen · hoek "+(kp.paren.length+1)+"</b><span>"+
+    (kp.half?("wijs <b>dezelfde</b> hoek aan op "+veilig(kp.doel))
+            :("wijs een herkenbare hoek aan op "+veilig(kp.bron)))+"</span>";
+  const knop=(tekst,klasse,fn)=>{
+    const b=document.createElement("button");b.type="button";
+    if(klasse)b.className=klasse;
+    b.textContent=tekst;b.onclick=fn;box.appendChild(b);
+  };
+  if(kp.paren.length>=2&&!kp.half)
+    knop("Koppel op "+kp.paren.length+" hoeken","actief",koppelKlaar);
+  if(kp.paren.length||kp.half)
+    knop("Laatste weg",null,async()=>{
+      if(kp.half)kp.half=null; else kp.paren.pop();
+      await koppelNaar(kp.bron);
+    });
+  knop("Stoppen",null,()=>koppelStop("Koppelen afgebroken"));
+}
+
+async function koppelStart(){
+  if(!plan){melding("Laad eerst een plan");return;}
+  const bron=plan.zone;
+  const kandidaten=[];
+  for(const z of await planZones()){
+    if(z===bron)continue;
+    const d=await haalPlan(z);
+    if(d&&d.georef&&d.georef.eenheid_m)kandidaten.push(z);
+  }
+  if(!kandidaten.length){
+    melding("Geen plan om op te leggen — maak eerst een omtrekplan");
+    return;
+  }
+  const doel=kandidaten.length===1?kandidaten[0]
+    :await kiesZone("Waarop koppelen?",kandidaten,
+       "Kies het plan waarop dit blad moet gaan liggen — het omtrekplan uit het GRB als je een "+
+       "schaal wil, of de vorige versie van dit blad als je er punten van wil overnemen.");
+  if(!doel)return;
+  if(plan.georef)
+    melding(bron+" draagt al een schaal; die wordt vervangen");
+  pl.nummeren=false;                 // twee standen tegelijk gaat niet
+  const k=document.getElementById("pl-nummer");
+  if(k){k.textContent="Nummer";k.style.background="";k.style.borderColor="";}
+  kp.aan=true;kp.bron=bron;kp.doel=doel;kp.paren=[];kp.half=null;kp.zicht={};
+  koppelKnop();
+  await koppelNaar(bron);
+}
+
+async function koppelKlaar(){
+  const bronPlan=await haalPlan(kp.bron);
+  if(!bronPlan){koppelStop("Plan "+kp.bron+" niet gevonden");return;}
+  const doelPlan=await haalPlan(kp.doel);
+  const r=berekenKoppeling(bronPlan,kp.paren);
+  if(!r){melding("De hoeken liggen op één plek — daar valt geen schaal uit af te leiden");return;}
+  // Lag je op een plaatselijk raam, dan is wat je krijgt óók plaatselijk: dit blad weet nu waar
+  // het ligt ten opzichte van het vorige, en verder niets. Een echte projectie erop plakken zou
+  // een maat beweren die nergens gemeten is.
+  if(doelPlan&&doelPlan.georef&&doelPlan.georef.plaatselijk){
+    r.georef.epsg=null; r.georef.plaatselijk=true;
+  }
+  bronPlan.georef=r.georef;
+  if(!await zetPlan(kp.bron,bronPlan)){melding("Opslag weigert — ruimte vol?");return;}
+  const zone=kp.bron;
+  koppelStop();
+  await toonPlan(zone);
+  toonKoppelUitslag(bronPlan,r,doelPlan);
+}
+
+/* De uitslag is geen felicitatie maar een controle: wat is dit plan nu groot, hoe staat het
+   gedraaid, en hoe zeker is dat. Daarom een venster en geen toast — dit lees je één keer per
+   project, en als er iets niet klopt wil je het hier zien en niet op de werf. */
+function toonKoppelUitslag(p,r,doelPlan){
+  const g=r.georef;
+  const komma=(v,n)=>v.toFixed(n).replace(".",",");
+  const draai=Math.abs(g.noord)<0.5
+    ?(g.plaatselijk?"het staat even recht als het vorige":"het noorden staat boven")
+    :((g.plaatselijk?"het staat ":"het noorden staat ")+komma(Math.abs(g.noord),1)+"° "+
+      (g.noord>0?"naar links":"naar rechts")+" gedraaid"+(g.plaatselijk?" ten opzichte van het vorige":""));
+  const ergste=Math.max.apply(null,r.afwijking);
+  const regels=[];
+  // Twee soorten uitslag, want er is twee soorten kennis. Een plan dat op een kaart ligt weet
+  // hoeveel meter het meet; een plan dat op zijn voorganger ligt weet dat alleen ten opzichte
+  // van dat blad. Het verschil hardop zeggen is de hele reden dat dit klopt.
+  if(g.plaatselijk){
+    // de maatverhouding: 1 betekent dat beide bladen even groot getekend staan
+    const verhouding=g.eenheid_m;
+    const diagonaal=doelPlan?Math.hypot(doelPlan.breedte,doelPlan.hoogte):null;
+    regels.push("Dit blad ligt nu vast <b>ten opzichte van het vorige</b>: het staat op <b>"+
+      komma(verhouding*100,1)+"%</b> van diens maat, en "+draai+".");
+    regels.push("Bij twee versies van dezelfde tekening ligt die verhouding zelden ver van 100%. "+
+      "Wijkt ze sterk af, dan wees je waarschijnlijk twee verschillende hoeken aan.");
+    if(r.afwijking.length<3)
+      regels.push("Twee hoeken sluiten altijd, dus er valt nu niets na te rekenen. "+
+        "Wijs een derde hoek aan als je wil weten óf het klopt.");
+    else if(diagonaal)
+      regels.push("Grootste afwijking over "+r.afwijking.length+" hoeken: <b>"+
+        komma(ergste/diagonaal*100,2)+"%</b> van de bladdiagonaal. "+
+        (ergste/diagonaal<0.005?"Dat sluit."
+         :ergste/diagonaal<0.02?"Dat is aan de ruime kant — kijk of je elke hoek op hetzelfde punt aanwees."
+         :"Dat is te veel. Waarschijnlijk wees je twee verschillende hoeken aan."));
+    regels.push("Dit levert géén schaal op: het blad weet waar het ligt ten opzichte van zijn "+
+      "voorganger, niet hoeveel meter het meet. Er komt dus ook geen schaalbalk bij.");
+  }else{
+    const breed=p.breedte*g.eenheid_m, hoog=p.hoogte*g.eenheid_m;
+    regels.push("Het blad meet nu <b>"+komma(breed,1)+" bij "+komma(hoog,1)+" m</b>, en "+draai+".");
+    regels.push("Eén beeldeenheid is "+komma(g.eenheid_m*1000,2)+" mm.");
+    if(r.afwijking.length<3)
+      regels.push("Twee hoeken sluiten altijd, dus er valt nu niets na te rekenen. "+
+        "Wijs een derde hoek aan als je wil weten óf het klopt.");
+    else
+      regels.push("Grootste afwijking over "+r.afwijking.length+" hoeken: <b>"+
+        komma(ergste,2)+" m</b>. "+
+        (ergste<0.5?"Dat sluit."
+         :ergste<2?"Dat is aan de ruime kant — kijk of je elke hoek op hetzelfde punt aanwees."
+         :"Dat is te veel. Waarschijnlijk wees je twee verschillende hoeken aan, of het blad "+
+          "staat scheef — en scheeftrekken doet deze koppeling bewust niet."));
+  }
+  if(r.hefboom<0.15)
+    regels.push("⚠️ De hoeken lagen dicht bij elkaar — samen maar "+
+      Math.round(r.hefboom*100)+"% van de diagonaal. Een tik van een paar pixels weegt dan zwaar "+
+      "door in de schaal. Neem hoeken die zo ver mogelijk uit elkaar liggen.");
+  regels.push(g.plaatselijk
+    ? ("Met <b>Bewaar</b> gaat deze koppeling mee het bestand in.")
+    : ("Vanaf nu draagt "+p.zone+" een schaalbalk. Met <b>Bewaar</b> gaat de koppeling "+
+       "mee het bestand in."));
+  const dlg=document.getElementById("dlg");
+  document.getElementById("dlg-titel").textContent="Plan "+p.zone+" gekoppeld";
+  const body=document.getElementById("dlg-body");
+  body.innerHTML=regels.map(t=>'<p class="inv-uitleg" style="margin:0 0 10px">'+t+"</p>").join("");
+  document.getElementById("dlg-kopieer").style.display="none";
+  dlg.onclose=()=>{
+    dlg.onclose=null;
+    // Dit is waarvoor je koppelde: de punten die je op de omtrek prikte horen nu hier. Meteen
+    // aanbieden, want een minuut later is de aanleiding weg en zoek je de knop niet meer.
+    overnameAangeboden.delete(p.zone);
+    biedOvernameAan(p);
+  };
+  dlg.showModal();
+}
+
+/* Als aanbod, niet als vraag — zoals het nummervoorstel. Negeer je het, dan verdwijnt het, en
+   per plan bieden we het één keer per sessie aan zodat het niet gaat zeuren. */
+async function biedOvernameAan(doel){
+  if(!doel||!doel.georef||kp.aan)return;
+  if(overnameAangeboden.has(doel.zone))return;
+  const t=await teNemenPunten(doel);
+  if(!t||!t.passen.length)return;
+  overnameAangeboden.add(doel.zone);
+  meldingMetActie(stuks(t.passen.length,"punt van elders past","punten van elders passen")+
+    " op "+doel.zone,"overnemen",()=>neemPuntenOver(doel));
+}
+
+/* Eén vraag, één knop per keuze. Dezelfde vorm als "Op welk niveau sta je?" — dat is het enige
+   keuzepatroon dat deze app kent, en twee patronen voor hetzelfde is er een te veel. */
+function kiesZone(titel,zones,uitleg){
+  return new Promise(res=>{
+    const dlg=document.getElementById("dlg");
+    document.getElementById("dlg-titel").textContent=titel;
+    const body=document.getElementById("dlg-body");
+    body.innerHTML="";
+    const rij=document.createElement("div");
+    rij.style.cssText="display:flex;flex-wrap:wrap;gap:8px";
+    let gekozen=null;
+    zones.forEach(z=>{
+      const b=document.createElement("button");
+      b.type="button";
+      b.style.cssText="font-size:17px;font-weight:650;padding:16px 22px;background:var(--zone-soft);"+
+        "color:var(--zone);border-color:var(--zone-soft)";
+      b.textContent=z;
+      b.onclick=()=>{gekozen=z;dlg.close();};
+      rij.appendChild(b);
+    });
+    body.appendChild(rij);
+    if(uitleg){
+      const u=document.createElement("p");
+      u.className="inv-uitleg";u.style.marginTop="12px";u.textContent=uitleg;
+      body.appendChild(u);
+    }
+    document.getElementById("dlg-kopieer").style.display="none";
+    dlg.onclose=()=>{dlg.onclose=null;res(gekozen);};
+    dlg.showModal();
+  });
+}
+
+/* ---- de punten overnemen ----
+   Op de werf stond er geen plannenset, dus prikte je op de omtrek. Thuis koppel je het echte plan,
+   en dan horen die punten dáárop te staan en niet meer op de noodoplossing.
+
+   Overnemen is een verhuizing, geen kopie: een vaststelling heeft één plek. Wat verandert is niet
+   wáár ze ligt maar op welke tekening dat wordt uitgedrukt — het punt op de kaart van Vlaanderen
+   blijft hetzelfde. Precies daarom kan dit alleen tussen twee plannen die allebei weten waar ze
+   liggen, en is het rekenwerk een omweg langs Lambert en terug.
+
+   Het etiket verhuist niet mee. "C4" is een rastervak van de omtrek en zegt niets op een
+   architectenplan, dus het lokaal wordt op het nieuwe plan opnieuw opgezocht. Dat is dezelfde
+   regel als overal: de coördinaat is het feit, het nummer een interpretatie.
+
+   Wat buiten het nieuwe blad valt, blijft staan waar het staat. Een punt in de tuin hoort niet
+   met geweld op een verdiepingsplan geduwd te worden. */
+let laatsteOverdracht=null;      // om de laatste verhuizing te kunnen terugdraaien
+const overnameAangeboden=new Set();
+
+function stuks(n,enkel,meer){return n+" "+(n===1?enkel:meer);}
+
+async function teNemenPunten(doel){
+  if(!doel||!doel.georef)return null;
+  const bronnen={}, uit={passen:[],buiten:[],zonderSchaal:0};
+  const lijst=[];
+  (staat.punten||[]).forEach(p=>{ if(p.plek)lijst.push({p,dag:null}); });
+  // ook wat van vorige vergaderingen nog openstaat: juist dát wil je zien als je een ruimte
+  // binnenkomt, en dus op het plan waarop je straks werkt
+  archief.forEach(dag=>(dag.punten||[]).forEach(p=>{
+    if(p.plek&&p.status!=="klaar")lijst.push({p,dag});
+  }));
+  for(const it of lijst){
+    const z=it.p.plek.zone;
+    if(!z||z===doel.zone)continue;
+    if(!(z in bronnen))bronnen[z]=await haalPlan(z);
+    const bp=bronnen[z];
+    if(!bp||!bp.georef){uit.zonderSchaal++;continue;}
+    const L=naarLambert(bp,it.p.plek.x,it.p.plek.y);
+    const b=naarBeeld(doel,L.X,L.Y);
+    if(b.x>=0&&b.x<=100&&b.y>=0&&b.y<=100)uit.passen.push({...it,naar:b});
+    else uit.buiten.push(it);
+  }
+  return uit;
+}
+
+async function neemPuntenOver(doel){
+  const t=await teNemenPunten(doel);
+  if(!t)return false;
+  if(!t.passen.length){
+    melding(t.buiten.length?("Geen enkel punt valt binnen "+doel.zone)
+                           :"Er staat niets klaar om over te nemen");
+    return false;
+  }
+  const vandaag=t.passen.filter(o=>!o.dag).length, oud=t.passen.length-vandaag;
+  const vanwaar=[...new Set(t.passen.map(o=>o.p.plek.zone))].join(", ");
+  const regels=[
+    "<b>"+stuks(t.passen.length,"punt","punten")+"</b> van "+veilig(vanwaar)+
+      (t.passen.length===1?" verhuist":" verhuizen")+" naar "+veilig(doel.zone)+
+      (oud?(" — "+vandaag+" van vandaag, "+oud+" van vorige vergaderingen"):"")+".",
+    "Ze houden hun plek; die wordt alleen op deze tekening uitgedrukt in plaats van op de "+
+      "tekening waar ze vandaan komen. Het lokaalnummer wordt hier opnieuw opgezocht, want een "+
+      "etiket van dat andere blad zegt op dit plan niets."
+  ];
+  if(t.buiten.length)
+    regels.push("<b>"+stuks(t.buiten.length,"punt valt","punten vallen")+"</b> buiten dit blad en "+
+      "blijft staan waar het staat.");
+  if(t.zonderSchaal)
+    regels.push(stuks(t.zonderSchaal,"punt staat","punten staan")+" op een plan zonder schaal en "+
+      "kan niet mee — koppel dat plan eerst.");
+  if(!await vraagJa("Punten overnemen op "+doel.zone,regels,"Overnemen"))return false;
+
+  const dagen=new Set();
+  laatsteOverdracht=[];
+  t.passen.forEach(o=>{
+    const p=o.p, k=p.plek;
+    const van={zone:k.zone,x:k.x,y:k.y,lokaal:k.lokaal||null,naam:k.naam||"",puntzone:p.zone};
+    laatsteOverdracht.push({p,van,dag:o.dag});
+    const l=lokaalBij(o.naar.x,o.naar.y,doel);
+    k.van=van;                       // waar het vandaan kwam blijft in het punt staan
+    k.zone=doel.zone;
+    k.x=+o.naar.x.toFixed(2); k.y=+o.naar.y.toFixed(2);
+    k.lokaal=l?l.nr:null; k.naam=l?(l.naam||""):"";
+    // de zonecode in het verslag hoort mee: anders staat een punt onder "BUITEN" met een
+    // lokaalnummer van N3 erbij, en dat leest niemand goed
+    if(ZONES.includes(doel.zone))p.zone=doel.zone;
+    raakAan(p);
+    if(o.dag)dagen.add(o.dag);
+  });
+  bewaarStaat();
+  for(const dag of dagen)await zetDag(dag.datum,dag);
+  await tekenLijst();
+  planTeken();planVoet();
+  meldingMetActie(stuks(t.passen.length,"punt staat","punten staan")+" nu op "+doel.zone,
+                  "ongedaan maken",draaiOverdrachtTerug);
+  // Het terugdraaien gaat voor; pas als die melding is uitgewerkt bieden we aan op te ruimen.
+  setTimeout(ruimVersiesOp,6500);
+  return true;
+}
+
+async function draaiOverdrachtTerug(){
+  if(!laatsteOverdracht||!laatsteOverdracht.length){melding("Niets om terug te draaien");return;}
+  const dagen=new Set();
+  laatsteOverdracht.forEach(({p,van,dag})=>{
+    p.plek.zone=van.zone;p.plek.x=van.x;p.plek.y=van.y;
+    p.plek.lokaal=van.lokaal;p.plek.naam=van.naam;
+    p.zone=van.puntzone;
+    delete p.plek.van; raakAan(p);
+    if(dag)dagen.add(dag);
+  });
+  const n=laatsteOverdracht.length;
+  laatsteOverdracht=null;
+  bewaarStaat();
+  for(const dag of dagen)await zetDag(dag.datum,dag);
+  await tekenLijst();
+  planTeken();planVoet();
+  melding(stuks(n,"punt","punten")+" teruggezet");
+}
+
+/* Eén vraag met één bevestiging. De kopieerknop van het venster doet dienst als jaknop — dat
+   venster heeft er maar twee, en een derde bijzetten voor één handeling is het niet waard. */
+function vraagJa(titel,regels,jaTekst){
+  return new Promise(res=>{
+    const dlg=document.getElementById("dlg");
+    document.getElementById("dlg-titel").textContent=titel;
+    document.getElementById("dlg-body").innerHTML=
+      regels.map(t=>'<p class="inv-uitleg" style="margin:0 0 10px">'+t+"</p>").join("");
+    const ja=document.getElementById("dlg-kopieer");
+    ja.style.display="";ja.textContent=jaTekst;
+    let gekozen=false;
+    ja.onclick=()=>{gekozen=true;dlg.close();};
+    dlg.onclose=()=>{
+      dlg.onclose=null;ja.onclick=null;
+      ja.textContent="Kopieer";ja.style.display="none";
+      res(gekozen);
+    };
+    dlg.showModal();
+  });
+}
+
+/* ---- een nieuwe versie van hetzelfde plan ----
+   Punten hangen aan een zone en dragen procenten van het blad. Laad je een ánder plan voor
+   dezelfde zone, dan wijzen diezelfde procenten op de nieuwe tekening een andere plek aan — en
+   dat gebeurde tot nu toe zwijgend. Tussen twee zones was dit al opgelost (zie *De punten
+   overnemen*), binnen één zone niet.
+
+   De oplossing is dat de zone niet langer één plan is. Het vorige blad blijft staan onder een
+   eigen naam, mét zijn punten, tot je ze hebt overgezet. Daarna is het dezelfde handeling als
+   overal: twee keer dezelfde hoek aanwijzen, en de punten rekenen zichzelf om.
+
+   Wat er nieuw bij komt is dat dit óók moet werken voor twee bladen die geen van beide een
+   schaal dragen — en dat is juist het gewone geval: twee versies van hetzelfde
+   architectenplan. Daarom krijgt het geparkeerde blad een **plaatselijk raam**: een stelsel dat
+   alleen ten opzichte van zichzelf geldt. Genoeg om er een opvolger op te leggen, en nadrukkelijk
+   geen kaart — de app tekent er geen schaalbalk bij en beweert nergens meters. */
+
+function puntenOpZone(z){
+  const uit=[];
+  (staat.punten||[]).forEach(p=>{ if(p.plek&&p.plek.zone===z)uit.push({p,dag:null}); });
+  archief.forEach(dag=>(dag.punten||[]).forEach(p=>{
+    if(p.plek&&p.plek.zone===z&&p.status!=="klaar")uit.push({p,dag});
+  }));
+  return uit;
+}
+
+async function vrijeVersienaam(zone){
+  const bestaand=await planZones();
+  let naam=zone+" oud", n=1;
+  while(bestaand.includes(naam)){n++;naam=zone+" oud "+n;}
+  return naam;
+}
+
+/* Het vorige blad opzijzetten, met de punten die erop staan. Die verhuizen mee: ze horen bij de
+   tekening waarop ze geprikt zijn, niet bij de naam van de zone. */
+async function parkeerPlan(oud,naam,raakt){
+  const kopie={...oud, zone:naam, versieVan:oud.zone};
+  if(!kopie.georef)
+    kopie.georef={epsg:null, eenheid_m:1, x:0, y:0, noord:0, plaatselijk:true};
+  if(!await zetPlan(naam,kopie)){melding("Opslag weigert — ruimte vol?");return null;}
+  const dagen=new Set();
+  raakt.forEach(({p,dag})=>{ p.plek.zone=naam; raakAan(p); if(dag)dagen.add(dag); });
+  bewaarStaat();
+  for(const dag of dagen)await zetDag(dag.datum,dag);
+  return kopie;
+}
+
+/* Staat er niets meer op een geparkeerd blad, dan mag het weg. Als aanbod, niet als vraag — en
+   pas nadat de melding over het terugdraaien is uitgewerkt, want die gaat voor. */
+async function ruimVersiesOp(){
+  for(const z of await planZones()){
+    const d=await haalPlan(z);
+    if(!d||!d.versieVan)continue;
+    if(puntenOpZone(z).length)continue;
+    meldingMetActie("Op "+z+" staat niets meer","wegdoen",async()=>{
+      await wisPlan(z);
+      planLijst=await planZones();
+      if(plan&&plan.zone===z)await toonPlan(d.versieVan);
+      tekenZones();
+      melding(z+" weggedaan");
+    });
+    return;
+  }
 }
 
 function planPasIn(){
@@ -1083,6 +2913,7 @@ function burenBij(x,y,hoeveel){
 function tekenBuren(){
   const box=document.getElementById("pl-buren");
   box.innerHTML="";
+  box.classList.remove("koppel");
   if(!plan||!pl.pin||pl.nummeren)return;
   const buren=burenBij(pl.pin.x,pl.pin.y,5);
   if(buren.length<2)return;
@@ -1123,7 +2954,7 @@ async function merkAfgehandeld(oud){
   const p=(dag.punten||[]).find(x=>x.id===oud.id);
   if(!p)return;
   p.status="klaar";
-  p.afgehandeld=staat.datum;
+  p.afgehandeld=staat.datum; raakAan(p);
   await zetDag(dag.datum,dag);
   pl.gekozen=null;
   planTeken();planVoet();
@@ -1148,6 +2979,7 @@ function planVoet(){
   document.getElementById("pl-invoer").hidden=!(plan&&pl.pin&&!pl.nummeren);
   tekenBuren();
   if(!plan)return;
+  if(kp.aan){koppelVoet();return;}
   if(pl.gekozen){
     const p=staat.punten.find(x=>x.id===pl.gekozen);
     const oud=p?null:oudePuntenOpDitPlan().find(x=>x.id===pl.gekozen);
@@ -1215,6 +3047,7 @@ async function toonPlan(zone){
       document.getElementById("pl-vouw").textContent=
         localStorage.getItem(VOUWSLEUTEL)==="1"?"▴":"▾";}catch(e){}
   planTeken();planVoet();
+  if(!kp.aan&&plan&&plan.georef)biedOvernameAan(plan);
 }
 
 async function openPlan(gevraagd){
@@ -1311,7 +3144,8 @@ function planBedrading(){
       const x=(pl.start.x-pl.dx)/(plan.breedte*pl.schaal)*100;
       const y=(pl.start.y-pl.dy)/(plan.hoogte*pl.schaal)*100;
       if(x>=0&&x<=100&&y>=0&&y<=100){
-        if(pl.nummeren){ nummerHier(x,y); }
+        if(kp.aan){ koppelTik(x,y); }
+        else if(pl.nummeren){ nummerHier(x,y); }
         else{
           // Tik je op een punt dat er al staat, dan wil je dát bekijken, geen nieuw punt ernaast.
           const raak=puntGeraakt(pl.start.x,pl.start.y);
@@ -1348,6 +3182,8 @@ document.getElementById("pl-laad").onclick=()=>document.getElementById("planbest
 /* Meerdere plannen: de knop wisselt er doorheen. Twee niveaus is de praktijk; een lijst zou
    meer schermruimte kosten dan ze oplevert. */
 document.getElementById("pl-plan").onclick=async()=>{
+  // tijdens het koppelen bepaalt de beurt welk plan je ziet; zelf wisselen zou je kwijtspelen
+  if(kp.aan){melding("Tijdens het koppelen wisselt het plan vanzelf");return;}
   if(planLijst.length<2){document.getElementById("planbestand").click();return;}
   const i=plan?planLijst.indexOf(plan.zone):-1;
   const volgende=planLijst[(i+1)%planLijst.length];
@@ -1439,8 +3275,14 @@ document.getElementById("pl-bewaar").onclick=()=>{
   }catch(e){melding("Bewaren lukte niet in deze browser");}
 };
 
+document.getElementById("pl-koppel").onclick=()=>{
+  if(kp.aan){koppelStop("Koppelen afgebroken");return;}
+  koppelStart();
+};
+
 document.getElementById("pl-nummer").onclick=()=>{
   if(!plan){melding("Laad eerst een plan");return;}
+  if(kp.aan){melding("Eerst het koppelen afmaken of stoppen");return;}
   pl.nummeren=!pl.nummeren;
   const k=document.getElementById("pl-nummer");
   k.textContent=pl.nummeren?"Stop":"Nummer";
@@ -1461,6 +3303,7 @@ document.getElementById("pl-nummer").onclick=()=>{
 };
 
 document.getElementById("pl-benoem").onclick=async()=>{
+  if(kp.aan){melding("Eerst het koppelen afmaken of stoppen");return;}
   if(!plan||!pl.pin){melding("Zet eerst een pin");return;}
   const l=pl.pin.lokaal;
   const antwoord=await vraagTekst("Plek benoemen",
@@ -1557,11 +3400,48 @@ document.getElementById("planbestand").onchange=async e=>{
   catch(err){melding(kort+" is geen plan — begint met “"+tekst.trim().slice(0,12)+"…”");return;}
   if(!data||!data.zone){melding(kort+": geen zone in het bestand");return;}
   if(!data.beeld||!data.breedte){melding(kort+": geen tekening in het bestand");return;}
+
+  /* Ligt er al een plan voor deze zone met punten erop, dan is dit een nieuwe versie en geen
+     nieuw plan. Overschrijven zou die punten verzetten zonder dat iemand het ziet: ze dragen
+     procenten van een blad, en dit is een ander blad. */
+  const bestaand=await haalPlan(data.zone);
+  let geparkeerd=null;
+  if(bestaand){
+    const raakt=puntenOpZone(data.zone);
+    if(raakt.length){
+      const naam=await vrijeVersienaam(data.zone);
+      const hoeveel=stuks(raakt.length,"punt","punten");
+      if(!await vraagJa("Nieuwe versie van "+data.zone,[
+        "Op <b>"+veilig(data.zone)+"</b> ligt al een plan, met "+hoeveel+" erop.",
+        "Een punt onthoudt zijn plaats in procenten van het blad. Op een ándere tekening wijzen "+
+          "diezelfde procenten een andere plek aan, dus zomaar vervangen zou "+hoeveel+
+          " verzetten zonder dat iemand het ziet.",
+        "Daarom blijft het vorige blad staan als <b>"+veilig(naam)+"</b>, met de punten erop, tot "+
+          "je ze hebt overgezet. Dat gaat met <b>Koppel</b>: wijs twee keer dezelfde hoek aan op "+
+          "beide tekeningen, en de punten rekenen zichzelf om."
+      ],"Nieuwe versie")){melding(kort+" niet geladen — "+data.zone+" blijft zoals het was");return;}
+      geparkeerd=await parkeerPlan(bestaand,naam,raakt);
+      if(!geparkeerd)return;
+    }
+  }
+
   if(!await zetPlan(data.zone,data)){melding("Opslag weigert — ruimte vol of privémodus?");return;}
   planLijst=await planZones();
   tekenZones();
   await toonPlan(data.zone);
   document.getElementById("pl-plan").textContent=planLijst.length>1?("Plan: "+data.zone):"Plan";
+  if(geparkeerd){
+    // Dragen beide bladen een raam, dan heeft toonPlan het overnemen al aangeboden. Zo niet, dan
+    // weet het nieuwe blad nog niet waar het ligt, en is koppelen de eerstvolgende handeling —
+    // meteen aanbieden, want een minuut later is de aanleiding weg.
+    const t=data.georef?await teNemenPunten(await haalPlan(data.zone)):null;
+    if(!(t&&t.passen.length))
+      meldingMetActie(stuks(puntenOpZone(geparkeerd.zone).length,"punt staat","punten staan")+
+        " nog op "+geparkeerd.zone,"koppel",
+        // het koppelen speelt zich op de kaart af, dus die moet openstaan
+        ()=>openPlan(data.zone).then(koppelStart));
+    return;
+  }
   melding("Plan "+data.zone+" geladen — "+((data.lokalen||[]).length)+" lokalen");
 };
 
@@ -1664,12 +3544,26 @@ function vermelding(p){
 function maakTekst(){
   const r=[];
   r.push("DATUM: "+staat.datum);
+  // Welk beroep dit verslag schrijft. Zonder deze regel neemt het verwerkingsscript de architect,
+  // zodat oudere notities blijven werken.
+  r.push("PROFIEL: "+profiel.sleutel);
   if(staat.weer.trim())r.push("W: "+staat.weer.trim());
   if(staat.bezetting.trim())r.push("BZ: "+staat.bezetting.trim());
   const aw=(staat.aanwezig||[]).map(code=>{
     const c=contacten.find(x=>x.code===code); return c?(c.naam+" ("+c.code+")"):code;
   });
   if(aw.length) r.push("AW: "+aw.join(", "));
+  // Welke code welke rol vervult. Zonder deze regel moet het verwerkingsscript de codes van één
+  // dossier hardgecodeerd kennen; mét deze regel bepaalt de app wie wat mág, en groepeert het
+  // script daarop. Namen blijven in de notitie, de juridische indeling wordt expliciet.
+  const rollen=contacten.filter(c=>c.rol&&(staat.aanwezig||[]).concat(
+      staat.punten.map(p=>p.aan).filter(Boolean)).includes(c.code));
+  if(rollen.length) r.push("ROL: "+rollen.map(c=>c.code+"="+c.rol).join(", "));
+  // De namen van de gebruikte hoofdstukken erbij, zodat het verslag "#07 dak" kan schrijven en
+  // niet "#07". Wie het leest moet meteen zien welk deel van zijn bestek geraakt wordt.
+  const gebruikt=[...new Set(staat.punten.map(p=>p.hoofdstuk).filter(Boolean))]
+    .map(nr=>hoofdstukVan(nr)).filter(Boolean);
+  if(gebruikt.length) r.push("HFDST: "+gebruikt.map(h=>h.nr+"="+h.naam).join(", "));
   if(staat.weerdata){const w=staat.weerdata.dag;
     r.push("WD: "+w.min+"-"+w.max+" C, neerslag "+w.neerslag+" mm, max wind "+w.windmax+" km/u (open-meteo)");}
   let vorige=null;
@@ -1679,7 +3573,19 @@ function maakTekst(){
     // @-marker: het lokaal als het bekend is, anders de coördinaat op het plan. De coördinaat
     // staat er altijd bij, zodat het verwerkingsscript de punten terug op het plan kan tekenen.
     const plek = p.plek ? "@"+(p.plek.lokaal?p.plek.lokaal+" ":"")+p.plek.x+","+p.plek.y+" " : "";
-    let l=merk+plek+(p.spreker?p.spreker+": ":"")+(p.tekst||"[nog geen notitie — "+p.tijd+"]");
+    // De volgorde is die van het verwerkingsscript: markers, spreker, dan pas VERBOD, en de
+    // toewijzing en deadline achteraan waar ze uit de zin gehaald worden.
+    // De soort staat vooraan als merk, zoals VERBOD. "gebrek" is de gewone gang van zaken en
+    // krijgt er geen; de andere twee wél, want die veranderen wie moet herstellen en waarom.
+    // Het merk is de sleutel in hoofdletters. Welke er bestaan hangt van het profiel af, dus
+    // er staat hier geen vaste lijst — het verwerkingsscript leest ze uit hetzelfde profiel.
+    const so=SOORTEN.find(o=>o.sleutel===p.soort);
+    const soortmerk = (p.urgent?"URGENT: ":"") + (so&&so.blok?so.sleutel.toUpperCase()+": ":"");
+    let l=merk+plek+(p.spreker?p.spreker+": ":"")+(p.verbod?"VERBOD: ":"")+soortmerk+
+      (p.tekst||"[nog geen notitie — "+p.tijd+"]");
+    if(p.hoofdstuk) l+=" #"+p.hoofdstuk;
+    if(p.aan) l+=" >"+p.aan;
+    if(p.deadline) l+=" DL "+p.deadline;
     if(p.bijlage && !p.bijlage.beeld) l+=" ["+p.bijlage.naam+"]";
     r.push(l);
   });
@@ -1688,14 +3594,8 @@ function maakTekst(){
      vaststelling één keer noteert en daarna zwijgt, verliest ze: de aannemer kan aanvoeren dat
      ze opgelost was of nooit meer ter sprake kwam. Een herhaling met de datum erbij is het
      tegendeel — ze toont hoelang iets al loopt. */
-  const open=[];
-  archief.forEach(dag=>{
-    (dag.punten||[]).forEach(p=>{
-      if(p.status!=="klaar") open.push({...p,datum:dag.datum});
-    });
-  });
+  const open=openPunten();
   if(open.length){
-    open.sort((a,b)=>(a.datum+a.zone).localeCompare(b.datum+b.zone));
     r.push("-");
     r.push("OPEN");
     open.forEach(p=>{
@@ -1705,6 +3605,505 @@ function maakTekst(){
     });
   }
   return r.join("\n");
+}
+
+/* ---- het verslag ----
+   Tot nu toe eindigde de app bij een exporttekst: die ging naar Apple Notes, en op de Mac maakte
+   werf_verwerk.py er een verslag van. Dat is één computer te veel. De browser kan afdrukken, en
+   in datzelfde venster zit "Bewaar als PDF" — op iOS de deelknop in het afdrukvoorbeeld. Er komt
+   dus geen PDF-bibliotheek aan te pas: wat je krijgt is deze bladzijde zelf, met een afdrukstijl
+   eroverheen.
+
+   De indeling is die van werf_verwerk.py, tot en met de toelichting onder elke kop. Dat is geen
+   nabootsing om de netheid: de indeling ís de juridische lijn — aan de aannemer wijst de architect
+   aan, aan de opdrachtgever legt hij voor, en de soort gaat vóór de rol. Twee verslagen die
+   hetzelfde dossier anders indelen, is één te veel.
+
+   Eén model, drie gebruiken: dit verslag, de doorstuurlijsten per rol en per hoofdstuk, en de
+   exporttekst blijft ernaast staan voor wie de Mac-route toch wil. */
+
+function maakEl(tag,klasse,tekst){
+  const e=document.createElement(tag);
+  if(klasse)e.className=klasse;
+  if(tekst!==undefined&&tekst!==null)e.textContent=tekst;
+  return e;
+}
+
+/* Wat er van vorige vergaderingen nog openstaat. Eén plek, want zowel de exporttekst als het
+   verslag als de kaart stellen dezelfde vraag. */
+function openPunten(){
+  const uit=[];
+  archief.forEach(dag=>(dag.punten||[]).forEach(p=>{
+    if(p.status!=="klaar")uit.push({...p,datum:dag.datum});
+  }));
+  uit.sort((a,b)=>(a.datum+(a.zone||"")).localeCompare(b.datum+(b.zone||"")));
+  return uit;
+}
+
+function naamVan(code){
+  const c=contacten.find(x=>x.code===code);
+  return c?(c.naam+" ("+c.code+")"):code;
+}
+
+/* De soort gaat vóór de rol. Een beschadiging aan de aannemer toewijzen onder "uit te voeren
+   binnen de aanneming" is precies de fout die dit onderscheid moet voorkomen: heeft een derde de
+   schade veroorzaakt, dan is de aannemer niet gehouden ze binnen zijn aanneming te herstellen. */
+function functieVan(p){
+  const s=SOORTEN.find(o=>o.sleutel===p.soort);
+  if(s&&s.blok)return {sleutel:"soort:"+s.sleutel,kop:s.blok,toelichting:s.blokuitleg||""};
+  const r=p.aan?rolVan(p.aan):null;
+  if(r)return {sleutel:"rol:"+r.sleutel,kop:r.kop,toelichting:r.toelichting};
+  return {sleutel:"opvolging",kop:profiel.rest.kop,toelichting:profiel.rest.toelichting||""};
+}
+
+function hoofdstukTekst(nr){
+  const h=hoofdstukVan(nr);
+  return h?("#"+h.nr+" "+h.naam):("#"+nr);
+}
+
+/* Dezelfde tabel als ZONES in werf_verwerk.py: op een blad leest "niveau 3" beter dan "N3".
+   Staat er een zone in die de app niet kent, dan blijft de code staan — verzinnen doen we niet. */
+const ZONENAAM={N3:"niveau 3",N4:"niveau 4",N5:"niveau 5",DAK:"dak",KAPEL:"kapel",
+  KELDER:"kelder",STELLING:"stelling",BUITEN:"buiten"};
+function zoneNaam(z){return ZONENAAM[z]||z||"zonder zone";}
+
+function plekTekst(p){
+  if(p.plek&&p.plek.lokaal)return p.plek.lokaal;
+  if(p.plek)return (p.zone||p.plek.zone||"")+" "+plaatsKort(p.plek);
+  return p.zone||"";
+}
+/* Met de zone erbij. In de lijst per zone staat die al boven de kop, maar een afvinklijst die je
+   doorstuurt komt straks los van dit verslag te staan — daar moet "3.15" zichzelf kunnen plaatsen. */
+function plekVol(p){
+  const z=zoneNaam(p.zone);
+  const k=p.plek&&p.plek.lokaal?p.plek.lokaal:(p.plek?plaatsKort(p.plek):"");
+  return k?(z+" · "+k):z;
+}
+
+function verslagModel(){
+  const punten=staat.punten||[];
+  // de foto's krijgen hun eigen doorlopende nummer: ze vormen een eigen bijlage, en die
+  // verwijzing moet gelden ongeacht in welk blok een punt terechtkomt
+  const fotonr=new Map();
+  punten.filter(p=>p.foto).forEach((p,i)=>fotonr.set(p.id,i+1));
+
+  const zones=[];
+  punten.forEach(p=>{
+    let z=zones.find(o=>o.zone===p.zone);
+    if(!z){z={zone:p.zone,punten:[]};zones.push(z);}
+    z.punten.push(p);
+  });
+  // binnen een zone lopen de nummers door zoals op het plan: scherm en blad zeggen hetzelfde
+  zones.forEach(z=>z.punten.forEach((p,i)=>{p._nr=i+1;}));
+
+  const hoofdstukken=[];
+  punten.forEach(p=>{
+    if(!p.hoofdstuk)return;
+    let h=hoofdstukken.find(o=>o.nr===p.hoofdstuk);
+    if(!h){h={nr:p.hoofdstuk,kop:hoofdstukTekst(p.hoofdstuk),punten:[]};hoofdstukken.push(h);}
+    h.punten.push(p);
+  });
+  hoofdstukken.sort((a,b)=>String(a.nr).localeCompare(String(b.nr)));
+
+  // De doorstuurblokken. Alleen wat aan iemand is toegewezen: een blok is een lijst die je
+  // doorstuurt, en een lijst zonder geadresseerde stuur je nergens heen. Wat niet is toegewezen
+  // staat gewoon onder zijn zone.
+  const blokken=[];
+  punten.filter(p=>p.aan).forEach(p=>{
+    const f=functieVan(p);
+    let b=blokken.find(o=>o.sleutel===f.sleutel);
+    if(!b){b={sleutel:f.sleutel,kop:f.kop,toelichting:f.toelichting,partijen:[]};blokken.push(b);}
+    let w=b.partijen.find(o=>o.code===p.aan);
+    if(!w){w={code:p.aan,naam:naamVan(p.aan),punten:[]};b.partijen.push(w);}
+    w.punten.push(p);
+  });
+  // urgent bovenaan: wie een lijst van boven naar onder afwerkt, doet dan het dringende eerst
+  blokken.forEach(b=>b.partijen.forEach(w=>
+    w.punten.sort((a,c)=>(a.urgent?0:1)-(c.urgent?0:1))));
+
+  const aw=(staat.aanwezig||[]).map(naamVan);
+  return {datum:staat.datum, weer:(staat.weer||"").trim(), bezetting:(staat.bezetting||"").trim(),
+          weerdata:staat.weerdata||null, aanwezig:aw,
+          zones, hoofdstukken, verboden:punten.filter(p=>p.verbod),
+          blokken, open:openPunten(), fotonr, punten};
+}
+
+/* ---- de afdruk ----
+   Alles wordt in een eigen blok gebouwd dat op het scherm niet bestaat en bij het afdrukken het
+   enige is wat overblijft. Zo hoeft er niets van de app zelf "afdrukvriendelijk" gemaakt te
+   worden, en kan de afdruk een documentindeling volgen in plaats van een scherm-indeling. */
+
+function afdrukMeta(p,m,opties){
+  const o=opties||{};
+  const uit=[];
+  const plek=o.volledig?plekVol(p):plekTekst(p);
+  if(plek)uit.push(plek);
+  if(p.hoofdstuk&&!o.zonderHoofdstuk)uit.push(hoofdstukTekst(p.hoofdstuk));
+  const s=SOORTEN.find(o=>o.sleutel===p.soort);
+  if(s&&s.sleutel!=="gebrek")uit.push(s.kop.toLowerCase());
+  if(p.spreker)uit.push("volgens "+naamVan(p.spreker));
+  // Binnen een blok dat al aan iemand gericht is, hoeft er niet in elke regel te staan aan wie.
+  if(p.aan&&!o.zonderAan)uit.push("→ "+naamVan(p.aan));
+  if(p.deadline)uit.push("tegen "+p.deadline);
+  if(p.foto&&m.fotonr.has(p.id))uit.push("foto "+m.fotonr.get(p.id));
+  if(p.bijlage&&!p.bijlage.beeld)uit.push(p.bijlage.naam||"document");
+  return uit.join(" · ");
+}
+
+function afdrukPunt(p,m,opties){
+  const o=opties||{};
+  const rij=maakEl("div","af-punt");
+  rij.appendChild(maakEl("span","af-nr",o.vinkje?"☐":(p._nr?p._nr+".":"–")));
+  const body=maakEl("div","af-body");
+  const kop=maakEl("p","af-tekst");
+  if(p.urgent)kop.appendChild(maakEl("span","af-urgent","URGENT"));
+  if(p.verbod)kop.appendChild(maakEl("span","af-verbod","VERBOD"));
+  kop.appendChild(document.createTextNode(p.tekst||"[geen notitie — "+(p.tijd||"")+"]"));
+  body.appendChild(kop);
+  const meta=afdrukMeta(p,m,o);
+  if(meta)body.appendChild(maakEl("p","af-meta",meta));
+  rij.appendChild(body);
+  return rij;
+}
+
+function afdrukKop(el,tekst,toelichting){
+  el.appendChild(maakEl("h2","af-kop",tekst));
+  if(toelichting)el.appendChild(maakEl("p","af-toelichting",toelichting));
+}
+
+/* Hoelang staat dit al open, en de hoeveelste keer het in een verslag komt. Beide staan er, want
+   ze zeggen iets anders: het aantal dagen telt in een termijndiscussie, de vermelding toont dat
+   er niet gezwegen is. */
+function ouderdomTekst(p){
+  const d=dagenOpen(p), delen=[];
+  delen.push(d+" dagen open (sinds "+datumKort(p.datum)+")");
+  delen.push(vermelding(p)+"e vermelding");
+  return delen.join(" · ");
+}
+
+/* Het plan als bijlage, met de stippen erop. Dit is wat plan_verslag.py op de Mac deed; hier
+   hoeft er geen bestand meer heen en weer. Bewust een eigen tekening en niet het scherm: op een
+   blad wil je het hele plan zien, niet de uitsnede waarop je stond te werken. */
+async function afdrukPlan(zone,punten){
+  const data=await haalPlan(zone);
+  if(!data||!data.beeld)return null;
+  let beeld;
+  try{beeld=await laadBeeld(data.beeld);}catch(e){return null;}
+  const breed=Math.min(1600,Math.max(900,data.breedte));
+  const f=breed/data.breedte;
+  const c=document.createElement("canvas");
+  c.width=Math.round(data.breedte*f); c.height=Math.round(data.hoogte*f);
+  const x=c.getContext("2d");
+  x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);
+  x.imageSmoothingQuality="high";
+  x.drawImage(beeld,0,0,c.width,c.height);
+  const straal=Math.max(11,Math.round(c.width/95));
+  x.textAlign="center";x.textBaseline="middle";
+  punten.forEach(p=>{
+    const gx=p.plek.x/100*c.width, gy=p.plek.y/100*c.height;
+    x.beginPath();x.arc(gx,gy,straal,0,7);
+    x.fillStyle="#1b4f8a";x.fill();
+    x.lineWidth=straal/5;x.strokeStyle="#fff";x.stroke();
+    x.fillStyle="#fff";
+    x.font="600 "+Math.round(straal*1.15)+"px ui-monospace,Menlo,monospace";
+    x.fillText(String(p._nr),gx,gy+straal*0.05);
+  });
+  return new Promise(res=>c.toBlob(b=>res(b?URL.createObjectURL(b):null),"image/jpeg",0.9));
+}
+
+let afdrukUrls=[];
+function ruimAfdrukOp(){
+  afdrukUrls.forEach(u=>{try{URL.revokeObjectURL(u)}catch(e){}});
+  afdrukUrls=[];
+  document.getElementById("afdruk").innerHTML="";
+}
+
+async function bouwAfdruk(){
+  const m=verslagModel();
+  const el=document.getElementById("afdruk");
+  ruimAfdrukOp();
+
+  const kop=maakEl("div","af-hoofd");
+  kop.appendChild(maakEl("h1",null,"Werfverslag"));
+  kop.appendChild(maakEl("p","af-datum",datumLang(m.datum)));
+  const feiten=[];
+  if(m.weer)feiten.push("Weer: "+m.weer);
+  if(m.weerdata){const w=m.weerdata.dag;
+    feiten.push("Weer, hele dag: "+w.min+"–"+w.max+" °C · neerslag "+w.neerslag+
+                " mm · max wind "+w.windmax+" km/u");}
+  if(m.bezetting)feiten.push("Bezetting: "+m.bezetting);
+  if(m.aanwezig.length)feiten.push("Aanwezig: "+m.aanwezig.join(", "));
+  feiten.forEach(t=>kop.appendChild(maakEl("p","af-feit",t)));
+  el.appendChild(kop);
+
+  m.zones.forEach(z=>{
+    afdrukKop(el,"Vaststellingen — "+zoneNaam(z.zone));
+    z.punten.forEach(p=>el.appendChild(afdrukPunt(p,m)));
+  });
+
+  if(m.hoofdstukken.length){
+    afdrukKop(el,"Per bestekhoofdstuk",
+      "Welk deel van het werk het betreft. Wie dit leest, ziet meteen welk hoofdstuk van zijn "+
+      "bestek geraakt wordt.");
+    m.hoofdstukken.forEach(h=>{
+      const dringend=h.punten.filter(p=>p.urgent).length;
+      el.appendChild(maakEl("p","af-subkop",h.kop+" — "+stuks(h.punten.length,"punt","punten")+
+        (dringend?(", waarvan "+dringend+" urgent"):"")));
+      // Eén regel per punt: dit is een ingang tot de lijst hierboven, geen tweede lijst. De
+      // verwijzing vooraan is de zone met het nummer dat het punt daar draagt — en op het plan.
+      h.punten.forEach(p=>{
+        const r=maakEl("div","af-punt");
+        r.appendChild(maakEl("span","af-nr af-wijs",(p.zone||"")+" "+(p._nr||"")));
+        const b=maakEl("div","af-body");
+        b.appendChild(maakEl("p","af-tekst",(p.urgent?"🔴 ":"")+(p.tekst||"[geen notitie]")+
+          (p.plek&&p.plek.lokaal?"  ("+p.plek.lokaal+")":"")));
+        r.appendChild(b);
+        el.appendChild(r);
+      });
+    });
+  }
+
+  if(m.open.length){
+    afdrukKop(el,"Nog steeds open",
+      "Onderstaande vaststellingen zijn op een eerdere werfvergadering gedaan en op heden niet "+
+      "opgelost. Deze herhaling geldt als aanmaning.");
+    m.open.forEach(p=>{
+      const rij=maakEl("div","af-punt");
+      rij.appendChild(maakEl("span","af-nr","–"));
+      const body=maakEl("div","af-body");
+      body.appendChild(maakEl("p","af-tekst",p.tekst||"[geen notitie]"));
+      body.appendChild(maakEl("p","af-meta",plekVol(p)+" · "+ouderdomTekst(p)));
+      rij.appendChild(body);
+      el.appendChild(rij);
+    });
+  }
+
+  if(m.verboden.length){
+    afdrukKop(el,(profiel.bijzonder&&profiel.bijzonder.kop)||"Verbod",
+      (profiel.bijzonder&&profiel.bijzonder.verslag)||"");
+    m.verboden.forEach(p=>el.appendChild(afdrukPunt(p,m,{volledig:true})));
+  }
+
+  m.blokken.forEach(b=>{
+    afdrukKop(el,b.kop,b.toelichting);
+    b.partijen.forEach(w=>{
+      el.appendChild(maakEl("p","af-subkop",w.naam+" — "+stuks(w.punten.length,"punt","punten")));
+      w.punten.forEach(p=>el.appendChild(
+        afdrukPunt(p,m,{vinkje:true,volledig:true,zonderAan:true})));
+    });
+  });
+
+  // Het plan met de stippen. Per zone waarvoor een plan op dit toestel staat; de nummers zijn
+  // die van de lijst hierboven.
+  for(const z of m.zones){
+    const opPlan=z.punten.filter(p=>p.plek&&p.plek.zone===z.zone);
+    if(!opPlan.length)continue;
+    const url=await afdrukPlan(z.zone,opPlan);
+    if(!url)continue;
+    afdrukUrls.push(url);
+    const blok=maakEl("section","af-bijlage");
+    blok.appendChild(maakEl("h2","af-kop","Plan "+z.zone));
+    const im=maakEl("img","af-plan");im.src=url;im.alt="Plan "+z.zone;
+    blok.appendChild(im);
+    el.appendChild(blok);
+  }
+
+  // De foto's, genummerd zoals ze in de tekst aangehaald worden.
+  const metFoto=m.punten.filter(p=>p.foto);
+  if(metFoto.length){
+    const blok=maakEl("section","af-bijlage");
+    blok.appendChild(maakEl("h2","af-kop","Foto's en documenten"));
+    for(const p of metFoto){
+      const nr=m.fotonr.get(p.id);
+      const kader=maakEl("figure","af-foto");
+      const blob=await haalFoto(p.id);
+      if(blob&&!(p.bijlage&&!p.bijlage.beeld)){
+        const url=URL.createObjectURL(blob);afdrukUrls.push(url);
+        const im=maakEl("img");im.src=url;im.alt=p.tekst||"";
+        kader.appendChild(im);
+      }else{
+        kader.appendChild(maakEl("p","af-geenbeeld",
+          blob?("document: "+((p.bijlage&&p.bijlage.naam)||"bijlage")):"beeld niet beschikbaar"));
+      }
+      kader.appendChild(maakEl("figcaption",null,
+        nr+" · "+plekVol(p)+" · "+(p.tijd||"")+(p.tekst?" — "+p.tekst:"")));
+      blok.appendChild(kader);
+    }
+    el.appendChild(blok);
+  }
+
+  el.appendChild(maakEl("p","af-voet",
+    "Opgemaakt met Werfpunten "+VERSIE+" op "+datumLang(new Date().toISOString().slice(0,10))+"."));
+  return m;
+}
+
+function datumLang(iso){
+  const M=["januari","februari","maart","april","mei","juni","juli","augustus","september",
+           "oktober","november","december"];
+  const d=new Date(iso+"T00:00:00");
+  if(isNaN(d))return iso;
+  return d.getDate()+" "+M[d.getMonth()]+" "+d.getFullYear();
+}
+
+async function drukAf(){
+  if(!(staat.punten||[]).length&&!openPunten().length){melding("Nog niets om af te drukken");return;}
+  melding("Verslag klaarmaken…");
+  await bouwAfdruk();
+  // Afdrukken vanuit een open venster gaat op iOS mis: dat venster ligt in de bovenste laag en
+  // de afdrukstijl krijgt het er niet altijd uit. Dus eerst sluiten.
+  document.querySelectorAll("dialog[open]").forEach(d=>d.close());
+  const na=()=>{
+    removeEventListener("afterprint",na);
+    setTimeout(ruimAfdrukOp,1500);
+  };
+  addEventListener("afterprint",na);
+  setTimeout(()=>{try{print()}catch(e){melding("Afdrukken lukt niet in deze browser");na();}},350);
+}
+
+/* ---- doorsturen ----
+   De blokken bestaan al; wat ontbrak was ze de deur uit krijgen. Dat gaat via het deelvenster van
+   het toestel — dan werkt AirDrop, en dat werkt zónder netwerk. Op een werf zonder bereik is dat
+   niet een detail maar het verschil tussen wel en niet doorsturen.
+
+   Wat er meegaat is één blok: de tekst als afvinklijst plus de foto's die erbij horen. Niet het
+   hele verslag — de dakwerker krijgt hoofdstuk dak, en niets van de rest. Dat is de reden dat de
+   blokken bestaan. */
+
+/* De bestanden dragen het nummer waarmee ze in de lijst staan, en de plek in de naam. Wie de
+   foto's in zijn deelvenster ziet staan, hoort ze zonder de lijst ernaast te kunnen thuisbrengen —
+   en ze komen in dezelfde volgorde binnen als de regels. */
+async function bestandenVan(punten){
+  const uit=[];
+  let n=0;
+  for(const p of punten){
+    if(!p.foto)continue;
+    n++;
+    const b=await haalFoto(p.id);
+    if(!b)continue;
+    const doc=p.bijlage&&!p.bijlage.beeld;
+    const kort=String(n).padStart(2,"0")+"-"+
+      ((p.plek&&p.plek.lokaal?p.plek.lokaal:p.zone||"werf").replace(/[^\w.-]/g,""));
+    const naam=doc?(kort+"-"+(p.bijlage.naam||"document").replace(/[^\w.-]/g,"-")):(kort+".jpg");
+    try{uit.push(new File([b],naam,{type:b.type||(doc?"application/octet-stream":"image/jpeg")}));}
+    catch(e){}
+  }
+  return uit;
+}
+
+function doorstuurTekst(titel,toelichting,punten,m){
+  const r=[titel,""];
+  if(toelichting)r.push(toelichting,"");
+  // De foto's krijgen hier hun eigen nummer, want alleen die van dít blok gaan mee. Het nummer
+  // uit het volledige verslag zou naar een foto verwijzen die de ontvanger niet heeft.
+  const fotonr=new Map();
+  punten.filter(p=>p.foto).forEach((p,i)=>fotonr.set(p.id,i+1));
+  const mm={...m,fotonr};
+  punten.forEach(p=>{
+    const meta=afdrukMeta(p,mm,{volledig:true,zonderAan:true});
+    r.push("- [ ] "+(p.urgent?"URGENT — ":"")+(p.tekst||"[geen notitie]")+(meta?"  ("+meta+")":""));
+  });
+  r.push("");
+  r.push("Werfvergadering "+datumLang(m.datum)+" — uittreksel uit het werfverslag.");
+  return r.join("\n");
+}
+
+async function stuurDoor(titel,tekst,punten){
+  const bestanden=await bestandenVan(punten);
+  const kan=f=>{try{return navigator.canShare&&navigator.canShare(f)}catch(e){return false}};
+  if(navigator.share){
+    // eerst mét de foto's; kan het toestel dat niet, dan de tekst alleen — en dan zeggen we dat,
+    // want een lijst die naar een foto verwijst die niet meekwam is erger dan geen foto
+    if(bestanden.length&&kan({files:bestanden})){
+      try{await navigator.share({title:titel,text:tekst,files:bestanden});return;}
+      catch(e){if(e&&e.name==="AbortError")return;}
+    }
+    try{
+      await navigator.share({title:titel,text:tekst});
+      if(bestanden.length)melding("Zonder de "+bestanden.length+" foto's — dit toestel deelt geen bestanden");
+      return;
+    }catch(e){if(e&&e.name==="AbortError")return;}
+  }
+  melding(await kopieer(tekst)?"Gekopieerd — dit toestel heeft geen deelvenster"
+                              :"Delen én kopiëren lukken niet in deze browser");
+}
+
+function toonDoorsturen(perWat){
+  const m=verslagModel();
+  const lijst=[];
+  if(perWat==="rol"){
+    m.blokken.forEach(b=>b.partijen.forEach(w=>lijst.push({
+      titel:b.kop+" — "+w.naam, toelichting:b.toelichting, punten:w.punten})));
+    if(m.verboden.length&&profiel.bijzonder)lijst.unshift({titel:profiel.bijzonder.kop,
+      toelichting:profiel.bijzonder.verslag, punten:m.verboden});
+  }else{
+    m.hoofdstukken.forEach(h=>lijst.push({titel:h.kop,toelichting:"",punten:h.punten}));
+  }
+  const dlg=document.getElementById("dlg");
+  document.getElementById("dlg-titel").textContent=
+    perWat==="rol"?"Doorsturen per rol":"Doorsturen per bestekhoofdstuk";
+  const body=document.getElementById("dlg-body");
+  body.innerHTML="";
+  if(!lijst.length){
+    body.appendChild(maakEl("p","inv-uitleg", perWat==="rol"
+      ? "Nog geen punt is aan iemand toegewezen. Dat gebeurt in de keet: daar zeg je wie er iets "+
+        "mee moet, en dáárop zijn deze lijsten gebouwd."
+      : "Nog geen punt draagt een bestekhoofdstuk. Dat kies je in de keet, bovenaan."));
+  }
+  lijst.forEach(o=>{
+    const rij=maakEl("div","door-rij");
+    const links=maakEl("div","door-wat");
+    links.appendChild(maakEl("b",null,o.titel));
+    const fotos=o.punten.filter(p=>p.foto).length;
+    links.appendChild(maakEl("span",null,stuks(o.punten.length,"punt","punten")+
+      (fotos?(" · "+stuks(fotos,"foto","foto's")):"")));
+    rij.appendChild(links);
+    const knop=maakEl("button",null,"Doorsturen");
+    knop.type="button";
+    knop.onclick=()=>stuurDoor(o.titel,doorstuurTekst(o.titel,o.toelichting,o.punten,m),o.punten);
+    rij.appendChild(knop);
+    body.appendChild(rij);
+  });
+  document.getElementById("dlg-kopieer").style.display="none";
+  dlg.showModal();
+}
+
+/* Eén knop waar het verslag de app verlaat, in vier vormen. Dit is keetwerk, niet werfwerk —
+   hier telt volledigheid, niet het aantal tikken. */
+function openVerslag(){
+  const m=verslagModel();
+  const dlg=document.getElementById("dlg");
+  document.getElementById("dlg-titel").textContent="Verslag";
+  const body=document.getElementById("dlg-body");
+  body.innerHTML="";
+  const zonderwoorden=(staat.punten||[]).filter(p=>!(p.tekst||"").trim()).length;
+  const samen=stuks((staat.punten||[]).length,"punt","punten")+" van vandaag"+
+    (m.open.length?(", "+stuks(m.open.length,"punt","punten")+" nog open van vorige keren"):"");
+  body.appendChild(maakEl("p","inv-uitleg",samen+"."));
+  if(zonderwoorden)
+    body.appendChild(maakEl("p","inv-uitleg",zonderwoorden+" daarvan staat er nog zonder woorden. "+
+      "Werk ze eerst af in de keet — een verslag met lege regels is er geen."));
+  const knop=(tekst,uitleg,knoptekst,fn)=>{
+    const rij=maakEl("div","door-rij");
+    const links=maakEl("div","door-wat");
+    links.appendChild(maakEl("b",null,tekst));
+    links.appendChild(maakEl("span",null,uitleg));
+    rij.appendChild(links);
+    const b=maakEl("button",null,knoptekst);b.type="button";
+    b.onclick=()=>{dlg.close();fn();};
+    rij.appendChild(b);
+    body.appendChild(rij);
+  };
+  knop("Afdrukken of als PDF bewaren",
+       "het hele verslag, met het plan en de foto's erbij","Afdrukken",drukAf);
+  knop("Doorsturen per rol",
+       "elk blok naar wie er iets mee moet, met zijn foto's","Kiezen",()=>toonDoorsturen("rol"));
+  knop("Doorsturen per bestekhoofdstuk",
+       "de dakwerker krijgt hoofdstuk dak, en niets van de rest","Kiezen",
+       ()=>toonDoorsturen("hoofdstuk"));
+  knop("Verslagtekst kopiëren",
+       "de steno-export voor werf_verwerk.py op de Mac","Kopiëren",kopieerVerslagtekst);
+  document.getElementById("dlg-kopieer").style.display="none";
+  dlg.showModal();
 }
 
 async function kopieer(t){
@@ -1720,7 +4119,7 @@ async function kopieer(t){
 const dlg=document.getElementById("dlg");
 document.getElementById("dlg-sluit").onclick=()=>dlg.close();
 
-document.getElementById("kopieer").onclick=async()=>{
+async function kopieerVerslagtekst(){
   const t=maakTekst();
   if(!t){melding("Nog niets te kopiëren");return}
   const ok=await kopieer(t);
@@ -1733,7 +4132,8 @@ document.getElementById("kopieer").onclick=async()=>{
   };
   dlg.showModal();
   if(ok)melding("Gekopieerd — plak in Apple Notes");
-};
+}
+document.getElementById("verslag").onclick=openVerslag;
 
 document.getElementById("fotos").onclick=async()=>{
   const metFoto=staat.punten.filter(p=>p.foto);
@@ -1766,6 +4166,9 @@ laadStaat();
 document.getElementById("weer").value=staat.weer||"";
 document.getElementById("bezetting").value=staat.bezetting||"";
 laadContacten();
+laadHoofdstukken();
+laadProfiel();          // zet ROLLEN en SOORTEN, en laadt de woorden van dít profiel
+merkProfiel();
 tekenContacten();
 tekenSprekers();
 tekenZones();
@@ -1808,6 +4211,12 @@ opendb().then(async d=>{
     if(planLijst.includes(staat.zone) && staat.punten.length) setTimeout(()=>openPlan(staat.zone),300);
     else setTimeout(vraagNiveau,350);
   }
+  // Achteraan, en maar één keer: eerst mag je werken. Maar niet zwijgen, want een toestel dat
+  // stukgaat vóór de eerste back-up neemt het hele dossier mee.
+  merkBackupknop();
+  if(backupAchterstand())
+    setTimeout(()=>meldingMetActie("Nog geen back-up van wat hier staat","nu bewaren",
+      ()=>document.getElementById("backup").click()),2500);
 });
 </script>
 
