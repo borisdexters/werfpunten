@@ -892,7 +892,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v66";
+const VERSIE="v67";
 let staat={datum:new Date().toISOString().slice(0,10),weer:"",bezetting:"",zone:"N3",punten:[]};
 /* ---- de beelden van een punt ----
    Eén vaststelling had één foto. Dat klopt niet met een werf: één euvel heeft drie hoeken, en
@@ -4983,6 +4983,7 @@ async function toonPlan(zone){
 async function openPlan(gevraagd){
   const dlg=document.getElementById("plandlg");
   if(!dlg.open)dlg.showModal();
+  pasVenstersAan();
   planLijst=await planZones();
   // het gevraagde plan, anders dat van de huidige zone, anders het enige dat er is
   const zone=(gevraagd&&planLijst.includes(gevraagd))?gevraagd
@@ -6528,6 +6529,35 @@ async function dbMaakVerzoek(titel,map,omschrijving){
    De service worker is cache-first, en dat blijft zo: op een werf telt zekerheid, niet versheid.
    Maar wát er klaarstaat mag gezegd worden, en dan mag jij kiezen wanneer. Nooit vanzelf
    herladen — dat zou midden in een vergadering het scherm onder je handen verversen. */
+/* ---- de schermvullende vensters passen zich aan wat er zichtbaar is ----
+   100dvh is de hoogte van het venster, niet van wat je ziet. In Safari legt de adresbalk zich
+   over de pagina heen (viewport-fit=cover), en dan valt de bovenste balk van het planscherm
+   eronder: het menu staat er wel, maar je kunt er niet bij. Hetzelfde gebeurt als het toetsenbord
+   opkomt of als de pagina inzoomt.
+
+   visualViewport zegt wél wat er werkelijk zichtbaar is — hoogte, verschuiving en zoom — en die
+   maat leggen we op de vensters. Kent de browser hem niet, dan blijft 100dvh staan zoals het was. */
+const SCHERMVENSTERS=["plandlg","tekendlg","sneldlg"];
+function pasVenstersAan(){
+  const vv=window.visualViewport;
+  if(!vv)return;
+  SCHERMVENSTERS.forEach(id=>{
+    const d=document.getElementById(id);
+    if(!d)return;
+    if(!d.open){ d.style.height=""; d.style.transform=""; return; }
+    d.style.height=Math.round(vv.height)+"px";
+    // Verschuift het zichtbare deel — bij zoomen of scrollen — dan schuift het venster mee,
+    // zodat de balk bovenaan blijft waar je hem kunt zien.
+    const dx=Math.round(vv.offsetLeft), dy=Math.round(vv.offsetTop);
+    d.style.transform=(dx||dy)?("translate("+dx+"px,"+dy+"px)"):"";
+  });
+}
+if(window.visualViewport){
+  visualViewport.addEventListener("resize",pasVenstersAan);
+  visualViewport.addEventListener("scroll",pasVenstersAan);
+  addEventListener("orientationchange",()=>setTimeout(pasVenstersAan,120));
+}
+
 function biedBijwerken(){
   meldingMetActie("Nieuwe versie klaar","nu bijwerken",()=>location.reload());
 }
