@@ -102,6 +102,8 @@
   .versie{font:10px ui-monospace,Menlo,monospace;color:var(--ink-faint);opacity:.6;margin-left:6px}
 
   .verg{background:var(--surface);border-bottom:1px solid var(--line-soft)}
+  .keet-verg{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;
+    margin-bottom:4px}
   .verg-kop{display:flex;align-items:center;gap:10px;width:100%;border:none;border-radius:0;
     background:none;padding:9px 14px;text-align:left;color:var(--ink-soft);font-size:13px}
   .verg-tekst{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -408,6 +410,15 @@
      onzichtbare paginahoogte innam. */
   #plandlg:not([open]){display:none}
   .plan-vlak{position:relative;flex:1;min-height:0;background:#111;overflow:hidden}
+  /* De verdieping aanklikken hoort op de kaart, niet op een scherm ervoor: waar je bent is het
+     eerste wat je zegt als je binnenkomt, en daarna wissel je nog een paar keer per rondgang.
+     Over de kaart heen, want de kaart is alles wat eronder ligt. */
+  .planzones{position:absolute;top:0;left:0;right:0;z-index:3;background:rgba(20,20,22,.82);
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+    border-bottom:1px solid #2c2c2e;padding:8px 10px;top:auto}
+  .planzones .zone-btn{border-color:#48484a;color:#d8d8dc;padding:9px 13px;font-size:12.5px}
+  .planzones .zone-btn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);
+    color:#fff}
   #plancanvas{display:block;width:100%;height:100%;touch-action:none}
   /* display:flex zou het hidden-attribuut overstemmen */
   /* `hidden` verliest het van een klasse die display zet, dus elk van deze drie moet er staan.
@@ -551,27 +562,6 @@
        de regel wat er óntbreekt, in de accentkleur, tot het ingevuld is. Dat is een por en geen
        stop — hetzelfde patroon als de oranje stip op Back-up. En op een toestel dat de regel nog
        nooit gezien heeft staat ze open: de app toont je alles tot je zegt dat het niet hoeft. -->
-  <div class="verg">
-    <button type="button" class="verg-kop" id="vergknop" aria-expanded="true" aria-controls="verg-body">
-      <span class="verg-tekst" id="verg-tekst"></span>
-      <span class="verg-pijl" id="verg-pijl">▴</span>
-    </button>
-    <div class="verg-body" id="verg-body">
-      <div class="dagboek">
-        <label for="weer">W:</label><div class="weerveld"><input id="weer" placeholder="droog, 19°, wind matig" autocomplete="off"><button type="button" id="weerknop" title="Weer ophalen via locatie">☁</button></div>
-        <label for="bezetting">BZ:</label><input id="bezetting" placeholder="6 man — 2 dakwerkers, 3 schilders" autocomplete="off">
-        <p class="weerinfo" id="weerinfo"></p>
-      </div>
-
-      <div class="aanwezig">
-        <div class="aanwezig-kop">
-          <span class="aw-label">Aanwezig</span>
-        </div>
-        <div class="aw-chips" id="awchips"></div>
-      </div>
-    </div>
-  </div>
-
   <nav class="zones" id="zones" aria-label="Zone kiezen"></nav>
 
   <div class="zoekrij" id="zoekrij" hidden>
@@ -689,6 +679,30 @@
     <button type="button" id="keet-klaar" class="tk-klaar">Klaar</button>
   </div>
   <div class="keet-vlak">
+    <!-- Wie er was, hoeveel man er stond en welk weer het was: dagboekplicht, maar geen werfwerk.
+         Het stond op het beginscherm en kostte daar ruimte de hele vergadering lang, terwijl je
+         het één keer invult — en dat doe je hier, als je afwerkt. Het weer haalt de app zelf op
+         bij het eerste punt; dit veld is er voor als dat niet lukt of niet klopt. -->
+    <div class="verg keet-verg">
+      <button type="button" class="verg-kop" id="vergknop" aria-expanded="true" aria-controls="verg-body">
+        <span class="verg-tekst" id="verg-tekst"></span>
+        <span class="verg-pijl" id="verg-pijl">▴</span>
+      </button>
+      <div class="verg-body" id="verg-body">
+        <div class="dagboek">
+          <label for="weer">W:</label><div class="weerveld"><input id="weer" placeholder="droog, 19°, wind matig" autocomplete="off"><button type="button" id="weerknop" title="Weer ophalen via locatie">☁</button></div>
+          <label for="bezetting">BZ:</label><input id="bezetting" placeholder="6 man — 2 dakwerkers, 3 schilders" autocomplete="off">
+          <p class="weerinfo" id="weerinfo"></p>
+        </div>
+
+        <div class="aanwezig">
+          <div class="aanwezig-kop">
+            <span class="aw-label">Aanwezig</span>
+          </div>
+          <div class="aw-chips" id="awchips"></div>
+        </div>
+      </div>
+    </div>
     <div class="keet-beelden" id="keet-beelden"></div>
     <div class="keet-plek" id="keet-plek"></div>
     <div class="keet-blok">
@@ -774,6 +788,7 @@
     <button type="button" id="pl-klaar" class="tk-klaar">Lijst</button>
   </div>
   <div class="plan-vlak">
+    <nav class="zones planzones" id="planzones" aria-label="Verdieping kiezen"></nav>
     <canvas id="plancanvas"></canvas>
     <div class="plan-zoom">
       <button type="button" id="pl-in" aria-label="Inzoomen">+</button>
@@ -892,7 +907,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v67";
+const VERSIE="v68";
 let staat={datum:new Date().toISOString().slice(0,10),weer:"",bezetting:"",zone:"N3",punten:[]};
 /* ---- de beelden van een punt ----
    Eén vaststelling had één foto. Dat klopt niet met een werf: één euvel heeft drie hoeken, en
@@ -2227,7 +2242,9 @@ function zetVergVouw(open){
 function vergVouwUitOpslag(){
   let v=null;
   try{v=localStorage.getItem(VERGVOUWSLEUTEL)}catch(e){}
-  zetVergVouw(v===null ? true : v==="1");
+  // Dicht tenzij je hem zelf openzette: je komt in de keet om punten af te werken. De regel zelf
+  // zegt in de accentkleur wat er nog ontbreekt, dus wat er mist blijft zichtbaar.
+  zetVergVouw(v==="1");
 }
 
 /* Alleen wie aanwezig is, verschijnt als snelknop bij de invoer. */
@@ -2358,22 +2375,29 @@ function meldingMetActie(tekst,actietekst,fn){
   clearTimeout(el._t); el._t=setTimeout(()=>{el.classList.remove("aan");laatstVerwijderd=null;},6000);
 }
 
+/* De zonebalk staat op twee plaatsen: op de lijst, en over de kaart. Dat is met opzet dezelfde
+   balk — de verdieping aanklikken is dezelfde handeling waar je ook staat, en twee lijsten die
+   hetzelfde bedoelen lopen vroeg of laat uit elkaar. */
 function tekenZones(){
-  const nav=document.getElementById("zones");nav.innerHTML="";
-  ZONES.forEach(z=>{
-    const b=document.createElement("button");
-    const heeftPlan=planLijst.includes(z);
-    b.className="zone-btn"+(heeftPlan?" met-plan":"");
-    // Is er een plan voor deze zone, dan opent de knop het meteen. Dat is wat je verwacht als je
-    // op N3 drukt: het plan van niveau 3 zien, niet alleen een zone instellen.
-    b.textContent=heeftPlan?("📍 "+z):z;
-    b.type="button";
-    b.setAttribute("aria-pressed",String(z===staat.zone));
-    b.onclick=()=>{
-      staat.zone=z;bewaarStaat();tekenZones();
-      if(planLijst.includes(z)) openPlan(z);
-    };
-    nav.appendChild(b);
+  ["zones","planzones"].forEach(waar=>{
+    const nav=document.getElementById(waar);
+    if(!nav)return;
+    nav.innerHTML="";
+    ZONES.forEach(z=>{
+      const b=document.createElement("button");
+      const heeftPlan=planLijst.includes(z);
+      b.className="zone-btn"+(heeftPlan?" met-plan":"");
+      // Is er een plan voor deze zone, dan opent de knop het meteen. Dat is wat je verwacht als je
+      // op N3 drukt: het plan van niveau 3 zien, niet alleen een zone instellen.
+      b.textContent=heeftPlan?("📍 "+z):z;
+      b.type="button";
+      b.setAttribute("aria-pressed",String(z===staat.zone));
+      b.onclick=()=>{
+        staat.zone=z;bewaarStaat();tekenZones();
+        if(planLijst.includes(z)) openPlan(z);
+      };
+      nav.appendChild(b);
+    });
   });
 }
 
@@ -7221,8 +7245,12 @@ opendb().then(async d=>{
     const dag=onafgeslotenDag; onafgeslotenDag=null;
     setTimeout(()=>vraagOverVorigeDag(dag),300);
   }else if(planLijst.length){
-    if(planLijst.includes(staat.zone) && staat.punten.length) setTimeout(()=>openPlan(staat.zone),300);
-    else setTimeout(vraagNiveau,350);
+    /* De kaart ís het beginscherm. Er werd eerst gevraagd op welk niveau je stond, maar dat is
+       een tussenvraag op het moment dat je binnenkomt — en de zonebalk staat nu op het plan zelf,
+       dus wisselen is één tik. Openen op waar je gebleven was is de beste gok: een rondgang gaat
+       verder waar hij ophield. */
+    const start=planLijst.includes(staat.zone)?staat.zone:planLijst[0];
+    setTimeout(()=>openPlan(start),300);
   }
   // Achteraan, en maar één keer: eerst mag je werken. Maar niet zwijgen, want een toestel dat
   // stukgaat vóór de eerste back-up neemt het hele dossier mee.
