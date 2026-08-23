@@ -864,7 +864,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v63";
+const VERSIE="v64";
 let staat={datum:new Date().toISOString().slice(0,10),weer:"",bezetting:"",zone:"N3",punten:[]};
 /* ---- de beelden van een punt ----
    Eén vaststelling had één foto. Dat klopt niet met een werf: één euvel heeft drie hoeken, en
@@ -4859,7 +4859,21 @@ function houdPinVrij(){
   if(py>grens){ pl.dy-=(py-grens); planTeken(); }
 }
 
+/* De uitgang draagt de oogst. Het plan blijft de hele tijd open — dat is de bedoeling, want op
+   een werf komen punten in trossen — maar dan moet er wél ergens staan hoeveel je al hebt en
+   waar je heen kunt. De teller stond in de voet, en die klap je juist in om kaart te winnen; zo
+   zag je hem nooit. Op de knop staat hij altijd. */
+function merkPlanUitgang(){
+  const k=document.getElementById("pl-klaar");
+  if(!k)return;
+  const n=(staat.punten||[]).length;
+  k.textContent=n?("Lijst · "+n):"Lijst";
+  k.title=n?(stuks(n,"punt","punten")+" in dit verslag — tik om naar de lijst te gaan")
+           :"Terug naar de lijst";
+}
+
 function planVoet(){
+  merkPlanUitgang();
   const voet=document.getElementById("pl-voet");
   const el=document.getElementById("pl-lokaal");
   voet.hidden=!plan;
