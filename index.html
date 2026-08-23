@@ -663,7 +663,12 @@
   <div class="dlg-kop"><h2 id="inv-titel">Invoer</h2></div>
   <div class="dlg-body">
     <p class="inv-uitleg" id="inv-uitleg"></p>
-    <textarea id="inv-veld" rows="6"></textarea>
+    <!-- Hier staan namen en codes: werfnamen, zonecodes, fasecodes, contacten, een projectcode.
+         Autocorrectie maakt daar "grievend" van "GRIDVELD" en "N0" van "NO", en dat merk je pas
+         als het ergens in een verslag staat. In de vaststellingsvelden blijft ze wél aan — daar
+         dicteer je op een werf en helpt ze. -->
+    <textarea id="inv-veld" rows="6" autocorrect="off" autocapitalize="off"
+      spellcheck="false" autocomplete="off"></textarea>
   </div>
   <div class="dlg-voet">
     <button id="inv-annuleer">Annuleren</button>
@@ -907,7 +912,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v70";
+const VERSIE="v71";
 let staat={datum:new Date().toISOString().slice(0,10),weer:"",bezetting:"",zone:"N3",punten:[]};
 /* ---- de beelden van een punt ----
    Eén vaststelling had één foto. Dat klopt niet met een werf: één euvel heeft drie hoeken, en
