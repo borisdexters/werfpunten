@@ -659,6 +659,9 @@
       <button type="button" id="fotos">bijlagen tonen</button>
       <button type="button" id="backup" title="Alles op dit toestel in één bestand">Back-up</button>
     </div>
+    <div class="beheer-groep">
+      <button type="button" id="bijwerkknop">bijwerken — kijk of er een nieuwe versie is</button>
+    </div>
     <p class="beheer-versie">Werfpunten <span id="versie"></span></p>
   </div>
   <div class="dlg-voet">
@@ -889,7 +892,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v65";
+const VERSIE="v66";
 let staat={datum:new Date().toISOString().slice(0,10),weer:"",bezetting:"",zone:"N3",punten:[]};
 /* ---- de beelden van een punt ----
    Eén vaststelling had één foto. Dat klopt niet met een werf: één euvel heeft drie hoeken, en
@@ -2280,6 +2283,7 @@ document.getElementById("fasebeheer").onclick=beheerFasen;
 document.getElementById("projectcodebeheer").onclick=beheerProjectcode;
 document.getElementById("documentenknop").onclick=toonDocumenten;
 document.getElementById("dropboxbeheer").onclick=beheerDropbox;
+document.getElementById("bijwerkknop").onclick=kijkNieuweVersie;
 document.getElementById("profielbeheer").onclick=kiesProfiel;
 
 /* ---- het beheervenster ----
@@ -6516,6 +6520,34 @@ async function dbMaakVerzoek(titel,map,omschrijving){
   return j.url;
 }
 
+/* ---- bijwerken ----
+   Vanaf het beginscherm draait de app schermvullend: geen adresbalk, geen herlaadknop. Er was
+   dus geen enkele manier om te weten dat er een nieuwe versie klaarstond, laat staan om ze te
+   halen — je moest de app volledig afsluiten en twee keer openen, en dat maar hopen.
+
+   De service worker is cache-first, en dat blijft zo: op een werf telt zekerheid, niet versheid.
+   Maar wát er klaarstaat mag gezegd worden, en dan mag jij kiezen wanneer. Nooit vanzelf
+   herladen — dat zou midden in een vergadering het scherm onder je handen verversen. */
+function biedBijwerken(){
+  meldingMetActie("Nieuwe versie klaar","nu bijwerken",()=>location.reload());
+}
+
+async function kijkNieuweVersie(){
+  if(!("serviceWorker" in navigator)){melding("Deze browser houdt geen versies bij");return;}
+  let reg=null;
+  try{ reg=await navigator.serviceWorker.getRegistration(); }catch(e){}
+  if(!reg){melding("Nog niets geïnstalleerd — open de app eerst met netwerk");return;}
+  melding("Kijken of er iets nieuws is…");
+  try{ await reg.update(); }
+  catch(e){ melding("Geen netwerk — probeer het later"); return; }
+  const nieuw=reg.installing||reg.waiting;
+  if(!nieuw){ melding("Je hebt de nieuwste versie ("+VERSIE+")"); return; }
+  if(nieuw.state==="installed"||nieuw.state==="activated"){ biedBijwerken(); return; }
+  nieuw.addEventListener("statechange",()=>{
+    if(nieuw.state==="installed"||nieuw.state==="activated")biedBijwerken();
+  });
+}
+
 async function beheerDropbox(){
   const d=dbLees();
   const nu=[d.sleutel?("sleutel = "+d.sleutel):"sleutel = ",
@@ -7174,9 +7206,27 @@ opendb().then(async d=>{
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
+    const had = !!navigator.serviceWorker.controller;   // draaide er al een versie?
     navigator.serviceWorker.register("sw.js")
-      .then(r => { window.__sw = "geregistreerd (" + (r.active ? "actief" : "installeert") + ")"; })
+      .then(r => {
+        window.__sw = "geregistreerd (" + (r.active ? "actief" : "installeert") + ")";
+        // Een nieuwe versie die binnenkomt terwijl de app openstaat.
+        r.addEventListener("updatefound", () => {
+          const nieuw = r.installing;
+          if (!nieuw || !had) return;          // de eerste installatie is geen bijwerking
+          nieuw.addEventListener("statechange", () => {
+            if (nieuw.state === "installed" || nieuw.state === "activated")
+              try { biedBijwerken(); } catch (e) {}
+          });
+        });
+      })
       .catch(e => { window.__sw = "mislukt: " + e.message; });
+    /* De service worker roept skipWaiting aan, dus een nieuwe versie neemt het meteen over. Dan
+       is dít het betrouwbaarste teken dat er iets nieuws klaarstaat — de pagina zelf toont nog
+       de oude, tot je herlaadt. */
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (had) try { biedBijwerken(); } catch (e) {}
+    });
   });
 } else { window.__sw = "niet ondersteund"; }
 </script>
