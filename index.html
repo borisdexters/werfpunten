@@ -804,6 +804,7 @@
       <div>Nog geen plan op dit toestel.<br>Laad een <code>.werfplan</code>-bestand;
         het blijft daarna offline beschikbaar.</div>
       <button type="button" id="pl-laad">Plan laden</button>
+      <button type="button" id="pl-omtrek">Omtrek uit het GRB</button>
     </div>
     <div class="plan-voet" id="pl-voet" hidden>
       <div class="plan-kop">
@@ -912,7 +913,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v71";
+const VERSIE="v72";
 let staat={datum:new Date().toISOString().slice(0,10),weer:"",bezetting:"",zone:"N3",punten:[]};
 /* ---- de beelden van een punt ----
    Eén vaststelling had één foto. Dat klopt niet met een werf: één euvel heeft drie hoeken, en
@@ -5099,6 +5100,188 @@ function planVoet(){
    herinnering weer. */
 let eersteOpening=true;
 
+/* ---- de omtrek uit het GRB ----
+   Heb je de plannenset niet bij, of bestaat ze nog niet, dan moet er toch iets zijn om op aan te
+   duiden. Het GRB levert dat publiek en gratis: `GRB:ADP` is het perceel, `GRB:GBG` het gebouw.
+   Daarmee kun je wijzen — "lek aan de noordgevel", "scheur ter hoogte van de inrit" — en thuis
+   koppel je de echte plannen eraan.
+
+   Dit stond al in plan_omtrek.py, maar dat is een desktopscript. Nagemeten op 23/08: de dienst
+   antwoordt met `access-control-allow-origin: *`, dus de app mag hem rechtstreeks bevragen. Geen
+   server, geen tussenstap.
+
+   Twee dingen die plan_omtrek.py duur heeft geleerd en die hier één op één gelden:
+   - géén `srsName=EPSG:31370` meesturen. Dat lijkt de nettere aanvraag, maar de dienst loopt
+     erop vast: een 504 na veertig seconden waar dezelfde aanvraag zonder in zes seconden
+     antwoordt. Het is de projectie die de laag toch al heeft.
+   - de projectie in het antwoord nakijken. Schuift ze ooit, dan zijn onze meters stilletjes
+     graden geworden — en een plan dat er goed uitziet maar de verkeerde maat draagt is erger
+     dan geen plan.
+
+   Het plan dat hieruit komt draagt `voorlopig:true`. Laad je later een echt plan voor die zone,
+   dan wordt het zonder omhaal vervangen: het is een vervanger, geen versie om te bewaren. */
+/* WGS84 in graden -> Lambert 72 in meters. Eén op één overgezet uit plan_omtrek.py, waar hij
+   nagemeten is tegen de adreszoeker van Vlaanderen: over zes ijkpunten van Oostende tot Tongeren
+   bleef het verschil onder de millimeter. proef/vast/lambert-ijkpunten.json toetst nu beide
+   kanten aan dezelfde getallen — een omrekening die op twee plaatsen staat, moet op twee plaatsen
+   kloppen.
+
+   Waarom niet gewoon aan de dienst overlaten: die aanvaardt een zoekkader in graden en
+   herprojecteert het, maar zónder datumverschuiving. Op de Korenmarkt in Gent kwam het punt zo
+   75 m verderop te liggen, in het perceel van de buren. Zwijgend, want er komt gewoon een perceel
+   terug. */
+const WGSA=6378137.0, WGSF=1/298.257223563;
+const INTA=6378388.0, INTF=1/297.0;                    // Hayford / International 1924
+const HDX=-106.8686, HDY=52.2978, HDZ=-103.7239;       // BD72 -> WGS84; wij draaien ze om
+const HRX=0.3366, HRY=-0.4570, HRZ=1.8422;             // boogseconden
+const HDS=-1.2747;                                     // ppm
+const LLON0=4.367486666666666, LLAT1=51.16666723333333, LLAT2=49.8333339;
+const LX0=150000.013, LY0=5400088.438;
+
+function _geocentrisch(lat,lon,a,f){
+  const e2=f*(2-f), la=lat*Math.PI/180, lo=lon*Math.PI/180;
+  const n=a/Math.sqrt(1-e2*Math.sin(la)**2);
+  return [n*Math.cos(la)*Math.cos(lo), n*Math.cos(la)*Math.sin(lo), n*(1-e2)*Math.sin(la)];
+}
+function _geodetisch(x,y,z,a,f){
+  const e2=f*(2-f), lon=Math.atan2(y,x), p=Math.hypot(x,y);
+  let lat=Math.atan2(z,p*(1-e2));
+  for(let i=0;i<8;i++){                                // convergeert ruim binnen acht ronden
+    const n=a/Math.sqrt(1-e2*Math.sin(lat)**2);
+    lat=Math.atan2(z+e2*n*Math.sin(lat),p);
+  }
+  return [lat*180/Math.PI, lon*180/Math.PI];
+}
+function wgsNaarLambert(lat,lon){
+  let [x,y,z]=_geocentrisch(lat,lon,WGSA,WGSF);
+  const rx=-HRX/3600*Math.PI/180, ry=-HRY/3600*Math.PI/180, rz=-HRZ/3600*Math.PI/180;
+  const sc=1-HDS*1e-6;
+  [x,y,z]=[-HDX+sc*(x-rz*y+ry*z), -HDY+sc*(rz*x+y-rx*z), -HDZ+sc*(-ry*x+rx*y+z)];
+  const [la2g,lo2g]=_geodetisch(x,y,z,INTA,INTF);
+  const e=Math.sqrt(INTF*(2-INTF));
+  const la=la2g*Math.PI/180, lo=lo2g*Math.PI/180;
+  const p1=LLAT1*Math.PI/180, p2=LLAT2*Math.PI/180;
+  const m=p=>Math.cos(p)/Math.sqrt(1-e*e*Math.sin(p)**2);
+  const t=p=>Math.tan(Math.PI/4-p/2)/Math.pow((1-e*Math.sin(p))/(1+e*Math.sin(p)),e/2);
+  const n=(Math.log(m(p1))-Math.log(m(p2)))/(Math.log(t(p1))-Math.log(t(p2)));
+  const F=m(p1)/(n*Math.pow(t(p1),n));
+  const r=INTA*F*Math.pow(t(la),n);
+  const th=n*(lo-LLON0*Math.PI/180);
+  return {x:LX0+r*Math.sin(th), y:LY0-r*Math.cos(th)};
+}
+
+const GRBWFS="https://geo.api.vlaanderen.be/GRB/wfs";
+const GRBCM=100;                       // beeldeenheden per meter: één eenheid is een centimeter
+
+async function grbLaag(laag,kader,maximum){
+  const q=new URLSearchParams({service:"WFS", version:"2.0.0", request:"GetFeature",
+    typeNames:laag, outputFormat:"application/json", count:String(maximum),
+    bbox:kader.map(v=>v.toFixed(6)).join(",")+",EPSG:31370"});
+  /* De dienst is publiek en wisselvallig: 504's komen voor, en een aanvraag die achttien seconden
+     duurt is normaal. Zonder grens blijft hij hangen en weet je op een werf niet of je moet
+     wachten of iets anders doen. */
+  const stop=new AbortController();
+  const wekker=setTimeout(()=>stop.abort(),45000);
+  let r;
+  try{ r=await fetch(GRBWFS+"?"+q.toString(),{cache:"no-store",signal:stop.signal}); }
+  catch(e){ throw new Error(e.name==="AbortError"?"de dienst antwoordde niet binnen 45 s":"onbereikbaar"); }
+  finally{ clearTimeout(wekker); }
+  if(!r.ok)throw new Error("de dienst gaf "+r.status+(r.status===504?" (overbelast — later opnieuw)":""));
+  const d=await r.json();
+  const naam=(((d.crs||{}).properties)||{}).name||"";
+  if((d.features||[]).length && String(naam).indexOf("31370")<0)
+    throw new Error("GRB antwoordt in "+(naam||"een onbekende projectie")+" — niet in meters");
+  return d.features||[];
+}
+
+function grbRingen(f){
+  const g=(f&&f.geometry)||{};
+  if(g.type==="Polygon")return g.coordinates||[];
+  if(g.type==="MultiPolygon")return (g.coordinates||[]).reduce((a,p)=>a.concat(p),[]);
+  return [];
+}
+/* Ligt dit punt in dit vlak? Stralen tellen: een lijn naar rechts snijdt een gesloten rand een
+   oneven aantal keer als het punt erbinnen ligt. */
+function inVlak(ring,x,y){
+  let binnen=false;
+  for(let i=0,j=ring.length-1;i<ring.length;j=i++){
+    const xi=ring[i][0],yi=ring[i][1],xj=ring[j][0],yj=ring[j][1];
+    if((yi>y)!==(yj>y) && x < (xj-xi)*(y-yi)/((yj-yi)||1e-12)+xi) binnen=!binnen;
+  }
+  return binnen;
+}
+function raaktVlak(f,x,y){ return grbRingen(f).some(r=>inVlak(r,x,y)); }
+
+/* De vakmaat kiest zichzelf: klein genoeg dat het midden van een hoekvak binnen bereik van een
+   tik in die hoek ligt (de app hangt een label alleen aan een pin binnen 14% van de plaatbreedte),
+   en groot genoeg om er niet honderd te krijgen. */
+function grbVakmaat(breedteM,hoogteM){
+  const maten=[1,2,5,10,20,25,50,100];
+  for(const m of maten){
+    const kolommen=Math.ceil(breedteM/m), rijen=Math.ceil(hoogteM/m);
+    if(kolommen<=26 && rijen<=20 && m<=0.14*breedteM) return m;
+  }
+  return maten[maten.length-1];
+}
+const GRBLETTERS="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+function grbRaster(breedteM,hoogteM,vak){
+  const uit=[], kolommen=Math.ceil(breedteM/vak), rijen=Math.ceil(hoogteM/vak);
+  for(let k=0;k<kolommen;k++)for(let r=0;r<rijen;r++){
+    const mx=Math.min((k+0.5)*vak,(k*vak+breedteM)/2);
+    const my=Math.min((r+0.5)*vak,(r*vak+hoogteM)/2);
+    uit.push({nr:GRBLETTERS[k]+(r+1), naam:"",
+              x:+(mx/breedteM*100).toFixed(2), y:+(my/hoogteM*100).toFixed(2)});
+  }
+  return uit;
+}
+
+async function maakOmtrekplan(hier,zone){
+  const L=wgsNaarLambert(hier.lat,hier.lon);    // nagemeten op 0,197 mm over zes ijkpunten
+  const x=L.x, y=L.y;
+  // eerst het perceel waar je op staat, dan een ruimer kader eromheen
+  const hierbij=await grbLaag("GRB:ADP",[x-1,y-1,x+1,y+1],20);
+  const mijn=hierbij.find(f=>raaktVlak(f,x,y))||hierbij[0]||null;
+  const punten=[];
+  (mijn?grbRingen(mijn):[]).forEach(r=>r.forEach(p=>punten.push(p)));
+  if(!punten.length){ punten.push([x-40,y-40],[x+40,y+40]); }
+  let minX=Math.min(...punten.map(p=>p[0])), maxX=Math.max(...punten.map(p=>p[0]));
+  let minY=Math.min(...punten.map(p=>p[1])), maxY=Math.max(...punten.map(p=>p[1]));
+  const rand=Math.max(15,(maxX-minX)*0.15,(maxY-minY)*0.15);
+  minX-=rand; maxX+=rand; minY-=rand; maxY+=rand;
+  const kader=[minX,minY,maxX,maxY];
+
+  const [percelen,gebouwen]=await Promise.all([
+    grbLaag("GRB:ADP",kader,120), grbLaag("GRB:GBG",kader,200)]);
+
+  const breedteM=maxX-minX, hoogteM=maxY-minY;
+  const bw=Math.round(breedteM*GRBCM), bh=Math.round(hoogteM*GRBCM);
+  const naarBeeldXY=p=>[((p[0]-minX)*GRBCM).toFixed(1),((maxY-p[1])*GRBCM).toFixed(1)];
+  const pad=f=>grbRingen(f).map(r=>"M"+r.map(p=>naarBeeldXY(p).join(",")).join("L")+"Z").join("");
+
+  const stuk=[];
+  stuk.push('<rect width="'+bw+'" height="'+bh+'" fill="#fff"/>');
+  percelen.forEach(f=>{ if(f!==mijn)stuk.push('<path d="'+pad(f)+'" fill="none" stroke="#c9ccc6" stroke-width="18"/>'); });
+  gebouwen.forEach(f=>{
+    const vanMij=mijn&&grbRingen(f).some(r=>r.some(p=>raaktVlak(mijn,p[0],p[1])));
+    stuk.push('<path d="'+pad(f)+'" fill="'+(vanMij?"#5d646b":"#e6e8e3")+'" stroke="#8c9299" stroke-width="12"/>');
+  });
+  if(mijn)stuk.push('<path d="'+pad(mijn)+'" fill="none" stroke="#b04527" stroke-width="34"/>');
+
+  const svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+bw+'" height="'+bh+'" '+
+            'viewBox="0 0 '+bw+' '+bh+'">'+stuk.join("")+'</svg>';
+  const vak=grbVakmaat(breedteM,hoogteM);
+  return {
+    zone, soort:"svg", voorlopig:true,
+    bron:{grb:{lagen:["GRB:ADP","GRB:GBG"], opgehaald:new Date().toISOString().slice(0,10)}},
+    beeld:"data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg),
+    breedte:bw, hoogte:bh,
+    georef:{epsg:31370, eenheid_m:+(1/GRBCM).toFixed(4),
+            x:+minX.toFixed(3), y:+maxY.toFixed(3), noord:0},
+    lokalen:grbRaster(breedteM,hoogteM,vak),
+    maten:{breedte_m:Math.round(breedteM), hoogte_m:Math.round(hoogteM), vak_m:vak}
+  };
+}
+
 async function toonPlan(zone){
   const data=await haalPlan(zone);
   document.getElementById("pl-leeg").hidden=!!data;
@@ -5256,6 +5439,7 @@ function planBedrading(){
 
 document.getElementById("planknop").onclick=openPlan;
 document.getElementById("pl-laad").onclick=()=>document.getElementById("planbestand").click();
+document.getElementById("pl-omtrek").onclick=()=>haalOmtrek(null,false);
 
 /* Meerdere plannen: de knop wisselt er doorheen. Twee niveaus is de praktijk; een lijst zou
    meer schermruimte kosten dan ze oplevert. */
@@ -5529,7 +5713,12 @@ document.getElementById("planbestand").onchange=async e=>{
      procenten van een blad, en dit is een ander blad. */
   const bestaand=await haalPlan(data.zone);
   let geparkeerd=null;
-  if(bestaand){
+  /* Een GRB-omtrek is een vervanger, geen versie om te bewaren: hij stond er tot je het echte
+     plan had, en dat heb je nu. Wegdoen zonder omhaal — de punten erop dragen wél procenten van
+     een ánder blad, dus die verhuizen zoals altijd via Koppel als je dat wil. */
+  if(bestaand&&bestaand.voorlopig){
+    melding("De GRB-omtrek maakt plaats voor "+data.zone);
+  }else if(bestaand){
     const raakt=puntenOpZone(data.zone);
     if(raakt.length){
       const naam=await vrijeVersienaam(data.zone);
@@ -6519,6 +6708,37 @@ function vraagWelkeWerf(lijst,hier,meerdere){
     dlg.onclose=()=>{ dlg.onclose=null; res(null); };
     dlg.showModal();
   });
+}
+
+/* De omtrek halen en als plan wegzetten. Alles wat mis kan gaan zegt wát er misging: op een werf
+   wil je dat kunnen lezen zonder een computer te openen. */
+let omtrekBezig=false;
+async function haalOmtrek(zone,stil){
+  if(omtrekBezig)return false;
+  if(faseAard(faseVan(staat))!=="werf"){
+    if(!stil)melding("Een omtrek hoort bij een werffase");
+    return false;
+  }
+  omtrekBezig=true;
+  try{
+    const hier=await haalPlek(stil);
+    if(!hier){ if(!stil)melding("Geen plek gekregen — zet locatie aan"); return false; }
+    if(!stil)melding("Omtrek ophalen uit het GRB — dit duurt een halve minuut…");
+    const doel=zone||staat.zone||ZONES[0];
+    const plan2=await maakOmtrekplan(hier,doel);
+    await zetPlan(doel,plan2);
+    planLijst=await planZones();
+    tekenZones();
+    eersteOpening=true;                 // het hele blad in beeld, dit is een nieuw plan
+    await openPlan(doel);
+    melding("Omtrek geladen — "+plan2.maten.breedte_m+"×"+plan2.maten.hoogte_m+" m, "+
+            "vakken van "+plan2.maten.vak_m+" m");
+    return true;
+  }catch(e){
+    // Het GRB dekt alleen Vlaanderen, en de dienst is wisselvallig. Zeggen wat er misging.
+    if(!stil)melding("GRB: "+(e.message||"onbereikbaar"));
+    return false;
+  }finally{ omtrekBezig=false; }
 }
 
 async function beheerFasen(){
