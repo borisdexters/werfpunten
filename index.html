@@ -239,10 +239,16 @@
   #backup.wacht::before{content:"● ";font-size:10px;vertical-align:2px}
   /* Boven de invoer, en die wisselt van hoogte: de sprekersrij komt en gaat, en de extra
      knoprij klapt open. Gemeten in plaats van geraden (--invoerh, veilige zone zit er al in). */
-  .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--invoerh,96px) + 14px);
+  /* Boven de invoer, maar nooit verder dan het scherm hoog is: de invoer kan flink groeien —
+     sprekersrij, extra knoprij, een lang tekstveld — en zonder deze grens schoot de toast buiten
+     beeld. Gemeten op v62: hij stond op -513 px. */
+  .toast{position:fixed;left:50%;transform:translateX(-50%);
+    bottom:min(calc(var(--invoerh,96px) + 14px), 55vh);
     background:var(--ink);color:var(--ground);padding:10px 16px;border-radius:8px;font-size:14px;
     opacity:0;pointer-events:none;transition:opacity .2s;z-index:9}
   .toast.aan{opacity:1}
+  /* In een venster staat de invoer onderaan, dus daar hoort de melding bovenaan. */
+  .toast.boven{top:calc(14px + env(safe-area-inset-top,0px));bottom:auto}
   dialog{border:none;border-radius:12px;padding:0;max-width:92vw;width:520px;background:var(--surface);color:var(--ink)}
   dialog::backdrop{background:rgba(0,0,0,.55)}
   .dlg-kop{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
@@ -858,7 +864,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v62";
+const VERSIE="v63";
 let staat={datum:new Date().toISOString().slice(0,10),weer:"",bezetting:"",zone:"N3",punten:[]};
 /* ---- de beelden van een punt ----
    Eén vaststelling had één foto. Dat klopt niet met een werf: één euvel heeft drie hoeken, en
@@ -2285,10 +2291,35 @@ function laadStaat(){
   if(gewijzigd) bewaarStaat();
 }
 
-function melding(t){const el=document.getElementById("toast");el.textContent=t;el.classList.add("aan");
+/* ---- waar een melding terechtkomt ----
+   Een modaal <dialog> rendert in de top layer: bóven alles, ongeacht z-index. De toast is een
+   gewone div in de body en viel er dus onder — op het planscherm, in de keet en in ⚡ Snel was
+   élke bevestiging onzichtbaar. Je legde een punt vast, drukte op bewaren, en er gebeurde voor
+   je gevoel niets. Dat is precies het soort stilte waar deze app niet tegen kan.
+
+   De toast verhuist daarom naar het venster dat openstaat, en gaat daar bovenaan staan: onderaan
+   zit op die schermen de invoer al. Staat er geen venster open, dan gaat hij terug naar de body
+   en naar zijn plek boven de invoerbalk. */
+function toastEl(){
+  const el=document.getElementById("toast");
+  const vensters=[...document.querySelectorAll("dialog")].filter(d=>d.open);
+  const doel=vensters.length?vensters[vensters.length-1]:document.body;
+  if(el.parentElement!==doel)doel.appendChild(el);
+  el.classList.toggle("boven",!!vensters.length);
+  /* Onder de balk van het venster, niet erop: daar staan de knoppen ‹ › en Klaar, en een melding
+     die daaroverheen valt is even onleesbaar als een die er niet is. De hoogte wordt gemeten
+     omdat ze per venster verschilt. */
+  if(vensters.length){
+    const balk=doel.querySelector(".teken-balk, .dlg-kop, .snel-balk");
+    const h=balk?Math.round(balk.getBoundingClientRect().height):0;
+    el.style.top=(h+12)+"px";
+  }else el.style.top="";
+  return el;
+}
+function melding(t){const el=toastEl();el.textContent=t;el.classList.add("aan");
   clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove("aan"),1700);}
 function meldingMetActie(tekst,actietekst,fn){
-  const el=document.getElementById("toast");
+  const el=toastEl();
   el.innerHTML="";
   const s=document.createElement("span");s.textContent=tekst;el.appendChild(s);
   const b=document.createElement("button");b.className="toast-actie";b.type="button";b.textContent=actietekst;
