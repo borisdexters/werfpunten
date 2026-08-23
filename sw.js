@@ -1,6 +1,6 @@
 /* Werfpunten service worker — alles wat de app nodig heeft staat in de cache,
    zodat ze op de werf ook zonder netwerk opent. */
-const CACHE = "werfpunten-v68";
+const CACHE = "werfpunten-v69";
 const BESTANDEN = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", e => {

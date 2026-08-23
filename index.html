@@ -907,7 +907,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v68";
+const VERSIE="v69";
 let staat={datum:new Date().toISOString().slice(0,10),weer:"",bezetting:"",zone:"N3",punten:[]};
 /* ---- de beelden van een punt ----
    Eén vaststelling had één foto. Dat klopt niet met een werf: één euvel heeft drie hoeken, en
@@ -1454,6 +1454,87 @@ function bewaarProjecten(){
 
 function projectNu(){ return projecten.find(p=>p.id===actief)||projecten[0]; }
 
+/* ---- de werf herkennen aan waar je staat ----
+   Dit is niet hetzelfde als wat PLANMETHODE.md uitsluit. Daar gaat het over de zóne: binnen, per
+   verdieping, waar wapeningsstaal het kompas mist en een trap de schatting breekt. Hier gaat het
+   over het gebouw: buiten, op tientallen meters, en werven liggen kilometers uit elkaar. Dat is
+   precies waar GPS wél goed in is. De verdieping blijft een verklaring — die tik jij aan.
+
+   Drie regels houden het eerlijk, en ze komen alle drie uit dit dossier:
+
+   - **de app beweert niets over een ruwe meting.** Is de nauwkeurigheid slechter dan de helft van
+     de straal, dan weet ze het niet en vraagt ze het. Een ruw signaal mag een vraag stellen; het
+     mag geen antwoord geven.
+   - **twijfel is geen keuze.** Liggen er twee werven binnen bereik, dan vraagt ze het. Stil de
+     dichtstbijzijnde nemen zou een punt in de verkeerde lijst kunnen laten belanden, en dat is
+     precies wat werven moesten uitsluiten.
+   - **ze leert alleen wat jij bevestigt.** Kies je met de hand een werf, dan onthoudt ze díe plek
+     erbij — zo komen de keet, je bureau en de vergaderzaal van de bouwheer er vanzelf bij. Ze
+     verzint nooit een plek.
+
+   De coördinaten van een werf zijn dossierdata. Ze staan op dit toestel, in de projectlijst, en
+   gaan nergens anders heen. */
+const WERFSTRAAL=250;          // meter rond een onthouden plek
+const MAXPLEKKEN=8;            // per werf; de oudste valt af
+
+function meterTussen(a,b){
+  const R=6371000, r=Math.PI/180;
+  const dlat=(b.lat-a.lat)*r, dlon=(b.lon-a.lon)*r;
+  const la=a.lat*r, lb=b.lat*r;
+  const h=Math.sin(dlat/2)**2 + Math.cos(la)*Math.cos(lb)*Math.sin(dlon/2)**2;
+  return 2*R*Math.asin(Math.min(1,Math.sqrt(h)));
+}
+
+/* Hoe ver een werf van je vandaan ligt: de dichtstbijzijnde onthouden plek telt. */
+function afstandTot(project,hier){
+  const plekken=(project&&project.plekken)||[];
+  if(!plekken.length||!hier)return null;
+  return plekken.reduce((m,pl)=>{
+    const d=meterTussen(pl,hier);
+    return (m===null||d<m)?d:m;
+  },null);
+}
+
+function wervenBij(hier){
+  return projecten
+    .map(p=>({p, d:afstandTot(p,hier)}))
+    .filter(x=>x.d!==null && x.d<=WERFSTRAAL)
+    .sort((a,b)=>a.d-b.d);
+}
+
+/* Deze plek bij een werf onthouden — maar alleen als ze er iets aan toevoegt. Ligt ze al binnen
+   bereik van een bekende plek, dan is er niets nieuws te leren. */
+function onthoudPlek(project,hier){
+  if(!project||!hier)return false;
+  project.plekken=project.plekken||[];
+  if(project.plekken.some(pl=>meterTussen(pl,hier)<=WERFSTRAAL))return false;
+  project.plekken.push({lat:hier.lat, lon:hier.lon, tijd:new Date().toISOString()});
+  while(project.plekken.length>MAXPLEKKEN)project.plekken.shift();
+  bewaarProjecten();
+  return true;
+}
+
+/* De plek opvragen. `stil` vraagt nooit om toestemming: staat ze er niet, dan gebeurt er niets.
+   Zo kan het opstarten nooit een systeemvraag opwerpen op het moment dat je wil beginnen. */
+function haalPlek(stil){
+  return new Promise(async res=>{
+    if(!navigator.geolocation)return res(null);
+    if(stil&&navigator.permissions){
+      try{
+        const st=await navigator.permissions.query({name:"geolocation"});
+        if(st.state!=="granted")return res(null);
+      }catch(e){ /* kent de browser niet: dan toch maar proberen */ }
+    }
+    let klaar=false;
+    const af=v=>{ if(!klaar){klaar=true;res(v);} };
+    setTimeout(()=>af(null),stil?6000:12000);
+    navigator.geolocation.getCurrentPosition(
+      p=>af({lat:p.coords.latitude, lon:p.coords.longitude, nauw:p.coords.accuracy||9999}),
+      ()=>af(null),
+      {enableHighAccuracy:!stil, timeout:stil?6000:12000, maximumAge:120000});
+  });
+}
+
 /* ---- de verhuizing ----
    Wat er op een toestel staat van vóór de projecten, is één werf. Die krijgt een project en
    verhuist ernaartoe: localStorage bij het opstarten, IndexedDB zodra die openstaat. Er gaat
@@ -1527,9 +1608,21 @@ async function migreerOpslagDb(){
    Alles wat per werf verschilt opnieuw inlezen, en alles wat op het scherm staat opnieuw
    tekenen. Het openstaande plan gaat dicht: dat hoort bij de vorige werf, en een plan van de
    ene werf op de punten van de andere is precies wat we hier aan het uitsluiten zijn. */
+/* Kies je met de hand een werf, dan is dat het beste signaal dat er is: jij zégt dat je hier
+   bij deze werf hoort. Die plek komt erbij — zo leert de app de keet, je bureau en de
+   vergaderzaal van de bouwheer, zonder er ooit een te verzinnen. */
+async function leerPlekBij(id){
+  const p=projecten.find(x=>x.id===id);
+  if(!p||!(p.plekken||[]).length&&!projecten.some(x=>(x.plekken||[]).length))return;
+  const hier=await haalPlek(true);
+  if(!hier||hier.nauw>WERFSTRAAL/2)return;
+  if(onthoudPlek(p,hier))melding("Deze plek hoort nu ook bij "+p.naam);
+}
+
 async function wisselProject(id){
-  if(id===actief) return;
+  if(id===actief){ leerPlekBij(id); return; }
   if(!projecten.some(p=>p.id===id)) return;
+  leerPlekBij(id);
   const dlg=document.getElementById("plandlg");
   if(dlg.open){ koppelStop(); dlg.close(); }
   actief=id;
@@ -1609,8 +1702,24 @@ async function nieuwProject(){
   const schoon=naam.trim().slice(0,40);
   if(!schoon){ melding("Een werf zonder naam vind je niet terug"); return; }
   const id="w"+Date.now().toString(36);
-  projecten.push({id, naam:schoon, gemaakt:new Date().toISOString()});
+  const nieuw={id, naam:schoon, gemaakt:new Date().toISOString()};
+  projecten.push(nieuw);
   bewaarProjecten();
+  /* De plek erbij, hier en nergens anders. Hier heeft de vraag een zichtbare reden — je benoemt
+     een werf — en daarna hoeft ze nooit meer gesteld te worden. Zeg je nee, dan werkt alles
+     verder zoals altijd; je kiest je werf dan met de hand. */
+  if(navigator.geolocation && await vraagJa("Deze plek onthouden?",
+      ["Staat je hier op de werf, dan onthoudt de app deze plek bij <b>"+veilig(schoon)+"</b>. "+
+       "De volgende keer dat je hier de app opent, weet ze meteen welke werf het is.",
+       "Het gaat om het gebouw, niet om waar je in het gebouw staat — dat blijf je zelf zeggen "+
+       "door een verdieping aan te tikken.",
+       "De coördinaten blijven op dit toestel en gaan nergens heen. Overslaan mag: dan kies je "+
+       "je werf met de hand, zoals nu."],"Plek onthouden")){
+    melding("Plek opzoeken…");
+    const hier=await haalPlek(false);
+    if(hier && hier.nauw<=WERFSTRAAL/2){ onthoudPlek(nieuw,hier); melding("Plek onthouden"); }
+    else melding(hier?"De plek is te onnauwkeurig — later opnieuw":"Geen plek gekregen");
+  }
   // vers beginnen: geen sleutels, dus alles valt terug op zijn standaardlijst
   await wisselProject(id);
   melding(schoon+" aangemaakt");
@@ -6339,6 +6448,65 @@ async function vraagOvernemen(code){
   return true;
 }
 
+/* Waar ben je? Alleen gesteld als er iets te herkennen valt — draagt geen enkele werf een plek,
+   dan gebeurt er niets en blijft alles zoals het was.
+
+   De uitkomst is er een van drie: één werf binnen bereik (nemen en zeggen), meer dan één of geen
+   (vragen). Nooit stil de dichtstbijzijnde: twee werven in dezelfde straat zijn precies het geval
+   waarin een punt in de verkeerde lijst belandt, en dat merk je pas in een verslag. */
+async function herkenWerf(){
+  if(projecten.length<2)return;                       // met één werf valt er niets te herkennen
+  if(!projecten.some(p=>(p.plekken||[]).length))return;
+  const hier=await haalPlek(true);
+  const vaag=!hier||hier.nauw>WERFSTRAAL/2;
+  const bij=vaag?[]:wervenBij(hier);
+
+  if(bij.length===1){
+    const p=bij[0].p;
+    if(p.id===actief)return;                          // je zit al goed: dan zwijgt ze
+    await wisselProject(p.id);
+    melding(p.naam+" herkend — "+Math.round(bij[0].d)+" m");
+    return;
+  }
+  // Twijfel of niets: vragen. Dat is een tussenvraag, en die kost tijd — maar minder dan een
+  // punt terugzoeken dat in de verkeerde werf staat.
+  await vraagWelkeWerf(bij.length?bij.map(x=>x.p):projecten, hier, bij.length>1);
+}
+
+function vraagWelkeWerf(lijst,hier,meerdere){
+  return new Promise(res=>{
+    const dlg=document.getElementById("dlg");
+    document.getElementById("dlg-titel").textContent="Waar ben je?";
+    const body=document.getElementById("dlg-body");
+    body.innerHTML="";
+    body.appendChild(maakEl("p","inv-uitleg", meerdere
+      ? "Er liggen hier meer werven binnen bereik. Welke is het?"
+      : "Hier ben ik niet eerder geweest. Welke werf is dit? Ik onthou de plek erbij."));
+    const rij=maakEl("div",null);
+    rij.style.cssText="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px";
+    lijst.forEach(p=>{
+      const b=maakEl("button",null,p.naam+(p.id===actief?" · nu open":""));
+      b.type="button";
+      b.style.cssText="font-size:16px;font-weight:650;padding:14px 18px;background:var(--zone-soft);"+
+        "color:var(--zone);border-color:var(--zone-soft)";
+      b.onclick=async()=>{
+        dlg.close();
+        if(p.id!==actief)await wisselProject(p.id);
+        else if(hier)onthoudPlek(p,hier);
+        if(hier&&p.id===actief)bewaarProjecten();
+        res(p.id);
+      };
+      rij.appendChild(b);
+    });
+    body.appendChild(rij);
+    body.appendChild(maakEl("p","inv-uitleg",
+      "Sluit dit om te blijven waar je bent. Dan onthoudt ze niets."));
+    document.getElementById("dlg-kopieer").style.display="none";
+    dlg.onclose=()=>{ dlg.onclose=null; res(null); };
+    dlg.showModal();
+  });
+}
+
 async function beheerFasen(){
   const huidig=fasen.map(f=>(f.verborgen?"# ":"")+f.code+" = "+(f.naam||f.code)).join("\n");
   const nieuw=await vraagTekst("Projectfasen",
@@ -7244,13 +7412,22 @@ opendb().then(async d=>{
   if(onafgeslotenDag){
     const dag=onafgeslotenDag; onafgeslotenDag=null;
     setTimeout(()=>vraagOverVorigeDag(dag),300);
-  }else if(planLijst.length){
-    /* De kaart ís het beginscherm. Er werd eerst gevraagd op welk niveau je stond, maar dat is
+  }else{
+    /* Eerst wáár, dan wát. De werf herkennen gaat vóór het openen van de kaart: wissel je van
+       werf, dan zijn het andere plannen, andere zones en andere punten.
+
+       En de kaart ís het beginscherm. Er werd eerst gevraagd op welk niveau je stond, maar dat is
        een tussenvraag op het moment dat je binnenkomt — en de zonebalk staat nu op het plan zelf,
        dus wisselen is één tik. Openen op waar je gebleven was is de beste gok: een rondgang gaat
        verder waar hij ophield. */
-    const start=planLijst.includes(staat.zone)?staat.zone:planLijst[0];
-    setTimeout(()=>openPlan(start),300);
+    setTimeout(async()=>{
+      try{ await herkenWerf(); }catch(e){}
+      planLijst=await planZones();          // een andere werf draagt andere plannen
+      tekenZones();
+      if(!planLijst.length)return;
+      const start=planLijst.includes(staat.zone)?staat.zone:planLijst[0];
+      openPlan(start);
+    },300);
   }
   // Achteraan, en maar één keer: eerst mag je werken. Maar niet zwijgen, want een toestel dat
   // stukgaat vóór de eerste back-up neemt het hele dossier mee.
