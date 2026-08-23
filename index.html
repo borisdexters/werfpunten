@@ -907,7 +907,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v69";
+const VERSIE="v70";
 let staat={datum:new Date().toISOString().slice(0,10),weer:"",bezetting:"",zone:"N3",punten:[]};
 /* ---- de beelden van een punt ----
    Eén vaststelling had één foto. Dat klopt niet met een werf: één euvel heeft drie hoeken, en
@@ -5090,6 +5090,10 @@ function planVoet(){
        Math.round(pl.pin.x)+","+Math.round(pl.pin.y))+"</span>";
 }
 
+/* Alleen de allereerste keer dat het plan opengaat na het starten van de app. Daarna geldt de
+   herinnering weer. */
+let eersteOpening=true;
+
 async function toonPlan(zone){
   const data=await haalPlan(zone);
   document.getElementById("pl-leeg").hidden=!!data;
@@ -5099,12 +5103,17 @@ async function toonPlan(zone){
   pl.pin=wachtendePlek&&wachtendePlek.zone===plan.zone
     ?{x:wachtendePlek.x,y:wachtendePlek.y,lokaal:wachtendePlek.lokaal?{nr:wachtendePlek.lokaal,naam:wachtendePlek.naam||""}:null}
     :null;
-  // Waar je was is de beste gok voor waar je bent: op een werf loop je van ruimte naar ruimte,
-  // niet kriskras. Het plan opent daarom ingezoomd op je vorige punt in plaats van uitgezoomd op
-  // het hele blad — schelen twee knijpbewegingen per punt.
-  if(pl.pin)planNaarPin();
+  /* Waar je was is een goede gok midden in een rondgang: je loopt van ruimte naar ruimte, dus
+     inzoomen op je vorige punt scheelt twee knijpbewegingen. Maar bij het ópenen van de app
+     klopt die gok niet — dan kom je binnen en wil je zien wáár je bent, niet een uitsnede van
+     waar je gisteren was. PLANMETHODE.md zegt het zelf: nooit strak inzoomen op een gok.
+
+     Dus: bij het openen het hele blad, daarna de herinnering. */
+  if(eersteOpening) planPasIn();
+  else if(pl.pin)planNaarPin();
   else if(plan.laatst) planNaarPlek(plan.laatst.x,plan.laatst.y,2);
   else planPasIn();
+  eersteOpening=false;
   try{document.getElementById("pl-voet").classList.toggle("klein",
       localStorage.getItem(VOUWSLEUTEL)==="1");
       document.getElementById("pl-vouw").textContent=
