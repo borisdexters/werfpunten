@@ -88,6 +88,14 @@
   .beheer-groep button{text-align:left;font-size:15px;padding:12px 13px}
   .beheer-versie{margin:18px 0 0;font:11px ui-monospace,Menlo,monospace;color:var(--ink-faint);
     text-align:center}
+  /* De stand van de opslag hoort bij Back-up en staat er dus onder: samen beantwoorden ze de
+     enige vraag die telt — blijft dit staan, en waar staat het nog meer.
+     Een geweigerde blijvende opslag kleurt en blijft staan zolang ze waar is; dit is geen toast.
+     Wat er níet komt is een tweede stip op de beheerknop. Die draagt de back-upachterstand, en
+     twee waarschuwingen op één knop zijn er geen — dan weet je bij een oranje rand niet meer
+     wát er scheelt. De weigering rijdt daarom mee op de back-upherinnering zelf. */
+  .opslagstand{margin:9px 2px 0;font-size:11.5px;line-height:1.5;color:var(--ink-faint)}
+  .opslagstand.waarschuwt{color:var(--warn)}
   /* Welke werf je open hebt, staat in de kop. Op een toestel met vijf lopende werven is dat het
      eerste wat je wil zien, en het enige wat een punt in de verkeerde lijst kan laten belanden. */
   .projectknop{background:var(--zone-soft);border-color:var(--zone-soft);color:var(--zone);
@@ -243,11 +251,17 @@
      knoprij klapt open. Gemeten in plaats van geraden (--invoerh, veilige zone zit er al in). */
   /* Boven de invoer, maar nooit verder dan het scherm hoog is: de invoer kan flink groeien —
      sprekersrij, extra knoprij, een lang tekstveld — en zonder deze grens schoot de toast buiten
-     beeld. Gemeten op v62: hij stond op -513 px. */
-  .toast{position:fixed;left:50%;transform:translateX(-50%);
+     beeld. Gemeten op v62: hij stond op -513 px.
+     En over de volle breedte: `left:50%` zonder `right` gaf de melding maar een halve
+     schermbreedte om in te staan, dus wikkelde elke melding met een knop ernaast op een telefoon
+     tot een kolom van één woord breed. Met beide zijden gezet en `margin-inline:auto` staat ze
+     even goed in het midden, maar mag ze nemen wat er is. */
+  .toast{position:fixed;left:14px;right:14px;margin-inline:auto;width:max-content;
+    max-width:calc(100% - 28px);
     bottom:min(calc(var(--invoerh,96px) + 14px), 55vh);
     background:var(--ink);color:var(--ground);padding:10px 16px;border-radius:8px;font-size:14px;
     opacity:0;pointer-events:none;transition:opacity .2s;z-index:9}
+  .toast-actie{flex:0 0 auto}
   .toast.aan{opacity:1}
   /* In een venster staat de invoer onderaan, dus daar hoort de melding bovenaan. */
   .toast.boven{top:calc(14px + env(safe-area-inset-top,0px));bottom:auto}
@@ -481,6 +495,14 @@
     border:1px solid var(--ok);border-radius:5px;padding:4px 6px}
   .plek{font:11px/1 ui-monospace,Menlo,monospace;letter-spacing:.04em;padding:4px 7px;border-radius:5px;
     background:var(--surface-2);color:var(--ink-soft);border:1px solid var(--line-soft)}
+  /* Het nummer van een punt, en of het van vandaag is. Een overgenomen punt draagt een nummer
+     van een vorig verslag en staat er dus rustig bij; wat vandaag ontstond, licht op. Dat is het
+     onderscheid waar het om ging: in een verslag dat alles meedraagt, moet je nieuw kunnen zien
+     zonder te zoeken. */
+  .puntnr{font:11px/1 ui-monospace,Menlo,monospace;letter-spacing:.04em;padding:4px 6px;
+    border-radius:5px;background:var(--surface-2);color:var(--ink-faint);
+    border:1px solid var(--line-soft)}
+  .puntnr.nieuw{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:700}
   /* ---- het verslagvenster en de doorstuurlijsten ----
      Eén rij per keuze: links wát het is en hoe groot, rechts de knop. Dit is keetwerk, dus mag
      er staan wat er meegaat — op de werf zou die uitleg in de weg staan, hier is ze de reden
@@ -637,6 +659,7 @@
       <button type="button" id="hoofdstukbeheer">hoofdstukken</button>
       <button type="button" id="fasebeheer">projectfasen</button>
       <button type="button" id="projectcodebeheer">projectcode</button>
+      <button type="button" id="planbronbeheer">plannen</button>
       <button type="button" id="documentenknop">documenten</button>
       <button type="button" id="profielbeheer">profiel</button>
     </div>
@@ -645,10 +668,15 @@
       reist mee naar elke werf.</p>
     <div class="beheer-groep">
       <button type="button" id="woordbeheer">woorden</button>
+      <button type="button" id="onderdeelbeheer">onderdelen</button>
       <button type="button" id="dropboxbeheer">dropbox</button>
       <button type="button" id="fotos">bijlagen tonen</button>
       <button type="button" id="backup" title="Alles op dit toestel in één bestand">Back-up</button>
     </div>
+    <!-- Wordt gevuld als het venster opengaat: navigator.storage weet het pas als je het vraagt,
+         en die vraag hoort niet bij het opstarten thuis. Pal onder Back-up, want samen
+         beantwoorden die twee dezelfde vraag: blijft dit staan, en waar staat het nog meer. -->
+    <p class="opslagstand" id="opslagstand"></p>
     <div class="beheer-groep">
       <button type="button" id="bijwerkknop">bijwerken — kijk of er een nieuwe versie is</button>
     </div>
@@ -664,8 +692,9 @@
   <div class="dlg-body">
     <p class="inv-uitleg" id="inv-uitleg"></p>
     <!-- Hier staan namen en codes: werfnamen, zonecodes, fasecodes, contacten, een projectcode.
-         Autocorrectie maakt daar "grievend" van "GRIDVELD" en "N0" van "NO", en dat merk je pas
-         als het ergens in een verslag staat. In de vaststellingsvelden blijft ze wél aan — daar
+         Autocorrectie maakt van een werfnaam een gewoon woord dat erop lijkt, en van "N0" een
+         "NO", en dat merk je pas als het ergens in een verslag staat. Een zonecode die zo
+         verspringt komt in de export en wordt niet meer als zonewissel gelezen. In de vaststellingsvelden blijft ze wél aan — daar
          dicteer je op een werf en helpt ze. -->
     <textarea id="inv-veld" rows="6" autocorrect="off" autocapitalize="off"
       spellcheck="false" autocomplete="off"></textarea>
@@ -752,6 +781,13 @@
     <div class="keet-blok">
       <span class="keet-label">Tegen wanneer</span>
       <div class="keet-knoppen" id="keet-deadline"></div>
+    </div>
+    <!-- Naast de termijn en niet erboven: het zijn twee bepalingen bij dezelfde toewijzing.
+         Het blok verdwijnt als er niemand is aangewezen — zonder toewijzing is er niemand die
+         iets gevraagd kan worden. -->
+    <div class="keet-blok" id="keet-gevraagdblok">
+      <span class="keet-label">Wat er gevraagd wordt</span>
+      <div class="keet-knoppen" id="keet-gevraagd"></div>
     </div>
   </div>
 </dialog>
@@ -913,7 +949,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v72";
+const VERSIE="v77";
 let staat={datum:new Date().toISOString().slice(0,10),weer:"",bezetting:"",zone:"N3",punten:[]};
 /* ---- de beelden van een punt ----
    Eén vaststelling had één foto. Dat klopt niet met een werf: één euvel heeft drie hoeken, en
@@ -955,6 +991,46 @@ function isOpen(p){
 }
 function isDoorgeschoven(p){ return !!p && p.status==="door"; }
 
+/* ---- het nummer van een punt ----
+   Zolang een verslag alleen zijn eigen punten droeg, volstond de plaats in de lijst: punt 1, 2,
+   3, en de stip op het plan droeg hetzelfde cijfer als de bijlage. Dat werkt niet meer zodra het
+   vorige verslag de basis is. Dan schuift elk punt elke vergadering op, en verwijst "punt 4" in
+   twee verslagen naar twee verschillende dingen — precies wat een verslag dat moet standhouden
+   niet mag doen.
+
+   Een punt krijgt daarom één keer een nummer, van het verslag waarin het voor het eerst stond:
+   `UIT-03.7`. Dat nummer verhuist mee en verandert nooit. Twee dingen volgen daaruit, en ze zijn
+   allebei de reden dat het zo werkt:
+
+   - **je ziet waar een punt vandaan komt.** Staat er `UIT-01.3` in het verslag van vandaag, dan
+     loopt dat sinds de eerste vergadering, en dat is af te lezen zonder de historiek te openen
+   - **nieuw is nieuw.** Wat in dit verslag ontstaat, draagt het nummer van dit verslag. Er is dus
+     geen aparte vlag nodig om te weten wat er bij is gekomen — het staat in het nummer zelf, en
+     een vlag die hetzelfde zegt als een ander veld gaat vroeg of laat uit de pas lopen
+
+   Punten van vóór deze versie dragen geen nummer. Die krijgen er ook geen met terugwerkende
+   kracht: het archief herschrijven om een veld te vullen is precies de ingreep waarbij stil iets
+   misgaat. Ze tonen hun plaats in de lijst, zoals ze altijd deden. */
+function volgendPuntnummer(){
+  const voor=verslagRefKort(staat)+".";
+  let hoogste=0;
+  (staat.punten||[]).forEach(p=>{
+    if(p.nummer&&String(p.nummer).indexOf(voor)===0){
+      const n=parseInt(String(p.nummer).slice(voor.length),10);
+      if(n>hoogste)hoogste=n;
+    }
+  });
+  return voor+(hoogste+1);
+}
+function zorgVoorPuntnummer(p){
+  if(p&&!p.nummer){ zorgVoorNummer(); p.nummer=volgendPuntnummer(); }
+  return p?p.nummer:null;
+}
+/* Nieuw in dít verslag — af te leiden uit het nummer, niet uit een vlag ernaast. */
+function isNieuwPunt(p){
+  return !!(p&&p.nummer&&String(p.nummer).indexOf(verslagRefKort(staat)+".")===0);
+}
+
 /* ---- een punt dat doorloopt naar een volgend verslag ----
    Wat er van vorige keren nog openstaat, komt in het verslag terug onder "Nog steeds open". Dat
    werkt, maar het punt zelf blijft in het oude verslag staan en valt daar niet meer te bewerken
@@ -978,13 +1054,20 @@ function neemOver(bron, bronVerslag){
          id:bron.id, eerste:(bron.uit&&bron.uit.eerste)||bronVerslag.datum}
   };
   delete nieuw.naar;
-  delete nieuw.afgehandeld;
   // Beelden blijven bij het oorspronkelijke punt: ze zitten op hun eigen id in de opslag, en
   // twee punten die naar hetzelfde beeld wijzen is precies de valkuil uit het samenvoegen.
   nieuw.beelden=[];
-  bron.status="door";
-  bron.naar={ref:verslagRef(staat), id:nieuw.id};
-  raakAan(bron); raakAan(nieuw);
+  /* Alleen wat nog openstaat schuift werkelijk door. Een afgehandeld punt reist mee als
+     geschiedenis en niet als werk: het blijft in zijn eigen verslag staan als wat het was — klaar,
+     verholpen, vervallen — en het krijgt geen "doorgeschoven" over zich heen. Dat merk zou de
+     afhandeling wissen, en dát het opgelost is en wanneer, is zelf een vaststelling. */
+  if(isOpen(bron)){
+    delete nieuw.afgehandeld;
+    bron.status="door";
+    bron.naar={ref:verslagRef(staat), id:nieuw.id};
+    raakAan(bron);
+  }
+  raakAan(nieuw);
   return nieuw;
 }
 /* Sinds wanneer een punt loopt: de eerste melding, niet de laatste overname. */
@@ -1072,9 +1155,24 @@ function opendb(){return new Promise(res=>{
     q.onblocked=()=>af(null);
   }catch(e){af(null)}
 });}
+/* Geeft terug óf het gelukt is, net als zetPlan en zetDag. Dat deed het niet: het beloofde
+   `undefined`, en de ene oproeper die op het antwoord toetst las dat als "mislukt". Een foto in
+   de keet kwam daardoor nooit aan: het beeld ging de opslag in, "Opslag weigert — ruimte vol?"
+   verscheen, en het punt kreeg de verwijzing ernaar nooit. Er stond niets aan de opslag in de
+   weg; de melding was het enige wat er scheelde. Precies de fout die deze hele sectie moet
+   uitsluiten — het ziet eruit alsof het bewaard is, of alsof het niet bewaard is, en geen van
+   beide klopt.
+
+   Er ontbrak ook een `onerror`: een transactie die afbrak loste nooit op, en dan bleef de
+   oproeper eeuwig wachten. De andere zes oproepers wachten op die belofte.
+
+   En dit is de eerste plek waar er iets zwaars op dit toestel landt, dus de plek waar de vraag
+   om blijvende opslag over iets gaat. Hier en niet bij de camera: elke weg waarlangs een beeld
+   binnenkomt loopt hierlangs, dus is er geen weg die het kan vergeten. */
 function zetFoto(id,blob){return new Promise(res=>{
-  if(!db)return res();
-  const t=db.transaction("fotos","readwrite");t.objectStore("fotos").put(blob,dk(id));t.oncomplete=()=>res();
+  if(!db)return res(false);
+  const t=db.transaction("fotos","readwrite");t.objectStore("fotos").put(blob,dk(id));
+  t.oncomplete=()=>{vraagBlijvend();res(true)};t.onerror=()=>res(false);
 });}
 function haalFoto(id){return new Promise(res=>{
   if(!db)return res(null);
@@ -1161,6 +1259,7 @@ function bewaarZones(){
    vertrekpunt dat op dag één werkt. */
 const FASESLEUTEL="werfpunten-fasen";
 const PROJECTCODESLEUTEL="werfpunten-projectcode";
+const ALLEENOMTREKSLEUTEL="werfpunten-alleenomtrek";
 const STANDAARDFASE="UIT";
 
 const STANDAARDFASEN=[
@@ -1212,6 +1311,26 @@ function bewaarProjectcode(c){
   try{
     if(c)localStorage.setItem(pk(PROJECTCODESLEUTEL),c);
     else localStorage.removeItem(pk(PROJECTCODESLEUTEL));
+  }catch(e){}
+}
+
+/* ---- werken op de omtrek alleen ----
+   Een GRB-omtrek is standaard een noodoplossing: hij staat er tot het echte plan er is, en maakt
+   dan plaats. Maar niet elk project krijgt ooit een plannenset — een gevelherstel, een
+   terreinaanleg, een dossier waar je alleen buiten komt. Dan is de omtrek niet voorlopig maar
+   gewoon hét plan, en hoort de app er niet overheen te willen.
+
+   De keuze hangt aan de werf en niet aan het toestel: op de ene werf werk je op de omtrek en op
+   de andere op een plannenset. Ze verandert niets aan wat er al ligt — alleen aan wat er gebeurt
+   als er later een echt plan binnenkomt: met deze keuze is dat een versiewissel met de vraag
+   vooraf, zonder haar maakt de omtrek stil plaats. In beide gevallen gaat er niets verloren. */
+function alleenOmtrek(){
+  try{ return localStorage.getItem(pk(ALLEENOMTREKSLEUTEL))==="1"; }catch(e){ return false; }
+}
+function zetAlleenOmtrek(aan){
+  try{
+    if(aan)localStorage.setItem(pk(ALLEENOMTREKSLEUTEL),"1");
+    else localStorage.removeItem(pk(ALLEENOMTREKSLEUTEL));
   }catch(e){}
 }
 
@@ -1279,44 +1398,44 @@ function faseAard(code){
    geen beslissingen. Wat ze delen is de vorm — een punt draagt één soort, en die soort bepaalt
    onder welke kop het in het verslag komt. */
 const OVERLEGSOORTEN=[
-  {sleutel:"informatie", kop:"Informatie",
+  {sleutel:"informatie", kop:"Informatie", gevolgloos:true,
    uitleg:"ter kennisgeving — er volgt niets uit, en er hoeft niemand iets mee",
    blok:"Ter informatie",
    blokuitleg:"hieronder wat er is meegedeeld; er volgt niets uit en er is niemand iets mee "+
               "opgedragen",
    woorden:["stand van zaken","toelichting gegeven","planning meegedeeld","budget toegelicht"]},
-  {sleutel:"vraag", kop:"Vraag",
+  {sleutel:"vraag", kop:"Vraag", werkwoord:"antwoordt hierop", ongeachtRol:true,
    uitleg:"gesteld en nog niet beantwoord — het antwoord hoort in een volgend verslag",
    blok:"Vragen",
    blokuitleg:"hieronder wat er gevraagd is en nog niet beantwoord; het antwoord hoort in het "+
               "volgende verslag te staan",
    woorden:["vraag aan opdrachtgever","vraag aan studiebureau","vraag aan overheid",
             "verduidelijking gevraagd"]},
-  {sleutel:"beslissing", kop:"Beslissing",
+  {sleutel:"beslissing", kop:"Beslissing", gevolgloos:true,
    uitleg:"genomen en vastgelegd — dit is waar een verslag achteraf op wordt nagelezen",
    blok:"Beslissingen",
    blokuitleg:"hieronder de beslissingen zoals ze in deze bespreking genomen zijn; wie ze anders "+
               "begrepen heeft, meldt dat vóór het volgende verslag",
    woorden:["akkoord met voorstel","voorstel afgewezen","keuze materiaal","keuze indeling",
             "budget goedgekeurd"]},
-  {sleutel:"actie", kop:"Actie",
+  {sleutel:"actie", kop:"Actie", viaRol:true,
    uitleg:"iemand moet iets doen, met een termijn erbij",
    blok:"Acties en deadlines",
    blokuitleg:"hieronder wat er moet gebeuren, met wie het doet en tegen wanneer",
    woorden:["uit te werken","na te kijken","op te vragen","voor te leggen","aan te passen"]},
-  {sleutel:"docgevraagd", kop:"Document gevraagd",
+  {sleutel:"docgevraagd", kop:"Document gevraagd", werkwoord:"bezorgt dit", ongeachtRol:true,
    uitleg:"een stuk dat nog moet komen — blijft openstaan tot het er is",
    blok:"Op te vragen documenten",
    blokuitleg:"hieronder wat er nog ontbreekt om verder te kunnen, met wie het bezorgt en tegen "+
               "wanneer",
    woorden:["programma van eisen","bestaande plannen","opmetingsplan","sondering",
             "eigendomsakte","attest","technische fiche"]},
-  {sleutel:"docontvangen", kop:"Document ontvangen",
+  {sleutel:"docontvangen", kop:"Document ontvangen", gevolgloos:true,
    uitleg:"binnengekomen — dát het ontvangen is en wanneer, is zelf een vaststelling",
    blok:"Ontvangen documenten",
    blokuitleg:"hieronder wat er sinds het vorige verslag binnenkwam",
    woorden:["ontvangen","ontvangen per mail","ontvangen op de bespreking"]},
-  {sleutel:"aandachtspunt", kop:"Aandachtspunt",
+  {sleutel:"aandachtspunt", kop:"Aandachtspunt", gevolgloos:true,
    uitleg:"gesignaleerd risico of voorbehoud — vastgelegd zodat er later niet gezegd kan worden "+
           "dat het niet gemeld was",
    blok:"Aandachtspunten",
@@ -1337,15 +1456,16 @@ const OVERLEGSOORTEN=[
    kop en de gevolgtrekking wisselen. Kent deze tabel een rol niet — een profiel kan er eigen
    hebben — dan blijft de toelichting leeg. Geen zin is beter dan de verkeerde zin. */
 const OVERLEGROLLEN={
-  opdrachtgever:{kop:"Ter beslissing van de opdrachtgever",
+  opdrachtgever:{kop:"Ter beslissing van de opdrachtgever", werkwoord:"beslist",
     toelichting:"de opdrachtgever beslist; het ontwerp volgt die beslissing"},
-  bouwdirectie:{kop:"Ter beslissing van de bouwdirectie",
+  bouwdirectie:{kop:"Ter beslissing van de bouwdirectie", werkwoord:"beslist",
     toelichting:"de bouwdirectie beslist"},
-  studiebureau:{kop:"Ter advies",
+  studiebureau:{kop:"Ter advies", werkwoord:"adviseert",
     toelichting:"gevraagd advies, geen uitvoeringsopdracht"},
   aannemer:{kop:"Aan de aannemer",
     toelichting:"in deze fase ligt er nog geen aanneming vast — dit is een vraag of een "+
       "mededeling en geen opdracht"},
+  // Geen werkwoord en geen uitvoerdersvlag: in een overlegfase ligt er nog geen opdracht.
   onderaannemer:{kop:"Aan de onderaannemer",
     toelichting:"in deze fase ligt er nog geen opdracht vast"}
 };
@@ -1355,9 +1475,16 @@ function soortenVoor(code){
 }
 function rollenVoor(code){
   if(faseAard(code)==="werf") return profiel.rollen;
+  /* Het werkwoord en de uitvoerdersvlag gaan er hier af, en dat is de hele reden dat deze laag
+     bestaat. "Aannemer BV voert uit" onder een voorontwerpbespreking is geen slordigheid maar
+     een bewering over een aanneming die nog niet bestaat — precies het argument dat je niet aan
+     de tegenpartij hoort te geven. Draagt de overlegtabel zelf een werkwoord, dan geldt dat;
+     anders komt er geen zin en blijft het spoor met → en tegen staan. */
   return profiel.rollen.map(r=>{
     const o=OVERLEGROLLEN[r.sleutel];
-    return o ? {...r, kop:o.kop, toelichting:o.toelichting} : {...r, toelichting:""};
+    const kaal={...r}; delete kaal.werkwoord; delete kaal.uitvoerder;
+    return o ? {...kaal, kop:o.kop, toelichting:o.toelichting, werkwoord:o.werkwoord}
+             : {...kaal, toelichting:""};
   });
 }
 /* SOORTEN en ROLLEN zijn de twee lijsten waar de hele app uit put. Ze werden gezet door
@@ -1839,50 +1966,50 @@ const PROFIELEN=[
    verslag:"De architect verbiedt de hierna vermelde uitvoering. Wordt hieraan geen gevolg "+
      "gegeven, dan gebeurt dat op verantwoordelijkheid van de aannemer."},
  rollen:[
-  {sleutel:"aannemer", naam:"aannemer", kop:"Aanwijzingen aan de aannemer",
+  {sleutel:"aannemer", naam:"aannemer", kop:"Aanwijzingen aan de aannemer", uitvoerder:true, werkwoord:"voert dit uit",
    toelichting:"uit te voeren binnen de aanneming; meerwerk pas na akkoord van de opdrachtgever"},
-  {sleutel:"opdrachtgever", naam:"opdrachtgever", kop:"Ter beslissing van de opdrachtgever",
+  {sleutel:"opdrachtgever", naam:"opdrachtgever", kop:"Ter beslissing van de opdrachtgever", werkwoord:"beslist",
    toelichting:"de architect adviseert, de opdrachtgever beslist"},
-  {sleutel:"studiebureau", naam:"studiebureau", kop:"Ter advies",
+  {sleutel:"studiebureau", naam:"studiebureau", kop:"Ter advies", werkwoord:"adviseert",
    toelichting:"gevraagd advies, geen uitvoeringsopdracht"},
-  {sleutel:"architect", naam:"architect", kop:"Op te volgen door de architect", toelichting:""}],
+  {sleutel:"architect", naam:"architect", kop:"Op te volgen door de architect", werkwoord:"volgt dit op", toelichting:""}],
  soorten:[
-  {sleutel:"gebrek", kop:"Gebrek",
+  {sleutel:"gebrek", kop:"Gebrek", werkwoord:"herstelt",
    uitleg:"het uitgevoerde werk deugt niet — herstel binnen de aanneming",
    woorden:["scheur","vocht","lek","uitbloeiing","corrosie","schimmelvorming","verkleuring",
             "loszittend materiaal","doorbuiging","zetting","open voeg","oneffenheid"]},
-  {sleutel:"nietconform", kop:"Niet conform",
+  {sleutel:"nietconform", kop:"Niet conform", gevolgloos:true,
    uitleg:"wijkt af van plan, bestek of vergunning — ook al is het goed uitgevoerd",
    blok:"Niet conform plan of bestek",
    blokuitleg:"afwijking van wat is voorgeschreven, ongeacht de uitvoeringskwaliteit; "+
               "te herstellen of ter aanvaarding voor te leggen aan de opdrachtgever",
    woorden:["afwijkend materiaal","afwijkende afmeting","afwijkende plaatsing",
             "niet volgens detail"]},
-  {sleutel:"beschadiging", kop:"Beschadiging",
+  {sleutel:"beschadiging", kop:"Beschadiging", gevolgloos:true,
    uitleg:"schade aan werk dat goed was — wie ze veroorzaakte bepaalt wie herstelt",
    blok:"Beschadigingen",
    blokuitleg:"schade aan werk dat was uitgevoerd. Vóór herstel binnen de aanneming gevorderd "+
               "wordt, moet vaststaan wie ze veroorzaakt heeft",
    woorden:["beschadiging","breuk","vervuiling"]},
-  {sleutel:"onafgewerkt", kop:"Niet afgewerkt",
+  {sleutel:"onafgewerkt", kop:"Niet afgewerkt", werkwoord:"werkt dit af",
    uitleg:"het werk is niet af — dit raakt de termijn, niet de kwaliteit",
    blok:"Nog uit te voeren",
    blokuitleg:"niet-voltooiing, geen gebrek; dit raakt de uitvoeringstermijn en de oplevering",
    woorden:["onafgewerkt","ontbrekend materiaal","ontbrekende afdichting"]},
-  {sleutel:"esthetiek", kop:"Esthetiek",
+  {sleutel:"esthetiek", kop:"Esthetiek", gevolgloos:true,
    uitleg:"beoordeling van de architect, geen technisch gebrek",
    blok:"Esthetische opmerkingen",
    blokuitleg:"beoordeling van de architect, geen technisch gebrek",
    woorden:["kleurverschil","zichtbare naad","onregelmatig voegwerk","zichtbare bevestiging",
             "scheve plaatsing"]},
-  {sleutel:"veiligheid", kop:"Veiligheid",
+  {sleutel:"veiligheid", kop:"Veiligheid", gevolgloos:true,
    uitleg:"onveilige toestand — te melden aan de veiligheidscoördinator",
    blok:"Veiligheid",
    blokuitleg:"onveilige toestand, vastgesteld en gemeld; de coördinatie ervan behoort tot de "+
               "opdracht van de veiligheidscoördinator",
    woorden:["ontbrekende leuning","onbeveiligde sparing","obstakel in doorgang",
             "ontbrekende afscherming"]},
-  {sleutel:"meerwerk", kop:"Meerwerk",
+  {sleutel:"meerwerk", kop:"Meerwerk", gevolgloos:true,
    uitleg:"vast te stellen en te adviseren; uitvoering pas na voorafgaand schriftelijk akkoord "+
           "van de opdrachtgever over aard en prijs",
    blok:"Meerwerk — voorafgaand akkoord vereist",
@@ -1905,46 +2032,46 @@ const PROFIELEN=[
    verslag:"De coördinator maant aan de hierna vermelde toestand op te heffen. Wordt hieraan "+
      "geen gevolg gegeven, dan wordt dat aan de bouwdirectie gemeld."},
  rollen:[
-  {sleutel:"aannemer", naam:"aannemer", kop:"Aan de aannemer — na te leven",
+  {sleutel:"aannemer", naam:"aannemer", kop:"Aan de aannemer — na te leven", uitvoerder:true, werkwoord:"leeft dit na",
    toelichting:"de coördinator stelt vast en coördineert; hij geeft geen bevel. Het naleven van "+
      "het veiligheids- en gezondheidsplan behoort tot de aannemer zelf"},
-  {sleutel:"opdrachtgever", naam:"bouwdirectie", kop:"Ter beslissing van de bouwdirectie",
+  {sleutel:"opdrachtgever", naam:"bouwdirectie", kop:"Ter beslissing van de bouwdirectie", werkwoord:"beslist",
    toelichting:"de coördinator stelt vast en adviseert; de bouwdirectie treft de maatregelen"},
-  {sleutel:"studiebureau", naam:"preventieadviseur", kop:"Ter advies",
+  {sleutel:"studiebureau", naam:"preventieadviseur", kop:"Ter advies", werkwoord:"adviseert",
    toelichting:"gevraagd advies, geen uitvoeringsopdracht"},
-  {sleutel:"architect", naam:"ontwerper", kop:"Op te volgen door de ontwerper", toelichting:""}],
+  {sleutel:"architect", naam:"ontwerper", kop:"Op te volgen door de ontwerper", werkwoord:"volgt dit op", toelichting:""}],
  soorten:[
-  {sleutel:"onveilig", kop:"Onveilige toestand",
+  {sleutel:"onveilig", kop:"Onveilige toestand", werkwoord:"heft dit op",
    uitleg:"vastgesteld op de bouwplaats — op te heffen vóór de werken daar verdergaan",
    blok:"Onveilige toestand",
    blokuitleg:"vastgesteld op de bouwplaats; op te heffen vóór de werken op die plaats verdergaan",
    woorden:["ontbrekende leuning","onbeveiligde sparing","ontbrekende afscherming",
             "onstabiele stelling","ongeschikte ladder","onbeveiligde kant"]},
-  {sleutel:"vgp", kop:"Niet volgens het VGP",
+  {sleutel:"vgp", kop:"Niet volgens het VGP", viaRol:true,
    uitleg:"afwijking van wat in het veiligheids- en gezondheidsplan is afgesproken",
    blok:"Niet volgens het veiligheids- en gezondheidsplan",
    blokuitleg:"afwijking van wat is afgesproken; ofwel de uitvoering ofwel het plan moet mee",
    woorden:["afwijking van het VGP","niet-gemelde werkwijze","ontbrekende risicoanalyse"]},
-  {sleutel:"pbm", kop:"Beschermingsmiddelen",
+  {sleutel:"pbm", kop:"Beschermingsmiddelen", gevolgloos:true,
    uitleg:"vastgesteld en gemeld — het toezicht ligt bij de werkgever van wie het draagt",
    blok:"Persoonlijke beschermingsmiddelen",
    blokuitleg:"vastgesteld en gemeld; het toezicht op het dragen ervan behoort tot de werkgever "+
               "van wie het draagt",
    woorden:["geen helm","geen valbeveiliging","geen veiligheidsschoenen","geen gehoorbescherming"]},
-  {sleutel:"gelijktijdig", kop:"Gelijktijdige werken",
+  {sleutel:"gelijktijdig", kop:"Gelijktijdige werken", viaRol:true,
    uitleg:"risico dat ontstaat doordat aannemers tegelijk werken — het eigenlijke voorwerp van "+
           "de coördinatie",
    blok:"Gelijktijdige werken",
    blokuitleg:"risico dat ontstaat doordat aannemers tegelijk werken — het eigenlijke voorwerp "+
               "van de coördinatie",
    woorden:["werken boven elkaar","gedeelde stelling","gedeelde toegang","gedeelde hijszone"]},
-  {sleutel:"inrichting", kop:"Inrichting",
+  {sleutel:"inrichting", kop:"Inrichting", viaRol:true,
    uitleg:"toegang, doorgang, opslag en signalisatie",
    blok:"Inrichting van de bouwplaats",
    blokuitleg:"toegang, doorgang, opslag en signalisatie",
    woorden:["doorgang versperd","opslag in doorgang","ontbrekende signalisatie",
             "ontbrekende verlichting","afval in doorgang"]},
-  {sleutel:"pid", kop:"Voor het PID",
+  {sleutel:"pid", kop:"Voor het PID", gevolgloos:true,
    uitleg:"vast te leggen voor het latere onderhoud — geen tekortkoming",
    blok:"Voor het postinterventiedossier",
    blokuitleg:"vast te leggen voor het latere onderhoud van het bouwwerk; geen tekortkoming",
@@ -1957,44 +2084,44 @@ const PROFIELEN=[
  // wat niet. Daarom draagt dit profiel geen eigen rechtshandeling, en verdwijnt die knop.
  bijzonder:null,
  rollen:[
-  {sleutel:"opdrachtgever", naam:"aangifteplichtige", kop:"Ter beslissing van de aangifteplichtige",
+  {sleutel:"opdrachtgever", naam:"aangifteplichtige", kop:"Ter beslissing van de aangifteplichtige", werkwoord:"beslist",
    toelichting:"de verslaggever stelt vast en rapporteert; de aangifteplichtige blijft "+
      "verantwoordelijk voor de aangifte en beslist"},
-  {sleutel:"architect", naam:"ontwerper", kop:"Ter aanpassing door de ontwerper",
+  {sleutel:"architect", naam:"ontwerper", kop:"Ter aanpassing door de ontwerper", werkwoord:"past dit aan",
    toelichting:"de uitvoering wijkt af van wat in de berekening is aangenomen; ofwel de "+
      "uitvoering ofwel de berekening moet mee"},
-  {sleutel:"aannemer", naam:"aannemer", kop:"Aan de aannemer — uit te voeren of te staven",
+  {sleutel:"aannemer", naam:"aannemer", kop:"Aan de aannemer — uit te voeren of te staven", uitvoerder:true,
    toelichting:"de verslaggever geeft geen opdracht; hij legt vast wat gestaafd is en wat niet"},
-  {sleutel:"studiebureau", naam:"studiebureau", kop:"Ter advies",
+  {sleutel:"studiebureau", naam:"studiebureau", kop:"Ter advies", werkwoord:"adviseert",
    toelichting:"gevraagd advies, geen uitvoeringsopdracht"}],
  soorten:[
-  {sleutel:"staving", kop:"Staving ontbreekt",
+  {sleutel:"staving", kop:"Staving ontbreekt", werkwoord:"bezorgt dit", ongeachtRol:true,
    uitleg:"zonder bewijsstuk kan de waarde niet aangenomen worden",
    blok:"Staving ontbreekt",
    blokuitleg:"zonder bewijsstuk kan de waarde niet aangenomen worden en geldt de ongunstige "+
               "waarde bij ontstentenis",
    woorden:["technische fiche ontbreekt","leveringsbon ontbreekt","foto van de uitvoering "+
             "ontbreekt","productgegevens ontbreken"]},
-  {sleutel:"afwijking", kop:"Afwijking",
+  {sleutel:"afwijking", kop:"Afwijking", gevolgloos:true,
    uitleg:"wat er ligt is niet wat er berekend is",
    blok:"Afwijking van de aangenomen waarde",
    blokuitleg:"wat er ligt is niet wat er berekend is; de berekening volgt de uitvoering, niet "+
               "omgekeerd",
    woorden:["andere isolatiedikte","ander materiaal","ander glas","ander toestel",
             "andere plaatsing"]},
-  {sleutel:"bouwknoop", kop:"Bouwknoop",
+  {sleutel:"bouwknoop", kop:"Bouwknoop", gevolgloos:true,
    uitleg:"onderbreking van de isolatieschil — vast te leggen nu ze nog zichtbaar is",
    blok:"Bouwknopen",
    blokuitleg:"onderbreking van de isolatieschil, vast te leggen op het ogenblik dat ze nog "+
               "zichtbaar is",
    woorden:["isolatie onderbroken","lagen sluiten niet aan","doorgaande draagvloer"]},
-  {sleutel:"luchtdichtheid", kop:"Luchtdichtheid",
+  {sleutel:"luchtdichtheid", kop:"Luchtdichtheid", gevolgloos:true,
    uitleg:"vast te leggen vóór afwerking — achteraf is het niet meer vast te stellen",
    blok:"Luchtdichtheid",
    blokuitleg:"vast te leggen vóór afwerking; achteraf is het niet meer vast te stellen",
    woorden:["doorvoer niet afgedicht","folie niet doorgetrokken","naad niet gekleefd",
             "aansluiting niet dicht"]},
-  {sleutel:"ventilatie", kop:"Ventilatie",
+  {sleutel:"ventilatie", kop:"Ventilatie", viaRol:true,
    uitleg:"debieten, roosters en doorstroomopeningen",
    blok:"Ventilatie",
    blokuitleg:"debieten, roosters en doorstroomopeningen",
@@ -2010,44 +2137,45 @@ const PROFIELEN=[
    verslag:"De aannemer maakt uitdrukkelijk voorbehoud bij het hierna vermelde, op het ogenblik "+
      "van de vaststelling."},
  rollen:[
-  {sleutel:"opdrachtgever", naam:"opdrachtgever", kop:"Ter beslissing van de opdrachtgever",
+  {sleutel:"opdrachtgever", naam:"opdrachtgever", kop:"Ter beslissing van de opdrachtgever", werkwoord:"beslist",
    toelichting:"vastgesteld en gemeld; wijziging en meerwerk pas na schriftelijk akkoord over "+
      "aard én prijs"},
-  {sleutel:"architect", naam:"architect", kop:"Ter verduidelijking door de architect",
+  {sleutel:"architect", naam:"architect", kop:"Ter verduidelijking door de architect", werkwoord:"verduidelijkt",
    toelichting:"gevraagde toelichting bij plan of bestek; uitvoeren zonder opheldering legt het "+
      "risico bij de aannemer"},
-  {sleutel:"aannemer", naam:"onderaannemer", kop:"Aan de onderaannemer",
+  {sleutel:"aannemer", naam:"onderaannemer", kop:"Aan de onderaannemer", uitvoerder:true,
+   werkwoord:"voert dit uit",
    toelichting:"uit te voeren binnen zijn onderaanneming"},
-  {sleutel:"studiebureau", naam:"studiebureau", kop:"Ter advies",
+  {sleutel:"studiebureau", naam:"studiebureau", kop:"Ter advies", werkwoord:"adviseert",
    toelichting:"gevraagd advies, geen uitvoeringsopdracht"}],
  soorten:[
-  {sleutel:"eigen", kop:"Eigen werk",
+  {sleutel:"eigen", kop:"Eigen werk", viaRol:true,
    uitleg:"de eigen restlijst — wat er nog moet gebeuren of nagezien worden",
    woorden:["onafgewerkt","na te zien","herstel uit te voeren","nog te reinigen"]},
-  {sleutel:"voorbehoud", kop:"Voorbehoud bij aanvang",
+  {sleutel:"voorbehoud", kop:"Voorbehoud bij aanvang", gevolgloos:true,
    uitleg:"de toestand zoals aangetroffen vóór de eigen werken",
    blok:"Voorbehoud bij aanvang",
    blokuitleg:"de toestand zoals aangetroffen vóór de eigen werken. Wat hier niet staat, wordt "+
               "achteraf als eigen werk gezien",
    woorden:["bestaande schade","ondergrond niet vlak","maatafwijking bestaand werk",
             "vocht in ondergrond"]},
-  {sleutel:"hinder", kop:"Hinder en wachttijd",
+  {sleutel:"hinder", kop:"Hinder en wachttijd", gevolgloos:true,
    uitleg:"raakt de uitvoeringstermijn — te melden op het ogenblik zelf",
    blok:"Hinder en wachttijd",
    blokuitleg:"raakt de uitvoeringstermijn; te melden op het ogenblik zelf, niet achteraf",
    woorden:["werkzone niet vrij","geen toegang","wachten op voorgaande aannemer",
             "nutsvoorziening ontbreekt","weerverlet"]},
-  {sleutel:"onduidelijk", kop:"Onduidelijk of strijdig",
+  {sleutel:"onduidelijk", kop:"Onduidelijk of strijdig", viaRol:true,
    uitleg:"gevraagde opheldering bij plan of bestek",
    blok:"Onduidelijk of strijdig in plan of bestek",
    blokuitleg:"gevraagde opheldering; uitvoeren zonder antwoord legt het risico bij de aannemer",
    woorden:["plan en bestek strijdig","maat ontbreekt","detail ontbreekt"]},
-  {sleutel:"schade", kop:"Schade door derden",
+  {sleutel:"schade", kop:"Schade door derden", gevolgloos:true,
    uitleg:"schade aan werk dat goed was — wie ze veroorzaakte bepaalt wie herstelt",
    blok:"Schade door derden",
    blokuitleg:"schade aan uitgevoerd werk; vóór herstel moet vaststaan wie ze veroorzaakte",
    woorden:["beschadiging door derden","breuk","vervuiling"]},
-  {sleutel:"meerwerk", kop:"Meerwerk",
+  {sleutel:"meerwerk", kop:"Meerwerk", gevolgloos:true,
    uitleg:"vast te stellen en te melden; uit te voeren pas na schriftelijk akkoord",
    blok:"Meerwerk — voorafgaand akkoord vereist",
    blokuitleg:"vastgesteld en gemeld; uit te voeren pas na schriftelijk akkoord van de "+
@@ -2174,6 +2302,73 @@ function leesRol(t){
    Kort houden blijft wel de bedoeling: hoe minder bijna-synoniemen, hoe groter de kans dat
    hetzelfde gebrek twee vergaderingen na elkaar dezelfde naam krijgt — en dat is wat het blok
    "Nog steeds open" laat werken. */
+/* ---- onderdelen ----
+   De woordenlijsten zeggen wát er mis is. Deze zegt waaraan. Samen vormen ze de vaststelling:
+   "scheur" plus "de dorpel" wordt "Scheur in de dorpel."
+
+   Het lidwoord staat in de lijst en niet in de app. Nederlandse lidwoorden zijn niet af te
+   leiden — het is de dorpel maar het raam, de muur maar het plafond — en een app die "het
+   dorpel" schrijft in een stuk dat als bewijs dient, is erger dan een app die overtypt wat jij
+   zei. Dus schrijf je ze één keer op zoals ze horen, en daarna staan ze er altijd goed.
+
+   Het voorzetsel volgt dezelfde regel. Standaard is dat "in"; begint het onderdeel zelf met een
+   voorzetsel, dan wordt dat gebruikt zoals het er staat. Zo schrijf je "aan de gevel" of "ter
+   hoogte van de doorvoer" gewoon in de lijst, en hoeft de app niets te kiezen.
+
+   Eén lijst voor het toestel en niet per profiel, anders dan de woorden. Dat is met opzet: de
+   soorten van een veiligheidscoördinator zijn andere soorten, maar een dorpel is een dorpel —
+   het gebouw verandert niet als je van pet wisselt. */
+const ONDERDEELSLEUTEL="werfpunten-onderdelen";
+const STANDAARDONDERDELEN=[
+  "de dorpel","het raam","de deur","het raamkader","het schrijnwerk",
+  "de muur","de wand","het plafond","de vloer","de chape","de tegelvloer",
+  "de plint","de bepleistering","de voeg",
+  "de gevel","de dakrand","het dakvlak","de dakgoot","de regenwaterafvoer","de schouw",
+  "de isolatie","het dampscherm",
+  "de trap","de leuning","de ligger","de kolom","de fundering","het terras",
+];
+let onderdelen=[];
+
+function laadOnderdelen(){
+  onderdelen=STANDAARDONDERDELEN.slice();
+  try{
+    const r=localStorage.getItem(ONDERDEELSLEUTEL);
+    if(r){const e=JSON.parse(r); if(Array.isArray(e))onderdelen=e;}
+  }catch(e){}
+}
+
+/* Het onderdeel zoals het in de zin komt te staan. Draagt het zelf al een voorzetsel, dan blijft
+   dat staan; anders komt er "in" voor. Meer regels dan dit horen er niet te zijn — wat er staat
+   is wat jij schreef. */
+const VOORZETSELS=/^(in|aan|op|onder|boven|bij|langs|tegen|rond|achter|naast|tussen|ter|van)\b/i;
+function verbindOnderdeel(o){
+  const t=(o||"").trim();
+  if(!t)return "";
+  return VOORZETSELS.test(t) ? t : "in "+t;
+}
+
+async function beheerOnderdelen(){
+  const uitleg="Eén onderdeel per regel, mét het lidwoord: de dorpel, het raam.\n\n"+
+    "Het lidwoord staat hier en niet in de app, want Nederlandse lidwoorden zijn niet af te\n"+
+    "leiden. Schrijf je het één keer goed op, dan staat het daarna altijd goed in het verslag.\n\n"+
+    "Standaard komt er “in” voor. Wil je iets anders, zet het er dan zelf bij:\n"+
+    "  aan de gevel\n  ter hoogte van de doorvoer\n\n"+
+    "Deze lijst hoort bij dit toestel en reist mee naar elke werf.\n"+
+    "Alles leeg laten zet de standaardlijst terug.";
+  const nieuw=await vraagTekst("Onderdelen", uitleg, onderdelen.join("\n"));
+  if(nieuw===null)return;
+  if(!nieuw.trim()){
+    try{localStorage.removeItem(ONDERDEELSLEUTEL)}catch(e){}
+    laadOnderdelen();
+    melding("Standaardonderdelen teruggezet");
+    return;
+  }
+  const lijst=nieuw.split("\n").map(r=>r.trim()).filter(Boolean);
+  try{localStorage.setItem(ONDERDEELSLEUTEL,JSON.stringify(lijst))}catch(e){}
+  laadOnderdelen();
+  melding(onderdelen.length+" onderdelen bewaard");
+}
+
 const WOORDSLEUTEL="werfpunten-gebrekwoorden";
 let STANDAARDWOORDEN=null;
 
@@ -2410,13 +2605,43 @@ async function beheerContacten(){
 document.getElementById("contactbeheer").onclick=beheerContacten;
 document.getElementById("hoofdstukbeheer").onclick=beheerHoofdstukken;
 document.getElementById("woordbeheer").onclick=beheerGebrekwoorden;
+document.getElementById("onderdeelbeheer").onclick=beheerOnderdelen;
 document.getElementById("zonebeheer").onclick=beheerZones;
 document.getElementById("fasebeheer").onclick=beheerFasen;
 document.getElementById("projectcodebeheer").onclick=beheerProjectcode;
+document.getElementById("planbronbeheer").onclick=beheerPlanbron;
 document.getElementById("documentenknop").onclick=toonDocumenten;
 document.getElementById("dropboxbeheer").onclick=beheerDropbox;
 document.getElementById("bijwerkknop").onclick=kijkNieuweVersie;
 document.getElementById("profielbeheer").onclick=kiesProfiel;
+
+/* Waarop werkt dit dossier: op een plannenset, of op de GRB-omtrek alleen?
+
+   Standaard is de omtrek een noodoplossing — hij staat er tot het echte plan er is en maakt dan
+   plaats. Voor een gevelherstel, een terreinaanleg of een dossier waar je alleen buiten komt,
+   komt dat echte plan nooit, en dan is de omtrek geen tussenstap maar het plan.
+
+   Het verschil zit niet in wat je ziet maar in wat er gebeurt als er later toch een plan
+   binnenkomt: als noodoplossing maakt de omtrek stil plaats, als plan is het een versiewissel
+   met de vraag vooraf. In geen van beide gevallen gaat er iets verloren — dat is de regel
+   erboven, en die staat los van deze keuze. */
+async function beheerPlanbron(){
+  const nu=alleenOmtrek();
+  const keuze=await vraagKeuze("Plannen van deze werf",
+    ["Waarop wijs je aan in dit dossier?",
+     "<b>Een plannenset</b> — de GRB-omtrek is dan een vertrekpunt tot de bladen er zijn, en "+
+     "maakt plaats zodra je er een laadt.",
+     "<b>Alleen de omtrek</b> — er komt geen plannenset. De omtrek blijft staan, en een plan dat "+
+     "later toch binnenkomt vraagt eerst, zoals elke nieuwe versie.",
+     "Wat er al ligt verandert hier niet van. Een plan wordt nooit overschreven: wat er staat "+
+     "gaat opzij, met punten of zonder."],
+    [{sleutel:"set",naam:"Een plannenset"+(nu?"":" ✓")},
+     {sleutel:"omtrek",naam:"Alleen de omtrek"+(nu?" ✓":"")}]);
+  if(keuze===null)return;
+  zetAlleenOmtrek(keuze==="omtrek");
+  melding(keuze==="omtrek"?"Deze werf werkt op de omtrek alleen"
+                         :"Deze werf werkt op een plannenset");
+}
 
 /* ---- het beheervenster ----
    Elke knop hierin opent zelf een venster. Twee vensters over elkaar heen is verwarrend, dus het
@@ -2424,8 +2649,12 @@ document.getElementById("profielbeheer").onclick=kiesProfiel;
    draait — en nadrukkelijk niet via `onclose`: het browserpaneel levert die gebeurtenis
    onbetrouwbaar af bij programmatisch sluiten, en dat is vorige sessie een half uur zoeken
    geweest. Een knop doet zijn werk meteen. */
-document.getElementById("beheerknop").onclick=()=>
+document.getElementById("beheerknop").onclick=()=>{
   document.getElementById("beheerdlg").showModal();
+  // Meten bij het openen en niet eerder: de cijfers verouderen, en niemand kijkt ernaar als het
+  // venster dicht is. Async, dus het venster wacht er niet op.
+  toonOpslagstand();
+};
 document.getElementById("beheer-sluit").onclick=()=>
   document.getElementById("beheerdlg").close();
 document.getElementById("beheerdlg").addEventListener("click",e=>{
@@ -2646,6 +2875,15 @@ async function tekenLijst(){
     const body=document.createElement("div");body.className="body";
     const kop=document.createElement("div");kop.className="kop";
     const chip=document.createElement("span");chip.className="chip";chip.textContent=p.zone;kop.appendChild(chip);
+    /* Punten van vóór deze versie dragen geen nummer; die krijgen er ook geen bij het tonen. */
+    if(p.nummer){
+      const n=document.createElement("span");
+      n.className="puntnr"+(isNieuwPunt(p)?" nieuw":"");
+      n.textContent=p.nummer;
+      n.title=isNieuwPunt(p)?"Nieuw in dit verslag"
+                            :"Loopt sinds "+String(p.nummer).split(".")[0];
+      kop.appendChild(n);
+    }
     // Snel vastgelegd en nog zonder woorden: in de keet is dit je werklijst.
     if(p.onaf){const o=document.createElement("span");o.className="onaf";o.textContent="⚡ onaf";
       o.title="Snel vastgelegd — nog af te werken";kop.appendChild(o);}
@@ -2810,6 +3048,150 @@ function toestelId(){
   }catch(e){return "t?";}
 }
 
+/* ---- blijvende opslag ----
+   Een back-up beschermt tegen een verloren toestel. Dit beschermt tegen het toestel zelf.
+
+   IndexedDB is standaard best-effort: het besturingssysteem mag de foto's, de plannen en het
+   archief van vorige vergaderingen opruimen zodra de ruimte krap wordt. Zonder vraag vooraf en
+   zonder melding achteraf. De app start daarna gewoon op, de punten staan er nog — die zitten in
+   localStorage — en de foto eronder is weg.
+
+   Dat is dezelfde fout als een slimme samenvoeging, en om dezelfde reden de ergste die deze app
+   kan maken (PLANMETHODE.md, "Samenvoegen is met opzet dom"): er staat iets, het ziet er goed
+   uit, en wat er niet meer staat weet niemand. Een vaststelling zonder haar foto is geen
+   vaststelling, en het verschil is niet te zien.
+
+   `navigator.storage.persist()` vraagt de browser die opruiming voor deze app uit te zetten. Het
+   is een vraag en geen instelling: Chrome beslist zelf op wat hij van je gebruik weet, Safari en
+   Firefox kunnen het aan de gebruiker voorleggen, en waar de API ontbreekt is er geen antwoord.
+   Vandaar drie regels.
+
+   **Niet bij het opstarten.** Een lege app die om blijvende opslag vraagt stelt een tussenvraag
+   over niets, en wie hem wegklikt is hem kwijt — een weigering komt in de meeste browsers niet
+   uit zichzelf terug. We vragen het op het eerste moment dat er werkelijk iets te verliezen valt:
+   het eerste beeld of het eerste plan dat in IndexedDB landt, en anders bij de eerste
+   back-upherinnering. Kijken mag wel meteen (`meetBlijvend`); dat vraagt niets.
+
+   **Eén keer per sessie.** Een reeks vragen die niets verandert is ruis. Een nee mag in een
+   latere sessie wél opnieuw gesteld worden: in Chrome hangt het antwoord af van hoe lang je de
+   app al gebruikt, en dat is precies de browser waar deze vraag het vaakst valt.
+
+   **Een nee blijft zichtbaar.** Niet als toast — die fadet weg, en dit is waar zolang het waar
+   is. Het staat in het beheervenster onder Back-up, en het scherpt de back-upherinnering aan:
+   als het toestel de opslag niet vasthoudt, is die back-up niet langer een voorzorg maar het
+   enige wat er nog tussen zit. */
+const BLIJVENDSLEUTEL="werfpunten-blijvend";
+
+/* "ja" | "nee" | "onbekend" (de browser kent de vraag niet) | null (nog niet gevraagd) */
+let blijvend=null;
+try{blijvend=localStorage.getItem(BLIJVENDSLEUTEL);}catch(e){}
+let blijvendGevraagd=false;   // deze sessie al gevraagd — kijken telt niet mee
+
+/* De terugval zit hier, op één plaats: ontbreekt `navigator.storage`, dan levert dit null en
+   werkt al het onderstaande gewoon door met "onbekend". Oudere Safari kent de API niet, en over
+   een gewone http-verbinding bestaat ze evenmin. Geen van beide is een fout. */
+function opslagAPI(){
+  try{ return (typeof navigator!=="undefined" && navigator.storage) || null; }catch(e){ return null; }
+}
+
+function zetBlijvend(w){
+  blijvend=w;
+  try{ w ? localStorage.setItem(BLIJVENDSLEUTEL,w) : localStorage.removeItem(BLIJVENDSLEUTEL); }catch(e){}
+  return w;
+}
+
+/* Kijken, niet vragen. Dit mag wél bij het opstarten: een browser die het uit zichzelf toekende
+   hoeft niets gevraagd te worden, en dan is de regel in het beheervenster meteen juist. */
+async function meetBlijvend(){
+  const s=opslagAPI();
+  if(!s||typeof s.persisted!=="function") return zetBlijvend("onbekend");
+  try{ if(await s.persisted()) return zetBlijvend("ja"); }
+  catch(e){ return zetBlijvend("onbekend"); }
+  // Niet blijvend. Een eerder nee blijft staan; anders is er simpelweg nog niets gevraagd.
+  return blijvend==="nee" ? "nee" : zetBlijvend(null);
+}
+
+/* En dit is de vraag zelf. `stil` is voor de enige oproeper die het antwoord in zijn eigen zin
+   verwerkt — twee meldingen over hetzelfde zijn er één te veel. */
+async function vraagBlijvend(stil){
+  if(blijvendGevraagd) return blijvend;
+  blijvendGevraagd=true;
+  const s=opslagAPI();
+  if(!s||typeof s.persist!=="function") return zetBlijvend("onbekend");
+  if(blijvend!=="ja"){
+    try{ if(await s.persisted()) blijvend="ja"; }catch(e){}
+  }
+  if(blijvend==="ja") return zetBlijvend("ja");    // al toegekend, niets te vragen
+  const was=blijvend;
+  let uit;
+  try{ uit=await s.persist(); }catch(e){ return zetBlijvend("onbekend"); }
+  zetBlijvend(uit?"ja":"nee");
+  toonOpslagstand();
+  /* Een nee is nieuws. Eén keer luid, met de handeling die het antwoord erop is; daarna draagt
+     het beheervenster het permanent. Een tweede keer luid is zeuren: wie het al weet, weet het. */
+  if(!uit && was!=="nee" && !stil)
+    meldingMetActie("Dit toestel houdt de opslag niet vast","back-up",
+      ()=>document.getElementById("backup").click());
+  return blijvend;
+}
+
+/* Hoeveel er staat en hoeveel erbij kan. Bij benadering, en dat zegt de tekst er ook bij:
+   browsers ronden deze cijfers met opzet af, want een exacte meting is een vingerafdruk. */
+async function meetOpslag(){
+  const s=opslagAPI();
+  if(!s||typeof s.estimate!=="function") return null;
+  try{
+    const e=await s.estimate();
+    if(!e||typeof e.usage!=="number") return null;
+    return {gebruikt:e.usage, ruimte:typeof e.quota==="number"?e.quota:null};
+  }catch(e){ return null; }
+}
+
+/* Bytes leesbaar maken. Duizend en niet 1024: dat is het getal dat de fabrikant op de doos van
+   de telefoon zet, en dus het getal waar de gebruiker het mee vergelijkt. */
+function omvang(b){
+  if(typeof b!=="number"||!isFinite(b)||b<0) return "?";
+  const e=["B","kB","MB","GB","TB"];
+  let i=0,n=b;
+  while(n>=1000&&i<e.length-1){n/=1000;i++;}
+  const g=(n<10&&i>0) ? Math.round(n*10)/10 : Math.round(n);
+  return String(g).replace(".",",")+" "+e[i];
+}
+
+/* De regel onder Back-up, in deze volgorde: mag het blijven staan, en hoeveel staat er. Het
+   eerste is het antwoord op een vraag die niemand stelt tot het te laat is; het tweede is wat je
+   nodig hebt om te weten of er nog een vergadering bij kan.
+
+   Apart van het tekenen gehouden, zodat de zin zonder browser na te rekenen valt. */
+function opslagZin(stand,maat){
+  const uit=[];
+  if(stand==="ja")
+    uit.push("Blijvende opslag: toegekend. Het toestel ruimt foto's, plannen en archief niet zomaar op.");
+  else if(stand==="nee")
+    uit.push("Blijvende opslag: geweigerd. Het toestel mag foto's, plannen en archief opruimen als de ruimte krap wordt — de back-up is dan het enige wat er nog tussen zit.");
+  else if(stand==="onbekend")
+    uit.push("Blijvende opslag: deze browser kent de vraag niet. Ga ervan uit dat het toestel mag opruimen, en maak geregeld een back-up.");
+  else
+    uit.push("Blijvende opslag: nog niet gevraagd — dat gebeurt bij het eerste beeld of plan.");
+  if(maat && typeof maat.gebruikt==="number"){
+    let z=omvang(maat.gebruikt)+" in gebruik";
+    if(typeof maat.ruimte==="number" && maat.ruimte>0){
+      const pct=maat.gebruikt/maat.ruimte*100;
+      z+=" van "+omvang(maat.ruimte)+" ("+(pct<1?"<1":Math.round(pct))+"%)";
+    }
+    uit.push(z+", bij benadering.");
+  }
+  return uit.join(" ");
+}
+
+async function toonOpslagstand(){
+  const el=document.getElementById("opslagstand");
+  if(!el) return;
+  const stand=await meetBlijvend();
+  el.textContent=opslagZin(stand,await meetOpslag());
+  el.classList.toggle("waarschuwt", stand==="nee"||stand==="onbekend");
+}
+
 /* Elke wijziging aan een punt krijgt een tijdstempel. Zonder dat kan een latere samenvoeging niet
    uitmaken welke van twee versies de jongste is, en dan wordt het raden. */
 function raakAan(p){ if(p) p.gewijzigd=new Date().toISOString(); return p; }
@@ -2840,6 +3222,9 @@ function alleSleutels(winkel){return new Promise(res=>{
    kwijt bent. Wie op een tweede toestel wil koppelen, koppelt daar opnieuw. */
 const NIETINBACKUP=new Set(["werfpunten-toestel","werfpunten-backup",
                             "werfpunten-migratie","werfpunten-migratie-db",
+                            // wat déze browser van blijvende opslag vindt, zegt niets over het
+                            // toestel waar de back-up straks op terechtkomt
+                            "werfpunten-blijvend",
                             "werfpunten-dropbox"]);
 
 function alleInstellingen(){
@@ -2967,22 +3352,90 @@ function dubbelPunt(p, gebruikt, beeldbron, teSchrijven, herkomst){
   return nieuw;
 }
 
+/* ---- het merkteken: weten in plaats van raden ----
+   Regel drie blijft staan: wat aan beide kanten verschilt, blijft allebei bestaan. Maar ze werd
+   te vaak toegepast, en dat had een oorzaak die geen ontwerpkeuze was — onwetendheid.
+
+   Het geval dat pijn deed is de gewone gang van zaken: de telefoon vangt "scheur dorpel" op de
+   werf, de laptop werkt dat in de keet af tot een volwaardige vaststelling. Lees je de telefoon
+   dan opnieuw in, dan zag `puntenSamen` twee versies die verschilden en hield ze allebei. Elk
+   punt dat je verbeterde kwam terug als ruwe tweeling. Niet fout — er ging niets verloren —
+   maar het is geen samenvoeging meer, en bij elke volgende ronde werd het erger.
+
+   De app kón het ook niet beter weten. Ze zag twee versies en geen geschiedenis, en dan is
+   allebei houden het enige eerlijke antwoord.
+
+   Vandaar `gedeeld`: bij elk punt de versie waarvan we wéten dat een ander toestel ze gezien
+   heeft. Daarmee valt "die ken ik al, dit is er de opvolger van" te onderscheiden van "hier is
+   onafhankelijk aan gewerkt", en dat is geen slimmigheid — het is het verschil tussen weten en
+   raden. Regel drie geldt onverkort voor het tweede geval, en juist scherper: wat overblijft
+   onder "verschilt" is nu écht een botsing en niet langer ruis.
+
+   `gedeeld` wordt alleen bij het samenvoegen gezet, nooit bij het maken van een back-up. Dat is
+   met opzet: een bestand dat je wegzet is geen bestand dat iemand inlas. Wie dat merkteken al
+   bij het uitvoeren zou zetten, beweert een uitwisseling die misschien nooit plaatsvond — en
+   dan vervalt de hele redenering tot "de nieuwste wint", precies wat PLANMETHODE.md afwijst.
+   Eén ronde heen en weer is genoeg om het aan beide kanten te vestigen. */
+
+/* Zuiver, zodat het oordeel los van alle boekhouding na te rekenen valt.
+   "gelijk"   — niets te doen
+   "ouder"    — daar is een voorganger van hier: hier blijft staan
+   "nieuwer"  — hier is een voorganger van daar: daar neemt het over
+   "botsing"  — allebei aangeraakt sinds ze elkaar zagen: allebei houden */
+function samenvoegOordeel(hier, daar){
+  const H=hier.gewijzigd||"", D=daar.gewijzigd||"";
+  if(H===D && (hier.tekst||"")===(daar.tekst||"")) return "gelijk";
+  const Bh=hier.gedeeld||"", Bd=daar.gedeeld||"";
+  const daarIsVoorganger = !!D && !!Bh && D<=Bh;
+  const hierIsVoorganger = !!H && !!Bd && H<=Bd;
+  // Allebei voorganger van de ander kan bij samenhangende gegevens niet. Kómt het toch voor,
+  // dan is er iets aan de merktekens niet in orde, en dan hoort er niets weg te vallen.
+  if(daarIsVoorganger && hierIsVoorganger) return "botsing";
+  if(daarIsVoorganger) return "ouder";
+  if(hierIsVoorganger) return "nieuwer";
+  return "botsing";
+}
+
+/* Het merkteken schuift alleen vooruit. Terugzetten zou een uitwisseling wegdenken die
+   werkelijk gebeurd is. */
+function merkGedeeld(p, tot){
+  if(tot && (!p.gedeeld || tot>p.gedeeld)) p.gedeeld=tot;
+  return p;
+}
+
 function puntenSamen(hier, daar, gebruikt, beeldbron, teSchrijven, herkomst, telling){
   const uit=hier.slice();
   const opId=new Map(uit.map(p=>[p.id,p]));
+  const neemBeelden=p=>beeldenVan(p).forEach(b=>{
+    const bl=beeldbron.get(b.id); if(bl)teSchrijven.push([b.id,bl]);
+  });
   daar.forEach(p=>{
     const bestaand=opId.get(p.id);
     if(!bestaand){
-      uit.push(p);
+      uit.push(merkGedeeld({...p}, p.gewijzigd));
       gebruikt.add(p.id);
-      beeldenVan(p).forEach(b=>{ const bl=beeldbron.get(b.id); if(bl)teSchrijven.push([b.id,bl]); });
+      neemBeelden(p);
       telling.punten++;
       return;
     }
-    // gelijk? dan is er niets te doen. `gewijzigd` is precies waarvoor het erin zit.
-    if((bestaand.gewijzigd||"")===(p.gewijzigd||"") &&
-       (bestaand.tekst||"")===(p.tekst||"")) return;
-    uit.push(dubbelPunt(p, gebruikt, beeldbron, teSchrijven, herkomst));
+    const oordeel=samenvoegOordeel(bestaand, p);
+    // Wat er ook uitkomt: we hebben deze versie gezien. Dat vastleggen is wat een tweede keer
+    // inlezen van hetzelfde bestand tegenhoudt — dat maakte vroeger elke keer nieuwe dubbels.
+    merkGedeeld(bestaand, p.gewijzigd);
+    if(oordeel==="gelijk"||oordeel==="ouder") return;
+    if(oordeel==="nieuwer"){
+      /* Hier stond de vórige versie hiervan. Dat is geen keuze tussen twee kandidaten maar het
+         doorschuiven van een lijn waar dit toestel zelf aan de basis staat; er valt niets weg
+         wat niet al in het nieuwe zit. */
+      const i=uit.indexOf(bestaand);
+      const vervanger=merkGedeeld({...p}, p.gewijzigd);
+      neemBeelden(p);
+      if(i>=0)uit[i]=vervanger; else uit.push(vervanger);
+      opId.set(p.id, vervanger);
+      telling.bijgewerkt++;
+      return;
+    }
+    uit.push(merkGedeeld(dubbelPunt(p, gebruikt, beeldbron, teSchrijven, herkomst), p.gewijzigd));
     telling.dubbel++;
   });
   return uit;
@@ -2992,8 +3445,8 @@ async function voegSamen(d){
   if(!d||d.formaat!=="werfpunten-backup")throw new Error("geen back-upbestand");
   const oudFormaat=(d.versie||1)<2;
   const herkomst={toestel:d.toestel||"onbekend", gemaakt:d.gemaakt||""};
-  const telling={werven:0, punten:0, dubbel:0, dagen:0, plannen:0, dubbelPlannen:0,
-                 fotos:0, instellingen:0};
+  const telling={werven:0, punten:0, dubbel:0, bijgewerkt:0, dagen:0, plannen:0,
+                 dubbelPlannen:0, fotos:0, instellingen:0};
 
   // de beelden uit de back-up, klaar om op te zoeken. De sleutel draagt het project vooraan;
   // hier is alleen het beeld-id interessant.
@@ -3147,6 +3600,14 @@ function samenvoegUitslag(t){
   if(t.fotos)  erbij.push(stuks(t.fotos,"beeld","beelden"));
   const regels=[erbij.length ? ("Erbij gekomen: <b>"+erbij.join(", ")+"</b>.")
                              : "Er stond niets in die back-up wat hier nog niet stond."];
+  /* Apart van de dubbels, en met opzet in andere woorden: hier is niets gekozen. Wat hier stond
+     was aantoonbaar de vorige versie van wat er nu staat, en dat is na te gaan aan het merkteken
+     — geen gok op een tijdstempel. */
+  if(t.bijgewerkt)
+    regels.push("<b>"+stuks(t.bijgewerkt,"punt","punten")+"</b> "+
+      (t.bijgewerkt===1?"stond":"stonden")+" hier in een oudere versie en "+
+      (t.bijgewerkt===1?"is":"zijn")+" bijgewerkt. Er is niets gekozen en niets weggegooid: "+
+      "wat hier stond, was de versie waar die uit voortkomt.");
   if(t.dubbel||t.dubbelPlannen){
     const d=[];
     if(t.dubbel)d.push(stuks(t.dubbel,"punt","punten"));
@@ -3263,6 +3724,9 @@ document.getElementById("backupbestand").onchange=async e=>{
    werkelijk iets bijgekomen is. Wie het negeert, ziet het morgen weer. */
 function merkBackupknop(){
   const wacht=backupAchterstand();
+  // Dit is de enige plek die weet wanneer de achterstand verandert, dus hangt de wachter eraan.
+  // Eén ingang, geen tweede boekhouding die uit de pas kan gaan lopen.
+  stemWachterAf(wacht);
   const k=document.getElementById("backup");
   if(k)k.classList.toggle("wacht",wacht);
   /* De knop zit in het beheervenster, dus daar ziet niemand de stip. Ze moet staan waar je hem
@@ -3282,6 +3746,126 @@ function backupAchterstand(){
   if(jongste&&jongste>laatst)return true;
   // ook een gearchiveerde vergadering die na de laatste back-up is afgesloten telt
   return archief.some(d=>d.datum>laatst.slice(0,10));
+}
+
+/* ---- de wachter: alleen kijken als er iets te brengen valt ----
+   Hierboven gaat het over één toestel dat stukgaat. Dit gaat over het gat ertussen: je legt vast
+   op de werf, je werkt af op de laptop in de keet, en tussen die twee zit een handeling die je
+   precies vergeet op de dag dat het telt. Het gat is bovendien tweezijdig — in de keet komt er
+   op de laptop óók van alles bij, zonder netwerk — dus elk toestel draagt zijn eigen achterstand
+   en de wachter hangt aan geen van beide in het bijzonder.
+
+   Wat de app niet kan: uit zichzelf iets versturen. `navigator.share()` vraagt een tik van de
+   gebruiker, en dat is een beveiliging van de browser, geen tekortkoming die te omzeilen valt.
+   Zolang er geen bestemming is ingesteld, is het beste wat de wachter kan doen: het moment
+   aanwijzen waarop het kán. Komt er ooit een bestemming, dan verandert alleen `wachterSlag` —
+   alles eromheen blijft staan.
+
+   En dan de eigenlijke regel: **hij bestaat alleen zolang er werk ligt.** Ligt er niets, dan
+   hangt er geen luisteraar, loopt er geen klok en kost hij niets — niet weinig, niets. Dat is
+   geen zuinigheid maar het antwoord op waar deze app draait: een telefoon zit op een werf de
+   hele dag op de rand van geen bereik, en "is er al bereik?" is daar de duurste vraag die je
+   kunt stellen. Een radio die blijft zoeken is een lege batterij om vier uur, en dan is de app
+   niet traag maar wég. */
+
+/* Oplopend, en dan blijven staan. Het `online`-signaal is gratis en komt vanzelf; deze klok is
+   het vangnet eronder, want dat signaal is niet te vertrouwen: terugkomen uit de achtergrond
+   levert het op iOS niet altijd op, en een wifi die zijn uplink terugkrijgt levert het nooit op
+   — het netwerk veranderde immers niet, alleen wat erachter zat. Vandaar trager en trager in
+   plaats van weg. */
+const WACHTTRAP=[20e3, 60e3, 5*60e3, 15*60e3];
+
+let wachter={aan:false, klok:null, stap:0, gemeld:false};
+
+/* `navigator.onLine` is geen belofte dat er internet is — hij zegt alleen dat er een netwerk aan
+   hangt, en op een werf is dat vaak een wifi zonder uplink. Als `false` is hij wél te
+   vertrouwen, en dat is de kant die hier telt: bij `false` valt er niets te proberen. Al de
+   rest, "onbekend" incluis, geldt als misschien. */
+function netwerkNu(){
+  try{ return typeof navigator==="undefined" || navigator.onLine!==false; }catch(e){ return true; }
+}
+
+/* De enige ingang. Idempotent, zodat elke oproeper hem mag aanroepen zonder te weten wat de
+   stand was — en `merkBackupknop` doet dat bij elke wijziging. */
+function stemWachterAf(werk){
+  if(werk===undefined)werk=backupAchterstand();
+  if(werk) wachterAan(); else wachterUit();
+}
+
+function wachterAan(){
+  if(wachter.aan)return;
+  wachter.aan=true; wachter.stap=0; wachter.gemeld=false;
+  try{
+    addEventListener("online",wachterWakker);
+    addEventListener("offline",wachterWeg);
+    // Terugkomen uit de achtergrond is op een telefoon het gewone geval, en klokken staan daar
+    // stil. Zonder dit merkt de wachter pas iets als zijn trap toevallig afloopt.
+    document.addEventListener("visibilitychange",wachterZichtbaar);
+  }catch(e){}
+  wachterPlan();
+}
+
+/* Volledig opruimen, en niet half: geen luisteraar, geen klok. Dat is de hele belofte van deze
+   sectie, dus ze hoort op één plaats te staan waar ze na te lezen valt. */
+function wachterUit(){
+  if(!wachter.aan)return;
+  wachter.aan=false;
+  try{
+    removeEventListener("online",wachterWakker);
+    removeEventListener("offline",wachterWeg);
+    document.removeEventListener("visibilitychange",wachterZichtbaar);
+  }catch(e){}
+  clearTimeout(wachter.klok);
+  wachter.klok=null; wachter.stap=0; wachter.gemeld=false;
+}
+
+function wachterPlan(){
+  if(!wachter.aan)return;
+  clearTimeout(wachter.klok);
+  const ms=WACHTTRAP[Math.min(wachter.stap,WACHTTRAP.length-1)];
+  wachter.klok=setTimeout(wachterSlag,ms);
+  if(wachter.stap<WACHTTRAP.length-1)wachter.stap++;
+}
+
+/* Netwerk dat verschijnt: opnieuw vooraan beginnen, want dit is het moment waar de trap voor
+   bedoeld was. Even laten bezinken — een netwerk dat net opkomt flappert, en een melding over
+   bereik dat een seconde later weer weg is, is erger dan geen melding. */
+function wachterWakker(){
+  if(!wachter.aan)return;
+  wachter.stap=0; wachter.gemeld=false;
+  clearTimeout(wachter.klok);
+  wachter.klok=setTimeout(wachterSlag,3000);
+}
+
+/* Weg is weg: de trap terug naar voren, zodat de terugkeer meteen opgemerkt wordt. */
+function wachterWeg(){
+  if(!wachter.aan)return;
+  wachter.stap=0; wachter.gemeld=false;
+}
+
+function wachterZichtbaar(){
+  if(!wachter.aan)return;
+  let zichtbaar=true;
+  try{ zichtbaar=document.visibilityState!=="hidden"; }catch(e){}
+  if(zichtbaar&&netwerkNu())wachterWakker();
+}
+
+/* Straks: {naam, stuur(pak)}. Zolang dit null is, kan er niets vanzelf vertrekken en wijst de
+   wachter alleen het moment aan. */
+let syncBestemming=null;
+
+function wachterSlag(){
+  if(!wachter.aan)return;
+  if(!netwerkNu())return wachterPlan();       // niets aan de hand, gewoon opnieuw plannen
+  if(syncBestemming){ syncBestemming.stuur(); return wachterPlan(); }
+  /* Eén keer per keer dat het netwerk opkomt, en niet één keer per punt: wie in de keet zit te
+     typen krijgt er anders bij elke zin een. `gemeld` gaat pas weer uit als het netwerk wegviel
+     of als de wachter opnieuw wordt aangezet. */
+  if(wachter.gemeld)return wachterPlan();
+  wachter.gemeld=true;
+  meldingMetActie("Er is bereik — dit staat nog op één toestel","wegzetten",
+    ()=>document.getElementById("backup").click());
+  wachterPlan();
 }
 
 /* ---- de keet ----
@@ -3305,16 +3889,108 @@ function backupAchterstand(){
    Wat er níet in staat is een gevolg: geen "moet hersteld worden", geen "is niet conform". Een
    vaststelling stelt vast. Wat er moet gebeuren volgt uit aan wie je het punt toewijst, en dat
    zet het verslag er zelf bij. Twee keer hetzelfde zeggen is twee keer kunnen tegenspreken. */
-let keet={i:0,lijst:[],gebrek:null,woordenOpen:null,hoofdstuk:null};
+let keet={i:0,lijst:[],gebrek:null,onderdeel:null,woordenOpen:null,hoofdstuk:null};
 
 /* De zin uit wat je aantikte plus wat de app al weet. Niets hiervan is verzonnen: de plaats komt
    uit de pin, de woorden uit jouw keuze. Daarom kan er ook niets fout in staan wat jij niet zelf
    hebt aangewezen. */
+function hoofdletter(t){ return t ? t.charAt(0).toUpperCase()+t.slice(1) : t; }
+
+/* De vaststelling zelf. Het aangetikte woord komt vooraan en de plek erachter — "Scheur in de
+   dorpel", niet "In dorpel scheur vastgesteld". Dat is niet alleen mooier: een vaststelling
+   begint bij wat je ziet, en waar je stond is de bepaling erbij.
+
+   Het lidwoord komt uit wat jij typte. "de dorpel" levert "Scheur in de dorpel", "dorpel" levert
+   "Scheur in dorpel" — de app verzint er geen. Nederlandse lidwoorden zijn niet af te leiden en
+   een app die "het dorpel" schrijft in een stuk dat als bewijs dient, is erger dan een app die
+   overtypt wat jij zei.
+
+   "vastgesteld" is eruit. Dat woord droeg niets: welke handeling dit is, staat in de soort en in
+   de kop van het blok waar het punt onder valt, en het stond er dus twee keer. */
 function keetZin(p){
   if(!keet.gebrek)return "";
-  const plek=p.plek&&p.plek.lokaal?("In "+p.plek.lokaal):
-             (p.plek?("Op "+p.zone+" ("+plaatsKort(p.plek)+")"):("Op "+p.zone));
-  return plek+" "+keet.gebrek+" vastgesteld.";
+  const deel=verbindOnderdeel(keet.onderdeel);
+  /* Koos je een onderdeel, dan is dát waar het zit; de zone staat toch al in het spoor onder de
+     regel en hoeft er niet nog eens bij. Een lokaal wél: dat is fijner dan de zone en zegt
+     werkelijk iets meer. Zonder onderdeel blijft het zoals het was. */
+  const waar = p.plek&&p.plek.lokaal ? "in "+p.plek.lokaal
+             : p.plek ? "op "+p.zone+" ("+plaatsKort(p.plek)+")"
+             : "op "+p.zone;
+  if(deel){
+    const lokaal = p.plek&&p.plek.lokaal ? ", in "+p.plek.lokaal : "";
+    return hoofdletter(keet.gebrek)+" "+deel+lokaal+".";
+  }
+  return hoofdletter(keet.gebrek)+" "+waar+".";
+}
+
+/* ---- wat er gevraagd wordt ----
+   De toewijzing zegt wie er iets mee moet en de rol zegt wát dat betekent, maar daartussen zit
+   een derde ding dat nergens stond: de handeling die je van hem verwacht vóór het herstel zelf.
+   Een herstelmethode voorleggen is geen herstel, en het verschil telt — je kunt niet vorderen
+   wat je niet gevraagd hebt.
+
+   Volzinnen in de derde persoon, want dat is hoe ze in het verslag terechtkomen; de knop draagt
+   alleen het steekwoord. Bewust kort, om dezelfde reden als de woordenlijsten: hoe minder
+   bijna-synoniemen, hoe groter de kans dat hetzelfde twee vergaderingen na elkaar hetzelfde
+   heet. */
+const GEVRAAGD=[
+  {knop:"herstelmethode", zin:"stelt de herstelmethode voor"},
+  {knop:"offerte",        zin:"bezorgt een offerte"},
+  {knop:"detail",         zin:"ziet het detail na"},
+  {knop:"planning",       zin:"bevestigt de planning"},
+  {knop:"staving",        zin:"bezorgt de staving"},
+];
+
+/* Scheidbare werkwoorden dragen hun voorwerp mee: "volgt dit op", niet "volgt op". Zonder dat
+   blijft het partikel in de lucht hangen — "N. volgt op tegen 30/08" laat de lezer zoeken waar
+   "op" aan vasthangt, en in een verslag dat als bewijs dient is een zin die je twee keer moet
+   lezen een zin die je kunt betwisten. "dit" wijst naar de vaststelling die er pal voor staat.
+
+   De niet-scheidbare houden hun kale vorm: "herstelt", "beslist", "adviseert", "verduidelijkt".
+   Die lopen zonder voorwerp, en er iets bij verzinnen maakt ze alleen langer.
+
+   De gevolgzin: wie doet wat, tegen wanneer, en wat er daarnaast gevraagd wordt.
+
+   Hij stelt niets vast wat er niet al staat. Het werkwoord komt uit de rol of uit de soort —
+   allebei tabellen die hierboven met de hand geschreven zijn — en nergens uit een gevolgtrekking
+   van de app zelf. Ontbreekt het werkwoord, of is de soort er een waarvan de uitleg het gevolg
+   voorwaardelijk maakt, dan komt er géén zin en blijft het oude spoor met → en tegen staan.
+   Geen zin is beter dan de verkeerde zin.
+
+   Zuiver gehouden: hij krijgt alles binnen en tekent niets, zodat hij zonder browser na te
+   rekenen valt. */
+function gevolgZin(p, naam, soort, rol){
+  if(!p||!naam) return "";
+  if(soort&&soort.gevolgloos) return "";
+  /* Het werkwoord van de soort beschrijft wat er met het wérk gebeurt; dat van de rol wat déze
+     partij doet. Ze zijn niet inwisselbaar. Een gebrek dat je aan de aannemer toewijst wordt
+     hersteld, maar hetzelfde gebrek ter beslissing aan de opdrachtgever voorleggen maakt van hem
+     geen hersteller — die beslist. Daarom telt het soortwerkwoord alleen bij de partij die
+     uitvoert; overal elders houdt de rol haar eigen werkwoord. */
+  /* Twee soorten werkwoorden bij een soort. "herstelt", "werkt dit af" en "heft dit op" zijn
+     verbijzonderingen van uitvoeren: alleen de partij die uitvoert kan ze doen, en toewijzen aan
+     de opdrachtgever maakt van hem geen hersteller. "antwoordt hierop" en "bezorgt dit" zijn dat
+     niet — die is verschuldigd door wie het punt ook krijgt, ongeacht zijn rol. Vandaar de vlag:
+     ze staat bij de soort, want het is de soort die weet wat voor handeling ze noemt. */
+  const soortWW = soort && soort.werkwoord &&
+                  (soort.ongeachtRol || (rol && rol.uitvoerder)) ? soort.werkwoord : null;
+  const ww=(soortWW||(rol&&rol.werkwoord))||"";
+  if(!ww) return "";
+  let z=naam+" "+ww;
+  if(p.deadline)z+=" tegen "+p.deadline;
+  if(p.gevraagd)z+=" en "+p.gevraagd;
+  return z+".";
+}
+
+/* Wat de afdruk ervan maakt, met de tabellen erbij gezocht. */
+function gevolgVan(p){
+  if(!p||!p.aan) return "";
+  // De kale naam: "Aannemer BV (AB) herstelt" leest als een formulier. De code hoort thuis waar
+  // ze iets doet — in het spoor eronder en in de steno-export — niet midden in een zin.
+  const c=contacten.find(x=>x.code===p.aan);
+  return gevolgZin(p, (c&&c.naam)||p.aan,
+    SOORTEN.find(s=>s.sleutel===p.soort),
+    rolVan(p.aan));
 }
 
 function keetPunt(){return keet.lijst[keet.i]||null;}
@@ -3456,6 +4132,35 @@ async function keetToon(){
     ((eerste&&eerste.kop)||(faseAard(faseVan(staat))==="werf"?"Vaststelling":"Soort"))+
     " "+(keet.woordenOpen?"▴":"▾");
   wd.innerHTML="";
+  /* Waaraan het zit, vóór wat er mis is: je kiest eerst het onderdeel en dan het gebrek, en dan
+     schrijft de zin zichzelf. Eén rij, want een onderdeel hoort bij geen enkele soort in het
+     bijzonder — een dorpel kan scheuren, beschadigd zijn of ontbreken. */
+  const odr=document.createElement("div");
+  odr.className="keet-woordrij keet-onderdeelrij";
+  onderdelen.forEach(o=>{
+    const b=document.createElement("button");
+    b.type="button";b.textContent=o;
+    if(keet.onderdeel===o)b.className="actief";
+    b.onclick=()=>{
+      keet.onderdeel=(keet.onderdeel===o)?null:o;   // nog eens tikken zet hem weer af
+      const zin=keetZin(p);
+      if(zin){p.tekst=zin;delete p.onaf;}
+      raakAan(p);bewaarStaat();
+      keetToon();
+    };
+    odr.appendChild(b);
+  });
+  if(onderdelen.length){
+    const kop=document.createElement("button");
+    // Het beletselteken zoals overal elders in deze app: deze kop schakelt niets, hij opent de
+    // lijst. Zonder dat teken ziet hij eruit als een soortknop en doet hij iets anders.
+    kop.type="button";kop.className="keet-soortkop";kop.textContent="Onderdeel ⋯";
+    kop.title="Waaraan het zit — tik om de lijst aan te passen";
+    kop.onclick=beheerOnderdelen;
+    wd.appendChild(kop);
+    wd.appendChild(odr);
+  }
+
   SOORTEN.forEach(soort=>{
     // De kop is zelf een knop. Anders is een soort zonder woorden onbereikbaar, en kun je de
     // soort van een bestaand punt niet wijzigen zonder de tekst opnieuw te laten schrijven.
@@ -3555,6 +4260,7 @@ async function keetToon(){
   const bij=[];
   if(naam)bij.push("→ "+naam);
   if(p.deadline)bij.push("tegen "+p.deadline);
+  if(p.gevraagd)bij.push(p.gevraagd);
   if(p.verbod)bij.unshift("⛔ verbod");
   if(p.urgent)bij.unshift("🔴 urgent");
   const h=p.hoofdstuk?hoofdstukVan(p.hoofdstuk):null;
@@ -3570,6 +4276,40 @@ async function keetToon(){
     b.onclick=()=>{p.deadline=waarde;raakAan(p);bewaarStaat();keetToon();};
     dl.appendChild(b);
   };
+  /* Wat er gevraagd wordt hangt aan de toewijzing: zonder iemand om het aan te vragen is het
+     blok zinledig, en een knop die niets kan doen hoort er niet te staan. */
+  const gvb=document.getElementById("keet-gevraagdblok");
+  const gvl=document.getElementById("keet-gevraagd");
+  gvb.hidden=!p.aan;
+  gvl.innerHTML="";
+  if(p.aan){
+    const gknop=(label,zin)=>{
+      const b=document.createElement("button");
+      b.type="button";b.textContent=label;
+      if((p.gevraagd||null)===zin)b.className="actief";
+      b.onclick=()=>{
+        p.gevraagd=(p.gevraagd===zin)?null:zin;   // nog eens tikken zet hem weer af
+        raakAan(p);bewaarStaat();keetToon();
+      };
+      gvl.appendChild(b);
+    };
+    gknop("niets",null);
+    GEVRAAGD.forEach(g=>gknop(g.knop,g.zin));
+    /* Eigen woorden mogen, maar ze staan achteraan en niet vooraan: de vaste zinnen zijn er
+       zodat hetzelfde twee vergaderingen na elkaar hetzelfde heet. */
+    const eigen=document.createElement("button");
+    eigen.type="button";
+    eigen.textContent="eigen…";
+    if(p.gevraagd&&!GEVRAAGD.some(g=>g.zin===p.gevraagd))eigen.className="actief";
+    eigen.onclick=async()=>{
+      const t=await vraagTekst("Wat er gevraagd wordt",
+        "In de derde persoon, zoals het in het verslag komt te staan — "+
+        "bijvoorbeeld “bezorgt het keuringsverslag”.", p.gevraagd||"");
+      if(t===null)return;
+      p.gevraagd=t.trim()||null;raakAan(p);bewaarStaat();keetToon();
+    };
+    gvl.appendChild(eigen);
+  }
   dknop("geen",null);
   dknop("+1 week",keetDatum(7));
   dknop("+2 weken",keetDatum(14));
@@ -3616,7 +4356,7 @@ function keetGa(stap){
     if(keet.alleen)melding("Niets meer dat werk vraagt");
     return;
   }
-  keet.i=n;keet.gebrek=null;keet.woordenOpen=null;keetToon();
+  keet.i=n;keet.gebrek=null;keet.onderdeel=null;keet.woordenOpen=null;keetToon();
 }
 
 /* Wat er in de keet nog te doen is: geen woorden, of niemand die er iets mee moet. Dat is de
@@ -3836,7 +4576,7 @@ async function knip(){
       tijd:new Date().toTimeString().slice(0,5),beelden:[{id,beeld:true,naam:""}],
       plek:wachtendePlek, onaf:true});
     await zetFoto(id,blob);
-    staat.punten.push(punt); bewaarStaat();
+    zorgVoorPuntnummer(punt); staat.punten.push(punt); bewaarStaat();
     snel.aantal++;
     document.getElementById("snel-teller").textContent=String(snel.aantal);
     const f=document.getElementById("snelflits");
@@ -3958,7 +4698,7 @@ async function bewaarPunt(veld){
     tijd:new Date().toTimeString().slice(0,5),beelden,
     plek:wachtendePlek});
   if(wachtendeFoto)await zetFoto(id,wachtendeFoto);
-  staat.punten.push(punt);bewaarStaat();
+  zorgVoorPuntnummer(punt);staat.punten.push(punt);bewaarStaat();
   el.value=""; if(el!==tekstEl)tekstEl.value="";
   wachtendeFoto=null;wachtendeBijlage=null;
   // De plek blijft staan. Je zegt één keer waar je bent en elk volgend punt landt daar, tot je
@@ -4071,7 +4811,8 @@ const pl={schaal:1,dx:0,dy:0,pin:null,wijzers:new Map(),start:null,knijp:null,nu
 function zetPlan(zone,data){return new Promise(res=>{
   if(!db)return res(false);
   const t=db.transaction("plannen","readwrite");t.objectStore("plannen").put(data,dk(zone));
-  t.oncomplete=()=>res(true);t.onerror=()=>res(false);
+  // Ook hier de vraag: wie met plannen werkt en nog geen foto nam, heeft evengoed iets te verliezen.
+  t.oncomplete=()=>{vraagBlijvend();res(true)};t.onerror=()=>res(false);
 });}
 function haalPlan(zone){return new Promise(res=>{
   if(!db)return res(null);
@@ -4757,7 +5498,6 @@ async function neemPuntenOver(doel){
   meldingMetActie(stuks(t.passen.length,"punt staat","punten staan")+" nu op "+doel.zone,
                   "ongedaan maken",draaiOverdrachtTerug);
   // Het terugdraaien gaat voor; pas als die melding is uitgewerkt bieden we aan op te ruimen.
-  setTimeout(ruimVersiesOp,6500);
   return true;
 }
 
@@ -4858,6 +5598,33 @@ async function vrijeVersienaam(zone){
   return naam;
 }
 
+/* ---- wat er met het vorige blad gebeurt ----
+   Eén regel draagt dit hele stuk: **een plan wordt nooit overschreven.** Wat er lag gaat opzij —
+   met punten of zonder.
+
+   Dat was niet zo, en het gat zat op twee plaatsen die allebei stil waren:
+
+   - een bestaand blad *zonder* punten werd zwijgend vervangen. Dat lijkt onschuldig, maar het
+     blad zelf is werk: een nummering die je op de desktop hebt aangebracht, een koppeling aan de
+     omtrek. Weg is weg, en er stond niets tegenover
+   - een **voorlopige GRB-omtrek** werd zonder omhaal vervangen, ook als er punten op stonden. Die
+     punten dragen procenten van de omtrek en bleven aan de zone hangen, dus ze wezen daarna een
+     andere plek aan op een ánder blad. Het commentaar zei dat ze "via Koppel" over te nemen
+     waren, maar koppelen kan alleen aan een blad dat er nog is — en dat was net gewist
+
+   Beide gevallen zijn nu hetzelfde geval: opzijzetten. Wat verschilt is wat de app zegt en of er
+   iets over te nemen valt.
+
+   `alleenOmtrek` is de keuze om het hele project op de GRB-omtrek te doen. Dan is die omtrek geen
+   noodoplossing meer maar hét plan, en is een echt plan dat later binnenkomt een versiewissel als
+   elke andere — met de vraag vooraf. */
+function planWissel(bestaand, aantalPunten, alleenOmtrek){
+  if(!bestaand) return {wat:"plaats", vraag:false, koppel:false, omtrek:false};
+  // een omtrek die plaatsmaakt voor het echte plan is verwacht: dat was zijn hele bedoeling
+  const omtrek = !!bestaand.voorlopig && !alleenOmtrek;
+  return {wat:"archiveer", omtrek, vraag:!omtrek, koppel:aantalPunten>0};
+}
+
 /* Het vorige blad opzijzetten, met de punten die erop staan. Die verhuizen mee: ze horen bij de
    tekening waarop ze geprikt zijn, niet bij de naam van de zone. */
 async function parkeerPlan(oud,naam,raakt){
@@ -4872,23 +5639,19 @@ async function parkeerPlan(oud,naam,raakt){
   return kopie;
 }
 
-/* Staat er niets meer op een geparkeerd blad, dan mag het weg. Als aanbod, niet als vraag — en
-   pas nadat de melding over het terugdraaien is uitgewerkt, want die gaat voor. */
-async function ruimVersiesOp(){
-  for(const z of await planZones()){
-    const d=await haalPlan(z);
-    if(!d||!d.versieVan)continue;
-    if(puntenOpZone(z).length)continue;
-    meldingMetActie("Op "+z+" staat niets meer","wegdoen",async()=>{
-      await wisPlan(z);
-      planLijst=await planZones();
-      if(plan&&plan.zone===z)await toonPlan(d.versieVan);
-      tekenZones();
-      melding(z+" weggedaan");
-    });
-    return;
-  }
-}
+/* Hier bood de app aan een leeg oud blad weg te doen zodra de punten eraf waren. Dat paste bij
+   het model waarin een oud blad een wachtkamer was: de punten eruit, en dan mocht het weg.
+
+   Het is er niet meer, en dat is een gevolg van de regel dat een plan nooit overschreven wordt.
+   Een blad is niet leeg als er geen punten op staan. Er staat een nummering op die iemand op een
+   groot scherm heeft aangebracht, en meestal een koppeling waarmee het weet waar het ligt — dat
+   is precies het werk dat PLANMETHODE.md naar de desktop verwijst omdat het een uur kost. Dat
+   aanbieden weg te gooien op het moment dat het er onbenut bij ligt, is het aanbieden op het
+   enige moment waarop niemand ziet wat hij kwijtraakt.
+
+   Een oud blad blijft dus staan. Het staat de zonebalk niet in de weg — het leeft in de
+   plannenlijst, niet in de zones — en het is de enige manier om er later alsnog punten van over
+   te nemen, want koppelen kan alleen aan een blad dat er nog is. */
 
 function planPasIn(){
   const c=document.getElementById("plancanvas");
@@ -5310,11 +6073,26 @@ async function toonPlan(zone){
   if(!kp.aan&&plan&&plan.georef)biedOvernameAan(plan);
 }
 
+/* Eén keer per zitting, en alleen als er werkelijk niets ligt. Mislukt het — geen plek, GRB
+   onbereikbaar, buiten Vlaanderen — dan blijft het bij die ene poging en staan de knoppen er
+   nog. Een aanbod dat zichzelf elke keer opnieuw opdringt is geen aanbod meer, en dertig
+   seconden wachten hoort niet twee keer te gebeuren omdat je het venster opnieuw opendeed. */
+let omtrekGeprobeerd=false;
+
 async function openPlan(gevraagd){
   const dlg=document.getElementById("plandlg");
   if(!dlg.open)dlg.showModal();
   pasVenstersAan();
   planLijst=await planZones();
+  /* Niets om te tonen, en je hebt net om een plan gevraagd — dan is de omtrek wat er te halen
+     valt. Dit is de plek waar het mag: je bent hier omdat je een plan wilde, dus dertig seconden
+     wachten is geen onderbreking maar het antwoord. Op de werf tijdens het vastleggen gebeurt
+     het nooit, want daar kom je hier niet. */
+  if(!planLijst.length&&!omtrekGeprobeerd){
+    omtrekGeprobeerd=true;
+    if(await haalOmtrek(null,false))return;   // haalOmtrek opent het plan zelf
+    planLijst=await planZones();
+  }
   // het gevraagde plan, anders dat van de huidige zone, anders het enige dat er is
   const zone=(gevraagd&&planLijst.includes(gevraagd))?gevraagd
             :planLijst.includes(staat.zone)?staat.zone:(planLijst[0]||staat.zone);
@@ -5708,33 +6486,32 @@ document.getElementById("planbestand").onchange=async e=>{
   if(!data||!data.zone){melding(kort+": geen zone in het bestand");return;}
   if(!data.beeld||!data.breedte){melding(kort+": geen tekening in het bestand");return;}
 
-  /* Ligt er al een plan voor deze zone met punten erop, dan is dit een nieuwe versie en geen
-     nieuw plan. Overschrijven zou die punten verzetten zonder dat iemand het ziet: ze dragen
-     procenten van een blad, en dit is een ander blad. */
+  /* Er ligt al iets op deze zone? Dan gaat dat opzij — nooit eronderuit. Zie planWissel. */
   const bestaand=await haalPlan(data.zone);
   let geparkeerd=null;
-  /* Een GRB-omtrek is een vervanger, geen versie om te bewaren: hij stond er tot je het echte
-     plan had, en dat heb je nu. Wegdoen zonder omhaal — de punten erop dragen wél procenten van
-     een ánder blad, dus die verhuizen zoals altijd via Koppel als je dat wil. */
-  if(bestaand&&bestaand.voorlopig){
-    melding("De GRB-omtrek maakt plaats voor "+data.zone);
-  }else if(bestaand){
-    const raakt=puntenOpZone(data.zone);
-    if(raakt.length){
-      const naam=await vrijeVersienaam(data.zone);
-      const hoeveel=stuks(raakt.length,"punt","punten");
-      if(!await vraagJa("Nieuwe versie van "+data.zone,[
-        "Op <b>"+veilig(data.zone)+"</b> ligt al een plan, met "+hoeveel+" erop.",
-        "Een punt onthoudt zijn plaats in procenten van het blad. Op een ándere tekening wijzen "+
-          "diezelfde procenten een andere plek aan, dus zomaar vervangen zou "+hoeveel+
-          " verzetten zonder dat iemand het ziet.",
-        "Daarom blijft het vorige blad staan als <b>"+veilig(naam)+"</b>, met de punten erop, tot "+
-          "je ze hebt overgezet. Dat gaat met <b>Koppel</b>: wijs twee keer dezelfde hoek aan op "+
-          "beide tekeningen, en de punten rekenen zichzelf om."
-      ],"Nieuwe versie")){melding(kort+" niet geladen — "+data.zone+" blijft zoals het was");return;}
-      geparkeerd=await parkeerPlan(bestaand,naam,raakt);
-      if(!geparkeerd)return;
+  const raakt=puntenOpZone(data.zone);
+  const wissel=planWissel(bestaand,raakt.length,alleenOmtrek());
+  if(wissel.wat==="archiveer"){
+    const naam=await vrijeVersienaam(data.zone);
+    const hoeveel=stuks(raakt.length,"punt","punten");
+    if(wissel.vraag){
+      const regels=[
+        "Op <b>"+veilig(data.zone)+"</b> ligt al een plan"+(raakt.length?", met "+hoeveel+" erop":"")+".",
+        "Een plan wordt hier nooit overschreven. Het vorige blad blijft staan als "+
+          "<b>"+veilig(naam)+"</b> — ook de nummering die je erop hebt gezet en de koppeling die "+
+          "het draagt."
+      ];
+      if(raakt.length)regels.push(
+        "De "+hoeveel+" gaan mee naar dat blad, want ze horen bij de tekening waarop je ze prikte. "+
+        "Overzetten doe je met <b>Koppel</b>: wijs twee keer dezelfde hoek aan op beide "+
+        "tekeningen, en ze rekenen zichzelf om.");
+      if(!await vraagJa("Nieuwe versie van "+data.zone,regels,"Nieuwe versie")){
+        melding(kort+" niet geladen — "+data.zone+" blijft zoals het was");return;}
     }
+    geparkeerd=await parkeerPlan(bestaand,naam,raakt);
+    if(!geparkeerd)return;
+    if(wissel.omtrek)
+      melding("De GRB-omtrek gaat opzij als "+naam+" — "+data.zone+" is nu het echte plan");
   }
 
   if(!await zetPlan(data.zone,data)){melding("Opslag weigert — ruimte vol of privémodus?");return;}
@@ -5932,10 +6709,19 @@ function maakTekst(){
     if(p.hoofdstuk) l+=" #"+p.hoofdstuk;
     if(p.aan) l+=" >"+p.aan;
     if(p.deadline) l+=" DL "+p.deadline;
+    /* Accolades omdat dit als enige veld spaties bevat: zonder afbakening kan het verwerkings-
+       script niet zien waar het ophoudt. */
+    if(p.gevraagd) l+=" VRAAG{"+String(p.gevraagd).replace(/[{}]/g,"")+"}";
     // Wanneer een stuk gevraagd is en wanneer het kwam, hoort in de notitie te staan: anders
     // valt achteraf niet na te rekenen hoelang erop gewacht is.
     // Een overgenomen punt is niet van vandaag. Zonder deze twee leest het in het verslag als
     // een verse vaststelling, en dan verdwijnt precies wat telt: dat er niet gezwegen is.
+    /* Het nummer van het punt, van het verslag waarin het ontstond. Het gaat mee zodat het
+       verwerkingsscript dezelfde referentie kan schrijven als de app — en zodat de notitieroute
+       via Apple Notes niet een verslag oplevert waarin de nummering ontbreekt die het andere
+       verslag wél draagt. Achteraan en tussen accolades, zoals VRAAG{}: het bevat een punt en
+       een streepje, en zonder afbakening is niet te zien waar het ophoudt. */
+    if(p.nummer) l+=" NR{"+String(p.nummer).replace(/[{}]/g,"")+"}";
     if(p.uit) l+=" SINDS "+sindsVan(p)+" x"+vermelding(p);
     if(p.doc&&p.doc.gevraagd) l+=" GEVRAAGD "+p.doc.gevraagd;
     if(p.doc&&p.doc.ontvangen) l+=" ONTVANGEN "+p.doc.ontvangen;
@@ -6102,15 +6888,25 @@ function verslagModel(){
 function afdrukMeta(p,m,opties){
   const o=opties||{};
   const uit=[];
+  /* Het nummer van het punt gaat voorop. Het cijfer in de marge (`_nr`) is de kruisverwijzing
+     binnen dít blad — naar de stip op het plan en de foto in de bijlage — en dat blijft zoals het
+     was. Dit is iets anders: de identiteit van het punt over verslagen heen. Nu het vorige
+     verslag de basis is, staan er in één verslag punten uit verschillende vergaderingen, en dan
+     moet af te lezen zijn welke waarvandaan komt zonder de historiek te openen. */
+  if(p.nummer)uit.push(isNieuwPunt(p)?p.nummer+" · nieuw":p.nummer);
   const plek=o.volledig?plekVol(p):plekTekst(p);
   if(plek)uit.push(plek);
   if(p.hoofdstuk&&!o.zonderHoofdstuk)uit.push(hoofdstukTekst(p.hoofdstuk));
   const s=SOORTEN.find(o=>o.sleutel===p.soort);
   if(s&&s.sleutel!=="gebrek")uit.push(s.kop.toLowerCase());
   if(p.spreker)uit.push("volgens "+naamVan(p.spreker));
-  // Binnen een blok dat al aan iemand gericht is, hoeft er niet in elke regel te staan aan wie.
-  if(p.aan&&!o.zonderAan)uit.push("→ "+naamVan(p.aan));
-  if(p.deadline)uit.push("tegen "+p.deadline);
+  /* Binnen een blok dat al aan iemand gericht is, hoeft er niet in elke regel te staan aan wie.
+     En draagt de gevolgzin het al, dan hoort het hier niet nog eens: twee keer hetzelfde zeggen
+     is twee keer kunnen tegenspreken, en dat geldt evengoed voor de app zelf. */
+  const heeftZin=!!gevolgVan(p);
+  if(p.aan&&!o.zonderAan&&!heeftZin)uit.push("→ "+naamVan(p.aan));
+  if(p.deadline&&!heeftZin)uit.push("tegen "+p.deadline);
+  if(p.gevraagd&&!heeftZin)uit.push(p.gevraagd);
   // Waar dit punt vandaan komt, en hoelang het al loopt. Zonder dat leest een overgenomen punt
   // als iets van vandaag, terwijl het juist zijn ouderdom is die telt.
   if(p.uit)uit.push("loopt sinds "+datumKort(p.uit.eerste)+" · "+p.uit.ref);
@@ -6133,6 +6929,14 @@ function afdrukPunt(p,m,opties){
   if(p.urgent)kop.appendChild(maakEl("span","af-urgent","URGENT"));
   if(p.verbod)kop.appendChild(maakEl("span","af-verbod","VERBOD"));
   kop.appendChild(document.createTextNode(p.tekst||"[geen notitie — "+(p.tijd||"")+"]"));
+  /* De gevolgzin loopt door achter de vaststelling in plaats van als losse brokken eronder te
+     staan. Wat er staat is niet nieuw — het stond al in het spoor — maar het leest als een zin
+     en niet als een formulier, en dat is wat een verslag hoort te zijn. */
+  const gz=gevolgVan(p);
+  if(gz){
+    const punt=/[.!?]$/.test((p.tekst||"").trim()) ? " " : ". ";
+    kop.appendChild(maakEl("span","af-gevolg",punt+gz));
+  }
   body.appendChild(kop);
   const meta=afdrukMeta(p,m,o);
   if(meta)body.appendChild(maakEl("p","af-meta",meta));
@@ -6424,10 +7228,13 @@ async function sluitVergadering(){
     "De vergadering van <b>"+veilig(datumVol(staat.datum))+"</b> wordt afgesloten en gaat naar "+
       "het archief: "+stuks(o.punten,"punt","punten")+
       (o.beelden?(", "+stuks(o.beelden,"beeld","beelden")):"")+".",
-    "<b>"+stuks(o.open,"punt blijft","punten blijven")+" openstaan.</b> Die komen in het verslag "+
-      "van de volgende vergadering terug onder <i>Nog steeds open</i>, met de ouderdom erbij — "+
-      "en op de kaart als amberkleurige stip. Wat je hebt afgevinkt komt niet terug.",
-    "Daarna begin je aan een verse vergadering. Het archief blijft leesbaar, en een vergadering "+
+    "<b>"+stuks(o.open,"punt blijft","punten blijven")+" openstaan.</b> Het volgende verslag "+
+      "vertrekt van dit verslag: alles wat hier staat gaat mee, met de ouderdom erbij — ook wat "+
+      "je hebt afgevinkt, want dát het opgelost is en wanneer, hoort in het verslag te blijven "+
+      "staan. Afgehandelde punten staan in geen enkele afvinklijst.",
+    "Wil je een punt niet meer zien, verwijder het dan — dat is de enige manier waarop het uit "+
+      "de reeks verdwijnt, en ze is aan jou.",
+    "Daarna begin je aan een vers verslag. Het archief blijft leesbaar, en een vergadering "+
       "die je per ongeluk afsluit kun je heropenen.",
   ];
   if(o.zonderWoorden)
@@ -6601,7 +7408,7 @@ async function nieuwFaseverslag(code){
   zetFaseLijsten();                  // andere fase, andere soorten en andere gevolgtrekkingen
   merkVergadering();
   await tekenLijst();
-  await vraagOvernemen(code);
+  await neemVorigOver(code);
   const t=await vraagTekst("Titel van "+verslagRef(staat),
     "Een korte titel bij de referentie — bijvoorbeeld \"Herwerkt voorontwerp na overleg\".\n"+
     "Leeg laten mag; de referentie staat er hoe dan ook.","");
@@ -6620,34 +7427,62 @@ function openInFase(code){
   return uit.sort((a,b)=>String(sindsVan(a.p)).localeCompare(String(sindsVan(b.p))));
 }
 
-/* De keuze staat bij het begin van een verslag, want dat is het moment waarop ze telt. Ze is
-   nooit dringend: kies je leeg, dan blijven de openstaande punten gewoon staan waar ze staan en
-   komen ze nog altijd terug onder "Nog steeds open". Overnemen is dus een gemak, geen redding —
-   dezelfde regel als bij het nummervoorstel en het afsluiten. */
-async function vraagOvernemen(code){
-  const open=openInFase(code);
-  if(!open.length)return false;
-  const keuze=await vraagKeuze("Openstaande punten",
-    [stuks(open.length,"punt staat","punten staan")+" nog open in "+faseNaam(code)+
-     ", uit "+stuks(new Set(open.map(o=>verslagSleutel(o.v))).size,"eerder verslag","eerdere verslagen")+".",
-     "<b>Overnemen</b> zet ze in dit verslag zodat je ze hier kunt afwerken. Het oorspronkelijke "+
-     "punt blijft staan waar het stond en telt niet dubbel; de ouderdom loopt door vanaf de "+
-     "eerste melding.",
-     "<b>Leeg beginnen</b> laat ze staan waar ze staan. Ze komen nog altijd terug onder "+
-     "<i>Nog steeds open</i> — je kunt ze dan alleen hier niet bewerken."],
-    [{sleutel:"over",naam:"Overnemen ("+open.length+")"},
-     {sleutel:"leeg",naam:"Leeg beginnen"}]);
-  if(keuze!=="over")return false;
-  const geraakt=new Map();
-  open.forEach(({p,v})=>{
-    staat.punten.push(neemOver(p,v));
-    geraakt.set(verslagSleutel(v),v);
-  });
-  for(const v of geraakt.values()) await zetDag(verslagSleutel(v),v);
+/* ---- het vorige verslag is de basis ----
+   Hier stond een vraag: overnemen of leeg beginnen, en alleen wat nog openstond. Dat is
+   omgedraaid, en de reden is hoe een werfverslag werkelijk werkt.
+
+   Een werfverslag is geen verslag van één vergadering maar een doorlopend stuk. Het draagt alles
+   wat er loopt én alles wat er is afgehandeld, vergadering na vergadering, tot iemand uitdrukkelijk
+   zegt dat een punt eraf mag. Dat is niet omslachtig maar de hele bewijskracht: wie een punt één
+   keer noteert en daarna zwijgt, verliest het — de tegenpartij voert dan aan dat het opgelost was
+   of nooit meer ter sprake kwam. Hetzelfde argument dat onder "Nog steeds open" staat, maar dan
+   voor het hele verslag in plaats van voor één blok.
+
+   Dus: het vorige verslag komt integraal mee. Drie regels houden dat eerlijk.
+
+   1. **Alles gaat mee, ook wat af is.** Een afgehandeld punt reist mee als geschiedenis: het houdt
+      zijn status en staat in geen enkele afvinklijst. Wie het weg wil, haalt het weg — en dán pas
+      is het weg, ook in het volgende verslag.
+   2. **Wat je uitdrukkelijk wist, komt niet terug.** Wissen is de enige manier waarop een punt uit
+      de reeks verdwijnt, en het is een handeling van jou. De app doet het nooit uit zichzelf.
+   3. **Wat nieuw is, is te zien.** Een punt draagt het nummer van het verslag waarin het ontstond,
+      dus wat vandaag bijkomt draagt de referentie van vandaag. Geen aparte vlag: het staat in het
+      nummer.
+
+   Alleen binnen dezelfde fase, om dezelfde reden als voorheen: een openstaande vraag uit het
+   voorontwerp hoort niet in een aanbestedingsverslag. Dat zijn twee gesprekken met twee andere
+   partijen. */
+function vorigVerslag(code){
+  const mijne=verslagSleutel(staat);
+  const zelfde=archief.filter(v=>faseVan(v)===code&&verslagSleutel(v)!==mijne);
+  if(!zelfde.length)return null;
+  // het hoogste volgnummer is het laatste; bij gelijk spel de jongste datum
+  return zelfde.slice().sort((a,b)=>
+    (+(a.nr||0))-(+(b.nr||0)) || String(a.datum||"").localeCompare(String(b.datum||""))
+  ).pop();
+}
+
+/* Wat er van dat verslag meegaat. Punten die al doorgeschoven zijn niet: die zijn elders al
+   voortgezet, en twee keer overnemen zou hetzelfde punt verdubbelen. */
+function basisPunten(code){
+  const v=vorigVerslag(code);
+  if(!v)return [];
+  return (v.punten||[]).filter(p=>!isDoorgeschoven(p)).map(p=>({p,v}));
+}
+
+async function neemVorigOver(code){
+  const mee=basisPunten(code);
+  if(!mee.length)return false;
+  const bron=mee[0].v;
+  mee.forEach(({p,v})=>staat.punten.push(neemOver(p,v)));
+  await zetDag(verslagSleutel(bron),bron);
   archief=await haalDagen();
   bewaarStaat();
   await tekenLijst();
-  melding(stuks(open.length,"punt overgenomen","punten overgenomen"));
+  const loopt=mee.filter(({p})=>isOpen(p)).length;
+  const af=mee.length-loopt;
+  melding(verslagRef(bron)+" als basis — "+stuks(loopt,"punt loopt","punten lopen")+
+          (af?", "+af+" afgehandeld":"")); 
   return true;
 }
 
@@ -6712,13 +7547,28 @@ function vraagWelkeWerf(lijst,hier,meerdere){
 
 /* De omtrek halen en als plan wegzetten. Alles wat mis kan gaan zegt wát er misging: op een werf
    wil je dat kunnen lezen zonder een computer te openen. */
+/* De omtrek halen bij het opstarten, als er nog geen plan is. Apart van haalOmtrek omdat het
+   hier niet mag blokkeren en niet mag schreeuwen: mislukt het — geen toestemming voor de plek,
+   GRB onbereikbaar, buiten Vlaanderen — dan hoort de app gewoon open te staan en zegt ze het
+   in een melding. Een werf zonder plan is geen fout. */
+async function haalOmtrekBijStart(){
+  if(omtrekGeprobeerd)return false;
+  omtrekGeprobeerd=true;
+  const gelukt=await haalOmtrek(null,false);
+  if(!gelukt)melding("Nog geen plan — laad er een of haal de omtrek via 📍 Plan");
+  return gelukt;
+}
+
 let omtrekBezig=false;
 async function haalOmtrek(zone,stil){
   if(omtrekBezig)return false;
-  if(faseAard(faseVan(staat))!=="werf"){
-    if(!stil)melding("Een omtrek hoort bij een werffase");
-    return false;
-  }
+  /* Hier stond een fasecontrole: "een omtrek hoort bij een werffase". Dat klopte niet met hoe een
+     dossier werkelijk begint. Een omtrek is het pérceel, niet een verdieping — en juist in een
+     verkennend gesprek of een voorstudie is hij het enige waarop je kunt wijzen. Dat is een
+     overlegfase, dus precies daar zei de app nee.
+
+     De omtrek hangt daarom niet aan de fase maar aan de plannenstand: zolang er geen plan ligt,
+     mag hij. Wie in een latere fase begint, krijgt hem daar even goed. */
   omtrekBezig=true;
   try{
     const hier=await haalPlek(stil);
@@ -7559,6 +8409,7 @@ document.getElementById("bezetting").value=staat.bezetting||"";
 laadContacten();
 laadHoofdstukken();
 laadProfiel();          // zet ROLLEN en SOORTEN, en laadt de woorden van dít profiel
+laadOnderdelen();       // die staan los van het profiel: een dorpel is een dorpel
 zetFaseLijsten();       // en de fase kiest welke van beide lijsten het worden
 merkProfiel();
 merkProject();
@@ -7658,7 +8509,17 @@ opendb().then(async d=>{
       try{ await herkenWerf(); }catch(e){}
       planLijst=await planZones();          // een andere werf draagt andere plannen
       tekenZones();
-      if(!planLijst.length)return;
+      /* Geen enkel plan op deze werf? Dan is er niets om te openen, en is de omtrek wat er te
+         halen valt. Hier, op het beginscherm, en niet pas als je de kaart opent: je hebt zonet
+         gezegd waar je bent — herkenWerf() staat één regel hoger — en dat is precies het gegeven
+         dat de omtrek nodig heeft. Ernaar vragen om het even later opnieuw te vragen zou de
+         gebruiker twee keer laten wachten op dezelfde meting.
+
+         Het duurt een halve minuut en dat is niet niks; PLANMETHODE.md waarschuwt terecht tegen
+         een stop op het moment dat je binnenkomt. Twee dingen houden dat draaglijk: het gebeurt
+         alleen als er wérkelijk niets ligt — na één keer heeft deze werf een plan — en het
+         blokkeert niets. De app staat intussen klaar; je kunt typen, foto's nemen en bewaren. */
+      if(!planLijst.length){ haalOmtrekBijStart(); return; }
       const start=planLijst.includes(staat.zone)?staat.zone:planLijst[0];
       openPlan(start);
     },300);
@@ -7666,9 +8527,20 @@ opendb().then(async d=>{
   // Achteraan, en maar één keer: eerst mag je werken. Maar niet zwijgen, want een toestel dat
   // stukgaat vóór de eerste back-up neemt het hele dossier mee.
   merkBackupknop();
-  if(backupAchterstand())
-    setTimeout(()=>meldingMetActie("Nog geen back-up van wat hier staat","nu bewaren",
-      ()=>document.getElementById("backup").click()),2500);
+  // Kijken kost niets en vraagt niets: als de browser blijvende opslag uit zichzelf toekende,
+  // klopt de regel in het beheervenster meteen.
+  meetBlijvend();
+  if(backupAchterstand()){
+    /* De tweede plek waar de vraag ergens over gaat, voor wie nog geen beeld of plan maakte.
+       Stil gesteld: het antwoord gaat mee in de herinnering hieronder in plaats van er een
+       eigen melding naast te zetten. Want het is dezelfde boodschap — dit staat op één toestel,
+       en er ligt geen kopie — alleen een graad erger als het toestel ook nog mag opruimen. */
+    const stand=await vraagBlijvend(true);
+    setTimeout(()=>meldingMetActie(
+      stand==="ja" ? "Nog geen back-up van wat hier staat"
+                   : "Nog geen back-up — en dit toestel houdt de opslag niet vast",
+      "nu bewaren", ()=>document.getElementById("backup").click()),2500);
+  }
 });
 </script>
 
