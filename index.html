@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-PkQVbsbY63M2L0oBrca1Fp/Ej35jbZQcbKp8w2ZYXrk=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-PdlO065j1QPDXpWuIZBj6CVo7RV/Wg6QRhOA9TIR/5I='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-4zJJ6lSMHVXO+eKq1IU0JZGY6g6KLEKACHtTmlumnIs=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-/pDbXwGW1fdGmgb/sduNelrDsv46KA0SqEdsi0JJg6I='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -71,7 +71,7 @@
        een meer die bij het afdrukken middengrijs wordt. Zie de kop "de AI-modus" in het script. */
     --ai:#1b4f8a;
     --radius:10px;
-    /* DE TEGEL. Boris, 28/09/2026, met twee voorbeelden ernaast: "vierkanter, met flauwe
+    /* DE TEGEL. De opdrachtgever, 28/09/2026, met twee voorbeelden ernaast: "vierkanter, met flauwe
        afgeronde hoeken, dichter opeen". Eén maat voor de zonecellen en de cellen van de kop,
        zodat de twee rijen bovenaan dezelfde vorm dragen. 8 px op een cel van 33,5 px hoog:
        de hoek is rond, de cel is een vierkant en geen pil. */
@@ -88,7 +88,7 @@
        zoeken. De camera houdt zijn zwart: een zoeker is geen blad, daar is het beeld het
        onderwerp en dringt elke tint zich op. */
     --vel:#ffffff; --vel-chroom:#f2f2f4; --vel-chroom-op:#e6e6ea;
-    /* HET TAKENBLAD IS LICHT GEEL. Boris, 01/10/2026, met een schermvoorbeeld van het
+    /* HET TAKENBLAD IS LICHT GEEL. De opdrachtgever, 01/10/2026, met een schermvoorbeeld van het
        planvenster met de pen open: "om aan te duiden dat we in een takenblad zitten wil ik heel
        licht gele calque overleggen."
 
@@ -146,7 +146,7 @@
   }
   */
   /* ---- EEN KLEUR PER VAK ----
-     Boris, 28/09/2026: "geef wat kleur. Ik vind de deelschermen niet duidelijk. haal hier de
+     de opdrachtgever, 28/09/2026: "geef wat kleur. Ik vind de deelschermen niet duidelijk. haal hier de
      kleuren. Zet er verloop in." -- met een verlopenpalet erbij.
 
      Overgenomen, met hun naam erbij zodat na te gaan is waar ze vandaan komen:
@@ -163,7 +163,7 @@
      Elk verloop heeft een donkere tegenhanger: dezelfde tint, veel dieper. Een pastel op een
      donker scherm is geen pastel maar een lamp. */
   :root{
-    /* DE GROND VAN HET UITSCHUIFBLAD. Boris, 28/09/2026: "geef de uitschuifschermen een
+    /* DE GROND VAN HET UITSCHUIFBLAD. De opdrachtgever, 28/09/2026: "geef de uitschuifschermen een
        lichtgrijze kleur", met een beeld erbij waarin witte kaartjes op een lichtgrijze grond
        liggen. Precies wat dit blad nodig had: de rijen zijn wit, dus op een wit blad zweven ze.
        Op grijs worden het kaartjes.
@@ -263,7 +263,7 @@
      gelijkvloers"), en daarmee stond de laag op een telefoon nergens meer blijvend in beeld:
      alleen in de titel van de zonecel (een muis), in de uitrol na vasthouden, en in een
      melding die verdwijnt. Op een blad met afbraak én nieuw is dat te weinig -- een punt op de
-     verkeerde toestand geprikt is in een geschil geen gegeven maar een bewering. Boris,
+     verkeerde toestand geprikt is in een geschil geen gegeven maar een bewering. De opdrachtgever,
      30/09/2026, uit drie voorstellen: de hoek van de kaart. Dus het woord van de toestand,
      linksboven op het plan zelf, alleen als het blad meer dan één laag heeft; zonder lagen
      staat er niets. Dezelfde vorm als de oud-knop rechtsboven, want het is hetzelfde soort
@@ -272,13 +272,13 @@
      linkerrand, op de hoogte van de oud-knop. */
   .kaartknop.kaartlaag{right:auto;left:10px}
   /* DE TERUGKNOP NA EEN SPRONG. Tik je in de lijst een punt van een ander blad aan, dan springt de
-     kaart naar dat blad; deze knop brengt je terug. Rechtsboven, in gele arcering (Boris,
+     kaart naar dat blad; deze knop brengt je terug. Rechtsboven, in gele arcering (de opdrachtgever,
      05/10/2026): hij moet opvallen als iets wat er tijdelijk staat, en mag niet verward worden met
      de gewone schakelaars. De oud-knop schuift een rij naar beneden zolang hij er staat. */
   .kaartknop.kaartterug{background:repeating-linear-gradient(135deg,#ffd84a 0 7px,#f4c400 7px 14px);
     border-color:#8a6d00;color:#1b1500}
   #vulling.met-terug #kaartoud{top:50px}
-  /* Boris, 05/10/2026, vraag 6: "het woord blijft zolang er kaart te zien is." De knoppen op de kaart
+  /* De opdrachtgever, 05/10/2026, vraag 6: "het woord blijft zolang er kaart te zien is." De knoppen op de kaart
      (laag, oud, terug) verdwijnen dus niet meer zodra het paneel opengaat, maar pas als het paneel
      de kaart werkelijk bedekt: zetPaneel zet data-kaartvrij op "nee" als er minder dan
      KAARTKNOPRUIMTE px kaart overblijft. Eén tik op de kaart die er nog is, sluit het paneel. */
@@ -302,7 +302,7 @@
   /* De kop draagt sinds 28/09/2026 geen enkele lijn meer: de cellen zijn tegels, met dezelfde
      vorm en dezelfde tussenruimte als de zonecellen eronder. Twee rijen tegels, en de ruimte
      ertussen zegt wat de haarlijnen zeiden. De naam van de werf is geen tegel maar de titel:
-     in Boris' voorbeelden staat de titel los en zijn alleen de gegevens en de knoppen tegels. */
+     in de opdrachtgever zijn voorbeelden staat de titel los en zijn alleen de gegevens en de knoppen tegels. */
   header{
     background:var(--t1); border-bottom:0;
     padding:var(--safe-t) 0 0; display:block; position:sticky; top:0; z-index:6;
@@ -316,7 +316,7 @@
   .kraster{display:flex;align-items:stretch;gap:4px;padding:7px var(--marge) 0}
   .kmain{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
   /* ---- de kop in kaartweergave ----
-     Boris, 23/09/2026, met Komoot ernaast: "ook menu bovenaan mag vereenvoudigd. niet alle
+     de opdrachtgever, 23/09/2026, met Komoot ernaast: "ook menu bovenaan mag vereenvoudigd. niet alle
      gegevens zijn hier nog nodig in de kaartweergave."
 
      Waar in een kaartapp de kaart van rand tot rand loopt, draagt dit scherm twee rijen cellen
@@ -343,7 +343,7 @@
   .wrap[data-paneel="dicht"] header{background:rgba(255,255,255,.80);backdrop-filter:blur(10px);
     -webkit-backdrop-filter:blur(10px)}
   /* DE FASESTROOK IS WEG. Ze stond verticaal rechts (UITVOERING), en de vraag of ze in
-     kaartweergave weg mocht stond twee sessies open. Boris, 28/09/2026: "doe rechtsboven
+     kaartweergave weg mocht stond twee sessies open. De opdrachtgever, 28/09/2026: "doe rechtsboven
      uitvoering weg" -- weg dus, in beide standen. De fase staat al in het verslagnummer
      (UIT-01) en is aan te passen in de hoofding-vraag onder Fase. Het element blijft in de
      opbouw staan: merkFase schrijft er de naam in, de grendel van de hoofding hangt eraan,
@@ -481,7 +481,7 @@
   /* De zones zijn de laatste rij van datzelfde raster: cellen, niet pillen. Een pil is een
      ding dat zweeft; een cel hoort bij de kop erboven. */
   /* ---- DE TEKENINGENSET ALS PILLEN ----
-     Boris, 28/09/2026, met een beeld erbij: "kan het menu bovenaan met de plannen ook afgerond
+     de opdrachtgever, 28/09/2026, met een beeld erbij: "kan het menu bovenaan met de plannen ook afgerond
      worden?"
 
      Wat daarvoor weg moest: de haarlijnen tussen de cellen en de lijn onder de balk. Die deden
@@ -493,7 +493,7 @@
     position:sticky;top:var(--kop,52px);z-index:5;-webkit-overflow-scrolling:touch}
   .zones::-webkit-scrollbar{display:none}
   /* Op 28/09/2026 stond de balk een halve dag als staande tabs aan de rechterrand, over
-     elkaar en met alleen het bladnummer, naar een voorbeeld van Boris. Gemeten: negen bladen
+     elkaar en met alleen het bladnummer, naar een voorbeeld van de opdrachtgever. Gemeten: negen bladen
      voluit waren 1001 px op een scherm van 812, met alleen het nummer 466. Op 30/09: "maak de
      planfiches toch horizontaal en bovenaan" -- dus liggend, hier, met de namen voluit. */
   /* ---- er staat meer dan er past ----
@@ -518,7 +518,7 @@
      "gevel noord" las als "ge▮noord". Dus: de pijl wordt zelf rond en krijgt een veeg voor zich
      uit die de pil eronder laat uitdoven in plaats van hem af te snijden. Uitdoven zegt
      hetzelfde als afsnijden -- er komt nog iets -- en het zegt het zonder een woord te breken. */
-  /* Boris, 30/09/2026 (avond): "bovenaan bij de plankeuze: maak dezelfde pijlen zoals bij de
+  /* De opdrachtgever, 30/09/2026 (avond): "bovenaan bij de plankeuze: maak dezelfde pijlen zoals bij de
      opmerkingen." Dus de pijl in een bol van het blad (.fiche-rij-pijl): 26 px, een haarlijn in
      inkt, de pijl erin, niets gevuld -- in plaats van het zwarte vakje met de witte pijl van
      hierboven. De grond is t1, zodat de cel eronder niet door de bol heen leest; de veeg ervoor
@@ -542,7 +542,7 @@
   /* De veeg. Ze ligt achter de pijl en reikt verder dan de pijl zelf, zodat de pil eronder
      geleidelijk wegvalt. `pointer-events:none`, want ze is een gordijn en geen knop.
 
-     Boris, 30/09/2026 (avond): "geef bovenaan bij de plannenkeuze meer whitespace tussen pijl en
+     De opdrachtgever, 30/09/2026 (avond): "geef bovenaan bij de plannenkeuze meer whitespace tussen pijl en
      tekst." De veeg ís die whitespace -- ze dooft de naam uit vóór hij de pijl raakt -- en ze was
      te kort: de vaste grond begon 7 px links van de pijl, en op 375 px stond "gelijkvloers" daar
      tegenaan. Nu 24 px vrije grond aan de linkerkant, en een uitdoving van 70 px daarvóór.
@@ -598,7 +598,7 @@
     padding:11px 15px;cursor:pointer;transition:background .12s,color .12s;
   }
   .zone-btn{position:relative;overflow:hidden}
-  /* DE HALS. Boris, 28/09/2026, met een derde voorbeeld ernaast: "laat de pillen wat mergen,
+  /* DE HALS. De opdrachtgever, 28/09/2026, met een derde voorbeeld ernaast: "laat de pillen wat mergen,
      elkaar raken". Tussen elke twee tegels staat een stuk van 6 px in dezelfde kleur, met
      boven en onder een holle boog eruit: zo lopen de twee tegels in elkaar over als twee
      druppels die elkaar raken, in plaats van naast elkaar te staan met een spleet.
@@ -617,7 +617,7 @@
     background:
       radial-gradient(circle at 3px -3.62px,transparent 8px,var(--t3) 8.4px) top/100% 50% no-repeat,
       radial-gradient(circle at 3px calc(100% + 3.62px),transparent 8px,var(--t3) 8.4px) bottom/100% 50% no-repeat}
-  /* DE KOP EN DE ZONEBALK IN DE LETTER VAN HET BLAD. Boris, 30/09/2026: "geef nu het menu
+  /* DE KOP EN DE ZONEBALK IN DE LETTER VAN HET BLAD. De opdrachtgever, 30/09/2026: "geef nu het menu
      helemaal boven met de plannen en de datum en het nummer en het project hetzelfde
      lettertype en lijntjes als van het opmerkingenmenu." Dus geen tegels en geen halzen meer
      maar de letter van de rijen (systeemletter, --tm, gewoon gewicht), staande haarlijnen
@@ -644,14 +644,14 @@
   /* En niets vet: gemeten op 30/09 stond het verslagnummer op 700 (anderedag) en elke zonecel op
      650. "Geen vette lettertypes" geldt ook hier; de aangeklikte zone zegt het met zwart. */
   .kcel,.kcel.anderedag,#projectknop,.zone-btn,.zone-btn[aria-pressed="true"]{font-weight:400}
-  /* Ook met-plan: het gewicht zei dat er een plan onder de zone ligt. Boris, 05/10/2026, vraag 8:
+  /* Ook met-plan: het gewicht zei dat er een plan onder de zone ligt. De opdrachtgever, 05/10/2026, vraag 8:
      "dunne onderstreping." Dus geen vet en geen plaatje: een haarlijn onder het woord, in de
      kleur van het woord — ze blijft zo leesbaar in de zwarte, centrale cel (wit op zwart). */
   .zone-btn.met-plan{font-weight:400;text-decoration:underline;text-decoration-thickness:1px;
     text-underline-offset:4px}
   /* DE LAAGRING IS WEG. Tot 28/09/2026 droeg het actieve blad de kleur van zijn laag: eerst
      als balk onderaan, sinds de pillen als ring rondom, met een haarlijn erbinnen omdat de
-     twee lichtste laagkleuren op wit geen ring gaven (gemeten: nieuw 2,1, opmeting 1,2). Boris,
+     twee lichtste laagkleuren op wit geen ring gaven (gemeten: nieuw 2,1, opmeting 1,2). De opdrachtgever,
      diezelfde dag, met de balk voor zich: "geen kader meer rond gelijkvloers, kijk naar
      kelder, zo overal." Dus: de aangeklikte cel is overal hetzelfde zwarte vlak, met of
      zonder lagen. Wat de laag was, zegt de titel van de cel nog (vasthouden toont de andere
@@ -690,7 +690,7 @@
   #faserij button.was{color:rgba(17,20,23,.55)}
   #faserij button.komt{color:rgba(17,20,23,.32)}
   #faserij .fnaam{padding-left:9px;color:var(--ink-faint)}
-  /* Boris, 28/09/2026: "hetgeen aangeklikt is, hier gelijkvloers, is zwart met witte tekst."
+  /* De opdrachtgever, 28/09/2026: "hetgeen aangeklikt is, hier gelijkvloers, is zwart met witte tekst."
      Niet meer --gekozen, de grijstrap uit de ladder, maar inkt op grond: dezelfde vorm als het
      kruisje op het blad en de cameraknop in de regel. Eén zwart vlak per rij, en dat is
      waar je staat. */
@@ -948,7 +948,7 @@
   textarea::placeholder{color:var(--ink-faint)}
   .onaf{font-size:var(--tk);font-weight:650;color:var(--warn);border:1px solid var(--warn);
     border-radius:5px;padding:1px 5px}
-  /* Het teken van de AI-modus: het enige gekleurde merk in de lijst, en juist daarom. Boris,
+  /* Het teken van de AI-modus: het enige gekleurde merk in de lijst, en juist daarom. De opdrachtgever,
      30/09/2026: "een gekleurd icoontje bij de opmerking, of zwart/wit". Dezelfde vorm als
      "onaf", in de kleur --ai. Het hangt aan p.via, niet aan de schakelaar. */
   .viaai{font-size:var(--tk);font-weight:650;color:var(--ai);border:1px solid var(--ai);
@@ -983,7 +983,7 @@
   .mteken{font-size:var(--tg);line-height:1;font-weight:300}
   .mkn.uit{color:var(--ink-faint)}
   /* ---- VIER INGANGEN OP EEN TELEFOON, VIJF OP EEN iPAD ----
-     Boris, 30/09/2026 (avond), over de vijfde: "vijf mag, maar hoeft niet op het smalle scherm,
+     de opdrachtgever, 30/09/2026 (avond), over de vijfde: "vijf mag, maar hoeft niet op het smalle scherm,
      wel op de iPad en in de werfkeet waar men iPad of MacBook gebruikt." Dat is de wet van werf,
      keet en kantoor, in de balk zelf: de Keet is het scherm waar een punt af wordt, en dat doe
      je aan een tafel op een groot scherm. Op een telefoon blijft ze bereikbaar zoals ze altijd
@@ -1037,7 +1037,7 @@
   /* ---- de fiche na go, en de zoeker ---- */
   #zoekdlg{width:min(94vw,520px);max-width:94vw}
   /* ---- de fiche als blad onderaan ----
-     Boris, 23/09/2026: "ik zet een speld en dan verschijnt er een scherm, maar ik zie de map
+     de opdrachtgever, 23/09/2026: "ik zet een speld en dan verschijnt er een scherm, maar ik zie de map
      niet meer. Eigenlijk wil ik een speld plaatsen en dan onderaan het popupscherm zien."
 
      Dat is niet alleen mooier, het is het verschil tussen kijken en gokken: je legt een
@@ -1080,7 +1080,7 @@
     border-radius:16px 16px 0 0;
     display:flex;flex-direction:column;
     background:none}
-  /* HET HAPJE. Boris, 28/09/2026: "haal een hapje uit de kaart waarin dan de X wordt geplaatst"
+  /* HET HAPJE. De opdrachtgever, 28/09/2026: "haal een hapje uit de kaart waarin dan de X wordt geplaatst"
      en meteen daarna "heel de rechterbovenhoek mag eruit". De grond van het blad -- kleur,
      glas, schaduw -- staat daarom op een ::before, en dat ::before draagt een masker met een
      rond gat in de rechterbovenhoek. Het kruisje ligt in dat gat en steekt 6 px boven het
@@ -1090,7 +1090,7 @@
      De maten hangen aan elkaar: het kruisje is 36 px, staat 4 px van de rechterrand en 6 px
      boven het blad, dus zijn middelpunt ligt op 22 px van rechts en 12 px van boven. De hap
      heeft straal 30: 18 voor het kruisje en 12 lucht eromheen. Eerst was dat 5 lucht, en
-     Boris: "de hap eruit mag echt duidelijk zoals in voorbeeld" -- op glas van 44 % boven wit
+     de opdrachtgever: "de hap eruit mag echt duidelijk zoals in voorbeeld" -- op glas van 44 % boven wit
      papier is een gat bijna dezelfde tint als het blad, dus alleen een ruime hap is te zien.
      Zo'n hap reikt tot voorbij de hoek, en daarmee is de ronding van 16 px in die hoek weg.
 
@@ -1113,7 +1113,7 @@
     mask-position:left top,right bottom,right top;
     -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
   /* GLAS, MAAR ALLEEN ALS ER VERVAAGD KAN WORDEN.
-     Boris, 28/09/2026: "en lichtjes transparant (glass)". Het plan ligt eronder en mag
+     De opdrachtgever, 28/09/2026: "en lichtjes transparant (glass)". Het plan ligt eronder en mag
      doorschemeren -- dat is wat een blad over een kaart hoort te doen.
 
      Maar doorschijnend zónder vervaging is geen glas: dan staan de lijnen van een
@@ -1122,7 +1122,7 @@
      geen gebrek maar de terugval, en ze is de veilige kant. */
   @supports ((backdrop-filter:blur(2px)) or (-webkit-backdrop-filter:blur(2px))){
     /* Er stond 26 px vervaging, met als reden "anders leest een open glas als een vuile ruit".
-       Boris, 28/09/2026, op het blad kijkend: "maak je het grijze uitschuifscherm glass?" --
+       De opdrachtgever, 28/09/2026, op het blad kijkend: "maak je het grijze uitschuifscherm glass?" --
        het wás glas, maar 26 px vervaging lost een lijntekening volledig op, en een glas
        waar niets doorheen komt is een grijs vlak. Gemeten in de browser boven het demoplan:
        op 26 px geen enkele lijn te zien, op 10 px nog niet, op 6 px schemeren de muren door.
@@ -1155,7 +1155,7 @@
   /* DE GREEP IS DE HELE KOPRIJ.
      Tot 28/09/2026 stond hier een streepje van 38 x 4 px in een raakvlak van 26 px, de vorm
      die elke kaartapp gebruikt, als echt element en geen `::before` omdat aan een
-     schijnelement geen luisteraar hangt. Boris, diezelfde dag, in drie stappen: "de ruimte
+     schijnelement geen luisteraar hangt. De opdrachtgever, diezelfde dag, in drie stappen: "de ruimte
      boven de foto/scan/tekenen moet compacter", "zet de x centraal en bovenaan zoals in het
      voorbeeld", en "als titel is enkel het nummer van het punt genoeg". Gemeten op 375 px
      stond er 101 px van de bovenrand van het blad tot de vakken: greep 26, kop 61, body 14.
@@ -1178,10 +1178,10 @@
   #fichedlg .dlg-body{flex:1;min-height:0;padding-top:6px}
   /* Hier stond tot 30/09/2026 de regel die het menu verborg zolang het blad open was: "de onderbalk hoeft er
      niet bij zolang het blad staat, twee rijen knoppen onder elkaar is er één te veel."
-     Boris, 30/09: "onderaan moet altijd het hoofdmenu zichtbaar blijven." Dus blijft hij; het
+     de opdrachtgever, 30/09: "onderaan moet altijd het hoofdmenu zichtbaar blijven." Dus blijft hij; het
      blad staat erboven in de kolom en houdt zijn grens van twee derde. */
   /* ---- de wegen verhuizen mee naar het blad ----
-     Boris, 23/09/2026: "De andere opnamemogelijkheden verdwijnen dan. Je hebt de keuze gemaakt
+     de opdrachtgever, 23/09/2026: "De andere opnamemogelijkheden verdwijnen dan. Je hebt de keuze gemaakt
      om een punt in te voeren via de speld. Die keuze opent dan een uitschuifscherm dat je verder
      kan aanvullen."
      En op 24/09/2026, over dat aanvullen: "speld zetten, dan bovenaan meteen foto kunnen nemen,
@@ -1210,7 +1210,7 @@
   #fichedlg .fiche-nr{position:relative;z-index:1;pointer-events:none}
   /* Het AI-teken naast het nummer: boven de greep, en het laat de aanraking net zo door. */
   #fichedlg .fiche-via{position:relative;z-index:1;pointer-events:none}
-  /* Rond, in de rechterbovenhoek, in het hapje (zie #fichedlg::before), wit op zwart -- Boris,
+  /* Rond, in de rechterbovenhoek, in het hapje (zie #fichedlg::before), wit op zwart -- de opdrachtgever,
      28/09/2026, eerst "zet de x centraal", een uur later "doe de x maar helemaal rechts", en
      dan het hapje. "Maak het kruisje wit in een zwarte cirkel": dezelfde vorm als de
      cameraknop in de invoerregel, één zwarte cirkel per scherm, en die is de uitgang. Zonder
@@ -1222,7 +1222,7 @@
   /* Een verslagnummer staat in kapitalen; een woord dat jij typte niet — dat is jouw woord en
      het hoort er te staan zoals je het schreef. */
   #zoek-titel{text-transform:none;letter-spacing:.01em;font-size:var(--tm);color:var(--ink)}
-  /* Boris, 30/09/2026: "doe voorlopig de teksten gewoon in hetzelfde lettertype, en niet dik".
+  /* De opdrachtgever, 30/09/2026: "doe voorlopig de teksten gewoon in hetzelfde lettertype, en niet dik".
      De titel van het blad dus in dezelfde letter en maat als de rijen eronder, gewoon gewicht.
      Voorlopig, zegt hij; de vorige regel was --tg en 650. */
   .fiche-nr{font-size:var(--tm);font-weight:400;letter-spacing:0}
@@ -1230,7 +1230,7 @@
     border:1px solid var(--line);background:var(--surface);color:var(--ink);
     font-size:20px;line-height:1;padding:0}
   /* ---- KADERS PER RIJ ----
-     Boris, 25/09/2026: "uitzuiveren - bovenaan foto met + ernaast kadertje met pen om op te
+     de opdrachtgever, 25/09/2026: "uitzuiveren - bovenaan foto met + ernaast kadertje met pen om op te
      tekenen, daaronder eenvoudig kaders per rij notitie, punt, categorie, persoon, bewaren."
 
      Wat eruit ging: de regel met datum, uur en zone -- de dag staat in de kop van de app en de
@@ -1240,14 +1240,14 @@
      Elke rij is één kader: links waar het over gaat, rechts wat er staat. Wat er niet staat,
      staat er als een streep, niet als een lege plek: een gat dat je kunt vullen is iets anders
      dan een gat dat ontbreekt. */
-  /* Geen lijn om een witte kaart. Boris, 28/09/2026: "nu hoeven de witte kaders ook geen zwart
+  /* Geen lijn om een witte kaart. De opdrachtgever, 28/09/2026: "nu hoeven de witte kaders ook geen zwart
      lijntje meer" -- en dat klopt: sinds het blad grijs is, scheidt de kleur al. Een rand erbij
      was de derde die hetzelfde zei. */
-  /* Boris, 30/09/2026, met een voorbeeld van een vlak scherm met lijnen: "haal de kadertjes
+  /* De opdrachtgever, 30/09/2026, met een voorbeeld van een vlak scherm met lijnen: "haal de kadertjes
      rond de vakken helemaal weg en voeg lijntjes toe zoals in het voorbeeld, maak ook een
      pijl in een bol." Dus geen vulling en geen ronding meer op een rij: een haarlijn eronder
      scheidt ze, over de volle breedte van het blad. Op 28/09 gingen alle lijntjes er juist
-     uit; dit is de andere kant van diezelfde keuze, en ze is van Boris. */
+     uit; dit is de andere kant van diezelfde keuze, en ze is van de opdrachtgever. */
   .fiche-rij{display:flex;align-items:center;gap:10px;width:100%;text-align:left;
     padding:14px 4px;margin-bottom:0;border:0;border-bottom:var(--haar) solid var(--line);
     border-radius:0;background:none;color:var(--ink);font-size:var(--tm)}
@@ -1256,11 +1256,11 @@
   .fiche-rij-naam{flex:none;color:var(--ink-soft)}
   .fiche-rij-waarde{flex:1;min-width:0;text-align:right;overflow:hidden;
     text-overflow:ellipsis;white-space:nowrap}
-  /* Boris, 30/09/2026: "laat de bijtekst weg: niemand, geen ...". Een rij zonder waarde toont
+  /* De opdrachtgever, 30/09/2026: "laat de bijtekst weg: niemand, geen ...". Een rij zonder waarde toont
      niets rechts; de tekst blijft in het element staan (zetWaarde), zodat wie het blad laat
      voorlezen nog hoort dat er niets gekozen is, en zodat de proeven hem kunnen nameten. */
   .fiche-rij-waarde.leegwaarde{visibility:hidden}
-  /* Boris, 30/09/2026: "naast 2 cat geen tekst schrijven, enkel eronder bij openklappen." Het
+  /* De opdrachtgever, 30/09/2026: "naast 2 cat geen tekst schrijven, enkel eronder bij openklappen." Het
      gekozen artikel staat dus niet in de rij; het staat in de lijst eronder, met zijn vinkje.
      De waarde blijft in het element voor wie het blad laat voorlezen. */
   #fiche-cat-waarde{display:none}
@@ -1300,14 +1300,14 @@
   .fiche-veld::placeholder{color:var(--ink-faint)}
   /* Het woord Vaststelling maakt plaats voor de cursor zodra je erin staat. */
   .fiche-veld:focus::placeholder{color:transparent}
-  /* Boris, 30/09/2026, op zijn iPhone: "tekstvlak gewoon op grijze achtergrond, niet wit, en geen
+  /* De opdrachtgever, 30/09/2026, op zijn iPhone: "tekstvlak gewoon op grijze achtergrond, niet wit, en geen
      zwart kader errond." Het kader was de focusring van 2 px die elk veld krijgt (hierboven,
      :focus-visible): op een toestel met een toetsenbord geldt een tekstveld altijd als
      zichtbaar-gefocust, dus stond die ring om het vak. Hier niet: de cursor zegt genoeg. En de
      grond uitdrukkelijk doorzichtig, want iOS tekent een textarea wit tenzij het anders hoort. */
   .fiche-veld:focus-visible{outline:0}
   .fiche-veld{background-color:transparent;appearance:none;-webkit-appearance:none}
-  /* Boris, 30/09/2026: "mic zwart, icoon wit" -- dezelfde bol als de camera in de regel en het
+  /* De opdrachtgever, 30/09/2026: "mic zwart, icoon wit" -- dezelfde bol als de camera in de regel en het
      kruisje op het blad. Wie aan het dicteren is (heeft) krijgt het omgekeerde: wit met een
      zwarte rand, zodat de stand nog te zien is. */
   .fiche-micknop{flex:none;width:40px;height:40px;padding:0;border-radius:999px;
@@ -1317,7 +1317,7 @@
   .fiche-micknop.heeft{background:var(--ground);color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
   /* De lijsten hangen ONDER hun rij en staan dicht tot je de rij aantikt. Dat is de
      uitzuivering: alles blijft er, maar niets staat er tegelijk. */
-  /* Boris, 30/09/2026: "maak de layout voor het uitrolscherm van cat hetzelfde als die voor
+  /* De opdrachtgever, 30/09/2026: "maak de layout voor het uitrolscherm van cat hetzelfde als die voor
      toewijzen aan. geen vette lettertypes." Dus dezelfde kolom als .fiche-aan: ingesprongen
      tot onder de naam van de rij, een dunne haarlijn tussen de artikels, geen kaartjes, en de
      gekozen regel met een vinkje in plaats van vet of een vulling. */
@@ -1325,7 +1325,7 @@
     border-bottom:var(--haar) solid var(--line)}
   .fiche-artikels[hidden],.fiche-aan[hidden]{display:none}
   /* Tot 30/09/2026 was dit één rij pillen die zijwaarts schoof, "want bij acht contacten zou
-     een wikkelende rij drie regels hoog worden". Boris, 30/09: "toewijzen aan: die schuift
+     een wikkelende rij drie regels hoog worden". De opdrachtgever, 30/09: "toewijzen aan: die schuift
      ook naar boven en laat dan per rij de namen betrokken aan de werf zien." Dus een naam per
      rij, onder de rij Toewijzen aan, ingesprongen tot onder haar naam (4 + 20 + 10 px), met
      een dunne haarlijn tussen de namen en de gekozen naam met een vinkje rechts. Het
@@ -1336,7 +1336,7 @@
     border-bottom:var(--haar) solid var(--line-soft);background:none;color:var(--ink);
     font-size:var(--tm);padding:12px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .fiche-aan button:last-of-type{border-bottom:0}
-  /* Niet vet (Boris, 30/09: "geen vette lettertypes"): het vinkje zegt het. */
+  /* Niet vet (de opdrachtgever, 30/09: "geen vette lettertypes"): het vinkje zegt het. */
   .fiche-aan button.gekozen{font-weight:400}
   .fiche-aan button.gekozen::after{content:"\2713";float:right;padding-right:8px}
   /* Een voorstel uit de vaststelling (aanVoorstellen) staat bovenaan en zegt dat het een
@@ -1381,7 +1381,7 @@
      ander soort ding zijn: de rijen dragen wat je invult, deze twee openen iets. Streepjes
      zolang ze leeg zijn -- een gat dat je nog kunt vullen is geen fout. */
   /* ---- AANWIJZEN ----
-     Boris, 27/09/2026: "als ik in dat scherm op «punt» druk dan kom ik op een ander scherm met
+     de opdrachtgever, 27/09/2026: "als ik in dat scherm op «punt» druk dan kom ik op een ander scherm met
      andere layout en geraak ik niet meer terug naar het invoerveld."
 
      Dat klopte, en de omweg was overbodig: de kaart onder het blad is aantikbaar -- dat is de
@@ -1403,7 +1403,7 @@
   #fichedlg.wijst .dlg-body{display:none}
 
   /* ---- EEN VAK DAT UITZET ----
-     Boris, 27/09/2026: "Ik wil het zien uitzetten en de andere vakken wegdrukken."
+     de opdrachtgever, 27/09/2026: "Ik wil het zien uitzetten en de andere vakken wegdrukken."
 
      Vandaar geen omklappend scherm maar een maat die verloopt. De rijen en het andere vak
      krimpen in 240 ms naar niets -- hoogte, rand, marge en doorzicht tegelijk -- en het vak dat
@@ -1412,7 +1412,7 @@
 
      De kop van het blad blijft staan, met het puntnummer erin. Wie de weg kwijt is, leest daar
      waar hij is. */
-  /* De rijen krimpen NIET. Boris, 27/09/2026: "het uitvergroten moet binnen het uitgetrokken
+  /* De rijen krimpen NIET. De opdrachtgever, 27/09/2026: "het uitvergroten moet binnen het uitgetrokken
      kader blijven. De andere lijnen worden naar beneden geduwd."
 
      Dat is een ander gebaar dan wegpoetsen, en het is het juiste: wat je wegpoetst is weg, wat
@@ -1457,7 +1457,7 @@
   .fiche-doos.groot>.fiche-paneelkop~.fiche-doos-beeld{inset:auto 0 0 0}
 
   /* ---- DE VORM VAN EEN UITGEZET VAK ----
-     Boris, 28/09/2026, met een beeld erbij: een statusregel bovenaan, een werkvlak met
+     de opdrachtgever, 28/09/2026, met een beeld erbij: een statusregel bovenaan, een werkvlak met
      hoekhaken, een kop, drie richtlijnen, en één knop onderaan. Het beeld kwam uit een
      maaltijdenapp met een roze verloop; overgenomen is de indeling, niet het uiterlijk --
      deze app is zwart-wit met haarlijnen, en een verloop zou hier een vreemde eend zijn. */
@@ -1508,7 +1508,7 @@
   .fiche-paneelgo:disabled{background:none;border-color:var(--line);color:var(--ink-faint)}
 
   /* ---- DE CALQUE SCHUIFT OVER HET BLAD ----
-     Boris, 01/10/2026: "ik wil een soort van calque overschuiven als nieuwe layer. Die calque
+     de opdrachtgever, 01/10/2026: "ik wil een soort van calque overschuiven als nieuwe layer. Die calque
      is dan paginagroot."
 
      Tot vandaag zette het tekenvak uit tot een kaart ín het blad, naast de twee andere vakken,
@@ -1559,19 +1559,19 @@
      bezig bent boven je hoofd openstaat. Dat is dezelfde soort uitgang als "Lijst" en ze hoort
      hier evenmin. Zolang je tekent, dus: weg; daarna staat ze er weer in het planvenster. */
   .fiche-tekenhuis #pl-voet{display:none}
-  /* En de bladkeuze evenmin. Boris, 27/09/2026: "op die tekenkaart moeten de keuze voor de
+  /* En de bladkeuze evenmin. De opdrachtgever, 27/09/2026: "op die tekenkaart moeten de keuze voor de
      plannen wegvallen." Je tekent op het blad waar je staat; een ander blad kiezen is een andere
      handeling, en ze stond hier bovendien voor de tweede keer -- de zonebalk van de app zelf
      staat boven het blad. Ze blijft bestaan waar ze hoort: in het planvenster. */
   .fiche-tekenhuis #planzones{display:none}
-  /* Boris, 28/09/2026, met het voorbeeld van de kaartjes die elkaar raken: "de vakjes mogen
+  /* De opdrachtgever, 28/09/2026, met het voorbeeld van de kaartjes die elkaar raken: "de vakjes mogen
      dichter/spannender opeen". Van 8 naar 3 px tussen de drie vakken; een hals zoals bij de
      tegels kan hier niet, want elk vak draagt zijn eigen kleur. */
   .fiche-media{display:flex;gap:0;margin-bottom:0;border-bottom:var(--haar) solid var(--line);height:88px;
     transition:height .24s ease}
   /* Tot 30/09/2026 droeg elk vak zijn eigen verloop (--vak-foto, --vak-scan, --vak-teken):
      "je ziet aan de kleur welk deelscherm je voor je hebt, nog voor je het woord leest."
-     Boris, 30/09, met een voorbeeld van een vlak scherm in één tint: "probeer eens deze
+     de opdrachtgever, 30/09, met een voorbeeld van een vlak scherm in één tint: "probeer eens deze
      vormgeving: de drie vakken in hetzelfde grijs, de kaders vaststelling, toewijzen ... ook
      gewoon in grijs." Dus één grijs voor de vakken én de rijen: de tegelkleur. De verlopen
      blijven op :root staan tot dit een beslissing is. */
@@ -1585,7 +1585,7 @@
     justify-content:center;gap:5px;padding:16px 8px;border:0;
     border-radius:0;color:var(--ink);
     font-size:var(--tm)}
-  /* GEEN LIJNTJES. Boris, 28/09/2026: "laat de zwarte randen weg rond de kaders. De gekleurde
+  /* GEEN LIJNTJES. De opdrachtgever, 28/09/2026: "laat de zwarte randen weg rond de kaders. De gekleurde
      kaders krijgen geen lijntjes."
      Dat kan ook: een rand is er om een vlak van zijn buurman te scheiden, en dat doet de kleur
      nu zelf. Wat de rand daarnaast zei -- er ligt iets in -- zegt het vak voortaan door zijn
@@ -1613,24 +1613,24 @@
      werfverslag wordt afgedrukt. */
   .fiche-haalrij{justify-content:space-between}
   /* Bewaren is de laatste rij, en ze ziet eruit als wat ze is: het einde van het blad. */
-  /* DE BALK ONDERAAN. Eerst twee knoppen naast elkaar, Bewaren zwart; daarna, Boris 30/09/2026 met
+  /* DE BALK ONDERAAN. Eerst twee knoppen naast elkaar, Bewaren zwart; daarna, de opdrachtgever 30/09/2026 met
      een voorbeeld: "maak de knoppen weggooien en bewaren mooi en strak over de volle breedte".
      Eén balk van rand tot rand -- de negatieve marges heffen de opvulling van de body op -- met
      een haarlijn erboven en een staande haarlijn ertussen, geen vulling en geen ronding. De
      pijl in een bol, dezelfde als op de rijen: terug links, verder rechts. */
   .fiche-knoppen{display:flex;gap:0;margin:8px calc(-1 * var(--marge)) -14px;
     border-top:var(--haar) solid var(--line)}
-  /* Zonder pijl, en zonder kleur (Boris, later op 30/09, na rood en zwart geprobeerd te hebben:
+  /* Zonder pijl, en zonder kleur (de opdrachtgever, later op 30/09, na rood en zwart geprobeerd te hebben:
      "haal de kleuren toch maar weg, terug naar dun lijntje en tekst, zonder pijl"). Het woord
      alleen, in inkt, in het midden van zijn helft; een haarlijn erboven en een staande haarlijn
      ertussen. */
   /* Hetzelfde letterbeeld als Foto en Scan in de vakken erboven (gewoon gewicht, --tm), op
-     Boris' woord: "geef weggooien en bewaren zelfde lettertype als foto, scan". */
+     de opdrachtgever zijn woord: "geef weggooien en bewaren zelfde lettertype als foto, scan". */
   .fiche-weg,.fiche-bewaar{flex:1;min-width:0;padding:18px var(--marge);border:0;border-radius:0;
     background:none;color:var(--ink);font-size:var(--tm);font-weight:400;text-align:center;
     display:flex;align-items:center;justify-content:center;gap:10px}
   .fiche-bewaar{border-left:var(--haar) solid var(--line)}
-  /* Boris, 30/09/2026: "onder 4 geen lijntje meer" -- de balk eronder draagt al een lijn erboven.
+  /* De opdrachtgever, 30/09/2026: "onder 4 geen lijntje meer" -- de balk eronder draagt al een lijn erboven.
      Rij 4 is sinds de omdraaiing Toewijzen aan. En: "als je uitklapt wel het lijntje met eronder
      de lijst, als laatste geen lijntje meer onder de lijst." */
   #fiche-persoon{border-bottom:0}
@@ -2138,12 +2138,12 @@
   .afdruk{display:none}
   @page{size:A4;margin:16mm 14mm}
   /* ---- DE LIJST IN DE LETTER VAN HET BLAD ----
-     Boris, 30/09/2026 (avond): "het uittrekmenu bestaande opmerkingen moet dezelfde layout
+     de opdrachtgever, 30/09/2026 (avond): "het uittrekmenu bestaande opmerkingen moet dezelfde layout
      krijgen als het menu opmerking: lettertype, stijl, grootte, de pijlen en de lijntjes. De
      afvinkvakjes mogen blijven." Dus: de systeemletter op --tm en niets vet (de merken hierboven
      stonden in mono, 600 en 700); geen gevuld metavakje meer -- de plek en het uur als gewone
      tekst, zoals een waarde op het blad; een haarlijn tussen de rijen in plaats van de hele
-     pixel, die er stond sinds de les van de zon in de ogen (dit is Boris' keuze van vandaag, met
+     pixel, die er stond sinds de les van de zon in de ogen (dit is de opdrachtgever zijn keuze van vandaag, met
      de datum); en de pijl die een punt uitklapt als de pijl in een bol van de rijen op het blad,
      een kwart gedraaid als het open staat. Het vinkvak blijft wat het was. Dit blok staat ná de
      oudere regels en wint ervan; die blijven staan met hun reden. Gemeten op 375 px op 30/09. */
@@ -2164,7 +2164,7 @@
   .puntmeer div{font-size:var(--tm);color:var(--ink-soft)}
   .puntmeer b{font-weight:400;color:var(--ink)}
   /* ---- HET PLANVENSTER OP HETZELFDE PAPIER ----
-     Boris, 01/10/2026, met drie schermvoorbeelden naast elkaar: "ik heb nu deze layout
+     de opdrachtgever, 01/10/2026, met drie schermvoorbeelden naast elkaar: "ik heb nu deze layout
      uitgewerkt. Als ik nu onder klik op plan is het niet consistent. Werk ook dit scherm zo uit"
      -- en even later: "de layout (look and feel) moet consistent zijn."
 
@@ -2263,7 +2263,7 @@
     font-size:var(--tg);line-height:1;background:var(--t1);
     border:var(--haar) solid var(--line);color:var(--ink)}
   /* ---- DE KEET OP HETZELFDE PAPIER ----
-     Boris, 01/10/2026: "de layout (look and feel) moet consistent zijn." Het hoofdscherm, het
+     de opdrachtgever, 01/10/2026: "de layout (look and feel) moet consistent zijn." Het hoofdscherm, het
      blad, de lijst en het planvenster staan sinds gisteren op één stelsel; de keet was het
      laatste grote scherm dat nog haar eigen vorm droeg: een chromen kop (zij deelt .teken-balk
      met het tekenvak), kopjes in kapitalen van 650, een keuzelijst voor het hoofdstuk, pillen
@@ -2542,7 +2542,7 @@
        invoerregel meet daarentegen tegen `.wrap`, en die staat op de gemeten zichtbare hoogte.
        Twee verschillende onderkanten dus: het blad zakte onder de regel en viel achter de balk.
        Binnen de wrap meten ze allebei tegen hetzelfde vlak. -->
-  <!-- HET BLAD. Boris, 25/09/2026: "uitzuiveren - bovenaan foto met + ernaast kadertje met pen
+  <!-- HET BLAD. De opdrachtgever, 25/09/2026: "uitzuiveren - bovenaan foto met + ernaast kadertje met pen
        om op te tekenen (indien dat aangeklikt wordt, dan vergroot de kaart en kan je tekenen),
        daaronder eenvoudig kaders per rij notitie, punt, categorie (of bestekartikel - autom bij
        aanmaak punt), persoon, bewaren. Na bewaren autom terug. De kruis klikt weg en leidt terug
@@ -2555,10 +2555,10 @@
        De lijsten achter Categorie en Persoon hangen onder hun rij en staan dicht. Alles blijft
        bereikbaar; niets staat er tegelijk. -->
   <dialog id="fichedlg">
-    <!-- Boris, 27/09/2026: "het uitschuifscherm mag sleepbaar kleiner of groter gemaakt worden,
+    <!-- De opdrachtgever, 27/09/2026: "het uitschuifscherm mag sleepbaar kleiner of groter gemaakt worden,
          als je op de horizontale streep klikt kan je naar boven of naar beneden schuiven." -->
     <!-- Eén rij: het nummer links, het kruisje rechts, en de hele rij is de greep (zie
-         .fiche-greep). Boris, 28/09/2026: "als titel van het uittrekscherm is enkel het nummer
+         .fiche-greep). De opdrachtgever, 28/09/2026: "als titel van het uittrekscherm is enkel het nummer
          van het punt genoeg. PBD-UIT-01 is niet nodig, is herhaling" -- de verslagverwijzing
          staat al in de kop van de app. -->
     <div class="fiche-kop" id="fiche-kop">
@@ -2577,7 +2577,7 @@
       <button type="button" class="fiche-wijsklaar" id="fiche-wijsklaar">Klaar</button>
     </div>
     <div class="dlg-body">
-      <!-- Boris, 27/09/2026: "ik wil het vak «tekenen» vergroten binnen het uitschuifvak. Ik wil
+      <!-- De opdrachtgever, 27/09/2026: "ik wil het vak «tekenen» vergroten binnen het uitschuifvak. Ik wil
            het zien uitzetten en de andere vakken wegdrukken" -- "idem voor vak foto" -- "en een
            nieuwe x op de vergrote schermen."
 
@@ -2612,7 +2612,7 @@
             <button type="button" class="fiche-paneelgo" id="fiche-fototeken">Aanduiden</button>
           </div>
         </div>
-        <!-- SCAN. Nieuw op 28/09/2026, op Boris' vraag: "scan is een nieuwe functie, voor
+        <!-- SCAN. Nieuw op 28/09/2026, op de opdrachtgever zijn vraag: "scan is een nieuwe functie, voor
              scannen van documenten op de werf." Ze opent de camera in documentstand en legt wat
              je vangt in dezelfde wachtplaats als een foto -- de app heeft er één. -->
         <div class="fiche-doos" id="fiche-scan" role="button" tabindex="0" aria-expanded="false">
@@ -2641,7 +2641,7 @@
         <div class="fiche-doos" id="fiche-pen" role="button" tabindex="0" aria-expanded="false">
           <span class="fiche-doos-teken" id="fiche-pen-teken" aria-hidden="true">&#9998;</span>
           <span class="fiche-doos-woord" id="fiche-pen-woord">Tekenen</span>
-          <!-- GEEN KOP EN GEEN STATUSREGEL. Boris, 01/10/2026: "ik wil een soort van calque
+          <!-- GEEN KOP EN GEEN STATUSREGEL. De opdrachtgever, 01/10/2026: "ik wil een soort van calque
                overschuiven als nieuwe layer. Die calque is dan paginagroot. Laat dan weg:
                'tekenen op plan', 'blad 0, ...' opmerking 02.1 mag wel zichtbaar blijven."
 
@@ -2665,13 +2665,13 @@
       <!-- Notitie is geen rij die iets opent maar het veld zelf: beginnen typen hoort geen tik
            vooraf te kosten. De microfoon staat erin, want spreken is dezelfde handeling op een
            werf waar je handen aan iets anders zitten. -->
-      <!-- Boris, 30/09/2026: "probeer ook een nummering 1. vaststelling, 2 toew...." -- het
+      <!-- De opdrachtgever, 30/09/2026: "probeer ook een nummering 1. vaststelling, 2 toew...." -- het
            nummer vóór elke rij, zoals in zijn voorbeeld, in de volgorde van de rijen. -->
       <!-- Een textarea en geen input, sinds 30/09/2026: "ik druk op vaststelling, dan schuift
            het vak 1 drie regels naar boven en vaststelling wordt vervangen door een prompt
            cursor". Eén regel zolang je er niet in staat, drie zodra je erin tikt (zie
            .fiche-veld:focus). Enter blijft bewaren, zoals bij de regel eronder. -->
-      <!-- Het woord: "op plaats 1 beschrijving, dan lokaal, dan cat, dan toewijzen" (Boris, 30/09).
+      <!-- Het woord: "op plaats 1 beschrijving, dan lokaal, dan cat, dan toewijzen" (de opdrachtgever, 30/09).
            En daarna: "onder 1 mag ook staan: vaststelling, lijntje en daaronder de vaststelling
            uitgeschreven of gedicteerd." Dus rij 1 is een rij als de andere -- nummer, woord,
            de microfoon rechts -- met een lijn eronder, en daaronder hangt het veld, ingesprongen
@@ -2690,7 +2690,7 @@
         <textarea class="fiche-veld" id="fiche-tekst" rows="1" placeholder=""
                   autocomplete="off" enterkeyhint="done" aria-label="Beschrijving"></textarea>
       </div>
-      <!-- De volgorde was die van Boris op 28/09/2026: vaststelling, toewijzen aan, categorie,
+      <!-- De volgorde was die van de opdrachtgever op 28/09/2026: vaststelling, toewijzen aan, categorie,
            punt of lokaal -- van wat je zelf zegt naar wat de app erbij weet. Op 30/09 draaide hij
            ze om: "3 moet boven 2 komen" en "4 in feite op plaats 2", en even later "nog
            logischer: categorie boven lokaal". Dus: beschrijving, categorie, lokaal, toewijzen
@@ -2722,7 +2722,7 @@
            dus pas als er een haal aan hangt, in plaats van als een lege rij die uitnodigt tot
            een tik die niets doet. -->
       <span class="fiche-rij fiche-haalrij" id="fiche-haal" hidden></span>
-      <!-- Boris, 30/09/2026: "onderaan knop opsplitsen: bewaren rechts, weggooien links".
+      <!-- De opdrachtgever, 30/09/2026: "onderaan knop opsplitsen: bewaren rechts, weggooien links".
            Weggooien laat het punt vallen dat je aan het maken was: de zin, de foto of scan, de
            aanduiding, aan wie het gericht was. Wat voor het vólgende punt blijft gelden -- de
            plek en het hoofdstuk -- blijft staan, zoals na Bewaren. -->
@@ -2732,10 +2732,10 @@
       <div class="fiche-knoppen">
         <!-- En nog later: "bij weggooien en bewaren mag de pijl weg. bewaren in zwart en weggooien in
              rood" -- dus alleen het woord, in het midden van zijn helft. -->
-        <!-- "ipv weggooien schrijf maar wissen" (Boris, 30/09): het woord op de knop; de functie
+        <!-- "ipv weggooien schrijf maar wissen" (de opdrachtgever, 30/09): het woord op de knop; de functie
              heet nog ficheWeggooien, want dat is wat ze doet. -->
         <!-- En een teken erbij, in de stijl en de maat van het + bij Foto: een min links van
-             Wissen, een plus rechts van Bewaren (Boris, 30/09). -->
+             Wissen, een plus rechts van Bewaren (de opdrachtgever, 30/09). -->
         <!-- "of wissen een cirkel met een schuine streep": dezelfde svg-vorm als het teken bij Scan,
              22 px, lijn 1,7 -- een cirkel met een streep erdoor. -->
         <button type="button" class="fiche-weg" id="fiche-weg"><span class="fiche-doos-teken fiche-doos-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M6 18 18 6"/></svg></span>Wissen</button>
@@ -2805,7 +2805,7 @@
        tussen de invoer; dat is waar je heen gaat als je stopt met vastleggen, en dat hoort
        niet in de regel waarin je vastlegt.
 
-       Boris, 30/09/2026 (avond): "hoofdmenu onderaan ook verder uitwerken. 1 Plan met de
+       De opdrachtgever, 30/09/2026 (avond): "hoofdmenu onderaan ook verder uitwerken. 1 Plan met de
        bestaande opmerkingen / 2 oude verslagen binnen hetzelfde project / 3 bestekteksten en
        vragen stellen aan ai en zoeken binnen het dossier / 4 permanent raadpleegbare
        basisgegevens van de locatie (de openbare api's: voorschriften, oude aanvragen, kaarten,
@@ -2870,6 +2870,8 @@
       <button type="button" id="dropboxbeheer">dropbox</button>
       <button type="button" id="fotos">bijlagen tonen</button>
       <button type="button" id="backup" title="Alles op dit toestel in één bestand">Back-up</button>
+      <!-- Alleen zichtbaar als er een noodkopie van vóór de verhuizing bestaat (merkNoodknop). -->
+      <button type="button" id="noodterug" hidden title="De gegevens zoals ze stonden vóór de verhuizing van de opslag">Noodkopie terugzetten</button>
     </div>
     <!-- Wordt gevuld als het venster opengaat: navigator.storage weet het pas als je het vraagt,
          en die vraag hoort niet bij het opstarten thuis. Pal onder Back-up, want samen
@@ -2923,7 +2925,7 @@
        (PLANFIRST §6a), en daar zou een plan de ruimte van het punt opeten. De grens is
        KEETBREED (700, dezelfde als de mediaquery die de Keet-ingang laat verschijnen), en niet
        NAZICHTBREED (1000) -- een iPad staand is 768 px, en dat is bij uitstek het scherm waar
-       deze kolom voor bedoeld is. Boris, 01/10/2026: "splitsen". -->
+       deze kolom voor bedoeld is. De opdrachtgever, 01/10/2026: "splitsen". -->
   <div class="keet-lijf">
   <div class="keet-plan" id="keet-plan" hidden></div>
   <div class="keet-vlak">
@@ -3228,7 +3230,7 @@
 <script>
 /* ---- GEEN ENKELE EMOJI, OOK NIET IN EEN COMMENTAAR ----
 
-   Boris, 01/10/2026: "alles in één keer", en de waarschuwing in een melding erbij. De keet en het
+   de opdrachtgever, 01/10/2026: "alles in één keer", en de waarschuwing in een melding erbij. De keet en het
    planvenster waren al schoon sinds gisteren; elders droegen dezelfde woorden nog een plaatje, en
    dan zegt het scherm hetzelfde ding op twee manieren.
 
@@ -3275,7 +3277,7 @@
    oude naam en dan schrijft onder de nieuwe, zoals migreerOpslag() dat voor de projecten deed.
    Niet met een zoek-en-vervang. Er staat een proef op die dat afdwingt. */
 const ZONESLEUTEL="werfpunten-zones";
-/* Zonder eigen naam heet een blad zoals zijn code: N0, N1, DAK. Boris, 05/10/2026: de naam is die
+/* Zonder eigen naam heet een blad zoals zijn code: N0, N1, DAK. De opdrachtgever, 05/10/2026: de naam is die
    de gebruiker opgaf, en "indien er geen naam wordt opgegeven is er een default benaming: N-1, N0,
    N1, gevel A, B, dak, fundering". Geen ingebouwde Nederlandse namen meer ("gelijkvloers"): die
    stonden naast de code op het scherm en maakten van één blad twee woorden. */
@@ -3350,7 +3352,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v214";
+const VERSIE="v217";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -3484,7 +3486,7 @@ async function aanmelden(email,wachtwoord,haal,url,sleutel){
 }
 
 /* ---- wachtwoord vergeten ----
-   Boris, 06/10/2026 (inloggen voor de proef). Twee stappen. 1: een mail vragen. De bron antwoordt altijd
+   de opdrachtgever, 06/10/2026 (inloggen voor de proef). Twee stappen. 1: een mail vragen. De bron antwoordt altijd
    hetzelfde, ook voor een onbekend adres, en de app zegt dat ook: wie een mailadres kan uitproberen,
    kan zo zien wie er klant is. 2: de link in de mail brengt je terug naar de app met een tijdelijk
    token in het adres (#access_token=...&type=recovery); daarmee zet je een nieuw wachtwoord, en daarna
@@ -3642,7 +3644,12 @@ async function bronRijVerzenden(rpc,pakket,haal){
   try{
     const r=await h(bronInstelling.url+"/rest/v1/rpc/"+rpc,{
       method:"POST", headers:kop,
-      body:JSON.stringify(pakket.dwing
+      /* p_dwing bestaat alleen op de RPC's die het kennen (het verslag). punt_wegschrijven heeft
+         die parameter niet: PostgREST antwoordt op een onbekende parameter met een fout, en dat
+         telde als `later` -- het punt bleef eeuwig in de rij. Een punt dat de opdrachtgever wil forceren
+         (D3, 06/10/2026) gaat dus zonder p_dwing, met een p_basis die de bron aanvaardt; zie
+         puntBotsingenOplossen. */
+      body:JSON.stringify((pakket.dwing&&rpc!=="punt_wegschrijven")
         ? {p_rij:pakket.rij, p_basis:pakket.basis||null, p_dwing:true}
         : {p_rij:pakket.rij, p_basis:pakket.basis||null})
     });
@@ -3675,6 +3682,7 @@ async function bronVerzender(pakket,haal){
    bestand. Een bestand dat de emmer weigert (te groot, verkeerd soort) is geweigerd, niet later:
    herhalen helpt daar nooit, en de melding zegt het. */
 const BRONEMMER="werfbeelden";
+const BACKUPEMMER="werfbackups";
 function beeldPad(werfId,id){ return werfId+"/"+id; }
 async function bronBeeldVerzenden(pakket,haal){
   const h=(typeof haal==="function")?haal:((u,o)=>fetch(u,o));
@@ -3724,7 +3732,7 @@ async function bronVerslagBeginnen(haal){
       method:"POST", headers:kop,
       body:JSON.stringify({p_werf:bronInstelling.werfId, p_datum:staat.datum,
                            p_titel:(staat.titel||null),
-                           /* Boris, 06/10/2026: de bron beslist het nummer. De app vraagt het
+                           /* De opdrachtgever, 06/10/2026: de bron beslist het nummer. De app vraagt het
                               nummer dat zij kent; is het bezet, dan antwoordt de bron met een ander. */
                            p_fase:(staat.fase||null), p_nummer:(staat.nr||null)})
     });
@@ -3742,7 +3750,7 @@ async function bronVerslagBeginnen(haal){
       staat.bronId=id; bronInstelling.verslagId=id;
       if(typeof g.gewijzigd==="string")staat.gewijzigd=g.gewijzigd;
       if(typeof g.fase==="string"&&g.fase)staat.fase=g.fase;
-      /* De bron beslist (Boris, 06/10/2026): was het gevraagde nummer bezet, dan volgt de app het
+      /* De bron beslist (de opdrachtgever, 06/10/2026): was het gevraagde nummer bezet, dan volgt de app het
          antwoord en zegt het, want de referentie staat in de kop van elk stuk. */
       if(typeof g.nummer==="number"&&g.nummer!==staat.nr){
         const gevraagd=staat.nr;
@@ -3801,12 +3809,91 @@ async function vraagBotsendeAfsluiting(info){
        {sleutel:"nieuwer", naam:"Nieuwere overnemen", uitleg:"jouw afsluiting vertrekt niet"}]);
   }finally{ bronVraagOpen=false; }
 }
+/* Een punt dat botst blokkeert de rij niet meer zonder uitweg (de opdrachtgever, 06/10/2026, D3): eerst
+   vragen, zoals bij het afsluiten. Tot nu toe bleef zo'n punt in de rij staan, en hield het de
+   afsluiting en verslag_beginnen tegen zonder dat iemand iets kon doen. Dezelfde vraag-slot als
+   bij de afsluiting: één vraag tegelijk. */
+async function vraagBotsendPunt(info){
+  if(bronVraagOpen)return null;
+  bronVraagOpen=true;
+  try{
+    const kort=t=>{ t=String(t||"").replace(/\s+/g," ").trim(); return t.length>140?t.slice(0,139)+"…":t; };
+    const regels=["In de bron staat een nieuwere versie van dit punt. "+
+      "Wil je jouw versie bewaren (de nieuwere wordt overschreven) of de nieuwere overnemen?"];
+    if(info&&info.mijn)regels.push("Jouw versie: "+veilig(kort(info.mijn)));
+    if(info&&info.bron)regels.push("In de bron: "+veilig(kort(info.bron)));
+    return await vraagKeuze("Het punt is intussen aangepast",regels,
+      [{sleutel:"mijn", naam:"Mijn versie bewaren", uitleg:"de nieuwere versie in de bron wordt overschreven"},
+       {sleutel:"nieuwer", naam:"Nieuwere overnemen", uitleg:"jouw wijziging aan dit punt vertrekt niet"}]);
+  }finally{ bronVraagOpen=false; }
+}
+
+/* De botsende punten van een beurt voorleggen, één vraag tegelijk, en uitvoeren wat er gekozen is.
+
+   Eerst lezen wat de bron nu draagt: zonder dat valt er niets te vergelijken, en een vraag zonder
+   de twee teksten erbij is een gok. Kan de bron niet gelezen worden, of kent hij het punt niet
+   meer, dan wordt er niets gevraagd en blijft het punt in de rij -- zoals tot nu toe.
+
+   MIJN VERSIE. De bron heeft voor het verslag een p_dwing, voor het punt niet: punt_wegschrijven
+   botst zodra `gewijzigd` in de bron nieuwer is dan p_basis. Geen nieuwe databasefunctie dus,
+   maar de basis zo zetten dat de bron aanvaardt: de `gewijzigd` die de bron nu draagt. Het punt
+   zelf krijgt een `gewijzigd` van nu (en nooit lager dan dat van de bron + 1 ms), zodat het
+   overschrijven ook in de tijd klopt: de bron gaat niet terug naar een oudere stempel.
+   Wijzigt de bron intussen nóg eens, dan botst het opnieuw en vraagt de app opnieuw.
+
+   NIEUWERE OVERNEMEN. Het merk gaat uit de rij en het punt van de bron komt in het werkblad.
+   Staat het punt in een afgesloten blad van het archief, dan blijft dat blad zoals het was (een
+   afgesloten verslag is vergrendeld): alleen het merk gaat weg.
+
+   Daarna loopt de beurt nog eens, zodat wat achter de botsing wachtte (de afsluiting, het
+   nieuwe verslag) meteen vertrekt. */
+async function puntBotsingenOplossen(uit,wachtOpties,stuur,h,vraagPunt,gevraagd){
+  const punten=uit.botst.filter(b=>b&&b.soort==="punt"&&!gevraagd.has(b.id));
+  if(!punten.length)return uit;
+  const dwing=new Set(), basis=new Map(), gedaan=new Set();
+  let overgenomen=0, bewaren=false, vervangen=false;
+  for(const b of punten){
+    gevraagd.add(b.id);
+    const z=wachtZoek(bl=>(bl.punten||[]).find(x=>x&&x.id===b.id));
+    if(!z)continue;
+    const l=await bronLees("punt?id=eq."+encodeURIComponent(b.id)+"&select=*",h);
+    const rij=(l.uit==="goed")?l.rijen.find(r=>r&&r.id===b.id):null;
+    if(!rij)continue;
+    const bron=rijNaarPunt(rij);
+    const keuze=await (vraagPunt||vraagBotsendPunt)({id:b.id, mijn:z.hit.tekst||"", bron:(bron&&bron.tekst)||""});
+    if(keuze==="mijn"){
+      if(!rij.gewijzigd)continue;      // zonder stempel van de bron valt er geen basis te kiezen
+      const bg=Date.parse(rij.gewijzigd);
+      z.hit.gewijzigd=new Date(Math.max(Date.now(),(isNaN(bg)?0:bg)+1)).toISOString();
+      dwing.add("punt:"+b.id); basis.set("punt:"+b.id,rij.gewijzigd);
+      gedaan.add(b.id); if(z.lopend)bewaren=true;
+    }else if(keuze==="nieuwer"){
+      if(z.lopend&&bron){
+        z.blad.punten=puntenVanBron(z.blad.punten,[bron],new Set(),new Set());
+        bewaren=true; vervangen=true;
+      }
+      wachtAf("punt",b.id); gedaan.add(b.id); overgenomen++;
+    }
+  }
+  if(!gedaan.size)return uit;
+  uit.botst=uit.botst.filter(b=>!(b.soort==="punt"&&gedaan.has(b.id)));
+  const oversla=new Set(uit.botst.map(b=>b.soort+":"+b.id));
+  const nog=await wachtAfwerken(stuur,Object.assign({},wachtOpties,{dwing:dwing, basis:basis, oversla:oversla}));
+  const eerder=uit.puntNieuwer||0;
+  uit=wachtSamenvoegen(uit,nog);
+  if(eerder||overgenomen)uit.puntNieuwer=eerder+overgenomen;
+  if(bewaren)bewaarStaat();
+  // alleen opnieuw tekenen als er op het scherm iets verving: een archiefblad blijft zoals het was
+  if(vervangen){ try{ await herlaadWerf(); }catch(e){} }
+  return uit;
+}
 /* Twee uitkomsten van wachtAfwerken in één. Een botsing die in beide voorkomt telt één keer. */
 function wachtSamenvoegen(a,b){
   const uit={weg:a.weg+b.weg, verdwenen:a.verdwenen+b.verdwenen, later:a.later+b.later,
     botst:a.botst.slice(), vergrendeld:a.vergrendeld.slice(), geweigerd:a.geweigerd.slice(),
     bekeken:a.bekeken+b.bekeken, geblokkeerd:b.geblokkeerd};
   if(a.nieuwer)uit.nieuwer=a.nieuwer;
+  if(a.puntNieuwer||b.puntNieuwer)uit.puntNieuwer=(a.puntNieuwer||0)+(b.puntNieuwer||0);
   for(const k of ["botst","vergrendeld","geweigerd"])
     for(const x of b[k])if(!uit[k].some(y=>y.soort===x.soort&&y.id===x.id))uit[k].push(x);
   return uit;
@@ -3814,15 +3901,18 @@ function wachtSamenvoegen(a,b){
 function wachtIsGebeurd(u){
   return !!(u&&(u.weg||u.verdwenen||u.later||u.botst.length||u.vergrendeld.length||u.geweigerd.length));
 }
-async function bronAfwerken(haal,vraag){
+async function bronAfwerken(haal,vraag,vraagPunt){
   if(!bronInstelling||!bronInstelling.werfId)return null;
   const h=(typeof haal==="function")?haal:((u,o)=>fetch(u,o));
   if(!(await aanmeldingZorg(h)))return null;
   const stuur=p=>bronVerzender(p,h);
   const werfId=bronInstelling.werfId;
-  let uit=await wachtAfwerken(stuur,{werfId:werfId, verslagId:null, alleenEigen:true});
+  const gevraagd=new Set();   // een punt wordt in één beurt maar één keer voorgelegd
+  const pas1={werfId:werfId, verslagId:null, alleenEigen:true};
+  let uit=await wachtAfwerken(stuur,pas1);
+  uit=await puntBotsingenOplossen(uit,pas1,stuur,h,vraagPunt,gevraagd);
 
-  /* Een afsluiting die botst wint niet stilzwijgend (Boris, 06/10/2026, wijziging t.o.v. de nota):
+  /* Een afsluiting die botst wint niet stilzwijgend (de opdrachtgever, 06/10/2026, wijziging t.o.v. de nota):
      is er in de bron een nieuwere stand van dit verslag dan het toestel kende, dan vraagt de app
      het, in gewone woorden. Mijn versie: dezelfde afsluiting nog eens, met p_dwing. Nieuwere
      overnemen: het merk gaat uit de rij en de app leest het verslag uit de bron. */
@@ -3870,8 +3960,10 @@ async function bronAfwerken(haal,vraag){
     }
     if(doorgaan){
       const oversla=new Set(uit.botst.map(b=>b.soort+":"+b.id));
-      const rest=await wachtAfwerken(stuur,{werfId:werfId, verslagId:id, oversla:oversla});
+      const pas3={werfId:werfId, verslagId:id, oversla:oversla};
+      const rest=await wachtAfwerken(stuur,pas3);
       uit=wachtSamenvoegen(uit,rest);
+      uit=await puntBotsingenOplossen(uit,{werfId:werfId, verslagId:id},stuur,h,vraagPunt,gevraagd);
     }
   }
   if(!wachtIsGebeurd(uit)&&!uit.nieuwer&&!(staat.bronId||bronInstelling.verslagId))return null;
@@ -4227,7 +4319,7 @@ const WACHTUITKOMSTEN=new Set(["weg","bestaat-niet","later","botst","vergrendeld
    `basis` is wat het toestel als uitgangspunt kende. De bron vergelijkt dat met wat er ligt;
    is het daar nieuwer, dan botst het. */
 /* Waar een stuk van de rij nu staat: het lopende blad, of een afgesloten blad in het archief.
-   Stap 9 (Boris, 06/10/2026): een punt, beeld of rondgang van het oude blad dat nog wachtte, is
+   Stap 9 (de opdrachtgever, 06/10/2026): een punt, beeld of rondgang van het oude blad dat nog wachtte, is
    niet meer `verdwenen` maar vertrekt naar zijn eigen verslag, via het `bronId` van het record
    waarin het gevonden wordt. De bladen met een bronId komen eerst; een blad zonder bronId is
    `eigen:false`: dat stuk kent zijn verslag niet zelf en leunt op de terugval. */
@@ -4319,7 +4411,11 @@ async function wachtAfwerken(stuur,opties){
       continue;
     }
     if(w.soort==="verslag"&&pakket.rij.stand!=="lopend"&&vast.has(w.id)){ uit.geblokkeerd++; continue; }
-    if(dwing.has(w.soort+":"+w.id))pakket.dwing=true;
+    if(dwing.has(w.soort+":"+w.id)){
+      pakket.dwing=true;
+      // een punt dat de bron aanvaardt na "mijn versie": de basis is wat de bron nu draagt
+      if(o.basis instanceof Map&&o.basis.has(w.soort+":"+w.id))pakket.basis=o.basis.get(w.soort+":"+w.id);
+    }
     let antwoord;
     try{ antwoord=await stuur(pakket); }catch(e){ antwoord="later"; }
     if(!WACHTUITKOMSTEN.has(antwoord))antwoord="later";
@@ -4332,7 +4428,7 @@ async function wachtAfwerken(stuur,opties){
        waarheid, het toestel is een venster.
        Het verslag: een kopwijziging gedraagt zich als een rondgang (uit de rij, de bron wint). Een
        AFSLUITING blijft staan en wordt gemeld met `afsluiting`: die wint niet stilzwijgend
-       (Boris, 06/10/2026), bronAfwerken vraagt wat er moet gebeuren. */
+       (de opdrachtgever, 06/10/2026), bronAfwerken vraagt wat er moet gebeuren. */
     else if(antwoord==="botst"){
       const b={soort:w.soort, id:w.id};
       if(w.soort==="rondgang")wachtAf(w.soort,w.id);
@@ -4387,6 +4483,9 @@ function wachtZin(uit,opties){
     delen.push(stuks(gebotsteRondgangen.length,"rondgang is","rondgangen zijn")+
                " intussen elders aangepast — de versie van de bron geldt");
   }
+  if(uit.puntNieuwer)
+    delen.push(stuks(uit.puntNieuwer,"punt is vervangen door de nieuwere versie uit de bron",
+                     "punten zijn vervangen door de nieuwere versie uit de bron"));
   if(uit.geblokkeerd)
     delen.push(stuks(uit.geblokkeerd,"afsluiting wacht","afsluitingen wachten")+" tot wat van dat verslag nog moet vertrekken, vertrokken is");
   if(uit.vergrendeld&&uit.vergrendeld.length)
@@ -4532,7 +4631,7 @@ function verslagNaarRij(v,werfId){
     /* Stap 9: het id is het bronId van het blad, de ref is de menselijke referentie (PAV-WV-03)
        en niet de archiefsleutel van het toestel, en nummer en fase zijn wat de referentie
        uniek maakt. `gewijzigd` is de tijd waarop het toestel het verslag aanraakte (zoals bij
-       de rondgang). `werkzone` valt weg: staat.zone is het scherm, niet het verslag (Boris,
+       de rondgang). `werkzone` valt weg: staat.zone is het scherm, niet het verslag (de opdrachtgever,
        06/10/2026). */
     id:v.bronId||null, werf_id:werfId||null, datum:v.datum||null, ref:verslagRef(v),
     titel:v.titel||null, weer:v.weer||null, weerdata:v.weerdata||null,
@@ -5936,10 +6035,205 @@ function hernoemWinkel(winkel, nieuw){
   });
 }
 
-async function migreerOpslagDb(){
+/* ---- de noodkopie vóór de verhuizing ----
+   de opdrachtgever, 06/10/2026 (D2): zijn iPad draait v77 met mogelijk echte punten, en de nieuwe versie
+   verhuist bij het eerste openen de opslag. De stukken zeggen zelf dat die verhuizing onbeproefd
+   is en stil kan mislukken (docs/INVENTARIS-functionaliteit.md). Dus eerst een kopie.
+
+   Welke stappen zijn destructief, en wanneer lopen ze:
+   - migreerOpslag(), bij het opstarten, synchroon: zet de vier sleutels zonder werf
+     (werfpunten-v1, -contacten, -hoofdstukken, -profiel) onder de eerste werf en haalt de oude
+     weg. Eenmalig, bewaakt door de vlag werfpunten-migratie.
+   - migreerOpslagDb()/hernoemWinkel(), zodra IndexedDB openstaat: schrijft elk record van
+     plannen, dagen en fotos zonder werf onder "werf|sleutel" en verwijdert het oude. Eenmalig,
+     bewaakt door werfpunten-migratie-db. De IndexedDB-versie zelf (opendb, versie 4) maakt
+     alleen winkels aan die ontbreken en wist niets.
+
+   WAT DE NOODKOPIE WEL DOET: alle werfpunten-sleutels van localStorage in één sleutel
+   (werfpunten-noodkopie, met datum en app-versie), vlak vóór migreerOpslag, en alleen als er nog
+   een oude sleutel zonder werf staat -- zonder oude gegevens is er niets om te redden. Eén keer
+   per app-versie; de vorige blijft staan als werfpunten-noodkopie-vorige (nooit meer dan twee).
+   Ze staat in NIETINBACKUP, zodat een back-up of herstel haar niet raakt of wist.
+   Daarnaast de IndexedDB-winkels dagen en calques, record voor record, naar een aparte database
+   (werfpunten-noodkopie) -- niet in dezelfde, want daar zou een versie-ophoging zelf een
+   verhuizing zijn.
+
+   WAT ZE NIET DOET: de plannen en de foto's worden niet gekopieerd. Het zijn blobs van
+   megabytes; een kopie ervan vult het geheugen van een iPad en kan de opslag zelf in gevaar
+   brengen. Het hernoemen van een record is bovendien één transactie (zetten onder de nieuwe
+   sleutel en wissen van de oude slagen samen of niet), dus daar staat de originele inhoud
+   telkens nog. En terugzetten zet alleen localStorage terug: een kopie van dagen en calques
+   blijft veilig in de aparte database liggen, maar de knop haalt ze er niet uit. */
+const NOODSLEUTEL="werfpunten-noodkopie";
+const NOODVORIGE="werfpunten-noodkopie-vorige";
+const NOODDBSLEUTEL="werfpunten-noodkopie-db";
+const NOODDB="werfpunten-noodkopie";
+const OUDESLEUTELS=["werfpunten-v1","werfpunten-contacten","werfpunten-hoofdstukken","werfpunten-profiel"];
+const NOODNIET=new Set([NOODSLEUTEL,NOODVORIGE,NOODDBSLEUTEL]);
+let noodGemeld=false;
+
+/* "gemaakt", "al-gemaakt" (deze versie al), "geen-oude-gegevens", of "mislukt" (geheugen vol). */
+function maakNoodkopie(){
+  try{
+    if(localStorage.getItem(MIGRATIESLEUTEL)) return "geen-oude-gegevens";
+    const sleutels={};
+    for(let i=0;i<localStorage.length;i++){
+      const k=localStorage.key(i);
+      if(k&&k.startsWith("werfpunten-")&&!NOODNIET.has(k)) sleutels[k]=localStorage.getItem(k);
+    }
+    if(!OUDESLEUTELS.some(k=>k in sleutels)) return "geen-oude-gegevens";
+    const oud=localStorage.getItem(NOODSLEUTEL);
+    if(oud){
+      try{ if((JSON.parse(oud)||{}).versie===VERSIE) return "al-gemaakt"; }catch(e){}
+    }
+    const tekst=JSON.stringify({formaat:"werfpunten-noodkopie", datum:new Date().toISOString(),
+                                versie:VERSIE, sleutels});
+    // de vorige eerst veiligstellen; faalt het schrijven, dan blijft de oude gewoon staan
+    if(oud) localStorage.setItem(NOODVORIGE,oud);
+    localStorage.setItem(NOODSLEUTEL,tekst);
+    return "gemaakt";
+  }catch(e){ return "mislukt"; }
+}
+
+function leesNoodkopie(){
+  for(const sl of [NOODSLEUTEL,NOODVORIGE]){
+    try{
+      const d=JSON.parse(localStorage.getItem(sl)||"null");
+      if(d&&d.formaat==="werfpunten-noodkopie"&&d.sleutels) return d;
+    }catch(e){}
+  }
+  return null;
+}
+
+/* Het antwoord van maakNoodkopie in een melding: gemaakt zegt het, mislukt waarschuwt, de rest
+   zwijgt. Eén keer per opstart. */
+function meldNoodkopie(uit){
+  if(uit==="gemaakt"&&!noodGemeld){
+    noodGemeld=true;
+    melding("Er is een noodkopie gemaakt van je gegevens voor de verhuizing");
+  }else if(uit==="mislukt"){
+    melding("Geen noodkopie kunnen maken (geheugen vol) — de verhuizing gaat toch door");
+  }
+}
+
+function merkNoodknop(){
+  const k=document.getElementById("noodterug");
+  if(k) k.hidden=!leesNoodkopie();
+}
+
+/* Terugzetten: de bewaarde sleutels terug, de verhuizingsvlag weg, en de app opnieuw laten
+   opstarten -- dan loopt de verhuizing opnieuw vanaf de oude sleutels. Wat sinds de verhuizing
+   bijkwam onder dezelfde sleutels wordt overschreven, en de vraag zegt dat. Het toestel-id,
+   de werflijst en de back-upvlaggen blijven zoals ze zijn. */
+async function noodkopieTerugzetten(opties){
+  const o=opties||{};
+  const d=leesNoodkopie();
+  if(!d){ melding("Er is geen noodkopie"); return false; }
+  const vraag=o.vraag||vraagJa;
+  const dag=String(d.datum||"").slice(0,10);
+  const ja=await vraag("Noodkopie terugzetten",
+    ["De gegevens van "+dag+" (versie "+(d.versie||"?")+") komen terug zoals ze stonden vóór de verhuizing.",
+     "Wat je sindsdien op deze werven bijmaakte en niet in de noodkopie zit, wordt overschreven. Maak eerst een back-up als je twijfelt."],
+    "Zet terug");
+  if(!ja) return false;
+  let nietTerug=0;
+  for(const [k,v] of Object.entries(d.sleutels||{})){
+    if(NIETINBACKUP.has(k)||k===PROJECTSLEUTEL||k===ACTIEFSLEUTEL) continue;
+    try{ localStorage.setItem(k,v); }catch(e){ nietTerug++; }
+  }
+  if(nietTerug){ melding(nietTerug+" onderdelen konden niet teruggezet worden — het geheugen is vol"); return false; }
+  // de verhuizing mag opnieuw lopen: de oude sleutels staan er weer
+  try{ localStorage.removeItem(MIGRATIESLEUTEL); }catch(e){}
+  (o.herlaad||(()=>{ try{ location.reload(); }catch(e){} }))();
+  return true;
+}
+
+/* Een geopende IndexedDB als bestemming van de kopie: {zet, sluit}. Eén transactie per record,
+   zodat een vol geheugen precies dat ene record kost en niet de hele kopie. */
+function doelVan(d){
+  return {
+    zet:(winkel,sl,w)=>new Promise(r=>{
+      try{
+        const t=d.transaction(winkel,"readwrite");
+        t.objectStore(winkel).put(w,sl);
+        t.oncomplete=()=>r(true); t.onerror=()=>r(false); t.onabort=()=>r(false);
+      }catch(e){ r(false); }
+    }),
+    sluit:()=>{ try{ d.close(); }catch(e){} }
+  };
+}
+
+/* De aparte database voor de IndexedDB-kopie. Geeft {zet, sluit} of null (niet beschikbaar). */
+function noodDoel(){
+  return new Promise(res=>{
+    let klaar=false;
+    const af=v=>{ if(!klaar){klaar=true;res(v);} };
+    setTimeout(()=>af(null),1500);
+    try{
+      const q=indexedDB.open(NOODDB,1);
+      q.onupgradeneeded=()=>{
+        ["dagen","calques"].forEach(n=>{
+          try{ if(!q.result.objectStoreNames.contains(n)) q.result.createObjectStore(n); }catch(e){}
+        });
+      };
+      q.onsuccess=()=>af(doelVan(q.result));
+      q.onerror=()=>af(null); q.onblocked=()=>af(null);
+    }catch(e){ af(null); }
+  });
+}
+
+/* dagen en calques, één record tegelijk (geen getAll: dat zet ze allemaal tegelijk in het
+   geheugen). Alleen als er in plannen, dagen of fotos nog een record zonder werf staat -- zonder
+   dat doet de verhuizing niets. Geeft {gemaakt, dagen, calques} of {gemaakt:false, reden}. */
+async function maakNoodkopieDb(bron, doel){
+  const vraagAan=q=>new Promise(res=>{ q.onsuccess=()=>res(q.result); q.onerror=()=>res(undefined); });
+  try{
+    let oud=false;
+    for(const winkel of ["plannen","dagen","fotos"]){
+      let sl=[];
+      try{ sl=await vraagAan(bron.transaction(winkel,"readonly").objectStore(winkel).getAllKeys()); }
+      catch(e){ continue; }              // een winkel die er niet is, heeft ook niets te verhuizen
+      if(Array.from(sl||[]).some(k=>typeof k==="string"&&!k.includes("|"))){ oud=true; break; }
+    }
+    if(!oud) return {gemaakt:false, reden:"geen-oude-gegevens"};
+    let vorige=null;
+    try{ vorige=JSON.parse(localStorage.getItem(NOODDBSLEUTEL)||"null"); }catch(e){}
+    if(vorige&&vorige.versie===VERSIE) return {gemaakt:false, reden:"al-gemaakt"};
+    const d=doel?(doel.zet?doel:doelVan(doel)):await noodDoel();
+    if(!d) return {gemaakt:false, reden:"mislukt"};
+    const tel={dagen:0, calques:0};
+    let goed=true;
+    for(const winkel of ["dagen","calques"]){
+      let sleutels=[];
+      try{ sleutels=Array.from(await vraagAan(bron.transaction(winkel,"readonly").objectStore(winkel).getAllKeys())||[]); }
+      catch(e){ continue; }              // een toestel zonder die winkel heeft er niets in
+      for(const sl of sleutels){
+        const w=await vraagAan(bron.transaction(winkel,"readonly").objectStore(winkel).get(sl));
+        if(w===undefined) continue;
+        if(await d.zet(winkel,sl,w)) tel[winkel]++; else goed=false;
+      }
+    }
+    if(d.sluit) d.sluit();
+    if(!goed) return {gemaakt:false, reden:"mislukt"};
+    try{ localStorage.setItem(NOODDBSLEUTEL, JSON.stringify({datum:new Date().toISOString(),
+                                                              versie:VERSIE, ...tel})); }catch(e){}
+    return {gemaakt:true, ...tel};
+  }catch(e){ return {gemaakt:false, reden:"mislukt"}; }
+}
+
+async function migreerOpslagDb(opties){
   let al=null;
   try{ al=localStorage.getItem(MIGRATIESLEUTEL+"-db"); }catch(e){}
   if(al||!db) return 0;
+  /* Eerst de kopie, dan pas verhuizen. Mislukt de kopie, dan gaat de verhuizing toch door:
+     zonder haar zijn de plannen onvindbaar onder hun nieuwe naam, en dat is erger. */
+  const kopie=await maakNoodkopieDb(db, opties&&opties.doel);
+  if(kopie.gemaakt&&!noodGemeld){
+    noodGemeld=true;
+    melding("Er is een noodkopie gemaakt van je gegevens voor de verhuizing");
+  }else if(kopie.reden==="mislukt"){
+    melding("Geen noodkopie van het archief kunnen maken — de verhuizing gaat toch door");
+  }
   const eerste=projecten[0].id;
   let n=0;
   for(const winkel of ["plannen","dagen","fotos"])
@@ -5961,6 +6255,33 @@ async function leerPlekBij(id){
   const hier=await haalPlek(true);
   if(!hier||hier.nauw>WERFSTRAAL/2)return;
   if(onthoudPlek(p,hier))melding("Deze plek hoort nu ook bij "+p.naam);
+}
+
+/* Na het aanmelden: in welke werf werk je nu? De opdrachtgever, 06/10/2026 (de proefgebruiker). Gemeten in de nepbron op een
+   vers toestel: na het aanmelden stond de app nog op de lokale "Werf 1", de werf uit de bron stond wel in de
+   lijst maar was niet gekozen, en er kwam geen melding. Een proefgebruiker legde zo punten vast die nooit naar de
+   bron gingen. Nu: staat er op dit toestel nog niets (geen punten, geen archief, niets in de wachtrij) en is er
+   precies één werf in de bron, dan werk je meteen in die werf; anders vraagt de app het, in gewone woorden, en
+   blijft wat er al op het toestel staat gewoon staan. `hulp` laat de proef de vraag en het wisselen vervangen. */
+async function kiesWerfNaAanmelden(hulp){
+  const vraag=(hulp&&hulp.vraag)||vraagKeuze, wissel=(hulp&&hulp.wissel)||wisselProject;
+  const bron=projecten.filter(p=>p&&p.bron);
+  const nu=projectNu();
+  if(!bron.length||(nu&&nu.bron))return false;
+  const leeg=!(staat.punten||[]).length&&!(archief||[]).length&&!wachtAantal();
+  let keuze=null;
+  if(leeg&&bron.length===1)keuze=bron[0].id;
+  else{
+    const k=await vraag("Welke werf wil je gebruiken?",
+      ["Je bent aangemeld. In de bron "+(bron.length===1?"staat een werf":"staan "+bron.length+" werven")+
+       ". Werk je erin, dan gaat wat je vastlegt ook naar de bron. Wat je op dit toestel al hebt, blijft staan."],
+      bron.map(p=>({sleutel:p.id, naam:p.naam, uitleg:"werken in de bron"}))
+          .concat([{sleutel:"blijf", naam:"Blijf op deze werf", uitleg:"er gaat dan niets naar de bron"}]));
+    if(k&&k!=="blijf")keuze=k;
+  }
+  if(!keuze)return false;
+  await wissel(keuze);
+  return true;
 }
 
 async function wisselProject(id){
@@ -6893,7 +7214,7 @@ function bewaarHoofdstukken(){
 }
 function hoofdstukVan(nr){return hoofdstukken.find(h=>h.nr===nr)||null;}
 
-/* Een eigen categorie, in de keet. Boris, 30/09/2026 (avond): "indien geen bestek toegevoegd,
+/* Een eigen categorie, in de keet. De opdrachtgever, 30/09/2026 (avond): "indien geen bestek toegevoegd,
    kan de gebruiker zelf een categorie opgeven thuis of ev. in de keet. Niet meer on the spot."
    Thuis is beheerHoofdstukken hieronder; dit is de korte weg uit de keet: één vraag, de naam.
    Het nummer is het eerstvolgende vrije, want een categorie zonder nummer kan het verslag niet
@@ -8295,7 +8616,7 @@ async function beheerContacten(){
   const rolnaam=sl=>{const r=ROLLEN.find(o=>o.sleutel===sl);return r?r.naam:sl;};
   const huidig=contacten.map(c=>c.naam+" = "+c.code+(c.rol?" = "+rolnaam(c.rol):"")+(c.vak?" = "+c.vak:"")).join("\n");
   /* Het vierde veld is het vak: dak, technieken, afwerking, ruwbouw. Het is vrij, en het dient
-     maar één ding -- de voorstellen bij "Toewijzen aan" (aanVoorstellen). Boris, 30/09/2026:
+     maar één ding -- de voorstellen bij "Toewijzen aan" (aanVoorstellen). De opdrachtgever, 30/09/2026:
      "dakdichtingen (aannemer dak), ventilatie (aannemer technieken)." */
   const uitleg="Eén contact per regel:  Naam = CODE = rol = vak\n"+
     "De code komt in het verslag voor de uitspraak te staan. De rol bepaalt onder welke kop een\n"+
@@ -8373,11 +8694,13 @@ async function beheerPlanbron(){
    geweest. Een knop doet zijn werk meteen. */
 document.getElementById("beheerknop").onclick=()=>{
   merkAiknop();
+  merkNoodknop();
   document.getElementById("beheerdlg").showModal();
   // Meten bij het openen en niet eerder: de cijfers verouderen, en niemand kijkt ernaar als het
   // venster dicht is. Async, dus het venster wacht er niet op.
   toonOpslagstand();
 };
+document.getElementById("noodterug").onclick=()=>{ noodkopieTerugzetten(); };
 document.getElementById("beheer-sluit").onclick=()=>
   document.getElementById("beheerdlg").close();
 document.getElementById("beheerdlg").addEventListener("click",e=>{
@@ -8389,7 +8712,7 @@ document.getElementById("beheerdlg").addEventListener("click",e=>{
 },true);
 
 /* ---- de AI-modus: een schakelaar zonder dienst erachter ----
-   Boris, 30/09/2026: "Ik wil ook AI-modus of offline modus. Zo ziet de gebruiker of er input
+   de opdrachtgever, 30/09/2026: "Ik wil ook AI-modus of offline modus. Zo ziet de gebruiker of er input
    komt via AI. Er moet dan een gekleurd icoontje komen bij de opmerking of zwart/wit offline
    modus en een keuzeknop (gelijk vliegtuigmodus bij iPhone)."
 
@@ -8488,7 +8811,7 @@ function toastEl(){
   }else el.style.top="";
   return el;
 }
-/* Hoe lang een melding blijft staan. Boris, 23/09/2026: "ok voor bericht indien het verdwijnt
+/* Hoe lang een melding blijft staan. De opdrachtgever, 23/09/2026: "ok voor bericht indien het verdwijnt
    na 2sec. Maar niet blijven staan." Een melding die blijft hangen over een plan waar je naar
    wil kijken, is zelf een gebrek -- ze dekt af wat ze aankondigt.
 
@@ -8654,7 +8977,7 @@ function tekenZones(){
 
    De marge laat een glimp van de buurcel staan. Een cel die strak tegen de rand sluit, ziet
    eruit als de laatste — en dan schuif je niet verder omdat je denkt dat er niets meer is. */
-/* HET GEKOZEN BLAD STAAT CENTRAAL. Boris, 30/09/2026 (avond): "het plan dat gekozen wordt staat
+/* HET GEKOZEN BLAD STAAT CENTRAAL. De opdrachtgever, 30/09/2026 (avond): "het plan dat gekozen wordt staat
    altijd centraal en in zwart." Het zwart stond er al -- de aangeklikte cel is overal hetzelfde
    zwarte vlak, sinds "kijk naar kelder, zo overal" van 28/09 -- het middenzetten niet: tot
    vandaag schoof de balk alleen zóver dat de cel net in beeld kwam, met een glimp van 24 px aan
@@ -9669,6 +9992,10 @@ function alleSleutels(winkel){return new Promise(res=>{
    kwijt bent. Wie op een tweede toestel wil koppelen, koppelt daar opnieuw. */
 const NIETINBACKUP=new Set(["werfpunten-toestel","werfpunten-backup",
                             "werfpunten-migratie","werfpunten-migratie-db",
+                            // de noodkopie is een kopie van deze opslag en blijft op dit toestel;
+                            // in een back-up zou ze alles dubbel dragen (en zichzelf, bij elk herstel)
+                            "werfpunten-noodkopie","werfpunten-noodkopie-vorige",
+                            "werfpunten-noodkopie-db",
                             // wat déze browser van blijvende opslag vindt, zegt niets over het
                             // toestel waar de back-up straks op terechtkomt
                             "werfpunten-blijvend",
@@ -9739,7 +10066,7 @@ async function maakBackup(volledig){
 }
 
 /* ---- de back-up die zichzelf wegzet ----
-   Boris, 23/09/2026: "dat bericht van bereik en backup is vervelend. kan dat niet
+   de opdrachtgever, 23/09/2026: "dat bericht van bereik en backup is vervelend. kan dat niet
    geautomatiseerd worden? wanneer terug online dan automatisch backup maken."
 
    De haak bestond al: `wachterSlag` stuurt stil door zodra er een `syncBestemming` is, en
@@ -9788,7 +10115,10 @@ async function backupNaarBron(d,haal){
   if(!bronInstelling||!bronInstelling.werfId)return "geen-bestemming";
   const drager="Bearer "+(bronInstelling.token||bronInstelling.sleutel);
   try{
-    const r=await h(bronInstelling.url+"/storage/v1/object/"+BRONEMMER+"/"+backupPad(bronInstelling.werfId,!!d.licht),{
+    /* Een eigen emmer voor back-ups (06/10/2026). De emmer voor beelden neemt alleen jpeg, png en pdf aan, met een
+       grens van 10 MB: een back-up in JSON kreeg daar 415, de app las dat als "later", en er is dus nooit een
+       back-up in de bron aangekomen. Zie supabase/migrations/20261007_werfbackups_emmer.sql. */
+    const r=await h(bronInstelling.url+"/storage/v1/object/"+BACKUPEMMER+"/"+backupPad(bronInstelling.werfId,!!d.licht),{
       method:"POST",
       headers:{"apikey":bronInstelling.sleutel, "Authorization":drager,
                "Content-Type":"application/json", "x-upsert":"true"},
@@ -9824,7 +10154,7 @@ function backupBestemmingen(){
   return uit;
 }
 
-/* Wanneer is een zending volledig? Boris, 05/10/2026, vraag 10: "volledig zodra de plannen
+/* Wanneer is een zending volledig? De opdrachtgever, 05/10/2026, vraag 10: "volledig zodra de plannen
    veranderd zijn." Dus de eerste keer, en na elke planwijziging; daartussen licht. Tot dan hing
    het aan wifi ("alleen op wifi", 24/09), en Safari kan wifi nooit bevestigen: op het toestel
    waar het uitmaakt ging er daardoor nooit een plan weg.
@@ -10753,7 +11083,7 @@ function gevolgVan(p,voor){
     rolVan(wie));
 }
 
-/* EEN PUNT AAN MEER DAN ÉÉN PARTIJ. Boris, 05/10/2026, op vraag 9 van de brief van 41: "onder
+/* EEN PUNT AAN MEER DAN ÉÉN PARTIJ. De opdrachtgever, 05/10/2026, op vraag 9 van de brief van 41: "onder
    elke kop, dus twee keer." Sinds 30/09/2026 kan een punt aan meer dan één gericht zijn; tot
    05/10 bepaalde de eerste de kop én de zin, en werden de anderen in die zin genoemd — "Ook
    voor X en Y" — zodat het punt niet twee keer opdook. Nu staat het wél onder elke kop, met
@@ -10761,7 +11091,7 @@ function gevolgVan(p,voor){
    vaststelling die twee keer staat, moet naar zichzelf kunnen verwijzen.
 
    Wat per partij verschilt is alleen het werkwoord, en dat komt uit haar rol. De rest niet.
-   Boris, diezelfde dag: "Het punt is uniek en vast, voor alle partijen, zoniet ontstaat er
+   De opdrachtgever, diezelfde dag: "Het punt is uniek en vast, voor alle partijen, zoniet ontstaat er
    verwarring en discussie." Daarom draagt elke zin dezelfde deadline en hetzelfde gevraagde:
    het punt heeft er maar één van, en dat is geen gebrek maar de regel.
 
@@ -10798,7 +11128,7 @@ function keetPunt(){return keet.lijst[keet.i]||null;}
 let keetPlanZone=null, keetPlan=null;
 
 /* ---- DE KEET IS BREED VANAF EEN IPAD, HET NAZICHT VANAF EEN BUREAU ----
-   Boris, 01/10/2026: "splitsen". Tot vandaag las deze functie NAZICHTBREED (1000), en de reden
+   de opdrachtgever, 01/10/2026: "splitsen". Tot vandaag las deze functie NAZICHTBREED (1000), en de reden
    die erbij stond was juist -- twee getallen die hetzelfde bedoelen lopen uit elkaar -- maar de
    premisse was mis: de twee bedoelen NIET hetzelfde.
 
@@ -11009,7 +11339,7 @@ async function keetToon(){
     pk.appendChild(los);
   }
 
-  /* HET HOOFDSTUK ALS KAST. Boris, 01/10/2026: dezelfde vorm als onder Categorie op het blad.
+  /* HET HOOFDSTUK ALS KAST. De opdrachtgever, 01/10/2026: dezelfde vorm als onder Categorie op het blad.
      Tot vandaag stond hier een keuzelijst -- de laatste van de app -- en daarin zag je het
      bestek niet: je koos een kop, en de artikels eronder bestonden alleen op het blad, terwijl
      de keet juist de plaats is waar je een punt afwerkt en dus naar het contract wijst.
@@ -11022,7 +11352,7 @@ async function keetToon(){
      alleen de artikels; loslaten doe je op de eerste regel. Dat de post daarbij wegvalt als ze
      onder een andere kop hing, is de regel van 22/09 en staat hieronder met haar reden.
 
-     BLADEREN IS GRATIS. Boris, 01/10/2026: "bladeren mag de post niet kosten." Wie 09 aantikt
+     BLADEREN IS GRATIS. De opdrachtgever, 01/10/2026: "bladeren mag de post niet kosten." Wie 09 aantikt
      om te kijken terwijl zijn punt onder 53 hangt, kiest 09 -- maar 53.41 valt niet weg, ze
      parkeert, en ze ligt er weer zodra je 53 opnieuw opslaat. Zie postBijKop. */
   const kast=document.getElementById("keet-kast");
@@ -11031,7 +11361,7 @@ async function keetToon(){
   // Open bij een punt zonder kop -- dan heb je hem nodig. Dezelfde regel als de woordenlijst.
   if(keet.kastOpen===null||keet.kastOpen===undefined)keet.kastOpen=!p.hoofdstuk;
   kast.hidden=!keet.kastOpen;
-  /* Geen tekst naast de vouwknop, alleen eronder bij het openklappen: dat is Boris' regel van
+  /* Geen tekst naast de vouwknop, alleen eronder bij het openklappen: dat is de opdrachtgever zijn regel van
      30/09 voor de rij Categorie op het blad, en ze geldt hier even goed -- wat er gekozen is,
      staat al in de gevolgregel ("Het verslag zet hier zelf bij: hoofdstuk 53 ..."). */
   vouwkast.textContent=kopWoord()+" "+(keet.kastOpen?"\u25b4":"\u25be");
@@ -11067,7 +11397,7 @@ async function keetToon(){
       })),
     });
   });
-  /* Boris, 30/09/2026 (avond): zonder bestek geef je een categorie thuis op of in de keet, niet
+  /* De opdrachtgever, 30/09/2026 (avond): zonder bestek geef je een categorie thuis op of in de keet, niet
      op de werf. Thuis is Beheer > hoofdstukken; hier is het de laatste regel van de kast. */
   rijen.push({nr:"+", naam:"nieuwe categorie\u2026", doe:()=>nieuweCategorie(p)});
   bouwBestekkast(kast,rijen);
@@ -11319,7 +11649,7 @@ function keetGa(stap){
   keet.kastOpen=null;keet.kopDicht=false;keet.parkeer=null;keetToon();
 }
 
-/* DE POST PARKEERT, ZE VALT NIET. Boris, 01/10/2026: "bladeren mag de post niet kosten, los
+/* DE POST PARKEERT, ZE VALT NIET. De opdrachtgever, 01/10/2026: "bladeren mag de post niet kosten, los
    dat op."
 
    De regel van 22/09 blijft overeind en is niet onderhandelbaar: een punt draagt nooit een post
@@ -11698,7 +12028,7 @@ function merkFotoknop(){
 }
 
 /* DE FOTO DIE KLAARSTAAT, TE ZIEN OP HET BLAD.
-   Boris, 25/09/2026: "waar is de foto naartoe op het scherm?" Nagemeten: nergens -- en niet
+   De opdrachtgever, 25/09/2026: "waar is de foto naartoe op het scherm?" Nagemeten: nergens -- en niet
    sinds deze verbouwing. Ook de oude fiche zei alleen "foto klaar"; er stond geen enkele
    `<img>` op het blad, in de invoerregel of in de lijst. Je zag je opname pas nadat het punt
    bewaard was, of als je het tekenscherm opende.
@@ -12031,7 +12361,7 @@ function ficheArtikel(tekst){
    opzettelijk: je typt in de keet of in de gang, niet noodzakelijk bij de plint, en een
    verzonnen coördinaat is erger dan geen. Een punt mag dus ook zonder allebei bewaard worden;
    het draagt dan zichtbaar "nog niet op plan". */
-/* De titel van het blad. Boris, 28/09/2026: "uitschuifscherm uit-01.4 wordt opmerking 01.4".
+/* De titel van het blad. De opdrachtgever, 28/09/2026: "uitschuifscherm uit-01.4 wordt opmerking 01.4".
    Het nummer van het punt blijft UIT-01.4 -- dat is de verwijzing in het verslag en die
    verandert niet -- maar op het blad staat de fasecode al in de kop van de app, dus daar is
    ze herhaling. Het woord is Opmerking, zoals de lijstkop eronder OPMERKINGEN zegt. */
@@ -12247,7 +12577,7 @@ function wisselTekstvak(open){
   if(fiche.uit.tekst){
     const v=document.getElementById("fiche-tekst"); if(v&&v.focus)try{v.focus();}catch(e){}
     /* En de rij Beschrijving naar boven, zodat het vak en het toetsenbord samen in beeld staan
-       (Boris, 30/09: "hoofdstuk schuift naar boven"). */
+       (de opdrachtgever, 30/09: "hoofdstuk schuift naar boven"). */
     const rij=document.getElementById("fiche-beschrijving");
     if(rij&&rij.scrollIntoView)try{rij.scrollIntoView({block:"start",behavior:"smooth"});}catch(e){}
   }
@@ -12564,7 +12894,7 @@ function bouwBestekkast(bak,koppen,opties){
       if(a.via)r.appendChild(maakEl("span","fiche-avia","via "+a.via));
       if(a.doe)r.onclick=a.doe;
       bak.appendChild(r); n++;
-      /* Boris, 30/09/2026, met een voorbeeld van een blad met een kop, een lijn en lopende tekst:
+      /* De opdrachtgever, 30/09/2026, met een voorbeeld van een blad met een kop, een lijn en lopende tekst:
          "wanneer je klikt op de ondercat, bv 05.21, wil ik ook uitschuiven en dan deze layout,
          zuivere tekst voorlopig." Draagt het bestek geen tekst, dan zegt het dat. */
       if(a.gekozen){
@@ -12599,7 +12929,7 @@ function vulFiche(opties){
   const lijst=document.getElementById("fiche-artikels");
   if(lijst){
     lijst.hidden=!fiche.uit.cat;
-    /* HET MENU IS HET BESTEK, ALS EEN KAST. Boris, 30/09/2026 (avond): "bij categorieën maak je
+    /* HET MENU IS HET BESTEK, ALS EEN KAST. De opdrachtgever, 30/09/2026 (avond): "bij categorieën maak je
        by default een hoofdstukken en subtitels menu uit het bestek dat je hebt toegevoegd."
        Tot dan stonden hier alleen de artikels die op de zin pasten -- drie, of niets. Nu staat
        het hele bestek er: eerst de hoofdstukken die het bestek heeft, en onder het opengeslagen
@@ -12607,11 +12937,11 @@ function vulFiche(opties){
        als voorstel en zijn hoofdstuk ligt open; kiezen doe je zelf, zoals bij de namen onder
        Toewijzen aan -- een voorstel is geen keuze.
 
-       Zonder bestek staat er geen lijst. Boris, dezelfde avond: "indien geen bestek toegevoegd,
+       Zonder bestek staat er geen lijst. De opdrachtgever, dezelfde avond: "indien geen bestek toegevoegd,
        kan de gebruiker zelf een categorie opgeven thuis of ev. in de keet. Niet meer on the spot
        omdat dit teveel tijd in beslag neemt." Dat keert een oudere keuze om: de standaardlijst
        van hoofdstukken bestond juist om op de werf snel een kop te kiezen. De omkering is van
-       Boris en staat hier met de datum. Op het blad dus alleen wat het bestek zegt; anders de
+       de opdrachtgever en staat hier met de datum. Op het blad dus alleen wat het bestek zegt; anders de
        weg naar thuis (Beheer > hoofdstukken) of de keet (de keuze daar, waar je er ook een
        nieuwe kunt opgeven: nieuweCategorie).
 
@@ -12659,7 +12989,7 @@ function vulFiche(opties){
       };
     }), {leeg:"Geen bestek voor deze werf. Een categorie geef je thuis op, onder Beheer \u203a hoofdstukken, of in de keet \u2014 niet hier."});
   }
-  /* CATEGORIE. Boris: "categorie (of bestekartikel - autom bij aanmaak punt)". Vandaar het
+  /* CATEGORIE. De opdrachtgever: "categorie (of bestekartikel - autom bij aanmaak punt)". Vandaar het
      artikelnummer vooraan en de kop van het hoofdstuk erachter: wat de app zélf gekozen heeft
      bij het maken van het punt, in één regel leesbaar, met de lijst eronder om het te wijzigen.
      "hoofdstuk onzeker" staat zo in het ontwerpblad van de fiches, en dat is met opzet dezelfde
@@ -12740,11 +13070,11 @@ function zetWaarde(id,tekst,leeg,onzeker){
    dezelfde som doet, en dan hoort ze afgesplitst te worden vóór de derde bestaat: anders staat
    er straks in de keet een rol achter de naam en op het blad niet, en zegt het scherm twee
    dingen over hetzelfde punt. */
-/* MEERDERE GEADRESSEERDEN. Boris, 30/09/2026: "onder 2 kunnen meerdere mogelijkheden aangeduid
+/* MEERDERE GEADRESSEERDEN. De opdrachtgever, 30/09/2026: "onder 2 kunnen meerdere mogelijkheden aangeduid
    worden." Een punt draagt `aan` (de eerste) en `aanOok` (de anderen). Deze twee helpers zijn
    de enige plaats waar die splitsing gemaakt wordt.
    Tot 05/10/2026 bepaalde de eerste de kop in het verslag en kwamen de anderen in de zin erbij.
-   Sinds Boris' antwoord van die dag ("onder elke kop, dus twee keer") staat het punt onder de
+   Sinds de opdrachtgever zijn antwoord van die dag ("onder elke kop, dus twee keer") staat het punt onder de
    kop van élke geadresseerde: de doorstuurblokken, de steno-export en het zoeken lezen de hele
    set (aanSet), en alleen de zin op één regel gaat over één partij (gevolgVan, zieOokVan). */
 function aanSet(o){ return [o&&o.aan, ...((o&&o.aanOok)||[])].filter(Boolean); }
@@ -12762,7 +13092,7 @@ function wisselAan(o,code){
   if(i<0)l.push(code); else l.splice(i,1);
   return zetAanSet(o,l);
 }
-/* VOORSTELLEN UIT DE VASTSTELLING. Boris, 30/09/2026: "stel vaststelling = plinten →
+/* VOORSTELLEN UIT DE VASTSTELLING. De opdrachtgever, 30/09/2026: "stel vaststelling = plinten →
    hoofdaannemer, onderaannemer afwerking, maar kan ook opdrachtgever (bv beslissen over kleur)
    en/of architect. Dakdichtingen (aannemer dak), ventilatie (aannemer technieken)."
 
@@ -12919,7 +13249,7 @@ document.getElementById("fichedlg").addEventListener("close",()=>{
   if(document.getElementById("fichedlg").open)return;
   ficheOpen(false);
 });
-/* HET KRUISJE SLUIT WAT BOVENOP LIGT. Boris, 01/10/2026: de calque is een laag over het blad,
+/* HET KRUISJE SLUIT WAT BOVENOP LIGT. De opdrachtgever, 01/10/2026: de calque is een laag over het blad,
    en "opmerking 02.1 mag wel zichtbaar blijven" -- dus blijft ook het kruisje van die rij staan.
    Ligt de calque erover, dan schuift één tik haar weg en staat je blad er nog; ligt ze er niet,
    dan doet het kruisje wat het altijd deed. Eén kruisje op het scherm in plaats van twee in
@@ -12932,7 +13262,7 @@ document.getElementById("fiche-x").onclick=()=>{
 /* Typen op het blad. Het schrijft door naar de regel eronder -- zie zetVaststelling -- en de
    Enter doet wat de pijl deed, want `goDrukken` weet zelf dat het blad openstaat. */
 /* De hoogte van het veld volgt de tekst: één regel in rust als er niets of één regel staat,
-   tot drie regels als er meer staat, en met de cursor erin altijd drie (Boris, 30/09/2026).
+   tot drie regels als er meer staat, en met de cursor erin altijd drie (de opdrachtgever, 30/09/2026).
    Gemeten op 30/09: een bewaarde beschrijving van twee regels stond in rust afgesneden op
    één regel -- een vaste hoogte kent de tekst niet. De maat komt uit de regelhoogte zelf;
    in de proefschil is die er niet en telt de terugval. */
@@ -12952,14 +13282,14 @@ document.getElementById("fiche-tekst").onblur=pasVeldHoogte;
 document.getElementById("fiche-tekst").onkeydown=e=>{
   if(e.key==="Enter"){ e.preventDefault(); goDrukken(); }
 };
-/* Er is geen Terug meer: het kruisje is de uitgang en het leidt terug naar de kaart. Boris,
+/* Er is geen Terug meer: het kruisje is de uitgang en het leidt terug naar de kaart. De opdrachtgever,
    25/09/2026: "De kruis klikt weg en leidt terug naar kaart." Twee uitgangen die hetzelfde doen
    is er één te veel, en de onderste plaats is nu van Bewaren.
 
    De twee rijen die een lijst openen. Ze onthouden hun stand in `fiche.uit`, want `vulFiche`
    hertekent het blad bij elke aanslag. */
 /* ---- TEKENEN BINNEN HET BLAD ----
-   Boris, 27/09/2026: "je klikt op het vak tekenen. dan vergroot dit tekenvlak uit, maar je
+   de opdrachtgever, 27/09/2026: "je klikt op het vak tekenen. dan vergroot dit tekenvlak uit, maar je
    blijft binnen het deelscherm. Dan weet je steeds waar je bent."
 
    Het tekenvlak en de pennenbalk verhuizen naar het blad en gaan daarna terug. Verhuizen en
@@ -13079,7 +13409,7 @@ async function zetGroot(welk){
   merkVakken();
   if(fiche.groot==="teken"){
     verhuisTeken(true);
-    /* Het blad groeit NIET mee. Boris, 27/09/2026: "het uitvergroten moet binnen het uitgetrokken
+    /* Het blad groeit NIET mee. De opdrachtgever, 27/09/2026: "het uitvergroten moet binnen het uitgetrokken
        kader blijven." Wil je meer tekenvlak, dan trek je het blad groter -- dat is één gebaar met
        één uitkomst, in plaats van een vak dat zelf beslist hoe groot je scherm wordt. */
     merkCalque();
@@ -13127,7 +13457,7 @@ function naVerloop(el,doe){
 async function zetTekenen(aan){ return (await zetGroot(aan?"teken":null))==="teken"; }
 
 /* ---- HET BLAD SLEPEN ----
-   Boris, 27/09/2026: "het uitschuifscherm mag sleepbaar kleiner of groter gemaakt worden."
+   de opdrachtgever, 27/09/2026: "het uitschuifscherm mag sleepbaar kleiner of groter gemaakt worden."
 
    De grens van 66 dvh blijft wat ze was -- de maat waarmee het blad opengaat -- maar ze is nu
    een vertrekpunt en geen wet. Wie meer plan wil ziet, sleept naar onder; wie het hele blad
@@ -13292,7 +13622,7 @@ document.getElementById("fiche-persoon").onclick=()=>{ fiche.uit.persoon=!fiche.
    het blijft dan zichtbaar als nog niet op plan zodat het bij het versturen niet nergens staat. */
 /* De balk hoort bij één weg nog: die van een punt dat er al staat, en dat je vanuit de keet of
    het nazicht rechtzet. Daar kijk je niet naar de kaart, dus daar hoort het planvenster wél.
-   De fiche liep hier tot 27/09/2026 ook langs, en dat was de omweg die Boris aanwees.
+   De fiche liep hier tot 27/09/2026 ook langs, en dat was de omweg die de opdrachtgever aanwees.
    Draagt het id van dat punt, niet ja of nee: de balk moet weten wélk punt ze een plek geeft. */
 let plekVoorPunt=null;
 function merkPlekbalk(){
@@ -13352,7 +13682,7 @@ function beginRechtzetten(p){
   planTeken();
   merkPlekbalk();
 }
-/* Tijdens het rechtzetten een ander blad kiezen. Boris, 06/10/2026: wie een punt per ongeluk op N1
+/* Tijdens het rechtzetten een ander blad kiezen. De opdrachtgever, 06/10/2026: wie een punt per ongeluk op N1
    zette terwijl hij op N3 dacht te staan (plannen lijken sterk op elkaar), moet het juist kunnen
    zetten op het blad waar het hoort. Het plan eronder springt dan mee, maar niet zonder te vragen:
    "we springen nu naar N3? ok?". Alleen het plan springt; je werkzone blijft waar ze was (vraag 5).
@@ -13390,12 +13720,12 @@ function terugNaarKeet(metPlek){
     const vorige=wachtendePlek;
     /* En de werkzone ook. plekUitPin() zet staat.zone op het blad van de plek (zo hoort het bij
        een nieuw punt: je prikt waar je staat) en plan.laatst op de pin. Een rechtzetting is geen
-       nieuw punt: van N3 een punt op N2 rechtzetten verhuisde je werkzone naar N2. Boris,
+       nieuw punt: van N3 een punt op N2 rechtzetten verhuisde je werkzone naar N2. De opdrachtgever,
        05/10/2026, vraag 5: "de werkzone blijft waar ik was." */
     const zoneVoor=staat.zone, laatstVoor=plan?plan.laatst:undefined;
     plekUitPin();
     if(wachtendePlek){
-      /* Boris, 06/10/2026 (B6): rechtzetten naar een ander blad verhuist het punt écht. Een punt
+      /* De opdrachtgever, 06/10/2026 (B6): rechtzetten naar een ander blad verhuist het punt écht. Een punt
          dat op N1 geprikt werd terwijl het op N3 hoort, staat daarna overal onder N3 — in de
          lijst, op de kaart en onder de kop van het verslag — en niet onder N1 met een plek op N3,
          want dat spreekt zichzelf tegen. Een correctie laat geen spoor na (zelfde dag, eerdere
@@ -14138,7 +14468,7 @@ function planTeken(){
   if(!planBeeld)return;
   x.imageSmoothingQuality="high";
   x.drawImage(planBeeld,pl.dx,pl.dy,plan.breedte*pl.schaal,plan.hoogte*pl.schaal);
-  /* HET TAKENBLAD. Boris, 01/10/2026: "om aan te duiden dat we in een takenblad zitten wil ik
+  /* HET TAKENBLAD. De opdrachtgever, 01/10/2026: "om aan te duiden dat we in een takenblad zitten wil ik
      heel licht gele calque overleggen."
 
      Over het hele vlak en niet alleen over het plan: je legt een vel over de tafel, niet over
@@ -16435,8 +16765,10 @@ function aanmeldToon(){
     : "Je verslagen staan online. Meld je aan om ze te kunnen wegschrijven en terugzien.";
   document.getElementById("aanmeld-ga").hidden=er;
   document.getElementById("aanmeld-af").hidden=!er;
-  if(email){ email.hidden=er; email.value=er?"":(email.value||aanmeldingEmail()); }
-  if(woord){ woord.hidden=er; woord.value=""; }
+  /* Het hele veld weg, niet alleen de invoer: anders staan de woorden E-mail en Wachtwoord er zonder vak onder
+     (gezien in de nepbron, 06/10/2026). */
+  if(email){ email.hidden=er; if(email.parentNode)email.parentNode.hidden=er; email.value=er?"":(email.value||aanmeldingEmail()); }
+  if(woord){ woord.hidden=er; if(woord.parentNode)woord.parentNode.hidden=er; woord.value=""; }
   const sv=document.getElementById("aanmeld-sleutelveld");
   const sl=document.getElementById("aanmeld-sleutel");
   if(sv)sv.hidden=er;
@@ -16501,8 +16833,12 @@ async function aanmeldGa(){
   if(uit==="aangemeld"){
     aanmeldToon(); melding("Aangemeld als "+aanmeldingEmail());
     bronLuister();
-    bronInlezen((u,o)=>fetch(u,o)).then(g=>{
-      if(g.uit==="goed")return bronKlaar(g);
+    bronInlezen((u,o)=>fetch(u,o)).then(async g=>{
+      if(g.uit==="goed"){
+        // wisselProject leest zelf uit de bron en werkt de rij af; dan is dit lezen overbodig
+        if(await kiesWerfNaAanmelden())return null;
+        return bronKlaar(g);
+      }
       /* Aangemeld maar niets gelezen: dat hoort gezegd, niet geslikt. Bij het opstarten zwijgt
          de app hierover -- geen bereik is daar gewoon -- na een aanmelding niet. */
       const st=(bronLaatste&&bronLaatste.status)?(" ("+bronLaatste.status+")"):"";
@@ -16788,7 +17124,7 @@ function hoofdstukTekst(nr){
 
 /* De naam komt uit de zonelijst van dit project, die van de gebruiker. Heeft het blad geen naam,
    dan staat de code er — verzinnen doen we niet. (Tot 05/10/2026 lag er een vaste tabel achter
-   met "niveau 3" en "dak"; die is weg, op Boris' antwoord bij vraag 12.) */
+   met "niveau 3" en "dak"; die is weg, op de opdrachtgever zijn antwoord bij vraag 12.) */
 function zoneNaam(z){
   const eigen=zones.find(o=>o.code===z);
   return (eigen&&eigen.naam)||z||"zonder zone";
@@ -16869,7 +17205,7 @@ function verslagModel(){
   // De doorstuurblokken. Alleen wat aan iemand is toegewezen: een blok is een lijst die je
   // doorstuurt, en een lijst zonder geadresseerde stuur je nergens heen. Wat niet is toegewezen
   // staat gewoon onder zijn zone.
-  // Een punt aan meer dan één partij staat onder de kop van elk van hen — Boris, 05/10/2026:
+  // Een punt aan meer dan één partij staat onder de kop van elk van hen — de opdrachtgever, 05/10/2026:
   // "onder elke kop, dus twee keer". Elke partij krijgt het punt in haar eigen lijst, en welke
   // kop dat is hangt van háár rol af (functieVan per partij), niet van die van de eerste.
   const blokken=[];
@@ -16919,7 +17255,7 @@ function verslagModel(){
           blokken, open:openPunten(), fotonr, punten};
 }
 
-/* HET GEFILTERDE VERSLAG. Boris, 05/10/2026: "De gebruiker kan kiezen het verslag volledig te
+/* HET GEFILTERDE VERSLAG. De opdrachtgever, 05/10/2026: "De gebruiker kan kiezen het verslag volledig te
    verzenden met alle punten of gefilterd per bestemmeling. Bv voor de ingenieur technieken zijn
    de opmerkingen aangaande de gevelafwerking niet van toepassing, en vice versa." En: "hoofding,
    aanwezigen, datum, weer, allemaal hetzelfde. Bij filter zeg je: dit is een gefilterd verslag,
@@ -17275,7 +17611,7 @@ async function bouwAfdruk(bestemmeling){
     el.appendChild(blok);
   }
 
-  /* AI IN DE VOET VAN HET VERSLAG. Boris, 01/10/2026, op vraag 8 van `AI-schakelaar-en-credits.md`
+  /* AI IN DE VOET VAN HET VERSLAG. De opdrachtgever, 01/10/2026, op vraag 8 van `AI-schakelaar-en-credits.md`
      -- de zwaarste van de acht: "ja, één regel in de voet". Voor de bewijsketen pleit alles vóór:
      een stuk dat zegt hoe het tot stand kwam is sterker dan een stuk dat het verzwijgt.
 
@@ -17396,7 +17732,7 @@ async function sluitVergaderingDoor(reden){
   /* Stap 9, de afsluiting naar de bron: het oude verslag wordt gemerkt VÓÓR het verse blad
      bestaat, dus vóór elk punt ervan in de rij. Het archiefrecord draagt dan `afgesloten`,
      `sleutel`, `gewijzigd` en `bronId`, en de rij vindt het daar terug (wachtPakket). Zonder
-     internet vertrekt het later; dat werkt ook zonder bereik (Boris, 06/10/2026). */
+     internet vertrekt het later; dat werkt ook zonder bereik (de opdrachtgever, 06/10/2026). */
   raakVerslagAan();
   const dag={...staat, afgesloten:new Date().toISOString()};
   if(!await zetDag(dag.sleutel,dag)){melding("Opslag weigert — ruimte vol?");return false;}
@@ -17617,7 +17953,7 @@ function oudeStipkleur(dagen){
    Hier stond: "Eén beeld, geen bedrading: pannen, zoomen en prikken blijven in het planvenster.
    Dit blad zegt waar je bent, meer niet -- en juist daarom hoeft het niets te kunnen."
 
-   **Die beslissing is op 23/09/2026 door Boris omgekeerd, en met reden.** Ze klopte toen de kaart
+   **Die beslissing is op 23/09/2026 door de opdrachtgever omgekeerd, en met reden.** Ze klopte toen de kaart
    een venster was dat je opende. Sinds plan-first is het blad de ondergrond van het hele scherm,
    en dan is het het eerste waar je naar kijkt en dus ook het eerste waarop je knijpt. Wat er
    gebeurde was het slechtst denkbare antwoord: niets van de app, en dus zoomde de brówser -- de
@@ -17726,7 +18062,7 @@ function prikOpKaart(sx,sy){
      grondplan van de demo: het vlak is 553 px hoog, de tekening staat van 273 tot 539 -- 265 px,
      en dus is 52% van wat je voor je ziet geen blad.
 
-     Tot vandaag gebeurde daar niets én werd er niets gezegd. Boris: "ik zet een speld. maar er
+     Tot vandaag gebeurde daar niets én werd er niets gezegd. De opdrachtgever: "ik zet een speld. maar er
      verschijnt geen uitschuifbaar scherm." Hij tikte naast het blad, en de app zweeg; dan lijkt
      het alsof het uitschuifscherm stuk is terwijl de tik nooit op een plek is geland.
 
@@ -17799,7 +18135,7 @@ function houdSpeldVrij(){
 }
 
 /* ---- springen naar een punt op een ander blad, en terug ----
-   Boris, 05/10/2026: "je staat op N3, je ziet op het plan alle punten van N3. In de lijst staan
+   de opdrachtgever, 05/10/2026: "je staat op N3, je ziet op het plan alle punten van N3. In de lijst staan
    eerst die van N3, daaronder de andere plannen. Klik je op een punt op N1, dan opent het plan N1
    en zie je ook meteen de andere punten van N1. Ik wil een return-knop die terug naar het laatste
    punt hiervoor gaat." En: "het springt naar het punt op de kaart, punt in het midden;
@@ -17862,7 +18198,7 @@ function kaartKijkTerug(){
   return true;
 }
 
-/* Wat er van het lopende verslag op de kaart hoort te staan. De regel is Boris' zin van
+/* Wat er van het lopende verslag op de kaart hoort te staan. De regel is de opdrachtgever zijn zin van
    23/09/2026: "de kaart filtert de lijst. De actieve punten en de nieuwe punten van tijdens de
    rondgang." Twee dingen dus, en het tweede is geen overbodigheid: een punt dat je zonet prikte
    en meteen afvinkte -- "staat er al" -- hoort tijdens diezelfde rondgang op het blad te blijven,
@@ -20095,7 +20431,7 @@ document.getElementById("nz-afsluit").onclick=async()=>{
 };
 
 /* ---- DOSSIER: de teksten, de vraag en de zoektocht ----
-   Boris, 30/09/2026 (avond): "bestekteksten en vragen stellen aan ai en zoeken binnen het
+   de opdrachtgever, 30/09/2026 (avond): "bestekteksten en vragen stellen aan ai en zoeken binnen het
    dossier." Drie dingen die op hetzelfde neerkomen: je zoekt iets op dat er al is. Vandaar één
    ingang, en drie wegen eronder.
 
@@ -20135,7 +20471,7 @@ function toonDossier(){
 }
 
 /* ---- LOCATIE: wat er over deze grond bekend is ----
-   Boris, 30/09/2026 (avond): "permanent raadpleegbare basisgegevens van de locatie (de openbare
+   de opdrachtgever, 30/09/2026 (avond): "permanent raadpleegbare basisgegevens van de locatie (de openbare
    api\'s: voorschriften, oude aanvragen, kaarten, grb, opmeting)."
 
    Vijf rubrieken, in zijn woorden. Eén ervan werkt: het GRB, want dat is de enige bestemming
@@ -20144,7 +20480,7 @@ function toonDossier(){
    nog niet zijn.
 
    Dat is geen halfheid maar de regel van dit dossier: elke nieuwe bestemming is een plaats waar
-   gegevens van deze werf heen gaan, en die opent niemand stil. Boris, dezelfde avond, gevraagd
+   gegevens van deze werf heen gaan, en die opent niemand stil. De opdrachtgever, dezelfde avond, gevraagd
    hoe ver: het kader, met het GRB echt. Wat er per rubriek nodig is, staat in de rij zelf. */
 function toonLocatie(){
   const dlg=document.getElementById("dlg");
@@ -20261,7 +20597,7 @@ async function kopieerVerslagtekst(){
   if(ok)melding("Gekopieerd — plak in Apple Notes");
 }
 /* De ingang heet Verslagen en toont ze allemaal: het verslag dat loopt én de oude van dit
-   project, per fase (Boris, 30/09/2026: "oude verslagen binnen hetzelfde project"). Het lopende
+   project, per fase (de opdrachtgever, 30/09/2026: "oude verslagen binnen hetzelfde project"). Het lopende
    verslag staat daar bovenaan, en de weg naar afdrukken, doorsturen en afsluiten loopt erlangs. */
 document.getElementById("verslag").onclick=()=>toonVergaderingen();
 document.getElementById("dossiermenu").onclick=toonDossier;
@@ -20297,6 +20633,9 @@ document.getElementById("fotos").onclick=async()=>{
 
 /* UI eerst tekenen, opslag daarna — zo werkt de app ook als IndexedDB geweigerd wordt */
 laadProjecten();
+/* Vóór de verhuizing, nooit erna: ná migreerOpslag() zijn de oude sleutels weg en is er niets
+   meer om te kopiëren. Zie "de noodkopie vóór de verhuizing". */
+const noodUit=maakNoodkopie();
 if(migreerOpslag()){
   // Wat er stond is één werf; die houdt haar zones zoals ze waren, want daar hangen punten aan.
   try{localStorage.setItem("werfpunten-zones:"+projecten[0].id, JSON.stringify(
@@ -20304,6 +20643,8 @@ if(migreerOpslag()){
      {code:"DAK",naam:"dak"},{code:"KAPEL",naam:"kapel"},{code:"KELDER",naam:"kelder"},
      {code:"STELLING",naam:"stelling"},{code:"BUITEN",naam:"buiten"}]));}catch(e){}
 }
+meldNoodkopie(noodUit);
+merkNoodknop();
 laadZones();
 laadFasen();
 laadStaat();
