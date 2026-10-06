@@ -1,7 +1,10 @@
-/* Werfpunten service worker — alles wat de app nodig heeft staat in de cache,
+/* Gridveld service worker — alles wat de app nodig heeft staat in de cache,
    zodat ze op de werf ook zonder netwerk opent. */
-const CACHE = "werfpunten-v77";
-const BESTANDEN = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
+const CACHE = "werfpunten-v214";
+/* demo-paviljoen.json staat hier met opzet NIET bij: bijna twee megabyte die elke
+   gebruiker anders bij de eerste opstart en bij elke cachebump opnieuw binnenhaalt, ook
+   wie de demo nooit aanraakt. Ze wordt opgehaald op het moment dat iemand erom vraagt. */
+const BESTANDEN = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-512-maskable.png"];
 
 self.addEventListener("install", e => {
   // cache:"reload" is hier niet optioneel: zonder dat haalt addAll de bestanden uit de gewone
