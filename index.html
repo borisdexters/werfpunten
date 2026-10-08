@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-4zJJ6lSMHVXO+eKq1IU0JZGY6g6KLEKACHtTmlumnIs=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-/pDbXwGW1fdGmgb/sduNelrDsv46KA0SqEdsi0JJg6I='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-r4uQ1Mva95qnI9Vb3C5+aZdTY4vUB+1Nir3a2hg5WjY=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-/pDbXwGW1fdGmgb/sduNelrDsv46KA0SqEdsi0JJg6I='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3352,7 +3352,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v217";
+const VERSIE="v218";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -15654,12 +15654,17 @@ function grbRaster(breedteM,hoogteM,vak){
   return uit;
 }
 
-async function maakOmtrekplan(hier,zone){
+async function maakOmtrekplan(hier,zone,gekozen){
   const L=wgsNaarLambert(hier.lat,hier.lon);    // nagemeten op 0,197 mm over zes ijkpunten
   const x=L.x, y=L.y;
-  // eerst het perceel waar je op staat, dan een ruimer kader eromheen
-  const hierbij=await grbLaag("GRB:ADP",[x-1,y-1,x+1,y+1],20);
-  const mijn=hierbij.find(f=>raaktVlak(f,x,y))||hierbij[0]||null;
+  /* De opdrachtgever, 08/10/2026: de app toont eerst het perceel en vraagt "juiste perceel?"; wat hij bevestigt komt hier
+     binnen als `gekozen` en wordt niet opnieuw gezocht. Zonder `gekozen` zoekt ze zelf, zoals tot nu toe. */
+  let mijn=gekozen||null;
+  if(!mijn){
+    // eerst het perceel waar je op staat, dan een ruimer kader eromheen
+    const hierbij=await grbLaag("GRB:ADP",[x-1,y-1,x+1,y+1],20);
+    mijn=hierbij.find(f=>raaktVlak(f,x,y))||hierbij[0]||null;
+  }
   const punten=[];
   (mijn?grbRingen(mijn):[]).forEach(r=>r.forEach(p=>punten.push(p)));
   if(!punten.length){ punten.push([x-40,y-40],[x+40,y+40]); }
@@ -15756,7 +15761,13 @@ async function openPlan(gevraagd,stil){
      het nooit, want daar kom je hier niet. */
   if(!planLijst.length&&!omtrekGeprobeerd){
     omtrekGeprobeerd=true;
-    if(await haalOmtrek(null,false))return;   // haalOmtrek opent het plan zelf
+    if(await haalOmtrek(null,false)){
+      // het GRB ligt nu als plan van de zone op de kaart; toon het ook in dit venster
+      planLijst=await planZones();
+      const z0=planLijst.includes(staat.zone)?staat.zone:planLijst[0];
+      if(z0){ await toonPlan(z0); document.getElementById("pl-plan").textContent=planLijst.length>1?("Plan: "+zoneNaam(z0)):"Plan"; }
+      return;
+    }
     planLijst=await planZones();
   }
   // het gevraagde plan, anders dat van de huidige zone, anders het enige dat er is
@@ -15915,7 +15926,13 @@ async function penNaarPlan(){
 }
 document.getElementById("penknop").onclick=penNaarPlan;
 document.getElementById("pl-laad").onclick=()=>document.getElementById("planbestand").click();
-document.getElementById("pl-omtrek").onclick=()=>haalOmtrek(null,false);
+document.getElementById("pl-omtrek").onclick=async()=>{
+  if(await haalOmtrek(null,false)){
+    planLijst=await planZones();
+    const z0=planLijst.includes(staat.zone)?staat.zone:planLijst[0];
+    if(z0)await openPlan(z0);
+  }
+};
 
 /* Meerdere plannen: de knop wisselt er doorheen. Twee niveaus is de praktijk; een lijst zou
    meer schermruimte kosten dan ze oplevert. */
@@ -19158,13 +19175,188 @@ function vraagWelkeWerf(lijst,hier,meerdere){
 async function haalOmtrekBijStart(){
   if(omtrekGeprobeerd)return false;
   omtrekGeprobeerd=true;
-  const gelukt=await haalOmtrek(null,false);
+  const gelukt=await haalOmtrekDirect(null,false);
   if(!gelukt)melding("Nog geen plan — laad er een of haal de omtrek via Plan");
   return gelukt;
 }
 
+/* ---- het GRB van je locatie, met een vraag ----
+   de opdrachtgever, 08/10/2026: "ik laad een grb, maar er verschijnt geen grb ... De app moet de locatie waar ik nu ben herkennen.
+   Dan wil ik een perceel zien en de vraag: juiste perceel? Dan klikken en wordt het GRB de achtergrond."
+
+   Wat er vroeger gebeurde: de app haalde de plek, zocht zelf een perceel, wachtte tot een halve minuut en meldde alles in
+   een melding van twee seconden, die je op een iPad mist. Nu staat de voortgang in een venster dat blijft staan, en jij
+   bevestigt het perceel. Daarna komt het GRB als plan van de zone op de kaart zelf te liggen; er opent geen ander scherm. */
+const PERCEELKADER=60;     // meter rondom je plek waarin percelen getoond worden
+/* Wat is jouw perceel? Het perceel waar je plek in ligt; anders het dichtstbijzijnde. Een kleine som apart, want hier
+   kan je telefoon (12 m onnauwkeurig, soms 40 m) een buurman als antwoord geven, en dan moet de gebruiker kunnen kiezen. */
+function grbKandidaat(percelen,x,y){
+  const binnen=percelen.findIndex(f=>raaktVlak(f,x,y));
+  if(binnen>=0)return binnen;
+  /* De afstand tot de RAND van het perceel, niet tot zijn hoekpunten: een stip in de straat ligt bij een lang perceel
+     soms dicht bij de zijkant en ver van elke hoek. */
+  const naarRand=(px,py,a,b)=>{
+    const dx=b[0]-a[0], dy=b[1]-a[1], l2=dx*dx+dy*dy;
+    const t=l2?Math.max(0,Math.min(1,((px-a[0])*dx+(py-a[1])*dy)/l2)):0;
+    return Math.hypot(px-(a[0]+t*dx), py-(a[1]+t*dy));
+  };
+  let beste=-1, dichtst=Infinity;
+  percelen.forEach((f,i)=>{
+    grbRingen(f).forEach(rg=>{
+      for(let k=0;k+1<rg.length;k++){
+        const d=naarRand(x,y,rg[k],rg[k+1]);
+        if(d<dichtst){ dichtst=d; beste=i; }
+      }
+    });
+  });
+  return beste;
+}
+/* De tekening waar je op tikt. Alle percelen rondom, het gekozen perceel gekleurd, en jij als stip. De y-as staat
+   omgekeerd: Lambert groeit naar het noorden, een scherm naar beneden. */
+function grbKeuzeSvg(percelen,x,y,gekozen,breedte){
+  const w=breedte||320, k=PERCEELKADER;
+  const minX=x-k, maxX=x+k, minY=y-k, maxY=y+k;
+  const sc=w/(maxX-minX), h=Math.round((maxY-minY)*sc);
+  const pt=q=>[((q[0]-minX)*sc).toFixed(1),((maxY-q[1])*sc).toFixed(1)];
+  const pad=f=>grbRingen(f).map(rg=>"M"+rg.map(q=>pt(q).join(",")).join("L")+"Z").join("");
+  const stuk=['<rect width="'+w+'" height="'+h+'" fill="#fff"/>'];
+  percelen.forEach((f,i)=>{
+    const dit=(i===gekozen);
+    stuk.push('<path data-i="'+i+'" d="'+pad(f)+'" fill="'+(dit?"rgba(176,69,39,.22)":"#f4f5f2")+'" stroke="'+(dit?"#b04527":"#a9aea6")+
+              '" stroke-width="'+(dit?3:1.2)+'"/>');
+  });
+  const p=pt([x,y]);
+  stuk.push('<circle cx="'+p[0]+'" cy="'+p[1]+'" r="6" fill="#1b5fd6" stroke="#fff" stroke-width="2"/>');
+  // geen style-attribuut in de tekst: de beveiligingsregel van de pagina laat inline stijl niet toe; de opmaak komt na het plaatsen
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'">'+stuk.join("")+'</svg>';
+}
+/* Het venster zelf: eerst voortgang, dan de vraag. Eén functie die tekst toont en knoppen geeft; wat ze teruggeeft is
+   wat de gebruiker koos. `hulp` laat de proef het venster vervangen. */
+function grbVenster(){
+  const dlg=document.getElementById("dlg"), body=document.getElementById("dlg-body");
+  let sluit=null;
+  const zet=(titel,html,knoppen)=>{
+    document.getElementById("dlg-titel").textContent=titel;
+    body.innerHTML=html||"";
+    document.getElementById("dlg-kopieer").style.display="none";
+    if(knoppen&&knoppen.length){
+      const rij=document.createElement("div");
+      rij.style.cssText="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px";
+      knoppen.forEach((kn,i)=>{
+        const b=document.createElement("button"); b.type="button"; b.textContent=kn.naam;
+        if(i===0)b.style.cssText="border-color:var(--lijn-hard);font-weight:650";
+        b.onclick=()=>kn.doe();
+        rij.appendChild(b);
+      });
+      body.appendChild(rij);
+    }
+  };
+  const open=()=>new Promise(res=>{ sluit=res; dlg.onclose=()=>{ dlg.onclose=null; res("gesloten"); }; if(!dlg.open)dlg.showModal(); });
+  const dicht=()=>{ dlg.onclose=null; try{ if(dlg.open)dlg.close(); }catch(e){} };
+  return {zet, open, dicht, body};
+}
+let grbBezig=false;
+async function kiesGrbPerceel(zone,hulp){
+  const h=hulp||{};
+  if(grbBezig)return false;
+  grbBezig=true;
+  const v=h.venster||grbVenster();
+  const doel=zone||staat.zone||ZONES[0];
+  let gesloten=false;
+  try{
+    const wachten=v.open?v.open():null;
+    if(wachten&&wachten.then)wachten.then(()=>{ gesloten=true; });
+    let gekozen=null, hier=null, percelen=[], x=0, y=0;
+    // 1. waar ben je?
+    for(;;){
+      v.zet("GRB van je locatie","<p class=\"inv-uitleg\">Ik bepaal waar je staat…</p><p class=\"inv-uitleg\">Staat er een vraag van je toestel om je locatie te gebruiken, kies dan <b>Sta toe</b>.</p>");
+      hier=await (h.plek||(()=>haalPlek(false)))();
+      if(gesloten)return false;
+      if(hier)break;
+      /* Heeft dit toestel of deze browser helemaal geen locatievoorziening, dan helpt opnieuw proberen niet: zeggen en
+         doorgaan, niet wachten op een klik. */
+      if(!h.plek&&!navigator.geolocation){
+        v.zet("Geen locatie op dit toestel","<p class=\"inv-uitleg\">Deze browser kan geen locatie geven. Open de app in Safari op je iPad of iPhone, of laad een plan zelf via <b>Plan</b>.</p>",
+          [{naam:"Sluiten", doe:()=>v.dicht()}]);
+        return false;
+      }
+      const opn=await new Promise(res=>v.zet("Ik vind je locatie niet",
+        "<p class=\"inv-uitleg\">Het toestel gaf mij geen locatie. Op een iPad: <b>Instellingen</b>, <b>Privacy en beveiliging</b>, <b>Locatievoorzieningen</b>, zet die aan en zet <b>Safari</b> (of de app) op <b>Tijdens gebruik van de app</b>. Binnen in een gebouw lukt het soms niet; ga dan even naar buiten.</p>",
+        [{naam:"Opnieuw proberen", doe:()=>res(true)},{naam:"Stoppen", doe:()=>res(false)}]));
+      if(!opn||gesloten){ v.dicht(); return false; }
+    }
+    const L=wgsNaarLambert(hier.lat,hier.lon); x=L.x; y=L.y;
+    const nauw=Math.round(hier.nauw||0);
+    // 2. welke percelen liggen er?
+    for(;;){
+      v.zet("GRB van je locatie","<p class=\"inv-uitleg\">Je locatie is gevonden"+(nauw&&nauw<9000?" (op ongeveer "+nauw+" m na)":"")+
+            ". Nu zoek ik de percelen in het GRB. Dat kan tot een halve minuut duren; dit venster blijft staan.</p>");
+      try{
+        percelen=await (h.laag||grbLaag)("GRB:ADP",[x-PERCEELKADER,y-PERCEELKADER,x+PERCEELKADER,y+PERCEELKADER],200);
+        break;
+      }catch(e){
+        if(gesloten)return false;
+        const opn=await new Promise(res=>v.zet("Het GRB antwoordt niet",
+          "<p class=\"inv-uitleg\">"+veilig(e.message||"onbereikbaar")+". Het GRB is een openbare dienst en soms overbelast. Het GRB dekt alleen Vlaanderen.</p>",
+          [{naam:"Opnieuw proberen", doe:()=>res(true)},{naam:"Stoppen", doe:()=>res(false)}]));
+        if(!opn||gesloten){ v.dicht(); return false; }
+      }
+    }
+    if(gesloten)return false;
+    if(!percelen.length){
+      const toch=await new Promise(res=>v.zet("Geen perceel gevonden",
+        "<p class=\"inv-uitleg\">Op deze plek vond ik geen perceel in het GRB. Het GRB dekt alleen Vlaanderen. Ik kan wel een leeg kader van ongeveer 80 m rond je plek maken.</p>",
+        [{naam:"Leeg kader maken", doe:()=>res(true)},{naam:"Stoppen", doe:()=>res(false)}]));
+      if(!toch||gesloten){ v.dicht(); return false; }
+    }else{
+      // 3. juiste perceel?
+      gekozen=grbKandidaat(percelen,x,y);
+      const antw=await new Promise(res=>{
+        const teken=()=>{
+          v.zet("Juiste perceel?",
+            "<p class=\"inv-uitleg\">De blauwe stip ben jij. Het gekleurde perceel is wat ik denk dat het jouwe is. <b>Tik op een ander perceel</b> als dat niet klopt.</p>"+
+            grbKeuzeSvg(percelen,x,y,gekozen),
+            [{naam:"Ja, dit perceel", doe:()=>res("ja")},{naam:"Stoppen", doe:()=>res("stop")}]);
+          const svg=v.body.querySelector&&v.body.querySelector("svg");
+          if(svg){ svg.style.maxWidth="100%"; svg.style.height="auto"; svg.style.display="block"; svg.style.margin="6px 0"; svg.style.cursor="pointer"; }
+          if(svg)svg.onclick=e=>{
+            const el=e.target&&e.target.closest?e.target.closest("[data-i]"):null;
+            if(el){ gekozen=Number(el.getAttribute("data-i")); teken(); }
+          };
+        };
+        teken();
+        if(h.kies)Promise.resolve(h.kies(percelen,gekozen)).then(i=>{ if(i==="stop")res("stop"); else { if(typeof i==="number")gekozen=i; res("ja"); } });
+      });
+      if(antw!=="ja"||gesloten){ v.dicht(); return false; }
+    }
+    // 4. het plan maken en als achtergrond leggen
+    v.zet("GRB van je locatie","<p class=\"inv-uitleg\">Ik haal de gebouwen rondom het perceel op en maak er je plan van. Dit duurt nog even.</p>");
+    const plan2=await (h.bouw||maakOmtrekplan)(hier,doel,percelen.length?percelen[gekozen]:null);
+    if(gesloten)return false;
+    await (h.zet||zetPlan)(doel,plan2);
+    planLijst=await planZones();
+    tekenZones();
+    kaartZone=null;                       // dwingt de kaart om het nieuwe plan te tonen
+    await tekenKaart();
+    v.dicht();
+    melding("GRB staat nu op de kaart — "+plan2.maten.breedte_m+"×"+plan2.maten.hoogte_m+" m");
+    return true;
+  }catch(e){
+    if(!gesloten){
+      try{ v.zet("Het GRB lukte niet","<p class=\"inv-uitleg\">"+veilig(e.message||"onbekende fout")+"</p>",[{naam:"Sluiten", doe:()=>v.dicht()}]); }catch(x2){}
+    }
+    return false;
+  }finally{ grbBezig=false; }
+}
+
 let omtrekBezig=false;
+/* Aangeroepen door wie een plan wil. Met een venster en een vraag; de oude, stille weg staat hieronder als
+   haalOmtrekDirect en wordt alleen nog gebruikt bij het opstarten, waar een venster niet mag opduiken. */
 async function haalOmtrek(zone,stil){
+  if(stil)return haalOmtrekDirect(zone,stil);
+  return kiesGrbPerceel(zone);
+}
+async function haalOmtrekDirect(zone,stil){
   if(omtrekBezig)return false;
   /* Hier stond een fasecontrole: "een omtrek hoort bij een werffase". Dat klopte niet met hoe een
      dossier werkelijk begint. Een omtrek is het pérceel, niet een verdieping — en juist in een
