@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-8NDyvXtC6so+r/Kty9LW5uNlsI0PbVK8fdmzrIV1960=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-/pDbXwGW1fdGmgb/sduNelrDsv46KA0SqEdsi0JJg6I='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-elHnz5cHlwncTeWHiYVQ/70KRtMQB6c3/Vq08z7Ix10=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-/pDbXwGW1fdGmgb/sduNelrDsv46KA0SqEdsi0JJg6I='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3352,7 +3352,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v219";
+const VERSIE="v220";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -15654,7 +15654,7 @@ function grbRaster(breedteM,hoogteM,vak){
   return uit;
 }
 
-async function maakOmtrekplan(hier,zone,gekozen){
+async function maakOmtrekplan(hier,zone,gekozen,toegestaanLeeg){
   const L=wgsNaarLambert(hier.lat,hier.lon);    // nagemeten op 0,197 mm over zes ijkpunten
   const x=L.x, y=L.y;
   /* De opdrachtgever, 08/10/2026: de app toont eerst het perceel en vraagt "juiste perceel?"; wat hij bevestigt komt hier
@@ -15676,6 +15676,11 @@ async function maakOmtrekplan(hier,zone,gekozen){
 
   const [percelen,gebouwen]=await Promise.all([
     grbLaag("GRB:ADP",kader,120), grbLaag("GRB:GBG",kader,200)]);
+  /* De opdrachtgever, 08/10/2026: "omtrek geladen, maar ik zie niets." Op een plek waar het GRB niets kent (buiten Vlaanderen, of een
+     plek zonder perceel) tekende deze functie toch een wit kader en de app meldde "geladen". Nu is dat een fout, behalve
+     als iemand er uitdrukkelijk om vroeg (het lege kader uit het venster "Geen perceel gevonden"). */
+  if(!toegestaanLeeg&&!mijn&&!percelen.length&&!gebouwen.length)
+    throw new Error("het GRB kent op deze plek geen percelen of gebouwen. Het dekt alleen Vlaanderen (en niet Brussel of Wallonië)");
 
   const breedteM=maxX-minX, hoogteM=maxY-minY;
   const bw=Math.round(breedteM*GRBCM), bh=Math.round(hoogteM*GRBCM);
@@ -19349,7 +19354,8 @@ async function kiesGrbPerceel(zone,hulp){
     }
     // 4. het plan maken en als achtergrond leggen
     v.zet("GRB van je locatie","<p class=\"inv-uitleg\">Ik haal de gebouwen rondom het perceel op en maak er je plan van. Dit duurt nog even.</p>");
-    const plan2=await (h.bouw||maakOmtrekplan)(hier,doel,percelen.length?percelen[gekozen]:null);
+    // Een leeg kader mag hier, want de gebruiker koos er in het venster "Geen perceel gevonden" uitdrukkelijk voor.
+    const plan2=await (h.bouw||maakOmtrekplan)(hier,doel,percelen.length?percelen[gekozen]:null,!percelen.length);
     if(gesloten)return false;
     const bewaard=await (h.zet||zetPlan)(doel,plan2);
     if(bewaard===false){
