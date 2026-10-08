@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-5f1HwpmAzYJlXz/J5sPsU/GfH17VHBDWpt7HLRCvLes=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-/pDbXwGW1fdGmgb/sduNelrDsv46KA0SqEdsi0JJg6I='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-lwP4GxoacPwAeW8aJWGJ/4/eXcKcuWdBLl2Ah5OJij8=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-/pDbXwGW1fdGmgb/sduNelrDsv46KA0SqEdsi0JJg6I='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3352,7 +3352,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v221";
+const VERSIE="v222";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -16637,6 +16637,18 @@ document.getElementById("planbestand").onchange=async e=>{
     // weet het nieuwe blad nog niet waar het ligt, en is koppelen de eerstvolgende handeling —
     // meteen aanbieden, want een minuut later is de aanleiding weg.
     const t=data.georef?await teNemenPunten(await haalPlan(data.zone)):null;
+    /* De opdrachtgever, 08/10/2026: "ik wil het GRB gebruiken als werkplan tot de plannen kunnen worden toegevoegd. De plannen moeten
+       dan wel de richting van de contouren van het GRB volgen." Kwam het echte plan over een voorlopige GRB-omtrek heen en
+       draagt het zelf geen richting en maat (een scan of PDF), dan is de eerstvolgende handeling het op het GRB leggen. Dat
+       gebeurde alleen als er punten op stonden, en als een melding van twee seconden. Nu een vraag die blijft staan. */
+    if(wissel.omtrek&&!data.georef&&!(t&&t.passen.length)){
+      const leg=await vraagJa("Het plan op het GRB leggen",[
+        "Het GRB van je locatie was je werkplan. Het staat nu opzij als <b>"+veilig(geparkeerd.zone)+"</b>, en <b>"+veilig(data.zone)+"</b> is je echte plan.",
+        "Dit plan weet nog niet in welke richting het ligt en hoe groot het is. Wijs <b>twee keer dezelfde hoek</b> aan: eerst op dit plan, dan op het GRB. Het plan rekent dan zelf de richting en de maat uit en volgt de contouren van het GRB."+
+        (puntenOpZone(geparkeerd.zone).length?" Je punten komen zo ook op de goede plek.":"")],"Nu op het GRB leggen");
+      if(leg){ await openPlan(data.zone); koppelStart(); }
+      return;
+    }
     if(!(t&&t.passen.length))
       meldingMetActie(stuks(puntenOpZone(geparkeerd.zone).length,"punt staat","punten staan")+
         " nog op "+geparkeerd.zone,"koppel",
