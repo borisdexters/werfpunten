@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-r4uQ1Mva95qnI9Vb3C5+aZdTY4vUB+1Nir3a2hg5WjY=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-/pDbXwGW1fdGmgb/sduNelrDsv46KA0SqEdsi0JJg6I='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-8NDyvXtC6so+r/Kty9LW5uNlsI0PbVK8fdmzrIV1960=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-/pDbXwGW1fdGmgb/sduNelrDsv46KA0SqEdsi0JJg6I='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3352,7 +3352,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v218";
+const VERSIE="v219";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -19267,6 +19267,24 @@ async function kiesGrbPerceel(zone,hulp){
     const wachten=v.open?v.open():null;
     if(wachten&&wachten.then)wachten.then(()=>{ gesloten=true; });
     let gekozen=null, hier=null, percelen=[], x=0, y=0;
+    /* 0. kan dit toestel het plan wel bewaren? De opdrachtgever, 08/10/2026: "GRB geladen, maar geen plan." De app meldde dat het GRB
+       geladen was zonder te controleren of het plan werkelijk bewaard werd. Op een iPad kan de database van de app dicht
+       zitten (de app of een Safari-tabblad staat nog open na een versiewissel, of de privé-modus staat aan): dan is er niets
+       om het plan in te zetten. Dat zeggen we vóór er een halve minuut gewacht wordt, niet erna. */
+    for(;;){
+      let ok=h.opslag?await h.opslag():!!db;
+      if(!ok&&!h.opslag){ try{ await opendb(); }catch(e){} ok=!!db; }
+      if(ok)break;
+      // Kent de browser helemaal geen database, dan helpt opnieuw proberen niet: zeggen en doorgaan.
+      if(!h.opslag&&typeof indexedDB==="undefined"){
+        v.zet("De opslag van dit toestel is niet beschikbaar","<p class=\"inv-uitleg\">Deze browser heeft geen opslag voor plannen. Open de app in Safari.</p>",[{naam:"Sluiten", doe:()=>v.dicht()}]);
+        return false;
+      }
+      const opn=await new Promise(res=>v.zet("De opslag van dit toestel is niet beschikbaar",
+        "<p class=\"inv-uitleg\">Zonder die opslag kan een plan nergens bewaard worden. Meestal komt dat doordat de app of een Safari-tabblad met deze pagina nog open staat, of doordat de privé-modus aanstaat. Sluit de app helemaal (veeg hem weg in de appkiezer), sluit ook de Safari-tabbladen met deze pagina, en open de app opnieuw.</p>",
+        [{naam:"Opnieuw proberen", doe:()=>res(true)},{naam:"Stoppen", doe:()=>res(false)}]));
+      if(!opn||gesloten){ v.dicht(); return false; }
+    }
     // 1. waar ben je?
     for(;;){
       v.zet("GRB van je locatie","<p class=\"inv-uitleg\">Ik bepaal waar je staat…</p><p class=\"inv-uitleg\">Staat er een vraag van je toestel om je locatie te gebruiken, kies dan <b>Sta toe</b>.</p>");
@@ -19333,7 +19351,13 @@ async function kiesGrbPerceel(zone,hulp){
     v.zet("GRB van je locatie","<p class=\"inv-uitleg\">Ik haal de gebouwen rondom het perceel op en maak er je plan van. Dit duurt nog even.</p>");
     const plan2=await (h.bouw||maakOmtrekplan)(hier,doel,percelen.length?percelen[gekozen]:null);
     if(gesloten)return false;
-    await (h.zet||zetPlan)(doel,plan2);
+    const bewaard=await (h.zet||zetPlan)(doel,plan2);
+    if(bewaard===false){
+      v.zet("Het plan kon niet bewaard worden",
+        "<p class=\"inv-uitleg\">Het GRB is wel opgehaald, maar dit toestel liet niet toe het plan op te slaan (de opslag is vol, geblokkeerd of de privé-modus staat aan). Sluit de app helemaal, open hem opnieuw en probeer het nog eens.</p>",
+        [{naam:"Sluiten", doe:()=>v.dicht()}]);
+      return false;
+    }
     planLijst=await planZones();
     tekenZones();
     kaartZone=null;                       // dwingt de kaart om het nieuwe plan te tonen
@@ -19372,7 +19396,7 @@ async function haalOmtrekDirect(zone,stil){
     if(!stil)melding("Omtrek ophalen uit het GRB — dit duurt een halve minuut…");
     const doel=zone||staat.zone||ZONES[0];
     const plan2=await maakOmtrekplan(hier,doel);
-    await zetPlan(doel,plan2);
+    if(!(await zetPlan(doel,plan2)))throw new Error("het plan kon niet op dit toestel bewaard worden (de opslag is niet beschikbaar)");
     planLijst=await planZones();
     tekenZones();
     eersteOpening=true;                 // het hele blad in beeld, dit is een nieuw plan
