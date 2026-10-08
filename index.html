@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-elHnz5cHlwncTeWHiYVQ/70KRtMQB6c3/Vq08z7Ix10=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-/pDbXwGW1fdGmgb/sduNelrDsv46KA0SqEdsi0JJg6I='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-5f1HwpmAzYJlXz/J5sPsU/GfH17VHBDWpt7HLRCvLes=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-/pDbXwGW1fdGmgb/sduNelrDsv46KA0SqEdsi0JJg6I='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2844,7 +2844,7 @@
 
      De knoppen houden hun oude id, zodat de bedrading er ongewijzigd op blijft passen. -->
 <dialog id="beheerdlg">
-  <div class="dlg-kop"><h2>Beheer</h2></div>
+  <div class="dlg-kop"><h2 id="beheertitel">Beheer</h2></div>
   <div class="dlg-body beheer-body">
     <h3>Deze werf</h3>
     <p class="beheer-uitleg">Hoort bij dit dossier. Een andere werf draagt haar eigen lijsten.</p>
@@ -3352,7 +3352,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v220";
+const VERSIE="v221";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -8693,6 +8693,8 @@ async function beheerPlanbron(){
    onbetrouwbaar af bij programmatisch sluiten, en dat is vorige sessie een half uur zoeken
    geweest. Een knop doet zijn werk meteen. */
 document.getElementById("beheerknop").onclick=()=>{
+  // De versie staat in de kop, zodat je op een toestel kunt zien welke app er draait (08/10/2026: niemand wist het meer).
+  document.getElementById("beheertitel").textContent="Beheer · "+VERSIE;
   merkAiknop();
   merkNoodknop();
   document.getElementById("beheerdlg").showModal();
@@ -15696,7 +15698,12 @@ async function maakOmtrekplan(hier,zone,gekozen,toegestaanLeeg){
   });
   if(mijn)stuk.push('<path d="'+pad(mijn)+'" fill="none" stroke="#b04527" stroke-width="34"/>');
 
-  const svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+bw+'" height="'+bh+'" '+
+  /* De eigen maat van de tekening mag niet reusachtig zijn. Eén eenheid is een centimeter, dus 85 m is 8500 breed en het
+     geheel 75 miljoen pixels. Safari op iPhone en iPad geeft zo'n SVG als beeld soms niet of blanco weer (de opdrachtgever, 08/10/2026:
+     "omtrek geladen, maar ik zie niets"). viewBox blijft de volle maat, dus alle coördinaten van het plan blijven kloppen;
+     alleen de maat die de browser als uitgangspunt neemt, wordt begrensd. De tekening blijft scherp: het is vector. */
+  const GRBBEELDMAX=2048, bk=Math.min(1,GRBBEELDMAX/Math.max(bw,bh));
+  const svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+Math.max(1,Math.round(bw*bk))+'" height="'+Math.max(1,Math.round(bh*bk))+'" '+
             'viewBox="0 0 '+bw+' '+bh+'">'+stuk.join("")+'</svg>';
   const vak=grbVakmaat(breedteM,hoogteM);
   return {
