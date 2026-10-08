@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-lwP4GxoacPwAeW8aJWGJ/4/eXcKcuWdBLl2Ah5OJij8=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-/pDbXwGW1fdGmgb/sduNelrDsv46KA0SqEdsi0JJg6I='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-kTqAU3tXB7EsQv74XsRoVSv+qKi+yygQfKJDiCkv1wM=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-/pDbXwGW1fdGmgb/sduNelrDsv46KA0SqEdsi0JJg6I='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3352,7 +3352,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v222";
+const VERSIE="v223";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -15773,10 +15773,11 @@ async function openPlan(gevraagd,stil){
      het nooit, want daar kom je hier niet. */
   if(!planLijst.length&&!omtrekGeprobeerd){
     omtrekGeprobeerd=true;
-    if(await haalOmtrek(null,false)){
-      // het GRB ligt nu als plan van de zone op de kaart; toon het ook in dit venster
+    const gedaan=await haalOmtrek(null,false);
+    if(gedaan){
+      // het GRB ligt nu als plan van een zone; toon het ook in dit venster
       planLijst=await planZones();
-      const z0=planLijst.includes(staat.zone)?staat.zone:planLijst[0];
+      const z0=(typeof gedaan==="string"&&planLijst.includes(gedaan))?gedaan:(planLijst.includes(staat.zone)?staat.zone:planLijst[0]);
       if(z0){ await toonPlan(z0); document.getElementById("pl-plan").textContent=planLijst.length>1?("Plan: "+zoneNaam(z0)):"Plan"; }
       return;
     }
@@ -15938,13 +15939,17 @@ async function penNaarPlan(){
 }
 document.getElementById("penknop").onclick=penNaarPlan;
 document.getElementById("pl-laad").onclick=()=>document.getElementById("planbestand").click();
-document.getElementById("pl-omtrek").onclick=async()=>{
-  if(await haalOmtrek(null,false)){
-    planLijst=await planZones();
-    const z0=planLijst.includes(staat.zone)?staat.zone:planLijst[0];
-    if(z0)await openPlan(z0);
-  }
-};
+/* Het GRB van je huidige plek, en daarna tonen op de zone waar het terechtkwam. Ook bereikbaar via ⋯ in het Plan-venster
+   ("GRB van deze plek"), voor als er al een plan ligt. */
+async function grbVanDezePlek(){
+  const gedaan=await haalOmtrek(null,false);
+  if(!gedaan)return false;
+  planLijst=await planZones();
+  const z0=(typeof gedaan==="string"&&planLijst.includes(gedaan))?gedaan:(planLijst.includes(staat.zone)?staat.zone:planLijst[0]);
+  if(z0)await openPlan(z0);
+  return true;
+}
+document.getElementById("pl-omtrek").onclick=()=>{ grbVanDezePlek(); };
 
 /* Meerdere plannen: de knop wisselt er doorheen. Twee niveaus is de praktijk; een lijst zou
    meer schermruimte kosten dan ze oplevert. */
@@ -16028,6 +16033,7 @@ function planMenu(){
   knop(g1,"▤ Verslag",()=>{sluitPlan();tik("verslag");});
 
   const g2=groep("Dit plan");
+  knop(g2,"GRB van deze plek",()=>{ grbVanDezePlek(); });
   knop(g2,"Ander plan of niveau",()=>tik("pl-plan"));
   knop(g2,"Pin wissen",()=>tik("pl-wis"));
   knop(g2,"Lokalen nummeren",()=>tik("pl-nummer"));
@@ -19275,7 +19281,10 @@ function grbVenster(){
       body.appendChild(rij);
     }
   };
-  const open=()=>new Promise(res=>{ sluit=res; dlg.onclose=()=>{ dlg.onclose=null; res("gesloten"); }; if(!dlg.open)dlg.showModal(); });
+  /* Het close-event van een dialoog komt niet meteen maar in een volgende taak. Sluit je dit venster en open je het meteen
+     opnieuw, dan krijgt het nieuwe het event van het vorige binnen en lijkt het gesloten (gezien 08/10/2026, twee keer het
+     GRB vlak na elkaar). Ligt het venster nog open, dan is het event van vroeger en negeren we het. */
+  const open=()=>new Promise(res=>{ sluit=res; dlg.onclose=()=>{ if(dlg.open)return; dlg.onclose=null; res("gesloten"); }; if(!dlg.open)dlg.showModal(); });
   const dicht=()=>{ dlg.onclose=null; try{ if(dlg.open)dlg.close(); }catch(e){} };
   return {zet, open, dicht, body};
 }
@@ -19371,12 +19380,33 @@ async function kiesGrbPerceel(zone,hulp){
       });
       if(antw!=="ja"||gesloten){ v.dicht(); return false; }
     }
-    // 4. het plan maken en als achtergrond leggen
+    /* 4. waar komt het te liggen? De opdrachtgever, 08/10/2026: het plan van "het gemeentehuis" stond er nog van een eerdere test, en
+       "ik ben niet in Maasmechelen". Er mag overal een GRB van je huidige plek gehaald worden, dus er is een regel nodig:
+       - geen plan op deze zone: gewoon leggen;
+       - een voorlopig GRB (van een eerdere plek): het gaat opzij, met de punten die erop staan, en het nieuwe komt ervoor;
+       - een ECHT plan: nooit overschrijven. Dan komt het GRB op de eerste zone zonder plan, en zegt de app welke. */
+    const bestaand=h.bestaand!==undefined?h.bestaand:await haalPlan(doel);
+    let opZone=doel;
+    if(bestaand&&!bestaand.voorlopig){
+      const vrij=(ZONES.includes("BUITEN")&&!(planLijst||[]).includes("BUITEN"))?"BUITEN":ZONES.find(z=>!(planLijst||[]).includes(z));
+      if(!vrij){
+        v.zet("Alle zones hebben al een plan",
+          "<p class=\"inv-uitleg\">Op elke zone ligt al een plan, dus het GRB heeft geen plaats. Voeg eerst een zone toe via Beheer, of laat een zone leeg.</p>",
+          [{naam:"Sluiten", doe:()=>v.dicht()}]);
+        return false;
+      }
+      opZone=vrij;
+    }
+    // 5. het plan maken en als achtergrond leggen
     v.zet("GRB van je locatie","<p class=\"inv-uitleg\">Ik haal de gebouwen rondom het perceel op en maak er je plan van. Dit duurt nog even.</p>");
     // Een leeg kader mag hier, want de gebruiker koos er in het venster "Geen perceel gevonden" uitdrukkelijk voor.
-    const plan2=await (h.bouw||maakOmtrekplan)(hier,doel,percelen.length?percelen[gekozen]:null,!percelen.length);
+    const plan2=await (h.bouw||maakOmtrekplan)(hier,opZone,percelen.length?percelen[gekozen]:null,!percelen.length);
     if(gesloten)return false;
-    const bewaard=await (h.zet||zetPlan)(doel,plan2);
+    if(bestaand&&bestaand.voorlopig&&opZone===doel&&!h.zet){
+      const naam=await vrijeVersienaam(doel);
+      if(!(await parkeerPlan(bestaand,naam,puntenOpZone(doel)))){ v.dicht(); return false; }
+    }
+    const bewaard=await (h.zet||zetPlan)(opZone,plan2);
     if(bewaard===false){
       v.zet("Het plan kon niet bewaard worden",
         "<p class=\"inv-uitleg\">Het GRB is wel opgehaald, maar dit toestel liet niet toe het plan op te slaan (de opslag is vol, geblokkeerd of de privé-modus staat aan). Sluit de app helemaal, open hem opnieuw en probeer het nog eens.</p>",
@@ -19388,8 +19418,10 @@ async function kiesGrbPerceel(zone,hulp){
     kaartZone=null;                       // dwingt de kaart om het nieuwe plan te tonen
     await tekenKaart();
     v.dicht();
-    melding("GRB staat nu op de kaart — "+plan2.maten.breedte_m+"×"+plan2.maten.hoogte_m+" m");
-    return true;
+    melding(opZone===doel
+      ? "GRB staat nu op de kaart — "+plan2.maten.breedte_m+"×"+plan2.maten.hoogte_m+" m"
+      : "Op "+doel+" ligt al een echt plan: het GRB staat op "+opZone+" — "+plan2.maten.breedte_m+"×"+plan2.maten.hoogte_m+" m");
+    return opZone;     // de zone waarop het GRB nu ligt, zodat de aanroeper die kan tonen
   }catch(e){
     if(!gesloten){
       try{ v.zet("Het GRB lukte niet","<p class=\"inv-uitleg\">"+veilig(e.message||"onbekende fout")+"</p>",[{naam:"Sluiten", doe:()=>v.dicht()}]); }catch(x2){}

@@ -1,6 +1,6 @@
 /* Gridveld service worker — alles wat de app nodig heeft staat in de cache,
    zodat ze op de werf ook zonder netwerk opent. */
-const CACHE = "werfpunten-v222";
+const CACHE = "werfpunten-v223";
 /* demo-paviljoen.json staat hier met opzet NIET bij: bijna twee megabyte die elke
    gebruiker anders bij de eerste opstart en bij elke cachebump opnieuw binnenhaalt, ook
    wie de demo nooit aanraakt. Ze wordt opgehaald op het moment dat iemand erom vraagt. */
