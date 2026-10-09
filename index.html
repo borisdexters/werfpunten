@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-kTqAU3tXB7EsQv74XsRoVSv+qKi+yygQfKJDiCkv1wM=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-/pDbXwGW1fdGmgb/sduNelrDsv46KA0SqEdsi0JJg6I='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-eCpbX8dh3SzoPsjeNlUrw4gqUMlCrTDBQFTUuU61oH4=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-iLKtj7j8foO4ILVceMjpfJYigeHb0ElFl01DB629NUg='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -278,16 +278,35 @@
   .kaartknop.kaartterug{background:repeating-linear-gradient(135deg,#ffd84a 0 7px,#f4c400 7px 14px);
     border-color:#8a6d00;color:#1b1500}
   #vulling.met-terug #kaartoud{top:50px}
+  /* Open punten dichtbij je plek: linksonder op de kaart, waar je duim ligt als je loopt. */
+  .kaartknop.kaartdichtbij{top:auto;bottom:10px;right:auto;left:10px}
+  .kaartknop.kaartperceel{top:auto;bottom:10px;right:10px}
+  .kaartknop.kaartverzet{background:repeating-linear-gradient(135deg,#ffd84a 0 7px,#f4c400 7px 14px);border-color:#8a6d00;color:#1b1500;
+    right:auto;left:10px}
+  /* Jij op het plan. Blauw als de speld van een nieuw punt in het planvenster, met een ring ter grootte van je onzekerheid:
+     de ring is de eerlijke helft van de stip. */
+  .kaarthier{position:absolute;left:var(--px);top:var(--py);width:14px;height:14px;margin:-7px 0 0 -7px;
+    border-radius:50%;background:#1b5fd6;box-shadow:0 0 0 3px #fff;z-index:3}
+  .kaarthier-ring{position:absolute;left:var(--px);top:var(--py);width:var(--r);height:var(--r);
+    margin:calc(var(--r) / -2) 0 0 calc(var(--r) / -2);border-radius:50%;
+    background:rgba(27,95,214,.12);border:1px solid rgba(27,95,214,.45);pointer-events:none;z-index:2}
   /* De opdrachtgever, 05/10/2026, vraag 6: "het woord blijft zolang er kaart te zien is." De knoppen op de kaart
      (laag, oud, terug) verdwijnen dus niet meer zodra het paneel opengaat, maar pas als het paneel
      de kaart werkelijk bedekt: zetPaneel zet data-kaartvrij op "nee" als er minder dan
      KAARTKNOPRUIMTE px kaart overblijft. Eén tik op de kaart die er nog is, sluit het paneel. */
   .wrap[data-paneel="open"][data-kaartvrij="nee"] .kaartknop{display:none}
-  .kaart.leeg{display:flex;align-items:center;justify-content:center}
+  .kaart.leeg{display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center}
+  .kaartgrb{position:static;padding:11px 16px;border:1px solid var(--line);border-radius:9px;
+    background:var(--surface);color:var(--ink);font:inherit;font-size:var(--tm);cursor:pointer}
   .kaartleeg{max-width:24em;padding:0 var(--marge);text-align:center;color:var(--ink-faint);
     font-size:var(--tm);line-height:1.6}
   .wrap{max-width:640px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;
     position:relative;z-index:1}
+  /* Op een iPad is de kolom 640 px en lag het plan over het hele scherm eronder: links en rechts zag je plan waar niets op reageerde
+     (geen stip, geen tik, knijpen zoomde de pagina). Het blad ligt nu precies onder de kolom, zodat wat je ziet ook werkt. */
+  @media (min-width:700px){
+    .kaart{left:calc((100vw - 640px) / 2);right:calc((100vw - 640px) / 2)}
+  }
   /* De ruimte tussen de zonerij en het paneel: hier is niets, en daarom zie je het plan. */
   /* De vingers op dit gat horen bij het plan eronder, niet bij de pagina: zonder dit zoomt
      de browser het hele scherm, menu en balken inbegrepen. */
@@ -854,6 +873,8 @@
   .openvlak{position:absolute;top:0;right:0;bottom:0;left:0;z-index:0;margin:0;padding:0;
     border:0;border-radius:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
   .punt .thumbdoos,.punt .bijlage,.punt .puntpijl,.punt .puntmeer{position:relative;z-index:1}
+  .punt .puntverzet{position:relative;z-index:1;margin-top:8px;font-size:var(--tm);padding:6px 10px}
+  .kaart.verzet{cursor:crosshair}
   /* Een punt van eerder: de duimnagel tekent niet, want tekenen zou het beeld in het archief
      veranderen. De tik valt erdoor op de rij, en die opent. */
   .punt-wrap.vaneerder .thumbdoos{pointer-events:none}
@@ -1754,13 +1775,13 @@
   #sneldlg::backdrop{background:#000}
   #snelbeeld{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
   .snel-kop{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;gap:10px;
-    padding:calc(12px + env(safe-area-inset-top,0px)) var(--marge) 12px;color:#fff;z-index:2;
+    padding:calc(12px + env(safe-area-inset-top,0px)) var(--marge) 12px;color:#fff;z-index:4;
     background:linear-gradient(#000c,#0000)}
   .snel-kop button{background:#ffffff22;color:#fff;border:1px solid var(--lijn-op);font-size:var(--tm);padding:9px 13px}
   .snel-teller{margin-left:auto;font:600 var(--tk) ui-monospace,Menlo,monospace;color:#fff}
   .snel-voet{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;
     justify-content:center;gap:22px;padding:20px var(--marge) calc(24px + env(safe-area-inset-bottom,0px));
-    z-index:2;background:linear-gradient(#0000,#000c)}
+    z-index:4;background:linear-gradient(#0000,#000c)}
   .snel-sluiter{width:78px;height:78px;border-radius:50%;background:#fff;border:5px solid #ffffff66;
     padding:0;flex:none}
   .snel-sluiter:active{transform:scale(.93)}
@@ -1787,7 +1808,7 @@
   #plandlg.klaarmaken .pl-klaarmaak{display:inline-block}
   @media (min-width:700px){
     #plandlg .pl-klaarmaak{display:inline-block}
-    #pl-meer{display:none}
+    /* Het menu blijft ook hier: "GRB van deze plek" en "Plan draaien" staan nergens anders. */
   }
   .teken-balk .tk-klaar{margin-left:auto;background:var(--vel);border-color:var(--vel-lijn);color:var(--vel-ink);font-weight:650}
   /* De pennenbalk. Ze staat er alleen als de pen op het blad ligt: op een werf is elke regel
@@ -2025,6 +2046,8 @@
   /* Verholpen: nog altijd leesbaar, maar niet meer wat je oog trekt. Ze staat in het verslag,
      er valt alleen niets meer over op te dragen. */
   .punt.klaar{opacity:.62}
+  /* Wat uit een verzonden verslag komt (de opdrachtgever, 08/10/2026: grijs): al gezegd, dus rustig. Hetzelfde grijs als de oude stippen op de kaart. */
+  .punt.eerder{opacity:.62}
   .uitbackup{font:var(--tk)/1 -apple-system,sans-serif;font-weight:650;color:var(--warn);
     border:1px solid var(--warn);border-radius:5px;padding:4px 6px}
   .verholpen{font:var(--tk)/1 -apple-system,sans-serif;font-weight:650;color:var(--ok);
@@ -2450,6 +2473,20 @@
   #pl-heel{font-size:13px}
   .leeg-klein{font-size:12.5px}
   .fotos-leeg{margin:0;color:var(--ink-soft)}
+  /* ---- tikdoelen op de werf (09/10/2026, audit) ----
+     Handschoenen en natte vingers: wat je snel moet raken is minstens 44 px hoog. De knoppen op de kaart, de greep van het paneel, de
+     nieuwe knop in de rij en de pijl in de rij. De pijl krijgt een onzichtbaar groter raakvlak, zodat je niet de hele rij (en dus de keet)
+     opent als je de pijl mist. */
+  .kaartknop{min-height:44px;display:inline-flex;align-items:center;padding:0 14px}
+  .kaartknop[hidden]{display:none}
+  #vulling.met-terug #kaartoud{top:60px}
+  /* "Annuleer verzetten" ligt linksonder, waar je duim ligt; de dichtbij-knop maakt dan plaats. */
+  .kaartknop.kaartverzet{top:auto;bottom:10px;left:10px}
+  #vulling.verzet #kaartdichtbij{display:none}
+  .lijstkop{min-height:44px}
+  .punt .puntverzet{min-height:44px}
+  .puntpijl::before{content:"";position:absolute;inset:-9px}
+  .keet-vouw{min-height:40px;padding:8px 0}
 </style>
 </head>
 <body>
@@ -2523,7 +2560,13 @@
     type="button" class="kaartknop kaartlaag" id="kaartlaag"
     title="De toestand die je ziet — tik voor de andere" hidden></button><button
     type="button" class="kaartknop kaartterug" id="kaartterug"
-    title="Terug naar het blad waar je vandaan sprong" hidden></button></div>
+    title="Terug naar het blad waar je vandaan sprong" hidden></button><button
+    type="button" class="kaartknop kaartdichtbij" id="kaartdichtbij"
+    title="Open punten dichtbij je plek" hidden></button><button
+    type="button" class="kaartknop kaartverzet" id="kaartverzet"
+    title="Het verzetten van een punt stoppen" hidden>Annuleer verzetten</button><button
+    type="button" class="kaartknop kaartperceel" id="kaartperceel"
+    title="De app koos dit perceel zelf; tik als het niet klopt" hidden>Ander perceel?</button></div>
 
   <div class="lijstkop" id="lijstkop" role="separator" aria-label="Paneel schuiven"
        tabindex="0" aria-valuetext="dicht">
@@ -2865,11 +2908,14 @@
       oversteekt, en reizen mee naar elke werf.</p>
     <div class="beheer-groep">
       <button type="button" id="woordbeheer">woorden</button>
+      <button type="button" id="leerbeheer">geleerd</button>
       <button type="button" id="onderdeelbeheer">onderdelen</button>
       <button type="button" id="bibbeheer">bib</button>
       <button type="button" id="dropboxbeheer">dropbox</button>
       <button type="button" id="fotos">bijlagen tonen</button>
       <button type="button" id="backup" title="Alles op dit toestel in één bestand">Back-up</button>
+      <button type="button" id="backupterug" title="Een back-upbestand inlezen, bijvoorbeeld op een nieuw toestel">Back-up terugzetten</button>
+      <button type="button" id="aanmeldbeheer" title="Aanmelden of afmelden bij de online bron">Aanmelden</button>
       <!-- Alleen zichtbaar als er een noodkopie van vóór de verhuizing bestaat (merkNoodknop). -->
       <button type="button" id="noodterug" hidden title="De gegevens zoals ze stonden vóór de verhuizing van de opslag">Noodkopie terugzetten</button>
     </div>
@@ -2881,7 +2927,7 @@
          want daar staat hij vandaag; of hij per werf of per bureau hoort is een open vraag
          (docs/AI-schakelaar-en-credits.md §6). Zie de kop "de AI-modus" in het script. -->
     <div class="beheer-groep">
-      <button type="button" id="aibeheer" aria-pressed="false">AI-modus: uit</button>
+      <button type="button" id="aibeheer" aria-pressed="false" hidden>AI-modus: uit</button>
     </div>
     <p class="beheer-uitleg">Nog geen dienst gekoppeld: aan of uit, er vertrekt niets van dit
       toestel. Een opmerking die via AI binnenkomt draagt een gekleurd teken; wat je zelf typt
@@ -3087,6 +3133,8 @@
 
 <dialog id="tekendlg">
   <div class="teken-balk">
+    <button type="button" id="tk-annuleer" title="Sluiten zonder iets te bewaren">Annuleer</button>
+    <button type="button" id="tk-andere" title="Een andere foto nemen" hidden>Andere foto</button>
     <button type="button" id="tk-undo">Ongedaan</button>
     <button type="button" id="tk-wis">Wissen</button>
     <span class="tk-kleuren" id="tk-kleuren"></span>
@@ -3352,12 +3400,16 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v223";
+const VERSIE="v240";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
-function vandaag(){ return new Date().toISOString().slice(0,10); }
-let staat={datum:new Date().toISOString().slice(0,10),weer:"",bezetting:"",zone:"N3",punten:[],rondgangen:[]};
+function dagVan(d){
+  const j=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,"0"), t=String(d.getDate()).padStart(2,"0");
+  return j+"-"+m+"-"+t;
+}
+function vandaag(){ return dagVan(new Date()); }
+let staat={datum:vandaag(),weer:"",bezetting:"",zone:"N3",punten:[],rondgangen:[]};
 
 /* ---- een schrijfactie die mislukt, zegt dat ----
    localStorage kan weigeren: een vol geheugen, een browser in privémodus, een toestel dat de
@@ -5464,10 +5516,17 @@ function biedBladnamenAan(){
      stond, de por was nooit verschenen, en er kwam er ook nooit meer een. */
   const el=toastEl();
   if(el&&el.classList&&el.classList.contains("aan"))return false;
-  rij.forEach(v=>{ const z=zones.find(x=>x.code===v.code); if(z)z.bladgevraagd=true; });
-  bewaarZones();
-  meldingMetActie(stuks(rij.length,"blad kan","bladen kunnen")+" hun eigen naam krijgen",
-                  "benoemen",()=>benoemBladen(rij));
+  /* Niet meer aanbieden maar doen: de voorstellen komen uit de bladen zelf. Eén melding, met "Terug" als je ze niet wilt. */
+  const was=[];
+  rij.forEach(v=>{
+    const z=zones.find(x=>x.code===v.code);
+    if(!z)return;
+    was.push({z,naam:z.naam});
+    z.naam=v.voorstel; z.bladgevraagd=true;
+  });
+  bewaarZones(); tekenZones();
+  meldingMetActie(stuks(rij.length,"blad heeft","bladen hebben")+" zijn eigen naam gekregen",
+                  "Terug",()=>{ was.forEach(w=>{ w.z.naam=w.naam; }); bewaarZones(); tekenZones(); });
   return true;
 }
 
@@ -5538,19 +5597,18 @@ async function benoemBlad(code,bestand){
   const rec=zones.find(z=>z.code===code);
   if(!rec)return;
   const voorstel=rec.naam||bladEtiket(bestand)||code;
-  const herkomst=bladHerkomst(bestand);
-  const nieuw=await vraagTekst("Naam van dit blad",
-    "Je ziet het blad hierachter staan — kijk het na voor je bevestigt.\n\n"+
-    (herkomst?herkomst+"\n\n":
-      "De bestandsnaam volgt de naamgeving van het Omgevingsloket niet, dus is het voorstel "+
-      "gewoon wat er in de naam stond.\n\n")+
-    "Zo komt het blad op de zonebalk te staan. Aanpassen mag nu, en later opnieuw via de "+
-    "zonelijst. De zone zelf — "+code+" — verandert niet: daaronder ligt het blad bewaard en "+
-    "daaraan hangen je punten.",
-    voorstel);
-  if(nieuw===null)return;
-  rec.naam=nieuw.trim();
+  /* Geen vraag meer (de opdrachtgever, 09/10/2026): het voorstel komt uit de bestandsnaam en wordt in bijna elk geval overgenomen. Het blad krijgt
+     zijn naam, en de melding laat je hem wijzigen. De zone zelf (code) verandert niet: daaronder ligt het blad bewaard en daaraan hangen je punten. */
+  const was=rec.naam;
+  rec.naam=String(voorstel).trim();
   bewaarZones(); tekenZones();
+  meldingMetActie("Blad heet "+rec.naam,"Wijzig",async()=>{
+    const nieuw=await vraagTekst("Naam van dit blad",
+      "De zone zelf \u2014 "+code+" \u2014 verandert niet. Het woord hier komt op de zonebalk en in het verslag.",rec.naam);
+    if(nieuw===null){ return; }
+    rec.naam=nieuw.trim()||was||rec.naam;
+    bewaarZones(); tekenZones();
+  });
 }
 
 /* ---- projectfasen ----
@@ -5959,7 +6017,7 @@ function onthoudPlek(project,hier){
 
 /* De plek opvragen. `stil` vraagt nooit om toestemming: staat ze er niet, dan gebeurt er niets.
    Zo kan het opstarten nooit een systeemvraag opwerpen op het moment dat je wil beginnen. */
-function haalPlek(stil){
+function haalPlek(stil,vers){
   return new Promise(async res=>{
     if(!navigator.geolocation)return res(null);
     if(stil&&navigator.permissions){
@@ -5974,7 +6032,7 @@ function haalPlek(stil){
     navigator.geolocation.getCurrentPosition(
       p=>af({lat:p.coords.latitude, lon:p.coords.longitude, nauw:p.coords.accuracy||9999}),
       ()=>af(null),
-      {enableHighAccuracy:!stil, timeout:stil?6000:12000, maximumAge:120000});
+      {enableHighAccuracy:!stil||!!vers, timeout:stil?6000:12000, maximumAge:vers?5000:120000});
   });
 }
 
@@ -6467,9 +6525,9 @@ async function zetDemoKlaar(d){
   /* De vergadering krijgt de datum van vandaag. Zonder dat leest laadStaat() haar als de dag van
      gisteren — die houdt alleen een staat van vandaag vast — en dan opent de demo leeg op het
      ene scherm waar ze juist iets te tonen heeft. */
-  const vandaag=new Date().toISOString().slice(0,10);
+  const dezeDag=vandaag();
   for(const [basis,waarde] of Object.entries(d.instellingen||{})){
-    const w=(basis===SLEUTEL)?{...waarde, datum:vandaag}:waarde;
+    const w=(basis===SLEUTEL)?{...waarde, datum:dezeDag}:waarde;
     try{ localStorage.setItem(basis+":"+DEMOID, JSON.stringify(w)); }catch(e){}
   }
   for(const [zone,pln] of Object.entries(d.plannen||{}))
@@ -8648,6 +8706,11 @@ document.getElementById("bestekbeheer").onclick=toonBestek;
 document.getElementById("bibbeheer").onclick=toonBib;
 document.getElementById("synoniembeheer").onclick=beheerSynoniemen;
 document.getElementById("woordbeheer").onclick=beheerGebrekwoorden;
+document.getElementById("leerbeheer").onclick=toonGeleerd;
+/* Terugzetten had geen eigen knop: alleen de melding na het maken van een back-up (twee seconden) bood het aan. Op een nieuw of gewist toestel was
+   er dus geen weg terug. Aanmelden zat niet in Beheer maar achter de werfnaam, waar een nieuwe gebruiker het niet zoekt. */
+document.getElementById("backupterug").onclick=()=>kiesHerstel();
+document.getElementById("aanmeldbeheer").onclick=()=>aanmeldToon();
 document.getElementById("onderdeelbeheer").onclick=beheerOnderdelen;
 document.getElementById("zonebeheer").onclick=beheerZones;
 document.getElementById("fasebeheer").onclick=beheerFasen;
@@ -8821,7 +8884,7 @@ function toastEl(){
    nu de omgekeerde afweging: de app doet het werk zelf, dus de knop is een kans en geen plicht.
    Wat er te doen valt, blijft staan waar het hoort -- de stip op Beheer, die wél wacht tot je
    hem wegwerkt. De melding is de aankondiging, niet de weg. */
-const TOASTTIJD=1700, TOASTTIJDACTIE=2000;
+const TOASTTIJD=1700, TOASTTIJDACTIE=4000;
 function melding(t){const el=toastEl();el.textContent=t;el.classList.add("aan");
   clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove("aan"),TOASTTIJD);}
 /* Wat er nu op de melding staat, zolang ze staat. Een melding met een knop erin telt niet:
@@ -8843,11 +8906,101 @@ function meldingMetActie(tekst,actietekst,fn){
   el.innerHTML="";
   const s=document.createElement("span");s.textContent=tekst;el.appendChild(s);
   const b=document.createElement("button");b.className="toast-actie";b.type="button";b.textContent=actietekst;
-  b.onclick=()=>{fn();el.classList.remove("aan");};
+  b.onclick=()=>{const r=fn();el.classList.remove("aan");return r;};
   el.appendChild(b);
   el.classList.add("aan");
   clearTimeout(el._t); el._t=setTimeout(()=>{el.classList.remove("aan");laatstVerwijderd=null;},TOASTTIJDACTIE);
 }
+
+/* Een melding die blijft staan tot je ze gelezen hebt: voor wat je niet mag missen als je net terugkomt. */
+function meldingLang(t,ms){
+  melding(t);
+  const el=toastEl();
+  clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove("aan"),ms||9000);
+}
+
+/* ---- sinds je laatste bezoek ----
+   de opdrachtgever, 08/10/2026: de app moet weten waar we zijn in tijd. Komt een tweede toestel of een collega ertussen, dan is het eerste
+   wat je wilt weten wat er veranderd is sinds je er laatst was. De app bewaart per toestel en per werf het moment dat je wegging
+   (app naar de achtergrond of dicht) en welke punten er toen stonden. Je eigen werk gebeurde terwijl je keek, dus alles wat
+   daarna verandert is van elders. Het verslag moet hetzelfde zijn: na een afsluiting begint er een vers verslag, en dan zijn
+   alle punten "nieuw" zonder dat iemand iets deed. */
+const LAATSTSLEUTEL="werfpunten-laatst";
+const LAATSTMIN=2*3600*1000;      // korter weg dan twee uur is wisselen van app, geen bezoek
+function bewaarLaatst(){
+  if(!actief)return;
+  try{
+    localStorage.setItem(pk(LAATSTSLEUTEL),JSON.stringify({tijd:new Date().toISOString(),ref:verslagRef(staat),ids:(staat.punten||[]).map(p=>p.id)}));
+  }catch(e){}
+}
+function leesLaatst(){
+  try{ const r=localStorage.getItem(pk(LAATSTSLEUTEL)); return r?JSON.parse(r):null; }catch(e){ return null; }
+}
+/* Wat is er veranderd? Pure som op de snapshot en de punten, zodat ze te meten is. */
+function sindsBezoek(laatst,punten,nu){
+  if(!laatst||!Array.isArray(laatst.ids))return null;
+  const t=Date.parse(laatst.tijd);
+  if(isNaN(t)||(nu-t)<LAATSTMIN)return null;
+  const had=new Set(laatst.ids);
+  let nieuw=0, klaar=0, anders=0;
+  (punten||[]).forEach(p=>{
+    if(!p)return;
+    if(!had.has(p.id)){ nieuw++; return; }
+    const g=Date.parse(p.gewijzigd||"");
+    if(isNaN(g)||g<=t)return;
+    if(p.status==="klaar"||p.status==="nvt")klaar++; else anders++;
+  });
+  if(!nieuw&&!klaar&&!anders)return null;
+  return {nieuw,klaar,anders,sinds:t};
+}
+function sindsWoord(t,nu){
+  const dagen=Math.round((Date.parse(dagVan(new Date(nu))+"T00:00:00")-Date.parse(dagVan(new Date(t))+"T00:00:00"))/86400000);
+  if(dagen<=0)return "eerder vandaag";
+  if(dagen===1)return "gisteren";
+  if(dagen<7){ try{ return new Date(t).toLocaleDateString("nl-BE",{weekday:"long"}); }catch(e){} }
+  return datumKort(dagVan(new Date(t)));
+}
+function sindsTekst(r,nu){
+  const delen=[];
+  if(r.nieuw)delen.push(stuks(r.nieuw,"nieuw punt","nieuwe punten"));
+  if(r.klaar)delen.push(r.klaar+" afgevinkt");
+  if(r.anders)delen.push(r.anders+" gewijzigd");
+  return "Sinds "+sindsWoord(r.sinds,nu)+": "+delen.join(" · ");
+}
+/* Bij terugkomen: eerst kijken wat er veranderde, dan pas de nieuwe stand bewaren. Geeft de tekst terug, of null. */
+function meldSindsBezoek(nu){
+  const r=sindsBezoek(leesLaatst(),staat.punten,nu||Date.now());
+  const l=leesLaatst();
+  if(!r||!l||l.ref!==verslagRef(staat))return null;
+  const t=sindsTekst(r,nu||Date.now());
+  meldingLang(t);
+  bewaarLaatst();      // gemeld is gemeld: wat je nu doet, telt de volgende keer niet als "van elders"
+  return t;
+}
+/* Terug uit de achtergrond: een andere dag dan toen, dan klopt wat er staat niet meer (ouderdom, de rondgang van vandaag, de
+   vraag over de vergaderdag). Opnieuw tekenen en de bestaande vraag stellen -- de app beslist niet of een vergadering geweest is. */
+let laatsteDag=null;
+function bijTerugkeer(){
+  let zichtbaar=true;
+  try{ zichtbaar=document.visibilityState!=="hidden"; }catch(e){}
+  if(!zichtbaar){ bewaarLaatst(); return false; }
+  const nu=Date.now();
+  const dagWisselde=laatsteDag&&laatsteDag!==vandaag();
+  laatsteDag=vandaag();
+  const tekst=meldSindsBezoek(nu);
+  if(dagWisselde){
+    try{ tekenLijst(); kaartZone=null; tekenKaart(); }catch(e){}
+    const dlg=document.getElementById("dlg");
+    if(staat.datum<vandaag()&&(staat.punten||[]).length&&dlg&&!dlg.open)setTimeout(()=>vraagOverVergaderdag(),300);
+  }
+  return {tekst,dagWisselde:!!dagWisselde};
+}
+try{
+  /* Als eigenschap en niet met addEventListener: de wachter van de back-up telt zijn eigen luisteraars om te bewijzen dat hij ze
+     opruimt, en deze hoort er niet bij -- hij blijft de hele zitting hangen. */
+  document.onvisibilitychange=bijTerugkeer;
+  addEventListener("pagehide",bewaarLaatst);
+}catch(e){}
 
 /* De zonebalk staat op twee plaatsen: op de lijst, en over de kaart. Dat is met opzet dezelfde
    balk — de verdieping aanklikken is dezelfde handeling waar je ook staat, en twee lijsten die
@@ -8910,6 +9063,7 @@ function tekenZones(){
         if(waar==="planzones"&&plekVoorPunt){ wisselBladBijRechtzetten(z); return; }
         const alHier=(z===staat.zone);
         kaartSprongen.length=0; merkKaartterug();   // zelf kiezen is geen sprong
+        if(verzetPunt)stopVerzet();                  // van blad wisselen stopt het verzetten: een tik daarna is een gewone tik
         staat.zone=z;bewaarStaat();tekenZones();tekenKaart();
         // De lijst volgt het blad: wat hier genoteerd is en hier nog openstaat, komt bovenaan.
         if(!alHier)tekenLijst();
@@ -9333,41 +9487,34 @@ async function vinkTik(p,vanEerder){
   if(!stand)return false;
   if(document.getElementById("dlg").open)return false;
   const werf=faseAard(faseVan(staat))==="werf";
-  // De hele tekst en waar het vandaan komt: je zegt ja op dít punt, niet op het begin van een zin.
-  const regels=["<b>"+veilig(p.tekst||"[geen notitie]")+"</b>",
-                veilig([herkomstMerk(p,vanEerder),plekVol(p)].filter(Boolean).join(" · "))];
-  let titel="Is het punt volledig opgelost?", ja="Ja, opgelost";
-  if(stand==="vol"){
-    titel="Punt opnieuw openzetten?"; ja="Ja, weer open";
-    regels.push(vanEerder
-      ? "Het staat nu als opgelost in dit verslag. Openzetten haalt dat weg: het komt terug onder "+
-        "<i>Nog steeds open</i>, en in de lijst terug op zijn blad bij wat van eerder openstaat."
-      : "Het staat nu als "+(werf?"verholpen":"afgewerkt")+" in dit verslag. Openzetten haalt dat "+
-        "weg: het punt gaat terug naar zijn blad in de lijst, en in de afvinklijsten.");
-  }else if(vanEerder){
-    regels.push(veilig(ouderdomTekst(p))+".");
-    regels.push("Afvinken zet het in dit verslag bij de opgeloste punten, en haalt het uit <i>Nog "+
-      "steeds open</i> en van de kaart. In de lijst schuift het naar onderaan; na het afsluiten van "+
-      "de vergadering staat het er niet meer. Dát het opgelost is en wanneer, blijft in het archief.");
-  }else{
-    regels.push("Het blijft in dit verslag staan, onder <i>"+
-      (werf?"Tijdens de vergadering verholpen":"Tijdens de bespreking afgewerkt")+
-      "</i>, en gaat uit de afvinklijsten. In de lijst schuift het naar onderaan.");
-  }
-  if(!await vraagJa(titel,regels,ja))return false;
-  /* Nagaan dat het punt nog is wat het was toen je tikte. Het venster is modaal, dus dit is geen
-     gewoon geval — maar wisselVerholpen wisselt, en een wissel op een punt dat intussen veranderd
-     is, doet het omgekeerde van waar je ja op zei. */
+  /* Geen vraag meer (de opdrachtgever, 09/10/2026: "niet te veel vragen"): je tikte net, dus het antwoord was altijd ja. De wissel is symmetrisch en
+     omkeerbaar; een melding met "Ongedaan maken" vervangt het venster. Dát het opgelost is en wanneer, blijft in het archief. */
+  const wissel=async()=>{
+    if(vanEerder){
+      await merkAfgehandeld(p,stand==="vol");
+      archief=await haalDagen();
+    }else{
+      wisselVerholpen(p);
+    }
+    await tekenLijst();
+  };
   if(vanEerder){
     const nog=stand==="vol"?inDitVerslagAfgevinkt():openPunten();
     if(!nog.some(o=>o.id===p.id&&o.sleutel===p.sleutel))return false;
-    await merkAfgehandeld(p,stand==="vol");
-    archief=await haalDagen();
-  }else{
-    if(!staat.punten.includes(p)||vinkStand(p,false)!==stand)return false;
-    wisselVerholpen(p);
-  }
-  await tekenLijst();
+  }else if(!staat.punten.includes(p)||vinkStand(p,false)!==stand)return false;
+  await wissel();
+  const woord=stand==="vol"?"Weer open":(werf?"Verholpen":"Afgewerkt");
+  /* Terug: dezelfde wissel nog eens, mits het punt nog is wat het na jouw tik was. */
+  meldingMetActie(woord+" \u2014 "+tekstBegin(p.tekst),"Ongedaan maken",async()=>{
+    if(!vanEerder&&!staat.punten.includes(p))return;
+    if(vanEerder){
+      await merkAfgehandeld(p,stand!=="vol");
+      archief=await haalDagen();
+    }else{
+      wisselVerholpen(p);
+    }
+    await tekenLijst();
+  });
   return true;
 }
 
@@ -9397,7 +9544,7 @@ async function tekenLijst(){
      je in een heropend verslag werkt. */
   const vk=document.getElementById("veldkop");
   if(vk){
-    const eigen=staat.datum===new Date().toISOString().slice(0,10);
+    const eigen=staat.datum===vandaag();
     /* "Vandaag" klopte zolang de lijst enkel het verslag van vandaag toonde. Ze toont ook wat
        er van vroeger openstaat, en sinds 17/09/2026 kan ze op een aangetikte stip gesorteerd
        staan — dan is "Vandaag" een verkeerd etiket boven een lijst die over het blad gaat.
@@ -9440,7 +9587,7 @@ async function tekenLijst(){
      zichtbaar punt is precies de stille onwaarheid waar dit dossier al twee keer over
      struikelde: niet de code liegt, maar de tekst die de lezer ervan weghoudt. */
   if(tel&&getoond.length!==rijen.length)
-    tel.textContent="1 van "+rijen.length;
+    tel.textContent="1 van "+rijen.length+" \u00b7 alles tonen";
   for(const {p,vanEerder} of getoond){
     const wrap=document.createElement("div");
     wrap.className="punt-wrap"+(vanEerder?" vaneerder":"");
@@ -9457,7 +9604,7 @@ async function tekenLijst(){
       wrap.appendChild(wis);
     }
     wrap.appendChild(maakVinkvak(p,vanEerder));
-    const d=document.createElement("div");d.className="punt"+(p.status==="klaar"?" klaar":"");
+    const d=document.createElement("div");d.className="punt"+(p.status==="klaar"?" klaar":"")+(vanEerder?" eerder":"");
     const openvlak=document.createElement("button");
     openvlak.type="button";openvlak.className="openvlak";
     d.appendChild(openvlak);
@@ -9585,6 +9732,12 @@ async function tekenLijst(){
     if(p.tekst){pp.textContent=p.tekst}
     else{pp.textContent="notitie toevoegen…";pp.className="leegnotitie"}
     body.appendChild(pp);
+    if(lijstAlleen===p.id&&p.plek&&!vanEerder&&!isKlaar(p)){
+      const vz=document.createElement("button");
+      vz.type="button"; vz.className="puntverzet"; vz.textContent="Verzet op de kaart";
+      vz.onclick=e=>{ e.stopPropagation(); startVerzet(p); };
+      body.appendChild(vz);
+    }
     /* De uitleg die tot nu toe alleen in een title stond. Geoogst uit de kop in plaats van
        opnieuw opgeschreven: zo kan de tekst nooit uit elkaar lopen met het merkje waar hij bij
        hoort, en krijgt elk merkje dat er later bij komt zijn regel gratis. */
@@ -10174,7 +10327,7 @@ async function planVingerafdruk(){
   paren.sort((a,b)=>String(a[0])<String(b[0])?-1:1).forEach(([sl,pl])=>{
     n++;
     voeg(String(sl)+"\n");
-    voeg(JSON.stringify(pl,(k,w)=>k==="laatst"?undefined:w)||"");
+    voeg(JSON.stringify(pl,(k,w)=>(k==="laatst"||k==="weergave")?undefined:w)||"");
     voeg("\n");
   });
   return n+":"+h.toString(16);
@@ -11180,7 +11333,17 @@ async function keetPlanToon(){
     img.alt=""; img.src=laagBeeld(keetPlan,laagVan(staat,keetPlan))||keetPlan.beeld;
     doos.appendChild(img);
   }
+  kleinBladDraai(doos,keetPlan);
   keetPlanStippen();
+}
+
+/* Keet en nazicht tonen het blad net zoals het hoofdscherm: met de kijkkeuze van het plan (`draaiVan`),
+   zonder schuiven of zoomen. Eén som voor beeld en stippen -- `kaartBeeldTransform` en `plekOpBeeld`. */
+function kleinBladDraai(doos,plan){
+  const img=doos&&doos.querySelector("img");
+  if(!img||!plan)return;
+  const b=doos.getBoundingClientRect();
+  img.style.transform=kaartBeeldTransform({schaal:1,dx:0,dy:0},b,plan);
 }
 
 function keetPlanStippen(){
@@ -11200,7 +11363,7 @@ function keetPlanStippen(){
        afgevinkt is. Zonder die uitzondering bewerk je een punt terwijl het blad ernaast niet
        toont waar het ligt, en dat is precies wat dit scherm moest oplossen. */
     if(!kaartToont(p,rid)&&!(nu&&nu.id===p.id))return;
-    const q=plekOpBeeld(p.plek.x,p.plek.y,b.width,b.height,keetPlan.breedte,keetPlan.hoogte);
+    const q=plekOpBeeld(p.plek.x,p.plek.y,b.width,b.height,keetPlan.breedte,keetPlan.hoogte,draaiVan(keetPlan));
     if(!q)return;
     const el=document.createElement("button");
     el.type="button";
@@ -11281,7 +11444,12 @@ async function keetToon(){
       const im=document.createElement("img");im.alt="";
       beeldUrl(beeld,b).then(u=>{if(u)im.src=u;});
       im.title="Aanduiden op deze foto";
-      im.onclick=()=>{document.getElementById("keetdlg").close();openTekenscherm(b,beeld.id,beeld);};
+      im.onclick=()=>{
+        /* Wat je typte bewaren, en onthouden bij welk punt je was: na het tekenscherm ga je daar terug naartoe (niet naar de lijst). */
+        const pt=keetPunt(); keetBewaarTekst();
+        tekenTerug=pt?pt.id:null;
+        document.getElementById("keetdlg").close(); openTekenscherm(b,beeld.id,beeld);
+      };
       vak.appendChild(im);
     }else{
       const d=document.createElement("span");d.className="keet-doc";
@@ -11827,9 +11995,14 @@ document.getElementById("keet-nvt").onclick=()=>{
   else { p.status="nvt"; p.afgehandeld=vandaag(); }
   raakAan(p);bewaarStaat();keetToon();tekenLijst();
 };
+let keetTerug=null;       // id van het punt waarmee je uit het nazicht kwam
+document.getElementById("keetdlg").addEventListener("cancel",()=>{ try{ keetBewaarTekst(); }catch(e){} });
 document.getElementById("keet-klaar").onclick=async()=>{
   keetBewaarTekst();
+  const naarNazicht=keetTerug; keetTerug=null;
   document.getElementById("keetdlg").close();
+  /* Kwam je uit het nazicht ("In de keet"), dan ga je daar ook weer naartoe. */
+  if(naarNazicht){ await tekenLijst(); openNazicht().then(()=>nazichtZet(naarNazicht)); return; }
   await tekenLijst();merkBackupknop();
   const onaf=staat.punten.filter(p=>p.onaf).length;
   melding(onaf?(onaf+" punt"+(onaf===1?"":"en")+" nog zonder woorden")
@@ -11852,7 +12025,7 @@ document.getElementById("keet-klaar").onclick=async()=>{
    tussen elke opname. Een eigen sluiter op de videostroom heeft die stap niet. Lukt dat niet —
    geen toestemming, geen camera — dan valt het terug op de gewone fotoknop, mét die tussenstap,
    want een trage weg is nog altijd beter dan geen. */
-let snel={stroom:null,aantal:0,bezig:false};
+let snel={stroom:null,aantal:0,bezig:false,vanPlan:false};
 
 function snelPlekTekst(){
   if(!wachtendePlek)return "Plek";
@@ -11864,7 +12037,8 @@ async function openSnel(){
   const mislukt=document.getElementById("snel-mislukt");
   snel.aantal=0;
   document.getElementById("snel-teller").textContent="0";
-  document.getElementById("snel-plek").textContent=snelPlekTekst();
+  /* "Plan", niet het lokaalnummer: de knop is de weg terug naar het plan, en niemand herkent "12,40" als knop. */
+  document.getElementById("snel-plek").textContent=wachtendePlek?("Plan \u00b7 "+snelPlekTekst()):"Plan";
   mislukt.hidden=true;
   if(!dlg.open)dlg.showModal();
   try{
@@ -11936,21 +12110,31 @@ async function knip(){
 
 document.getElementById("snel-knip").onclick=knip;
 document.getElementById("snel-stop").onclick=async()=>{
-  const n=snel.aantal;
+  const n=snel.aantal, terug=snel.vanPlan;
   sluitSnel();
   await tekenLijst();
   if(n)melding(n+(n===1?" foto vastgelegd":" foto's vastgelegd")+" — de woorden komen in de keet");
+  /* Kwam je uit het plan, dan ga je daar ook weer naartoe: een reeks foto's is geen eindstation. */
+  if(terug){ snel.vanPlan=false; openPlan(wachtendePlek?wachtendePlek.zone:undefined); }
 };
 document.getElementById("snel-plek").onclick=()=>{
   // de plek rechtzetten is een andere handeling; die hoort niet tussen twee opnames
+  snel.vanPlan=false;
   sluitSnel();
   openPlan(wachtendePlek?wachtendePlek.zone:undefined);
 };
-document.getElementById("snelknop").onclick=openSnel;
+document.getElementById("snelknop").onclick=()=>{ snel.vanPlan=false; openSnel(); };
 document.getElementById("pl-snel").onclick=()=>{
-  document.getElementById("plandlg").close();
+  /* De speld die je zette wordt de plek van de reeks (zoals bij "Lijst"); zonder speld blijft een eerdere plek staan. */
+  snel.vanPlan=true;
+  if(pl&&pl.pin)plekUitPin(); else document.getElementById("plandlg").close();
   openSnel();
 };
+/* Sluit het venster op een andere weg (Escape op een toetsenbord), dan gaat de camera mee uit. */
+document.getElementById("sneldlg").addEventListener("close",()=>{
+  if(document.getElementById("sneldlg").open)return;
+  if(snel.stroom){ snel.stroom.getTracks().forEach(t=>t.stop()); snel.stroom=null; }
+});
 
 function verkleinFoto(file){return new Promise(res=>{
   const r=new FileReader();
@@ -11988,7 +12172,50 @@ document.getElementById("fiche-foto").onclick=fotoDrukken;
    meer. Hangt er iets, dan klapt de rij vanzelf open en draagt de + het merk. */
 /* De camera draagt geen woord meer maar een teken, en een teken zet je niet met textContent —
    dat zou de tekening wissen. Wat de knop doet staat in een klasse en in zijn naam. */
+/* ---- een notitie die nog niet bewaard is, overleeft een herlading ----
+   iOS mag een geïnstalleerde app uit het geheugen gooien terwijl de camera open is. De zin die je typte en de foto die je maakte stonden alleen in
+   het werkgeheugen: dan was het werk weg en stond je met een lege app. Nu gaat de zin naar localStorage en de foto naar de opslag zodra ze er zijn,
+   en komen ze bij het opstarten terug. Na bewaren of leegmaken is het concept weg. Alleen op dit toestel; het is geen punt en gaat nergens heen. */
+const CONCEPTSLEUTEL="werfpunten-concept", CONCEPTFOTO="concept";
+let laatsteConceptFoto=null, conceptKlok=null;
+/* Pas aan zodra het herstel hierna gelopen heeft: anders wist de lege stand bij het opstarten het concept dat net terug moest komen. */
+let conceptActief=false;
+setTimeout(()=>{ conceptActief=true; },20000);
+function wisConceptFoto(){
+  laatsteConceptFoto=null;
+  try{ if(db){ const t=db.transaction("fotos","readwrite"); t.objectStore("fotos").delete(dk(CONCEPTFOTO)); } }catch(e){}
+}
+function bewaarConcept(){
+  if(!conceptActief)return;
+  clearTimeout(conceptKlok);
+  conceptKlok=setTimeout(()=>{
+    try{
+      const tekst=(typeof tekstEl!=="undefined"&&tekstEl)?tekstEl.value:"";
+      const heeftFoto=!!wachtendeFoto&&(!wachtendeBijlage||wachtendeBijlage.beeld!==false);
+      if(!tekst.trim()&&!heeftFoto){ localStorage.removeItem(pk(CONCEPTSLEUTEL)); if(laatsteConceptFoto)wisConceptFoto(); return; }
+      localStorage.setItem(pk(CONCEPTSLEUTEL),JSON.stringify({tekst,foto:heeftFoto,tijd:Date.now()}));
+      if(heeftFoto&&wachtendeFoto!==laatsteConceptFoto){ laatsteConceptFoto=wachtendeFoto; zetFoto(CONCEPTFOTO,wachtendeFoto); }
+      else if(!heeftFoto&&laatsteConceptFoto)wisConceptFoto();
+    }catch(e){}
+  },400);
+}
+async function herstelConcept(){
+  let c=null;
+  try{ const r=localStorage.getItem(pk(CONCEPTSLEUTEL)); c=r?JSON.parse(r):null; }catch(e){ c=null; }
+  if(!c)return false;
+  // ouder dan een dag: niet meer van deze rondgang
+  if(!c.tijd||Date.now()-c.tijd>24*3600*1000){ try{ localStorage.removeItem(pk(CONCEPTSLEUTEL)); }catch(e){} wisConceptFoto(); return false; }
+  if(tekstEl.value.trim()||wachtendeFoto)return false;       // je bent al aan het werk
+  let foto=null;
+  if(c.foto)foto=await haalFotoLokaal(CONCEPTFOTO);
+  if(!c.tekst.trim()&&!foto)return false;
+  if(c.tekst.trim())zetVaststelling(c.tekst,null);
+  if(foto){ wachtendeFoto=foto; laatsteConceptFoto=foto; isScan=false; wachtendeBijlage=null; merkFotoknop(); merkGo(); merkVakken(); }
+  melding("Je laatste notitie stond nog klaar"+(foto?" (met foto)":""));
+  return true;
+}
 function merkFotoknop(){
+  try{ bewaarConcept(); }catch(e){}
   const tekenen=!!wachtendeFoto&&(!wachtendeBijlage||wachtendeBijlage.beeld!==false);
   /* Twee knoppen, een stand. De ene staat in de invoerregel, de andere bovenaan het blad -- en
      ze doen hetzelfde, dus horen ze hetzelfde te tonen. Ze elk apart merken is de fout die de
@@ -12337,7 +12564,17 @@ function goBesluit(tekst,foto,haal,plek){
 function ficheArtikel(tekst){
   const t=bestekTreffers(tekst,BESTEKTREFFERS);
   if(!t.length)return null;
-  const eerste=t[0];
+  let eerste=t[0];
+  /* Staan er treffers even sterk als de eerste, en koos je bij deze woorden al vaker één bepaald hoofdstuk, dan wint dat hoofdstuk.
+     Alleen als beslissing bij gelijkstand: de app haalt niemand voor, ze kiest tussen twee even goede. */
+  try{
+    const gl=geleerdeVeld("hs",tekst);
+    if(gl.length&&gl[0].score>=LEERDREMPEL){
+      const gelijk=t.filter(x=>x.rang===eerste.rang&&x.raak===eerste.raak&&(x.hoofdraak||0)===(eerste.hoofdraak||0));
+      const leer=gelijk.find(x=>String(x.nr).split(".")[0]===gl[0].code);
+      if(leer)eerste=leer;
+    }
+  }catch(e){}
   const kop=String(eerste.nr).split(".")[0];
   /* Even sterk is nu twee dingen: dezelfde rang én dezelfde dekking. Sinds een woord dat niet
      past het artikel niet meer wegkegelt, staan er treffers bij die minder van je zin dekken —
@@ -12381,7 +12618,7 @@ function ficheGegevens(tekst,opties){
   return {
     verslag:verslagRef(staat),
     nummer:volgendPuntnummer(),
-    datum:nu.toISOString().slice(0,10),
+    datum:dagVan(nu),
     uur:nu.toTimeString().slice(0,5),
     zone:staat.zone,
     tekst:zin,
@@ -12494,6 +12731,7 @@ document.getElementById("foto").onchange=async e=>{
      commentaar zelf zegt "geen emoji" droeg er dus een zodra je een foto maakte. */
   const pf=document.getElementById("pl-foto");
   if(pf)pf.classList.add("heeft");
+  e.target.value="";        // dezelfde bestandsnaam moet op iOS opnieuw een change geven
 };
 
 const tekstEl=document.getElementById("tekst");
@@ -12530,6 +12768,7 @@ function zetVaststelling(t,van){
     vulFiche({behoudVeld:van==="blad"});
   }
   merkGo(); tekenBestektreffers();
+  try{ bewaarConcept(); }catch(e){}
 }
 tekstEl.oninput=()=>{ zetVaststelling(tekstEl.value,"regel"); };
 /* Enter bewaart. Op een telefoon is dat de knop rechtsonder op het toetsenbord, en die staat
@@ -12979,6 +13218,8 @@ function vulFiche(opties){
                     gekozen:a.nr===fiche.keuze,
                     voorgesteld:!!v, via:(v&&v.via)?v.via.woord:null,
                     doe:()=>{
+                      /* Je eigen keuze leert de app welk hoofdstuk bij je woorden hoort; loslaten leert het sterker af. */
+                      try{ leerVeld("hs",fiche.tekst,kopVan(a.nr),fiche.keuze===a.nr?-2:1); }catch(e){}
                       fiche.keuze=(fiche.keuze===a.nr)?null:a.nr;
                       /* Wie zelf aantikt, heeft gekeken. Het twijfelmerk hoort dan weg --
                          anders draagt een punt dat jij hebt nagekeken op bureau nog altijd
@@ -13091,8 +13332,180 @@ function wisselAan(o,code){
   const l=aanSet(o);
   if(code===null)return zetAanSet(o,[]);
   const i=l.indexOf(code);
-  if(i<0)l.push(code); else l.splice(i,1);
+  /* Wat je kiest, leert de app; wat je weer weghaalt, leert ze nog sterker af. */
+  if(i<0){ l.push(code); try{ leerAan(o&&o.tekst,code,1); }catch(e){} }
+  else { l.splice(i,1); try{ leerAan(o&&o.tekst,code,-2); }catch(e){} }
   return zetAanSet(o,l);
+}
+
+/* ---- wat de app van je leert ----
+   de opdrachtgever, 08/10/2026: "onze app leert en neemt initiatief", standaard aan, en het geleerde reist mee in de back-up. Bij een
+   overdracht aan een stagiair blijft de werfwijze bij de werf en blijven de eigen gewoonten bij de persoon: twee lagen. Wat
+   hier bewaard wordt zijn tellers per woord en geen tekst van punten; de app stelt voor en ordent, ze kiest niets. Wat het
+   verslag als bewijs zegt (de vaststelling, soort, urgent, deadline, verbod) leert ze nooit zelf in te vullen.
+   Tellen met vervaging: elke keer dat een woord weer voorkomt, wegen oudere keuzes 10 % minder. Pas vanaf twee keer stelt ze
+   voor, zodat één vergissing niets verandert. */
+const LEERSLEUTEL="werfpunten-geleerd", LEERIKSLEUTEL="werfpunten-geleerd-ik", LEERAANSLEUTEL="werfpunten-leren";
+const LEERVERVAL=0.9, LEERDREMPEL=1.8, LEERMAXWOORDEN=400;
+const LEERSTOP=new Set("deze dat die het een van met aan niet voor naar door zijn wordt staat ligt nog ook zonder moet geen bij over onder boven tussen heeft werd worden zich hier daar maar want dan nog".split(" "));
+function lerenAan(){ try{ return localStorage.getItem(LEERAANSLEUTEL)!=="uit"; }catch(e){ return true; } }
+function zetLeren(aan){ try{ localStorage.setItem(LEERAANSLEUTEL,aan?"aan":"uit"); }catch(e){} }
+function leerWoorden(tekst){
+  const uit=[];
+  /* Hoofdletterwoorden midden in de zin zijn namen (van een persoon of een bedrijf): die leert de app nooit, ze horen niet in een
+     lijst die meegaat in een back-up en naar een opvolger. */
+  String(tekst||"").replace(/[A-Za-zÀ-ÿ]{4,}/g,(w,i,vol)=>{
+    if(i>0&&/[A-ZÀ-Þ]/.test(w[0])&&!/[.!?]\s*$/.test(vol.slice(0,i)))return w;
+    const l=w.toLowerCase();
+    if(LEERSTOP.has(l))return w;
+    const st=l.slice(0,5);
+    if(!uit.includes(st))uit.push(st);
+    return w;
+  });
+  return uit;
+}
+function leerSleutel(laag){ return laag==="ik"?LEERIKSLEUTEL:pk(LEERSLEUTEL); }
+function leesGeleerd(laag){
+  try{
+    const r=localStorage.getItem(leerSleutel(laag));
+    const o=r?JSON.parse(r):null;
+    return (o&&o.aan&&typeof o.aan==="object")?o:{v:1,aan:{}};
+  }catch(e){ return {v:1,aan:{}}; }
+}
+function bewaarGeleerd(laag,o){
+  ["aan","hs"].forEach(veld=>{
+    const tab=o[veld]; if(!tab)return;
+    const woorden=Object.keys(tab);
+    if(woorden.length>LEERMAXWOORDEN){
+      woorden.map(w=>[w,Object.values(tab[w]).reduce((a,b)=>a+b,0)]).sort((a,b)=>a[1]-b[1])
+        .slice(0,woorden.length-LEERMAXWOORDEN).forEach(([w])=>{ delete tab[w]; });
+    }
+  });
+  return bewaarVeilig(leerSleutel(laag),JSON.stringify(o),"wat de app van je leerde");
+}
+function leerAan(tekst,code,stap){ return leerVeld("aan",tekst,code,stap); }
+/* Eén leermachine voor elk veld waarover de app mag voorstellen: `aan` (de partij) en `hs` (het hoofdstuk van het bestek). */
+function leerVeld(veld,tekst,code,stap){
+  if(!lerenAan()||!code||actief===DEMOID)return false;       // de demo leert niets: ze is van niemand
+  const w=leerWoorden(tekst);
+  if(!w.length)return false;
+  ["werf","ik"].forEach(laag=>{
+    const o=leesGeleerd(laag);
+    const tab=o[veld]||(o[veld]={});
+    w.forEach(woord=>{
+      const m=tab[woord]||(tab[woord]={});
+      Object.keys(m).forEach(c=>{ m[c]=+(m[c]*LEERVERVAL).toFixed(3); if(m[c]<0.05)delete m[c]; });
+      const nieuw=+((m[code]||0)+stap).toFixed(3);
+      if(nieuw>0)m[code]=nieuw; else delete m[code];
+      if(!Object.keys(m).length)delete tab[woord];
+    });
+    bewaarGeleerd(laag,o);
+  });
+  return true;
+}
+/* Wat de app bij deze tekst voorstelt uit wat ze leerde: [{code,score,bron}], de sterkste eerst. `bron` zegt waar het vandaan
+   komt, zodat een stagiair kan lezen dat het de werfwijze is en niet zijn eigen gewoonte. */
+function geleerdeAan(tekst){ return geleerdeVeld("aan",tekst); }
+function geleerdeVeld(veld,tekst){
+  if(!lerenAan())return [];
+  const w=leerWoorden(tekst);
+  if(!w.length)return [];
+  const lagen={werf:leesGeleerd("werf"),ik:leesGeleerd("ik")};
+  /* Per woord telt de sterkste band met een partij, over de woorden heen de sterkste: drie woorden in één zin die allemaal één keer
+     bij dezelfde partij hoorden, zijn nog geen gewoonte. De werflaag en je eigen laag registreren dezelfde keuze, dus ze tellen
+     niet bij elkaar op: de sterkste wint, en zegt waar het vandaan komt. */
+  const som={};
+  w.forEach(woord=>{
+    const wt=(lagen.werf[veld]||{})[woord]||{}, it=(lagen.ik[veld]||{})[woord]||{};
+    const codes=new Set([...Object.keys(wt),...Object.keys(it)]);
+    codes.forEach(c=>{
+      const wf=wt[c]||0, ik=it[c]||0;
+      const sterk=Math.max(wf,ik);
+      const r=som[c]||(som[c]={code:c,score:0,bron:"werf"});
+      if(sterk>r.score){ r.score=sterk; r.bron=wf>=ik?"werf":"ik"; }
+    });
+  });
+  return Object.values(som).filter(r=>r.score>=LEERDREMPEL)
+    .sort((a,b)=>b.score-a.score)
+    .map(r=>({code:r.code,score:+r.score.toFixed(2),bron:r.bron}));
+}
+
+/* Het scherm waar je ziet wat de app leerde, waarom, en waar je het vergeet. Alles wat ze weet staat hier, niets erbuiten. */
+function geleerdeRijen(){
+  const groep={};
+  ["werf","ik"].forEach(laag=>{
+    const o=leesGeleerd(laag);
+    ["aan","hs"].forEach(veld=>{
+      const tab=o[veld]||{};
+      Object.keys(tab).forEach(woord=>{
+        Object.keys(tab[woord]).forEach(code=>{
+          const score=tab[woord][code];
+          let naam=null;
+          if(veld==="aan"){ const c=contacten.find(x=>x.code===code); naam=c?c.naam:null; }
+          else { const h=hoofdstukVan(code); naam="hoofdstuk "+code+(h&&h.naam?" "+h.naam:""); }
+          if(!(score>=LEERDREMPEL)||!naam)return;
+          const sl=laag+"|"+veld+"|"+code;
+          const g=groep[sl]||(groep[sl]={laag,veld,code,naam,woorden:[],score:0});
+          g.woorden.push(woord); g.score=Math.max(g.score,score);
+        });
+      });
+    });
+  });
+  return Object.values(groep).sort((a,b)=>b.score-a.score);
+}
+function toonGeleerd(){
+  const dlg=document.getElementById("dlg"), body=document.getElementById("dlg-body");
+  document.getElementById("dlg-titel").textContent="Wat de app van jou leerde";
+  document.getElementById("dlg-kopieer").style.display="none";
+  const teken=()=>{
+    body.innerHTML="";
+    const aan=lerenAan();
+    body.appendChild(maakEl("p","inv-uitleg","De app onthoudt welke partij en welk hoofdstuk je bij welk woord kiest, en zet die voortaan vooraan. "+
+      "Ze kiest nooit zelf: je ziet het als \u201cvaak gekozen\u201d naast de knop. Dit blijft op je toestel en gaat mee in je back-up."));
+    const sch=maakEl("button",null,aan?"Leren staat aan — zet uit":"Leren staat uit — zet aan"); sch.type="button";
+    sch.onclick=()=>{ zetLeren(!aan); teken(); };
+    body.appendChild(sch);
+    const rijen=geleerdeRijen();
+    if(!rijen.length)body.appendChild(maakEl("p","inv-uitleg","Nog niets geleerd. Na een paar keer dezelfde keuze bij hetzelfde woord verschijnt het hier."));
+    rijen.forEach(r=>{
+      const d=maakEl("div","knoprij");
+      d.appendChild(maakEl("span",null,r.woorden.join(", ")+" \u2192 "+r.naam+" \u00b7 "+(r.laag==="werf"?"op deze werf":"jouw gewoonte")+" \u00b7 "+Math.round(r.score)+"\u00d7"));
+      const b=maakEl("button",null,"vergeet"); b.type="button";
+      b.onclick=()=>{ r.woorden.forEach(w=>vergeetGeleerd(r.laag,w,r.code,r.veld)); teken(); };
+      d.appendChild(b);
+      body.appendChild(d);
+    });
+    /* Overdracht: een stagiair of medewerker neemt de werf over. De werfwijze blijft bij de werf; de eigen gewoonten van de vorige
+       gebruiker gaan niet mee, zodat de opvolger zijn eigen laag opbouwt en intussen leert hoe de werf werkt. */
+    const over=maakEl("button",null,"Een ander neemt dit toestel over"); over.type="button";
+    over.onclick=async()=>{
+      const ja=await vraagJa("Een ander neemt over",["De werfwijze blijft staan: wat de app van deze werf leerde. Je eigen gewoonten worden gewist, zodat de ander zijn eigen manier van werken opbouwt."],"Ja, wis mijn gewoonten");
+      if(ja){ vergeetGeleerd("ik"); melding("Je gewoonten zijn gewist; de werfwijze blijft"); }
+      toonGeleerd();
+    };
+    body.appendChild(over);
+    if(rijen.length){
+      const alles=maakEl("button",null,"Alles vergeten"); alles.type="button";
+      alles.onclick=async()=>{
+        const ja=await vraagJa("Alles vergeten",["Je wist wat de app van deze werf en van jou leerde. De keuzes in je verslagen blijven staan."],"Ja, alles vergeten");
+        if(ja){ vergeetGeleerd("werf"); vergeetGeleerd("ik"); }
+        toonGeleerd();      // het vraagvenster is hetzelfde venster en sloot zichzelf
+      };
+      body.appendChild(alles);
+    }
+  };
+  teken();
+  if(!dlg.open)dlg.showModal();
+}
+function vergeetGeleerd(laag,woord,code,veld){
+  const o=leesGeleerd(laag);
+  if(woord===undefined){ try{ localStorage.removeItem(leerSleutel(laag)); }catch(e){} return true; }
+  const tab=o[veld||"aan"]||{};
+  if(tab[woord]){
+    if(code===undefined)delete tab[woord]; else delete tab[woord][code];
+    if(tab[woord]&&!Object.keys(tab[woord]).length)delete tab[woord];
+  }
+  return bewaarGeleerd(laag,o);
 }
 /* VOORSTELLEN UIT DE VASTSTELLING. De opdrachtgever, 30/09/2026: "stel vaststelling = plinten →
    hoofdaannemer, onderaannemer afwerking, maar kan ook opdrachtgever (bv beslissen over kleur)
@@ -13119,6 +13532,8 @@ function aanVoorstellen(tekst){
   const t=String(tekst||"");
   if(!t.trim())return [];
   const uit=[];
+  // Eerst wat je zelf gewoon bent te kiezen, dan de vaste wenken. Alleen contacten die nog bestaan.
+  geleerdeAan(t).forEach(g=>{ if(contacten.some(c=>c.code===g.code)&&!uit.includes(g.code))uit.push(g.code); });
   AANWENKEN.filter(w=>w.woord.test(t)).forEach(w=>{
     w.rollen.forEach(rol=>{
       const kand=contacten.filter(c=>c.rol===rol);
@@ -13139,6 +13554,7 @@ function aanKnoppen(bak,huidig,kies,tekst){
   // `huidig` is één code (de keet van vroeger) of een lijst; hier is het altijd een set.
   const set=Array.isArray(huidig)?huidig.filter(Boolean):(huidig?[huidig]:[]);
   const voorstel=aanVoorstellen(tekst);
+  const geleerd=geleerdeAan(tekst);
   const maak=(label,code,titel,voorgesteld)=>{
     const b=document.createElement("button");
     b.type="button"; b.textContent=label; if(titel)b.title=titel;
@@ -13147,6 +13563,8 @@ function aanKnoppen(bak,huidig,kies,tekst){
        want de keet merkt met `.actief` en het blad met `.gekozen`. */
     if(code===null?!set.length:set.includes(code))b.classList.add("gekozen","actief");
     if(voorgesteld)b.classList.add("voorgesteld");
+    const g=code?geleerd.find(x=>x.code===code):null;
+    if(g){ b.classList.add("geleerd"); b.title=(g.bron==="werf"?"Op deze werf meestal gekozen bij dit woord":"Jij kiest dit meestal bij dit woord"); }
     b.onclick=()=>kies(code);
     bak.appendChild(b);
   };
@@ -13660,6 +14078,7 @@ async function kiesPlekVoorPunt(p,vanaf){
     return;
   }
   plekTerug=vanaf==="nazicht"?"nazicht":"keet";
+  if(plekTerug==="keet"){ try{ keetBewaarTekst(); }catch(e){} }     // wat je typte staat anders alleen in het geheugen terwijl het plan open is
   plekVoorPunt=p.id;
   if(plekTerug==="nazicht")sluitNazicht();
   else document.getElementById("keetdlg").close();
@@ -13709,6 +14128,15 @@ async function wisselBladBijRechtzetten(z,hulp){
   beginRechtzetten(null);
   return true;
 }
+/* De plek van een bestaand punt verzetten. Eén plaats, voor het rechtzetten uit de keet en het nazicht én rechtstreeks op de
+   kaart. Geeft terug of het punt daarbij van blad verhuisde. */
+function zetPlekOpPunt(p,plek){
+  const nieuweZone=plek.zone;
+  const verhuisd=!!nieuweZone&&ZONES.includes(nieuweZone)&&p.zone!==nieuweZone;
+  if(verhuisd)p.zone=nieuweZone;
+  p.plek=plek; raakAan(p); bewaarStaat();
+  return verhuisd;
+}
 function terugNaarKeet(metPlek){
   const id=plekVoorPunt;
   plekVoorPunt=null;
@@ -13733,9 +14161,7 @@ function terugNaarKeet(metPlek){
          want dat spreekt zichzelf tegen. Een correctie laat geen spoor na (zelfde dag, eerdere
          beslissing). */
       const nieuweZone=wachtendePlek.zone;
-      const verhuisd=!!nieuweZone&&ZONES.includes(nieuweZone)&&p.zone!==nieuweZone;
-      if(verhuisd)p.zone=nieuweZone;
-      p.plek=wachtendePlek; raakAan(p); bewaarStaat();
+      const verhuisd=zetPlekOpPunt(p,wachtendePlek);
       melding(verhuisd?("Punt verhuisd naar "+zoneNaam(nieuweZone)):"Plek rechtgezet");
     }
     wachtendePlek=vorige;
@@ -13749,6 +14175,8 @@ function terugNaarKeet(metPlek){
   }
   if(plekTerug==="nazicht"){
     plekTerug="keet";
+    // verhuisde het punt naar een ander blad, dan volgt het nazicht het mee, anders verdwijnt het uit de ruit
+    if(p&&p.plek&&p.plek.zone&&typeof nazicht!=="undefined")nazicht.zone=p.plek.zone;
     openNazicht().then(()=>{ if(p)nazichtZet(p.id); });
     return;
   }
@@ -14041,6 +14469,8 @@ let wachtendeAanOok=[];   // de anderen, na de eerste; zie aanSet
 let wachtendeVia=null;    // "ai" als de zin via een dienst kwam; zie de kop "de AI-modus"
 let archief=[];          // vorige vergaderdagen, om te tonen wat er nog openstaat
 const pl={schaal:1,dx:0,dy:0,pin:null,wijzers:new Map(),start:null,knijp:null,nummeren:false,gekozen:null};
+/* De voorgevel aanwijzen om het plan te draaien: twee tikken. Hier en niet bij de rest van het draaien, want planTeken leest het. */
+const vg={aan:false,a:null};
 let calque=null;             // het calqueblad van het plan dat open staat
 let calqueMerk="aanpassen";  // welke pen in je hand ligt
 let calquePen=false;         // ligt de pen op het blad, of schuif je?
@@ -14053,7 +14483,8 @@ function calqueZichtbaar(){
 }
 let calqueBezig=null;        // de haal die nu getrokken wordt, nog niet bewaard
 
-function zetPlan(zone,data){return new Promise(res=>{
+function zetPlan(zone,data){try{ ruimteBladen=null; }catch(e){}   // de ligging van de bladen kan veranderd zijn
+  return new Promise(res=>{
   if(!db)return res(false);
   const t=db.transaction("plannen","readwrite");t.objectStore("plannen").put(data,dk(zone));
   // Ook hier de vraag: wie met plannen werkt en nog geen foto nam, heeft evengoed iets te verliezen.
@@ -14137,8 +14568,52 @@ function calqueVoegBladToe(c){
 /* Van het scherm naar het blad. Dezelfde som die een speld gebruikt, en met opzet dezelfde:
    liggen ze op een ander stelsel, dan schuift je aantekening weg van je punt zodra je zoomt. */
 function planPercent(sx,sy,plan,p){
-  return {x:(sx-p.dx)/(plan.breedte*p.schaal)*100,
-          y:(sy-p.dy)/(plan.hoogte*p.schaal)*100};
+  return schermNaarBlad(plan,p,sx,sy);
+}
+
+/* ---- het plan draaien ----
+   de opdrachtgever, 08/10/2026: "een plan kunnen draaien, standaard noord boven" en "bij het toevoegen of draaien van een plan
+   blijven de punten op hun plek".
+
+   Draaien is een KIJKkeuze en geen wijziging van het blad. De tekening, de percentcoordinaten van elk punt, elke haal van
+   het calqueblad en de koppeling (`georef`) blijven zoals ze zijn; alleen de manier waarop het blad op het scherm ligt
+   verandert. Daarmee kan een draai nooit een punt van zijn plek halen: het punt blijft op dezelfde plek van het blad, en dus
+   op dezelfde plek in de wereld. Wat er draait is het oog. Het plan bewaart die keuze als `weergave:{draai, door}`.
+
+   `draai` is het aantal graden waarover het blad met de klok mee wordt gedraaid. Zonder keuze volgt ze de koppeling: een plan
+   dat weet in welke richting het ligt (`georef.noord`) wordt zo getoond dat het noorden boven staat. Een blad zonder
+   koppeling (een scan) staat zoals het is, want de app weet niet wat boven is en verzint dat niet.
+
+   De draaiing gaat om het midden van het blad. Pannen en zoomen blijven daardoor wat ze waren: `pl.dx`/`pl.dy` zijn nog
+   altijd de linkerbovenhoek van het ONgedraaide blad, en zoomen om een punt schaalt het midden net zo mee als die hoek. */
+function draaiVan(p){
+  if(!p)return 0;
+  const w=p.weergave;
+  if(w&&typeof w.draai==="number"&&isFinite(w.draai))return w.draai;
+  const g=p.georef;
+  if(g&&!g.plaatselijk&&typeof g.noord==="number"&&isFinite(g.noord))return g.noord;
+  return 0;
+}
+function bladNaarScherm(p,v,px,py,draai){
+  const d=draai===undefined?draaiVan(p):draai;
+  const bs=p.breedte*v.schaal, hs=p.hoogte*v.schaal;
+  if(!d)return {x:v.dx+px/100*bs, y:v.dy+py/100*hs};
+  const t=d*Math.PI/180, c=Math.cos(t), s=Math.sin(t);
+  const u=(px/100-.5)*bs, w=(py/100-.5)*hs;
+  return {x:v.dx+bs/2+u*c-w*s, y:v.dy+hs/2+u*s+w*c};
+}
+function schermNaarBlad(p,v,sx,sy,draai){
+  const d=draai===undefined?draaiVan(p):draai;
+  const bs=p.breedte*v.schaal, hs=p.hoogte*v.schaal;
+  if(!d)return {x:(sx-v.dx)/bs*100, y:(sy-v.dy)/hs*100};
+  const t=d*Math.PI/180, c=Math.cos(t), s=Math.sin(t);
+  const du=sx-(v.dx+bs/2), dw=sy-(v.dy+hs/2);
+  return {x:((du*c+dw*s)/bs+.5)*100, y:((-du*s+dw*c)/hs+.5)*100};
+}
+/* De doos waarin het gedraaide blad past: breedte en hoogte van de omhullende rechthoek, in beeldeenheden. */
+function draaiDoos(p,draai){
+  const t=(draai===undefined?draaiVan(p):draai)*Math.PI/180, c=Math.abs(Math.cos(t)), s=Math.abs(Math.sin(t));
+  return {b:p.breedte*c+p.hoogte*s, h:p.breedte*s+p.hoogte*c};
 }
 
 /* pointermove vuurt bij elke haarbreedte die je vinger verschuift. Ongefilterd levert één
@@ -14438,8 +14913,8 @@ function tekenHaal(x,h){
   const p=(h&&h.punten)||[];
   if(!p.length||!plan)return;
   const kleur=merkRecord(h.merk).kleur, d=calqueDikte();
-  const sx=q=>pl.dx+q.x/100*plan.breedte*pl.schaal;
-  const sy=q=>pl.dy+q.y/100*plan.hoogte*pl.schaal;
+  const sx=q=>bladNaarScherm(plan,pl,q.x,q.y).x;
+  const sy=q=>bladNaarScherm(plan,pl,q.x,q.y).y;
   x.save();
   /* Iets doorschijnend, want het is calqueerpapier: wat eronder ligt hoort te blijven meelezen.
      Dekkend zou de aantekening de tekening wissen op precies de plek waar ze over gaat. */
@@ -14469,7 +14944,15 @@ function planTeken(){
   x.fillStyle=velKleur();x.fillRect(0,0,b.width,b.height);
   if(!planBeeld)return;
   x.imageSmoothingQuality="high";
-  x.drawImage(planBeeld,pl.dx,pl.dy,plan.breedte*pl.schaal,plan.hoogte*pl.schaal);
+  const dr=draaiVan(plan);
+  if(!dr)x.drawImage(planBeeld,pl.dx,pl.dy,plan.breedte*pl.schaal,plan.hoogte*pl.schaal);
+  else{
+    const bs=plan.breedte*pl.schaal, hs=plan.hoogte*pl.schaal;
+    x.save();
+    x.translate(pl.dx+bs/2,pl.dy+hs/2); x.rotate(dr*Math.PI/180);
+    x.drawImage(planBeeld,-bs/2,-hs/2,bs,hs);
+    x.restore();
+  }
   /* HET TAKENBLAD. De opdrachtgever, 01/10/2026: "om aan te duiden dat we in een takenblad zitten wil ik
      heel licht gele calque overleggen."
 
@@ -14496,7 +14979,7 @@ function planTeken(){
   if(pl.nummeren&&opPlan.length){
     x.fillStyle="rgba(17,20,23,.55)";
     opPlan.forEach(l=>{
-      const lx=pl.dx+l.x/100*plan.breedte*pl.schaal, ly=pl.dy+l.y/100*plan.hoogte*pl.schaal;
+      const lq=bladNaarScherm(plan,pl,l.x,l.y), lx=lq.x, ly=lq.y;
       x.beginPath();x.arc(lx,ly,4,0,7);x.fill();
     });
   }
@@ -14508,10 +14991,9 @@ function planTeken(){
   /* Eerst wat er nog openstaat van vorige keren, onder de punten van vandaag. Hol en amber:
      zichtbaar genoeg om op te vallen, rustig genoeg om niet met vandaag te verwarren. */
   oudePuntenOpDitPlan().forEach(p=>{
-    const gx=pl.dx+p.plek.x/100*plan.breedte*pl.schaal;
-    const gy=pl.dy+p.plek.y/100*plan.hoogte*pl.schaal;
+    const gq=bladNaarScherm(plan,pl,p.plek.x,p.plek.y), gx=gq.x, gy=gq.y;
     const gekozen=pl.gekozen===p.id;
-    const d=dagenOpen(p), kl=ouderdomskleur(d);
+    const d=dagenOpen(p), kl=oudeStipkleur(d);
     // hoe ouder, hoe zwaarder de rand: ook zonder kleur te zien valt het verschil op
     const straal=gekozen?13:10, dikte=(d>30?3.5:d>7?2.8:2.2)*(gekozen?1.3:1);
     x.beginPath();x.arc(gx,gy,straal,0,7);
@@ -14533,8 +15015,7 @@ function planTeken(){
 
   const mijne=puntenOpDitPlan();
   mijne.forEach((p,i)=>{
-    const gx=pl.dx+p.plek.x/100*plan.breedte*pl.schaal;
-    const gy=pl.dy+p.plek.y/100*plan.hoogte*pl.schaal;
+    const gq=bladNaarScherm(plan,pl,p.plek.x,p.plek.y), gx=gq.x, gy=gq.y;
     const gekozen=pl.gekozen===p.id;
     x.beginPath();x.arc(gx,gy,gekozen?12:9,0,7);
     x.fillStyle=gekozen?"#1b4f8a":"rgba(27,79,138,.86)";
@@ -14548,14 +15029,46 @@ function planTeken(){
   x.textAlign="start";x.textBaseline="alphabetic";
 
   if(pl.pin){
-    const px=pl.dx+pl.pin.x/100*plan.breedte*pl.schaal;
-    const py=pl.dy+pl.pin.y/100*plan.hoogte*pl.schaal;
+    const pq=bladNaarScherm(plan,pl,pl.pin.x,pl.pin.y), px=pq.x, py=pq.y;
     x.lineWidth=2.5;x.strokeStyle="#fff";x.fillStyle="#d92b06";
     x.beginPath();x.arc(px,py,11,0,7);x.fill();x.stroke();
     x.beginPath();x.arc(px,py,3,0,7);x.fillStyle="#fff";x.fill();
   }
   if(kp.aan)tekenKoppelPunten(x);
+  if(vg.aan&&vg.a){
+    const vq=bladNaarScherm(plan,pl,vg.a.x,vg.a.y);
+    x.save();
+    x.lineWidth=2.5; x.strokeStyle="#fff"; x.fillStyle="#0f9d76";
+    x.beginPath(); x.arc(vq.x,vq.y,9,0,7); x.fill(); x.stroke();
+    x.restore();
+  }
   tekenSchaal(x,b);
+  tekenNoord(x,b);
+}
+
+/* ---- de noordpijl ----
+   Alleen op een plan dat weet waar het noorden ligt (`georef`). Een blad zonder koppeling krijgt geen pijl: een pijl die naar
+   boven wijst zonder dat de app het weet, zou beweren wat ze niet kent, en dat is hetzelfde als bij de schaalbalk. Staat het
+   plan met het noorden boven, dan wijst de pijl omhoog; draai je het, dan draait de pijl mee en blijft ze naar het noorden wijzen. */
+function tekenNoord(x,b){
+  const g=plan&&plan.georef;
+  if(!g||g.plaatselijk||!g.eenheid_m)return;
+  const a=(draaiVan(plan)-(g.noord||0))*Math.PI/180;
+  const cx=26, cy=78, r=14;
+  x.save();
+  x.translate(cx,cy); x.rotate(a);
+  // donker met een witte rand: het plan is wit papier of een donkere rand, en de pijl moet op allebei te lezen zijn
+  x.beginPath();
+  x.moveTo(0,-r); x.lineTo(-r*.5,r*.7); x.lineTo(0,r*.3); x.lineTo(r*.5,r*.7); x.closePath();
+  x.lineJoin="round"; x.lineWidth=3.5; x.strokeStyle="rgba(255,255,255,.95)"; x.stroke();
+  x.fillStyle="#1b4f8a"; x.fill();
+  x.restore();
+  x.font="700 12px ui-monospace,Menlo,monospace";
+  x.textAlign="center"; x.textBaseline="middle";
+  const tx=cx+Math.sin(a)*(r+10), ty=cy-Math.cos(a)*(r+10);
+  x.lineWidth=3.5; x.strokeStyle="rgba(255,255,255,.95)"; x.strokeText("N",tx,ty);
+  x.fillStyle="#1b4f8a"; x.fillText("N",tx,ty);
+  x.textAlign="start"; x.textBaseline="alphabetic";
 }
 
 /* ---- de schaal ----
@@ -14746,7 +15259,7 @@ function tekenKoppelPunten(x){
     opDit.push({x:kp.half.x,y:kp.half.y,n:kp.paren.length+1,vol:false});
   x.save();
   opDit.forEach(o=>{
-    const gx=pl.dx+o.x/100*plan.breedte*pl.schaal, gy=pl.dy+o.y/100*plan.hoogte*pl.schaal;
+    const oq=bladNaarScherm(plan,pl,o.x,o.y), gx=oq.x, gy=oq.y;
     x.beginPath();x.arc(gx,gy,11,0,7);
     x.fillStyle=o.vol?"rgba(15,157,118,.92)":"rgba(255,255,255,.92)";x.fill();
     x.lineWidth=2.5;x.strokeStyle="#0f9d76";x.stroke();
@@ -15020,7 +15533,15 @@ async function neemPuntenOver(doel){
   if(t.zonderSchaal)
     regels.push(stuks(t.zonderSchaal,"punt staat","punten staan")+" op een plan zonder schaal en "+
       "kan niet mee — koppel dat plan eerst.");
-  if(!await vraagJa("Punten overnemen op "+doel.zone,regels,"Overnemen"))return false;
+  /* Geen vraag (de opdrachtgever, 09/10/2026): de punten blijven op hun plek in Lambert, er is een noodkopie, en "ongedaan maken" staat eronder. Wat niet
+     meekan, staat in de melding. */
+
+  /* De opdrachtgever, 08/10/2026: bij het toevoegen van een plan blijven de punten op hun plek, en gaat er niets verloren. Dit is een
+     verhuizing van gegevens, dus eerst een noodkopie naar waar de back-up heen gaat (als die er is), ten hoogste vier seconden
+     lang: een traag net houdt de verhuizing niet tegen, want "ongedaan maken" staat er daarna nog. */
+  try{
+    await Promise.race([backupWegzetten().catch(()=>null), new Promise(r=>setTimeout(r,4000))]);
+  }catch(e){}
 
   const dagen=new Set();
   laatsteOverdracht=[];
@@ -15043,7 +15564,9 @@ async function neemPuntenOver(doel){
   for(const dag of dagen)await zetDag(verslagSleutel(dag),dag);
   await tekenLijst();
   planTeken();planVoet();
-  meldingMetActie(stuks(t.passen.length,"punt staat","punten staan")+" nu op "+doel.zone,
+  meldingMetActie(stuks(t.passen.length,"punt staat","punten staan")+" nu op "+doel.zone+
+                  (t.buiten.length?(" \u00b7 "+t.buiten.length+" vallen erbuiten"):"")+
+                  (t.zonderSchaal?(" \u00b7 "+t.zonderSchaal+" op een plan zonder schaal"):""),
                   "ongedaan maken",draaiOverdrachtTerug);
   // Het terugdraaien gaat voor; pas als die melding is uitgewerkt bieden we aan op te ruimen.
   return true;
@@ -15217,7 +15740,9 @@ function planPasIn(){
      vermenigvuldigt die nul met een factor en blijft nul, dus je komt er niet meer uit.
      Een maat die nog niet bestaat is geen maat om mee te rekenen. */
   if(!plan||!b.width||!b.height)return;
-  pl.schaal=Math.min(b.width/plan.breedte,b.height/plan.hoogte);
+  // het gedraaide blad moet passen, niet het ongedraaide: op 90 graden is de breedte de hoogte
+  const dd=draaiDoos(plan);
+  pl.schaal=Math.min(b.width/dd.b,b.height/dd.h);
   pl.dx=(b.width-plan.breedte*pl.schaal)/2;
   pl.dy=(b.height-plan.hoogte*pl.schaal)/2;
 }
@@ -15230,9 +15755,12 @@ function planNaarPlek(x,y,factor){
   const c=document.getElementById("plancanvas");
   const b=c.getBoundingClientRect();
   if(!plan||!b.width)return;
-  pl.schaal=Math.min(b.width/plan.breedte,b.height/plan.hoogte)*factor;
-  pl.dx=b.width/2-x/100*plan.breedte*pl.schaal;
-  pl.dy=b.height/2-y/100*plan.hoogte*pl.schaal;
+  const dd=draaiDoos(plan);
+  pl.schaal=Math.min(b.width/dd.b,b.height/dd.h)*factor;
+  // zet het blad zo neer dat (x,y) op het midden van het venster valt, ook als het gedraaid ligt
+  pl.dx=0; pl.dy=0;
+  const nu=bladNaarScherm(plan,pl,x,y);
+  pl.dx=b.width/2-nu.x; pl.dy=b.height/2-nu.y;
 }
 function planNaarPin(){ if(pl.pin) planNaarPlek(pl.pin.x,pl.pin.y,4); }
 
@@ -15312,8 +15840,7 @@ function puntGeraakt(sx,sy){
   if(!plan)return null;
   let best=null,bd=22;
   puntenOpDitPlan().concat(oudePuntenOpDitPlan()).forEach(p=>{
-    const gx=pl.dx+p.plek.x/100*plan.breedte*pl.schaal;
-    const gy=pl.dy+p.plek.y/100*plan.hoogte*pl.schaal;
+    const gq=bladNaarScherm(plan,pl,p.plek.x,p.plek.y), gx=gq.x, gy=gq.y;
     const d=Math.hypot(gx-sx,gy-sy);
     if(d<bd){bd=d;best=p;}
   });
@@ -15329,8 +15856,8 @@ function puntGeraakt(sx,sy){
    Binnen een vel wint de laatste haal, om dezelfde reden. */
 function haalGeraakt(sx,sy){
   if(!plan)return null;
-  const sxv=q=>pl.dx+q.x/100*plan.breedte*pl.schaal;
-  const syv=q=>pl.dy+q.y/100*plan.hoogte*pl.schaal;
+  const sxv=q=>bladNaarScherm(plan,pl,q.x,q.y).x;
+  const syv=q=>bladNaarScherm(plan,pl,q.x,q.y).y;
   const bladen=calqueBladen(calque);
   let best=null,bd=Math.max(18,calqueDikte()*1.6);
   for(let bi=bladen.length-1;bi>=0;bi--){
@@ -15442,7 +15969,7 @@ function houdPinVrij(){
   const c=document.getElementById("plancanvas"), voet=document.getElementById("pl-voet");
   if(!plan||!pl.pin||voet.hidden)return;
   const b=c.getBoundingClientRect(), v=voet.getBoundingClientRect();
-  const py=pl.dy+pl.pin.y/100*plan.hoogte*pl.schaal;
+  const py=bladNaarScherm(plan,pl,pl.pin.x,pl.pin.y).y;
   const grens=(v.top-b.top)-26;
   if(py>grens){ pl.dy-=(py-grens); planTeken(); }
 }
@@ -15466,7 +15993,8 @@ function planVoet(){
   const voet=document.getElementById("pl-voet");
   const el=document.getElementById("pl-lokaal");
   voet.hidden=!plan;
-  document.getElementById("pl-invoer").hidden=!(plan&&pl.pin&&!pl.nummeren);
+  /* Een bestaand punt rechtzetten is geen nieuw punt maken: geen invoervak onder de pin (een foto daar bleef als wachtende foto voor het volgende punt hangen). */
+  document.getElementById("pl-invoer").hidden=!(plan&&pl.pin&&!pl.nummeren&&!plekVoorPunt);
   tekenBuren();
   if(!plan)return;
   if(kp.aan){koppelVoet();return;}
@@ -15706,9 +16234,14 @@ async function maakOmtrekplan(hier,zone,gekozen,toegestaanLeeg){
   const svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+Math.max(1,Math.round(bw*bk))+'" height="'+Math.max(1,Math.round(bh*bk))+'" '+
             'viewBox="0 0 '+bw+' '+bh+'">'+stuk.join("")+'</svg>';
   const vak=grbVakmaat(breedteM,hoogteM);
+  /* De richting van de perceelsgrens, voor "evenwijdig met het kader" (de opdrachtgever, 08/10/2026). Alleen als er een gekozen perceel is; een
+     leeg kader of een perceel zonder duidelijke richting geeft er geen. */
+  const kaderHoekWaarde=mijn?kaderHoekVan(grbRingen(mijn)):null;
   return {
     zone, soort:"svg", voorlopig:true,
-    bron:{grb:{lagen:["GRB:ADP","GRB:GBG"], opgehaald:new Date().toISOString().slice(0,10)}},
+    ...(kaderHoekWaarde!==null?{kader:{hoek:kaderHoekWaarde}}:{}),
+    bron:{grb:{lagen:["GRB:ADP","GRB:GBG"], opgehaald:vandaag(),
+               plek:{x:+x.toFixed(1), y:+y.toFixed(1)}}},       // Lambert-meters van waar je stond; zie kopieerGrbNaar
     beeld:"data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg),
     breedte:bw, hoogte:bh,
     georef:{epsg:31370, eenheid_m:+(1/GRBCM).toFixed(4),
@@ -15719,6 +16252,7 @@ async function maakOmtrekplan(hier,zone,gekozen,toegestaanLeeg){
 }
 
 async function toonPlan(zone){
+  vg.aan=false; vg.a=null;      // een halve voorgevelkeuze hoort bij het vorige blad
   const data=await haalPlan(zone);
   document.getElementById("pl-leeg").hidden=!!data;
   if(!data){plan=null;planBeeld=null;calque=null;calqueBezig=null;planTeken();planVoet();return;}
@@ -15754,6 +16288,33 @@ async function toonPlan(zone){
    nog. Een aanbod dat zichzelf elke keer opnieuw opdringt is geen aanbod meer, en dertig
    seconden wachten hoort niet twee keer te gebeuren omdat je het venster opnieuw opendeed. */
 let omtrekGeprobeerd=false;
+const grbZonesGeprobeerd=new Set();
+
+/* Staat er al een GRB van een plek vlak hier (minder dan 100 m), dan hoeft een volgende lege zone niet nog eens het hele traject:
+   het is dezelfde percelen en gebouwen, dus een kopie. Alleen als het toestel nu stil zijn plek kan geven en die dichtbij de
+   plek van dat GRB ligt; weet ze dat niet, dan gaat het de gewone weg met de vraag "Juiste perceel?". Geen aanname dat je nog
+   op dezelfde plek staat. */
+async function kopieerGrbNaar(zone){
+  let bron=null;
+  for(const z of planLijst||[]){
+    if(z===zone)continue;
+    const p=await haalPlan(z);
+    if(p&&p.voorlopig&&p.bron&&p.bron.grb&&p.bron.grb.plek){ bron=p; break; }
+  }
+  if(!bron)return false;
+  const hier=await haalPlek(true);
+  if(!hier)return false;
+  const L=wgsNaarLambert(hier.lat,hier.lon), q=bron.bron.grb.plek;
+  if(Math.hypot(L.x-q.x,L.y-q.y)>100)return false;
+  const k=JSON.parse(JSON.stringify(bron));
+  k.zone=zone; delete k.laatst;
+  if(!(await zetPlan(zone,k)))return false;
+  planLijst=await planZones();
+  tekenZones();
+  kaartZone=null; await tekenKaart();
+  melding("GRB van je plek ligt ook op "+zone);
+  return zone;
+}
 
 /* `stil` laadt het plan zonder het venster te tonen. Dat is wat het tekenen binnen het blad
    nodig heeft: dezelfde tekening, dezelfde gegevens, maar geen tweede scherm eroverheen. */
@@ -15771,9 +16332,17 @@ async function openPlan(gevraagd,stil){
      valt. Dit is de plek waar het mag: je bent hier omdat je een plan wilde, dus dertig seconden
      wachten is geen onderbreking maar het antwoord. Op de werf tijdens het vastleggen gebeurt
      het nooit, want daar kom je hier niet. */
-  if(!planLijst.length&&!omtrekGeprobeerd){
+  /* De opdrachtgever, 08/10/2026: "het GRB van je plek is standaard het plan van een zone zonder plan, tot er een ander plan wordt opgeladen."
+     Open je het plan van een zone waar nog niets ligt, dan is het GRB van waar je staat wat er te halen valt, zonder dat je
+     het in een menu hoeft te zoeken. Eén poging per zone per zitting: zeg je Stoppen of lukt het niet (geen locatie, buiten
+     Vlaanderen), dan blijft het daarbij en staan de gewone knoppen er nog. Een plan dat je later laadt, vervangt het GRB: dat
+     is de bestaande regel (`planWissel`), en een echt plan wordt nooit door een GRB overschreven. */
+  const wensZone=gevraagd||staat.zone;
+  const zonderPlan=ZONES.includes(wensZone)&&!planLijst.includes(wensZone);
+  if(zonderPlan&&!grbZonesGeprobeerd.has(wensZone)&&(planLijst.length?!stil:!omtrekGeprobeerd)){
+    grbZonesGeprobeerd.add(wensZone);
     omtrekGeprobeerd=true;
-    const gedaan=await haalOmtrek(null,false);
+    const gedaan=(await kopieerGrbNaar(wensZone))||await haalOmtrek(wensZone,false,true);
     if(gedaan){
       // het GRB ligt nu als plan van een zone; toon het ook in dit venster
       planLijst=await planZones();
@@ -15858,10 +16427,10 @@ function planBedrading(){
       return;
     }
     if(pl.wijzers.size===0&&pl.start&&pl.start.bewogen<8&&Date.now()-pl.start.tijd<400){
-      const x=(pl.start.x-pl.dx)/(plan.breedte*pl.schaal)*100;
-      const y=(pl.start.y-pl.dy)/(plan.hoogte*pl.schaal)*100;
+      const tq=schermNaarBlad(plan,pl,pl.start.x,pl.start.y), x=tq.x, y=tq.y;
       if(x>=0&&x<=100&&y>=0&&y<=100){
-        if(kp.aan){ koppelTik(x,y); }
+        if(vg.aan){ voorgevelTik(x,y); }
+        else if(kp.aan){ koppelTik(x,y); }
         else if(pl.nummeren){ nummerHier(x,y); }
         else{
           // Tik je op een punt dat er al staat, dan wil je dát bekijken, geen nieuw punt ernaast.
@@ -15942,11 +16511,13 @@ document.getElementById("pl-laad").onclick=()=>document.getElementById("planbest
 /* Het GRB van je huidige plek, en daarna tonen op de zone waar het terechtkwam. Ook bereikbaar via ⋯ in het Plan-venster
    ("GRB van deze plek"), voor als er al een plan ligt. */
 async function grbVanDezePlek(){
+  const inPlan=document.getElementById("plandlg").open;
   const gedaan=await haalOmtrek(null,false);
   if(!gedaan)return false;
   planLijst=await planZones();
   const z0=(typeof gedaan==="string"&&planLijst.includes(gedaan))?gedaan:(planLijst.includes(staat.zone)?staat.zone:planLijst[0]);
-  if(z0)await openPlan(z0);
+  /* Vanaf de kaart blijf je op de kaart: het GRB ligt er al, en een schermvullend planvenster is een tussenscherm waar je zelf uit moet. */
+  if(z0&&inPlan)await openPlan(z0);
   return true;
 }
 document.getElementById("pl-omtrek").onclick=()=>{ grbVanDezePlek(); };
@@ -16002,6 +16573,174 @@ function zetVouw(klein){
   try{localStorage.setItem(VOUWSLEUTEL,klein?"1":"0")}catch(e){}
   planTeken();
 }
+/* ---- een plan draaien: de keuzes ----
+   de opdrachtgever, 08/10/2026: "Een plan kunnen draaien, standaard noord boven. Meestal staat de voorgevel horizontaal onderaan, maar het
+   kan anders. Architecten kiezen vaak een plan evenwijdig met het kader (de perceelsgrens)."
+
+   Vier keuzes en een vrije draai. Elke keuze is een getal graden; wat het getal doet staat bij `draaiVan`. Twee keuzes hebben
+   een bron nodig die een scan niet heeft, en dat wordt gezegd in plaats van gegokt:
+     noord boven        -> nodig: een koppeling (`georef`), anders weet het blad niet waar het noorden is;
+     evenwijdig kader   -> nodig: een koppeling en een bekend perceel (uit het GRB dat je haalde);
+     voorgevel onderaan -> je wijst zelf twee punten aan op de gevel; geen koppeling nodig;
+     vrij               -> een schuif, en knoppen voor een kwartslag. */
+const KADERSLEUTEL="werfpunten-kader";
+
+/* De hoek van de perceelsgrens, in graden tegen de klok in vanaf het oosten, teruggebracht tot (-45,45]. Alle randen van het
+   perceel tellen mee, gewogen naar hun lengte, en een rand telt vier keer zijn hoek: zo is een hoek van 90 graden tussen twee
+   randen geen tegenspraak maar dezelfde richting. Een perceel zonder duidelijke richting (een rond of onregelmatig perceel)
+   geeft null: dan is er geen kader om mee evenwijdig te liggen, en dat is een eerlijker antwoord dan een gegokte hoek. */
+function kaderHoekVan(ringen){
+  let re=0, im=0, totaal=0;
+  (ringen||[]).forEach(r=>{
+    for(let i=0;i+1<r.length;i++){
+      const dx=r[i+1][0]-r[i][0], dy=r[i+1][1]-r[i][1], l=Math.hypot(dx,dy);
+      if(!l)continue;
+      const a=Math.atan2(dy,dx)*4;
+      re+=l*Math.cos(a); im+=l*Math.sin(a); totaal+=l;
+    }
+  });
+  if(!totaal||Math.hypot(re,im)/totaal<0.35)return null;
+  return +(Math.atan2(im,re)/4*180/Math.PI).toFixed(3);
+}
+function normaalHoek(d){
+  let h=((d%360)+360)%360;
+  if(h>180)h-=360;
+  return h;
+}
+function kaderHoek(){
+  if(plan&&plan.kader&&typeof plan.kader.hoek==="number")return plan.kader.hoek;
+  try{
+    const w=JSON.parse(localStorage.getItem(pk(KADERSLEUTEL))||"null");
+    if(w&&typeof w.hoek==="number")return w.hoek;
+  }catch(e){}
+  return null;
+}
+function onthoudKader(plan2){
+  if(!plan2||!plan2.kader||typeof plan2.kader.hoek!=="number")return;
+  try{ bewaarVeilig(pk(KADERSLEUTEL),JSON.stringify({hoek:plan2.kader.hoek,datum:vandaag()}),"de richting van het perceel"); }catch(e){}
+}
+function planWeetNoord(p){
+  const g=p&&p.georef;
+  return !!(g&&!g.plaatselijk&&g.eenheid_m);
+}
+/* Wat een keuze oplevert: graden, of waarom het niet kan. Zuivere som, zodat de proef ze kan nameten. */
+function draaiVoorstel(p,soort,kader){
+  const g=p&&p.georef;
+  if(soort==="noord"){
+    if(!planWeetNoord(p))return {fout:"Dit plan weet niet waar het noorden ligt. Koppel het eerst aan het GRB via Koppelen aan een ander plan."};
+    return {graden:normaalHoek(g.noord||0)};
+  }
+  if(soort==="kader"){
+    if(kader===null||kader===undefined)return {fout:"Er is geen perceel bekend. Haal eerst het GRB van deze plek: daar komt de richting van de perceelsgrens uit."};
+    if(!planWeetNoord(p))return {fout:"Dit plan weet niet in welke richting het ligt, dus ook niet welke kant het kader op staat. Koppel het eerst aan het GRB."};
+    return {graden:normaalHoek((g.noord||0)+kader)};
+  }
+  return {fout:"onbekende keuze"};
+}
+/* De voorgevel onderaan: twee punten op de gevel, en het plan draait zodat die lijn horizontaal ligt met het gebouw erboven.
+   Het gebouw ligt "boven" als het midden van de lokalen (anders het midden van het blad) aan de bovenkant van de lijn komt. */
+function voorgevelDraai(p,a,b,laag){
+  const dx=(b.x-a.x)/100*p.breedte, dy=(b.y-a.y)/100*p.hoogte;
+  if(Math.hypot(dx,dy)<1e-6)return null;
+  let phi=-Math.atan2(dy,dx)*180/Math.PI;
+  const lok=(typeof lokalenVan==="function"?lokalenVan(p,laag):[])||[];
+  const m=lok.length?{x:lok.reduce((s,l)=>s+l.x,0)/lok.length, y:lok.reduce((s,l)=>s+l.y,0)/lok.length}:{x:50,y:50};
+  const rot=(q,graden)=>{
+    const t=graden*Math.PI/180, c=Math.cos(t), s=Math.sin(t), u=(q.x/100-.5)*p.breedte, w=(q.y/100-.5)*p.hoogte;
+    return {x:u*c-w*s, y:u*s+w*c};
+  };
+  if(rot(m,phi).y>rot(a,phi).y)phi+=180;
+  return normaalHoek(phi);
+}
+
+function voorgevelStop(bericht){
+  vg.aan=false; vg.a=null;
+  planTeken();
+  if(bericht)melding(bericht);
+}
+async function voorgevelTik(x,y){
+  if(!vg.a){
+    vg.a={x,y}; planTeken();
+    melding("Tik nu het andere eind van de voorgevel");
+    return;
+  }
+  const g=voorgevelDraai(plan,vg.a,{x,y},planLaag());
+  vg.aan=false; vg.a=null;
+  if(g===null){ planTeken(); melding("Die twee punten liggen op dezelfde plek — probeer het opnieuw"); return; }
+  await zetDraai(g,"voorgevel");
+  melding("Voorgevel staat onderaan");
+}
+
+/* Het draaien zelf. Bewaart de keuze bij het plan; punten, calque en koppeling blijven ongemoeid. */
+async function zetDraai(graden,door,alleenZien){
+  if(!plan)return false;
+  const g=+normaalHoek(graden).toFixed(2);
+  if(door==="standaard")delete plan.weergave;
+  else plan.weergave={draai:g, door:door||"vrij"};
+  if(!alleenZien){
+    if(!(await zetPlan(plan.zone,plan))){ melding("Opslag weigert — de draai is niet bewaard"); }
+    kaartZone=null; tekenKaart();      // de ondergrond van het hoofdscherm ligt dan ook goed
+    planPasIn();
+  }
+  planTeken(); planVoet();
+  return true;
+}
+
+function toonDraaiDialoog(){
+  if(!plan){ melding("Er is geen plan om te draaien"); return; }
+  const dlg=document.getElementById("dlg");
+  document.getElementById("dlg-titel").textContent="Plan draaien";
+  const body=document.getElementById("dlg-body");
+  body.innerHTML="";
+  const huidig=draaiVan(plan);
+  const uit=maakEl("p","inv-uitleg","");
+  const toon=()=>{
+    const d=draaiVan(plan);
+    uit.textContent=(planWeetNoord(plan)&&Math.abs(normaalHoek(d-(plan.georef.noord||0)))<0.5
+      ? "Nu: noord boven" : "Nu: "+Math.round(d*10)/10+"° met de klok mee gedraaid")+
+      ". De punten blijven op hun plek op het plan; alleen de manier waarop het ligt verandert.";
+  };
+  toon();
+  body.appendChild(uit);
+  const rij=(kop)=>{ body.appendChild(maakEl("h3","beheer-kop",kop)); const d=maakEl("div","beheer-groep"); body.appendChild(d); return d; };
+  const knop=(doos,tekst,fn)=>{ const b=maakEl("button",null,tekst); b.type="button"; b.onclick=fn; doos.appendChild(b); return b; };
+  const kies=async(soort)=>{
+    const v=draaiVoorstel(plan,soort,kaderHoek());
+    // de reden staat in het venster zelf, niet in een melding die achter het venster verdwijnt
+    if(v.fout){ uit.textContent=v.fout; return; }
+    dlg.close();
+    await zetDraai(v.graden,soort);
+  };
+  const g1=rij("Kies hoe het plan ligt");
+  knop(g1,"Noord boven",()=>kies("noord"));
+  knop(g1,"Evenwijdig met het kader",()=>kies("kader"));
+  knop(g1,"Voorgevel onderaan",()=>{
+    dlg.close();
+    vg.aan=true; vg.a=null; planTeken();
+    meldingMetActie("Tik het begin van de voorgevel op het plan","stoppen",()=>voorgevelStop("Voorgevel niet gekozen"));
+  });
+  knop(g1,"Zoals ingescand",async()=>{ dlg.close(); await zetDraai(0,"vrij"); });
+  const g2=rij("Zelf draaien");
+  g2.style.cssText="display:flex;flex-wrap:wrap;gap:6px";      // de kleine knoppen naast elkaar, de schuif over de hele breedte
+  const schuif=document.createElement("input");
+  schuif.type="range"; schuif.min="-180"; schuif.max="180"; schuif.step="1"; schuif.value=String(Math.round(normaalHoek(huidig)));
+  schuif.style.cssText="flex:0 0 100%;width:100%";
+  schuif.setAttribute("aria-label","Hoek in graden");
+  schuif.oninput=()=>{ zetDraai(+schuif.value,"vrij",true); toon(); };
+  schuif.onchange=()=>{ zetDraai(+schuif.value,"vrij"); };
+  g2.appendChild(schuif);
+  const kwart=(tekst,delta)=>knop(g2,tekst,async()=>{
+    const n=normaalHoek(draaiVan(plan)+delta);
+    schuif.value=String(Math.round(n));
+    await zetDraai(n,"vrij"); toon();
+  });
+  kwart("Kwartslag links",-90); kwart("Kwartslag rechts",90); kwart("−1°",-1); kwart("+1°",1);
+  body.appendChild(maakEl("p","inv-uitleg",
+    "Evenwijdig met het kader gebruikt de perceelsgrens uit het GRB dat je haalde. Noord boven en kader vragen een plan dat gekoppeld is aan het GRB; een voorgevel kan op elk plan."));
+  document.getElementById("dlg-kopieer").style.display="none";
+  dlg.showModal();
+}
+
 /* ---- het menu over de kaart ----
    Het planscherm is schermvullend en de kaart slikt elk gebaar: je kunt hem verschuiven en verder
    niets. Daarmee was je er ook opgesloten — de enige uitgang was één knop rechtsboven, en waar de
@@ -16035,6 +16774,7 @@ function planMenu(){
   const g2=groep("Dit plan");
   knop(g2,"GRB van deze plek",()=>{ grbVanDezePlek(); });
   knop(g2,"Ander plan of niveau",()=>tik("pl-plan"));
+  knop(g2,"Plan draaien",()=>{ toonDraaiDialoog(); });
   knop(g2,"Pin wissen",()=>tik("pl-wis"));
   knop(g2,"Lokalen nummeren",()=>tik("pl-nummer"));
   knop(g2,"Koppelen aan een ander plan",()=>tik("pl-koppel"));
@@ -16277,11 +17017,8 @@ document.getElementById("pl-schets").onclick=()=>{
   },"image/jpeg",0.92);
 };
 
-document.getElementById("pl-foto").onclick=()=>{
-  // staat er al een foto klaar, dan opent dezelfde knop het tekenscherm om erop aan te duiden
-  if(wachtendeFoto){tk.naam="schets";openTekenscherm(wachtendeFoto,"nieuw");}
-  else document.getElementById("foto").click();
-};
+/* Dezelfde functie als de camera op het hoofdscherm: één bron, zodat een document of PDF dat klaarstaat niet in het tekenscherm belandt. */
+document.getElementById("pl-foto").onclick=fotoDrukken;
 
 /* Het plan met jouw nummering weer als bestand, anders blijft werk op één toestel steken.
    Zo werkt de route: op de Mac inladen en nummeren, hier bewaren, naar de telefoon sturen. En
@@ -16397,7 +17134,17 @@ function plekUitPin(){
   merkPlanknop();
   document.getElementById("plandlg").close();
 }
-document.getElementById("pl-klaar").onclick=plekUitPin;
+/* Tijdens het rechtzetten is dit dezelfde knop als "Deze plek": het punt krijgt de plek (of niets zonder pin) en je komt terug waar je vandaan kwam. */
+document.getElementById("pl-klaar").onclick=()=>{
+  if(plekVoorPunt){ terugNaarKeet(!!(pl&&pl.pin)); return; }
+  plekUitPin();
+};
+/* Verlaat je het planvenster op een andere weg (de onderbalk, Escape), dan blijft de rechtzetstand niet hangen: anders stond de balk
+   "Tik aan waar dit punt hoort" er de volgende keer weer, en verhuisde "Deze plek" een oud punt. */
+document.getElementById("plandlg").addEventListener("close",()=>{
+  if(document.getElementById("plandlg").open)return;      // het close-event van een eerdere sluiting
+  if(plekVoorPunt){ plekVoorPunt=null; plekTerug="keet"; try{ merkPlekbalk(); }catch(e){} }
+});
 
 
 /* Een haal tot punt maken. Ze verdwijnt daarbij niet van het blad: wat je getekend hebt blijft
@@ -16590,6 +17337,12 @@ document.getElementById("planbestand").onchange=async e=>{
   // Meldingen met het bestand erbij: gaat het mis, dan wil je op de werf kunnen zien wát er
   // mis is zonder een computer te moeten openen.
   const kort=(f.name||"bestand").slice(0,22);
+  /* Een foto of PDF is geen plan: de app leest als plan alleen een .werfplan (JSON). Dat zeggen, en zeggen wat wél kan, in plaats van
+     de eerste tekens van een beeldbestand te tonen. */
+  if(/^image\//.test(f.type||"")||/pdf/.test(f.type||"")||/\.(jpe?g|png|heic|pdf)$/i.test(f.name||"")){
+    melding(kort+" is een foto of PDF. Als plan lees ik alleen een .werfplan; voor een foto bij een punt gebruik je de camera.");
+    return;
+  }
   let tekst;
   try{tekst=await f.text();}
   catch(err){melding("Kan "+kort+" niet lezen ("+(err.name||"fout")+")");return;}
@@ -16608,22 +17361,11 @@ document.getElementById("planbestand").onchange=async e=>{
   if(wissel.wat==="archiveer"){
     const naam=await vrijeVersienaam(data.zone);
     const hoeveel=stuks(raakt.length,"punt","punten");
-    if(wissel.vraag){
-      const regels=[
-        "Op <b>"+veilig(data.zone)+"</b> ligt al een plan"+(raakt.length?", met "+hoeveel+" erop":"")+".",
-        "Een plan wordt hier nooit overschreven. Het vorige blad blijft staan als "+
-          "<b>"+veilig(naam)+"</b> — ook de nummering die je erop hebt gezet en de koppeling die "+
-          "het draagt."
-      ];
-      if(raakt.length)regels.push(
-        "De "+hoeveel+" gaan mee naar dat blad, want ze horen bij de tekening waarop je ze prikte. "+
-        "Overzetten doe je met <b>Koppel</b>: wijs twee keer dezelfde hoek aan op beide "+
-        "tekeningen, en ze rekenen zichzelf om.");
-      if(!await vraagJa("Nieuwe versie van "+data.zone,regels,"Nieuwe versie")){
-        melding(kort+" niet geladen — "+data.zone+" blijft zoals het was");return;}
-    }
+    /* Geen vraag meer (de opdrachtgever, 09/10/2026): het vorige blad gaat toch al opzij, met nummering, koppeling en punten, dus er valt niets te
+       verliezen. De melding zegt waar het staat. */
     geparkeerd=await parkeerPlan(bestaand,naam,raakt);
     if(!geparkeerd)return;
+    if(wissel.vraag)melding("Het vorige blad staat als "+naam+(raakt.length?(" \u2014 "+hoeveel+" gaan mee; overzetten kan met Koppel"):""));
     if(wissel.omtrek)
       melding("De GRB-omtrek gaat opzij als "+naam+" — "+data.zone+" is nu het echte plan");
   }
@@ -16708,11 +17450,23 @@ function witVel(breed,hoog){
   return new Promise(res=>c.toBlob(res,"image/jpeg",0.85));
 }
 
+let tekenTerug=null;      // het punt in de keet waar je vandaan kwam; na het tekenscherm ga je daar weer naartoe
+function sluitTekenscherm(){
+  tk.naam="";
+  const dlg=document.getElementById("tekendlg");
+  if(dlg.open)dlg.close();
+  if(tekenTerug){ const id=tekenTerug; tekenTerug=null; setTimeout(()=>bewerkPunt(id),0); }
+}
 async function openTekenscherm(bron, doel, beeld){
   const dlg=document.getElementById("tekendlg");
   tk.canvas=document.getElementById("tekencanvas");
   tk.ctx=tk.canvas.getContext("2d");
   tk.lijnen=[];tk.doel=doel;tk.basis=null;tk.bron=bron||null;
+  if(dlg.open)return;                                   // een dubbele tik op de camera mag niet twee keer openen
+  /* "Andere foto" alleen waar er een foto klaarstaat die je vervangt: de camerastand is dan al "aanduiden", en zonder deze knop kon je
+     geen tweede foto nemen. */
+  const andere=document.getElementById("tk-andere");
+  if(andere)andere.hidden=!(doel==="nieuw"&&bron&&bron===wachtendeFoto);
   if(bron){
     const img=new Image();
     await new Promise(res=>{img.onload=res;img.onerror=res;img.src=URL.createObjectURL(bron);});
@@ -16745,6 +17499,14 @@ async function openTekenscherm(bron, doel, beeld){
   tk.canvas.onpointerup=stop; tk.canvas.onpointercancel=stop;
 }
 
+/* De uitweg die ontbrak: het tekenscherm had alleen "Klaar", en dat bewaarde ook een leeg vel. Annuleer sluit zonder iets te doen. */
+document.getElementById("tk-annuleer").onclick=()=>{ sluitTekenscherm(); };
+document.getElementById("tk-andere").onclick=()=>{ tekenTerug=null; tk.naam=""; document.getElementById("tekendlg").close(); document.getElementById("foto").click(); };
+// Escape of een ander gebaar dat het scherm sluit: toch terug naar het punt
+document.getElementById("tekendlg").addEventListener("close",()=>{
+  if(document.getElementById("tekendlg").open)return;
+  if(tekenTerug){ const id=tekenTerug; tekenTerug=null; setTimeout(()=>bewerkPunt(id),0); }
+});
 document.getElementById("tk-undo").onclick=()=>{tk.lijnen.pop();tkHerteken();};
 document.getElementById("tk-wis").onclick=()=>{tk.lijnen=[];tkHerteken();};
 /* Wat er gebeurt als je het tekenscherm sluit met Klaar. Apart van de knop, want een handeling
@@ -16752,6 +17514,8 @@ document.getElementById("tk-wis").onclick=()=>{tk.lijnen=[];tkHerteken();};
    handeling waar de onbewerkte opname aan hangt. Hetzelfde patroon als ficheKlaar,
    laatHoofdstukLos en plekUitPin. */
 async function tekenKlaar(){
+  /* Niets getekend op een foto of een leeg vel: Klaar sluit gewoon. Zo hangt er geen leeg blad "Schets" aan het punt. */
+  if(tk.doel==="nieuw"&&!tk.lijnen.length){ sluitTekenscherm(); return; }
   /* Niet meer inbranden. De streken gaan als aanduiding naast het beeld en de opname blijft de
      opname -- zie de sectie bij aanduidingVan voor waarom dat meer is dan opruimwerk. */
   const halen=aanduidingUitLijnen(tk.lijnen,tk.canvas.width,tk.canvas.height);
@@ -16781,7 +17545,7 @@ async function tekenKlaar(){
     }
     tekenLijst();
   }
-  document.getElementById("tekendlg").close();
+  sluitTekenscherm();
 }
 document.getElementById("tk-klaar").onclick=()=>{tekenKlaar();};
 document.getElementById("schetsknop").onclick=()=>openTekenscherm(null,"nieuw");
@@ -17675,7 +18439,7 @@ async function bouwAfdruk(bestemmeling){
   const alle=m.punten||[];   // van dít blad: gefilterd telt het gefilterde
   const metAi=alle.filter(viaAi).length;
   el.appendChild(maakEl("p","af-voet",
-    "Opgemaakt met Gridveld "+VERSIE+" op "+datumLang(new Date().toISOString().slice(0,10))+"."+
+    "Opgemaakt met Gridveld "+VERSIE+" op "+datumLang(vandaag())+"."+
     (metAi?(" Bij "+stuks(metAi,"vaststelling","vaststellingen")+" van de "+alle.length+
             " in dit verslag kwam de tekst binnen via een AI-dienst; de opname zelf verliet het "+
             "toestel niet."):"")));
@@ -17791,7 +18555,7 @@ async function sluitVergaderingDoor(reden){
   // opnieuw ingevuld, de aanwezigen meestal niet — dat is per werf vrij vast
   // De opvolger blijft in dezelfde fase: je sluit een werfverslag af en begint aan het
   // volgende werfverslag. Van fase wisselen is een eigen handeling, niet een bijwerking.
-  staat={datum:new Date().toISOString().slice(0,10), weer:"", bezetting:"",
+  staat={datum:vandaag(), weer:"", bezetting:"",
          zone:staat.zone, aanwezig:(staat.aanwezig||[]).slice(), punten:[],
          rondgangen:[],
          fase:faseVan(staat), nr:0, titel:"", verslagstatus:"concept"};
@@ -17924,6 +18688,7 @@ async function tekenKaart(){
   kaartZone=zone; kaartLaag=laag; kaartPlan=data;
   tekenZones();
   merkKaartlaag();
+  merkKaartperceel();
   doos.innerHTML="";
   /* Een tweede oproep kan ons intussen ingehaald hebben — dan is dit beeld het verkeerde. */
   if(kaartZone!==zone||kaartLaag!==laag)return;
@@ -17935,11 +18700,20 @@ async function tekenKaart(){
       ? "Geen plan voor "+zone+". Kies een zone waar er een ligt, of laad er een."
       : "Nog geen plan op dit toestel.";
     doos.appendChild(p);
+    // Het GRB van je plek is het plan van een zone zonder plan (de opdrachtgever, 08/10/2026): één tik, ook op het hoofdscherm.
+    if(ZONES.includes(zone)){
+      const kn=document.createElement("button");
+      kn.type="button"; kn.className="kaartgrb"; kn.textContent="GRB van deze plek als plan";
+      kn.onclick=e=>{ if(e&&e.stopPropagation)e.stopPropagation(); grbZonesGeprobeerd.add(zone); kopieerGrbNaar(zone).then(ok=>{ if(!ok)kiesGrbPerceel(zone,{auto:true}); }); };
+      doos.appendChild(kn);
+    }
     return;
   }
   doos.classList.remove("leeg");
   const img=document.createElement("img");
   img.alt=""; img.src=laagBeeld(data,laag)||data.beeld;
+  // een gedraaid blad ligt meteen goed, niet pas na de eerste knijp
+  img.style.transform=kaartBeeldTransform(kaartKijkNu(doos.getBoundingClientRect().width,doos.getBoundingClientRect().height),doos.getBoundingClientRect(),data);
   doos.appendChild(img);
   tekenKaartPunten();
 }
@@ -17948,16 +18722,57 @@ async function tekenKaart(){
    is het scherm, het beeld draagt de verhouding van het blad, en daartussen zit een rand die
    links en rechts óf boven en onder even groot is. Apart gezet omdat het een som is: bij het
    paneel zat precies in zo een som de fout die een gebaar liet lijken te werken. */
-function plekOpBeeld(x,y,doosB,doosH,bladB,bladH){
+function plekOpBeeld(x,y,doosB,doosH,bladB,bladH,draai){
   if(!(doosB>0&&doosH>0&&bladB>0&&bladH>0))return null;
   const schaal=Math.min(doosB/bladB,doosH/bladH);
   const b=bladB*schaal, h=bladH*schaal;
-  return { x:(doosB-b)/2+x/100*b, y:(doosH-h)/2+y/100*h };
+  const q={ x:(doosB-b)/2+x/100*b, y:(doosH-h)/2+y/100*h };
+  if(!draai)return q;
+  // een gedraaid blad: om het midden van de doos, en zo bijgeschaald dat het gedraaide blad past
+  const e=kaartDraaiFactor(doosB,doosH,bladB,bladH,draai);
+  const t=draai*Math.PI/180, c=Math.cos(t), sn=Math.sin(t);
+  const u=(q.x-doosB/2)*e, w=(q.y-doosH/2)*e;
+  return { x:doosB/2+u*c-w*sn, y:doosH/2+u*sn+w*c };
+}
+/* Hoeveel een gedraaid blad moet bijschalen om in de doos te passen: de passing van de omhullende rechthoek van het gedraaide
+   blad, gedeeld door die van het blad zoals het lag. Onder de 1 als het blad door het draaien groter wordt dan de doos, boven
+   de 1 als een liggend blad op een staand scherm net minder ruimte nodig heeft. */
+function kaartDraaiFactor(doosB,doosH,bladB,bladH,draai){
+  const t=draai*Math.PI/180, c=Math.abs(Math.cos(t)), sn=Math.abs(Math.sin(t));
+  const bb=bladB*c+bladH*sn, hh=bladB*sn+bladH*c;
+  const f0=Math.min(doosB/bladB,doosH/bladH);
+  return Math.min(doosB/bb,doosH/hh)/f0;
+}
+/* De transform van het kaartbeeld: eerst de draaiing om het midden, dan de kijkstand (schuiven en zoomen). */
+function kaartBeeldTransform(k,b,plan){
+  const stil=(k.schaal===1&&!k.dx&&!k.dy);
+  let t=stil?"":("translate("+k.dx.toFixed(1)+"px,"+k.dy.toFixed(1)+"px) scale("+k.schaal.toFixed(4)+")");
+  const d=draaiVan(plan);
+  if(d&&b.width&&b.height){
+    const e=kaartDraaiFactor(b.width,b.height,plan.breedte,plan.hoogte,d), cx=b.width/2, cy=b.height/2;
+    t+=(t?" ":"")+"translate("+cx.toFixed(1)+"px,"+cy.toFixed(1)+"px) rotate("+d.toFixed(3)+"deg) scale("+e.toFixed(5)+
+       ") translate("+(-cx).toFixed(1)+"px,"+(-cy).toFixed(1)+"px)";
+  }
+  return t;
 }
 
 /* Het woord van de laag, linksboven op de kaart -- zie de opmaak bij .kaartlaag voor waarom.
    Alleen als het blad meer dan één laag heeft: zonder lagen valt er niets te zeggen, en met
    één laag is er geen keuze. Geeft het woord terug dat er staat, of null. */
+/* Het perceel dat de app zelf koos (geen twijfel, dus geen vraag), blijft aanpasbaar met één tik: dezelfde weg als Plan, ⋯, GRB van
+   deze plek, die het perceel wél laat bevestigen. Zodra daar een plan komt dat niet automatisch is, verdwijnt de knop vanzelf. */
+function merkKaartperceel(){
+  const b=document.getElementById("kaartperceel");
+  if(!b)return false;
+  const toon=!!(kaartPlan&&kaartPlan.voorlopig&&kaartPlan.bron&&kaartPlan.bron.grb&&kaartPlan.bron.grb.automatisch);
+  b.hidden=!toon;
+  return toon;
+}
+document.getElementById("kaartverzet").onclick=e=>{ if(e&&e.stopPropagation)e.stopPropagation(); stopVerzet(); melding("Verzetten gestopt"); };
+document.getElementById("kaartperceel").onclick=e=>{
+  if(e&&e.stopPropagation)e.stopPropagation();
+  grbVanDezePlek();
+};
 function merkKaartlaag(){
   const b=document.getElementById("kaartlaag");
   if(!b)return null;
@@ -17986,12 +18801,15 @@ function kaartOudAan(){
    hoe lang een punt al openstaat. Dat is precies wat je bij een oplevering of een aanmaning wél
    wil zien. Weggooien zou dat gegeven onzichtbaar maken; het is dus een keuze en geen verlies. */
 const KAARTKLEURSLEUTEL="werfpunten-kaartkleur";
-const OUDZWART={rand:"#111", tekst:"#111"};
+/* Grijs, niet zwart (de opdrachtgever, 08/10/2026): wat in een verzonden verslag stond is "al gezegd" en hoort
+   achter te liggen. Afgesloten is na het versturen, niet per se opgelost -- een oud punt dat nog
+   openstaat, blijft dus zichtbaar, maar rustig. */
+const OUDGRIJS={rand:"#8c8c8c", tekst:"#5f5f5f"};
 function kaartOuderdomAan(){
   try{ return localStorage.getItem(KAARTKLEURSLEUTEL)==="ouderdom"; }catch(e){ return false; }
 }
 function oudeStipkleur(dagen){
-  return kaartOuderdomAan()?ouderdomskleur(dagen):OUDZWART;
+  return kaartOuderdomAan()?ouderdomskleur(dagen):OUDGRIJS;
 }
 
 /* De stippen zelf. Eigen elementen over het beeld in plaats van een tweede doek: het blad is
@@ -18062,9 +18880,7 @@ function kaartKijkZet(){
        ruimte kan afdekken, mag de kaart óók op de passende stand verschuiven -- om de speld
        eronderuit te halen. Wie hier alleen naar de schaal keek, wiste die verschuiving en liet
        de stippen meelopen terwijl het beeld bleef staan. */
-    const stil=(k.schaal===1&&!k.dx&&!k.dy);
-    img.style.transform=stil?""
-      :("translate("+k.dx.toFixed(1)+"px,"+k.dy.toFixed(1)+"px) scale("+k.schaal.toFixed(4)+")");
+    img.style.transform=kaartBeeldTransform(k,b,kaartPlan);
   }
   doos.classList.toggle("gezoomd",kaartKijk.schaal>1);
   tekenKaartPunten();
@@ -18087,7 +18903,16 @@ function plekUitKaart(sx,sy){
   const qx=((sx-b.left)-k.dx)/k.schaal, qy=((sy-b.top)-k.dy)/k.schaal;
   const f=Math.min(b.width/kaartPlan.breedte,b.height/kaartPlan.hoogte);
   const bw=kaartPlan.breedte*f, bh=kaartPlan.hoogte*f;
-  const x=(qx-(b.width-bw)/2)/bw*100, y=(qy-(b.height-bh)/2)/bh*100;
+  // het gedraaide blad eerst terugdraaien: dezelfde som als plekOpBeeld, in omgekeerde volgorde
+  let ux=qx, uy=qy;
+  const dr=draaiVan(kaartPlan);
+  if(dr){
+    const e=kaartDraaiFactor(b.width,b.height,kaartPlan.breedte,kaartPlan.hoogte,dr);
+    const t=dr*Math.PI/180, c=Math.cos(t), sn=Math.sin(t);
+    const du=qx-b.width/2, dw=qy-b.height/2;
+    ux=b.width/2+(du*c+dw*sn)/e; uy=b.height/2+(-du*sn+dw*c)/e;
+  }
+  const x=(ux-(b.width-bw)/2)/bw*100, y=(uy-(b.height-bh)/2)/bh*100;
   if(!(x>=0&&x<=100&&y>=0&&y<=100))return null;
   return {x:+x.toFixed(2), y:+y.toFixed(2)};
 }
@@ -18137,6 +18962,184 @@ function prikOpKaart(sx,sy){
   return true;
 }
 
+/* ---- een punt rechtzetten rechtstreeks op de kaart ----
+   de opdrachtgever, 08/10/2026: de app mag niet laten zoeken. Rechtzetten kon alleen via de keet of het nazicht (zes tot acht tikken, en
+   op de telefoon niet eens een keet). Nu: tik op de stip, tik op "Verzet" in de rij, en tik op de kaart waar het hoort.
+   Naar een ander blad verhuist het punt echt (B6), maar niet zonder te vragen. */
+let verzetPunt=null;
+let verzetTimer=null;
+function stopVerzet(){
+  verzetPunt=null;
+  clearTimeout(verzetTimer); verzetTimer=null;
+  const el=document.getElementById("toast");
+  if(el&&/^Tik op de kaart waar dit punt/.test(el.textContent||"")){ clearTimeout(el._t); el.classList.remove("aan"); }
+  const k=document.getElementById("kaart");
+  if(k)k.classList.remove("verzet");
+  const kn=document.getElementById("kaartverzet");
+  if(kn)kn.hidden=true;
+  const vl=document.getElementById("vulling"); if(vl)vl.classList.remove("verzet");
+}
+async function startVerzet(p){
+  if(!p||!p.plek||!planLijst.length)return false;
+  if(p.plek.zone!==kaartZone)await springNaarPunt(p);
+  verzetPunt=p.id;
+  zetPaneel("dicht");
+  const k=document.getElementById("kaart");
+  if(k)k.classList.add("verzet");
+  /* De stand hangt niet aan de melding: elke andere melding wist de toast, en dan hing de modus nog. Een eigen knop blijft staan
+     tot je klaar bent of annuleert, en een eigen timer ruimt hem op. */
+  const kn=document.getElementById("kaartverzet");
+  if(kn)kn.hidden=false;
+  const vl=document.getElementById("vulling"); if(vl)vl.classList.add("verzet");
+  melding("Tik op de kaart waar dit punt hoort te liggen");
+  clearTimeout(verzetTimer);
+  verzetTimer=setTimeout(()=>{ if(verzetPunt===p.id)stopVerzet(); },60000);
+  return true;
+}
+async function verzetOpKaart(sx,sy){
+  const p=staat.punten.find(x=>x.id===verzetPunt);
+  if(!p){ stopVerzet(); return false; }
+  const c=plekUitKaart(sx,sy);
+  if(!c){ melding("Naast de tekening — tik op het plan zelf"); return false; }
+  /* Geen vraag voor een ander blad: je koos dat blad zelf en tikte daar. In plaats daarvan een melding met "Terug", die de oude plek
+     en het oude blad herstelt. */
+  const lok=lokaalBij(c.x,c.y,kaartPlan,kaartLaag);
+  const plek={zone:kaartZone, x:c.x, y:c.y, lokaal:lok?lok.nr:null, naam:lok?lok.naam:"",
+              laag:kaartLaag, lokaalLaag:lok?lokaalHerkomst(kaartPlan,kaartLaag):null};
+  const vorigePlek=p.plek?{...p.plek}:null, vorigeZone=p.zone;
+  const verhuisd=zetPlekOpPunt(p,plek);
+  stopVerzet();
+  await tekenLijst();
+  tekenKaartPunten();
+  meldingMetActie(verhuisd?("Verhuisd naar "+zoneNaam(kaartZone)):"Plek rechtgezet","Terug",async()=>{
+    if(!staat.punten.includes(p))return;
+    p.zone=vorigeZone; p.plek=vorigePlek; raakAan(p); bewaarStaat();
+    await tekenLijst(); tekenKaartPunten();
+  });
+  return true;
+}
+
+/* ---- waar sta je? ----
+   de opdrachtgever, 08/10/2026: de app moet de ruimte aanvoelen. Op een plan dat weet waar het ligt (`georef`, ook het GRB) staat een blauwe stip
+   waar je staat, met een ring ter grootte van je onzekerheid. Is die ring groter dan het blad of de meting slechter dan 60 m, dan
+   toont de app geen stip: een stip die liegt is erger dan geen. Alleen terwijl de app open is (iOS laat niets op de achtergrond
+   lopen) en alleen als het toestel al toestemming gaf: de stille weg vraagt nooit. */
+let hierNu=null;
+const HIERVERS=60000, HIERTIK=6000, HIERMAXNAUW=60, HIERPUNTNAUW=10, DICHTBIJM=25;
+async function ververHier(){
+  try{ if(document.visibilityState==="hidden")return null; }catch(e){}
+  const h=await haalPlek(true,true);
+  if(!h)return null;
+  const L=wgsNaarLambert(h.lat,h.lon);
+  hierNu={lat:h.lat,lon:h.lon,nauw:h.nauw,X:L.x,Y:L.y,tijd:Date.now()};
+  return hierNu;
+}
+function hierVers(){ return hierNu&&(Date.now()-hierNu.tijd)<HIERVERS?hierNu:null; }
+/* Waar ligt je plek op dit plan, in de doos? Zuivere som, zodat ze na te rekenen is. */
+function hierOpBlad(plan,hier,doosB,doosH){
+  if(!plan||!hier||!plan.georef||plan.georef.plaatselijk||!plan.georef.eenheid_m)return null;
+  const q=naarBeeld(plan,hier.X,hier.Y), q2=naarBeeld(plan,hier.X+hier.nauw,hier.Y);
+  if(!q||!q2)return null;
+  const binnen=q.x>=0&&q.x<=100&&q.y>=0&&q.y<=100;
+  const d=draaiVan(plan);
+  const a=plekOpBeeld(q.x,q.y,doosB,doosH,plan.breedte,plan.hoogte,d);
+  const b=plekOpBeeld(q2.x,q2.y,doosB,doosH,plan.breedte,plan.hoogte,d);
+  const straal=(a&&b)?Math.hypot(a.x-b.x,a.y-b.y):0;
+  const onzeker=hier.nauw>HIERMAXNAUW||straal>Math.min(doosB||0,doosH||0)*0.6;
+  return {x:q.x,y:q.y,pixel:a,straal,binnen,onzeker};
+}
+/* De open punten dichtbij: [{p,afstand}] op afstand, op dit plan, binnen `max` meter. */
+function dichtbijPunten(plan,punten,hier,max){
+  if(!plan||!hier||!plan.georef||plan.georef.plaatselijk)return [];
+  const uit=[];
+  (punten||[]).forEach(p=>{
+    if(!p||!p.plek||!isOpen(p))return;
+    const L=naarLambert(plan,p.plek.x,p.plek.y);
+    if(!L)return;
+    const afstand=Math.hypot(L.X-hier.X,L.Y-hier.Y);
+    if(afstand<=(max||DICHTBIJM))uit.push({p,afstand});
+  });
+  return uit.sort((a,b)=>a.afstand-b.afstand);
+}
+function dichtbijTekst(lijst){
+  if(!lijst.length)return "";
+  return "dichtbij \u00b7 "+stuks(lijst.length,"open","open")+" \u00b7 dichtste "+Math.max(1,Math.round(lijst[0].afstand))+" m";
+}
+/* Op welk blad sta je? Alleen een voorstel, en alleen als er niets te twijfelen valt: het huidige blad bevat je plek niet en
+   precies één ander blad wel. Verdiepingen liggen op elkaar, dus bevatten er twee je plek, dan weet de app het niet. */
+function zoneVoorstel(hier,huidige,bladen){
+  if(!hier||hier.nauw>25)return null;
+  const bevat=b=>{ const q=b.georef&&!b.georef.plaatselijk?naarBeeld(b,hier.X,hier.Y):null; return !!q&&q.x>=0&&q.x<=100&&q.y>=0&&q.y<=100; };
+  const hier_=bladen.find(b=>b.zone===huidige);
+  if(hier_&&bevat(hier_))return null;
+  const kand=bladen.filter(b=>b.zone!==huidige&&bevat(b));
+  return kand.length===1?kand[0].zone:null;
+}
+let ruimteBladen=null, ruimteBladenSleutel="";
+async function laadRuimteBladen(){
+  const sl=actief+"|"+(planLijst||[]).join(",");
+  if(ruimteBladen&&ruimteBladenSleutel===sl)return ruimteBladen;
+  const uit=[];
+  for(const z of planLijst||[]){
+    const d=await haalPlan(z);
+    if(d&&d.georef)uit.push({zone:z,georef:d.georef,breedte:d.breedte,hoogte:d.hoogte});
+  }
+  ruimteBladen=uit; ruimteBladenSleutel=sl;
+  return uit;
+}
+const zoneVoorstelWeg=new Set();       // sleutel: werf|blad
+async function bekijkZoneVoorstel(){
+  const h=hierVers();
+  if(!h||!kaartZone)return null;
+  const z=zoneVoorstel(h,kaartZone,await laadRuimteBladen());
+  if(!z||zoneVoorstelWeg.has(actief+"|"+z)||!ZONES.includes(z))return null;
+  zoneVoorstelWeg.add(actief+"|"+z);                     // één keer per zitting per blad: de app dringt niet aan
+  const naam=zoneNaam(z);
+  meldingMetActie("Je lijkt nu op "+naam,"Wissel",()=>{
+    kaartSprongen.length=0; merkKaartterug();
+    staat.zone=z; bewaarStaat(); tekenZones(); tekenKaart(); tekenLijst();
+  });
+  const el=document.getElementById("toast");
+  if(el){ clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove("aan"),9000); }
+  return z;
+}
+let hierKlok=null;
+let kaartRaakt=false;
+async function hierTik(){
+  if(!kaartPlan||!kaartPlan.georef||kaartPlan.georef.plaatselijk)return;
+  const had=hierNu;
+  if(!(await ververHier()))return;
+  /* Alleen hertekenen als je plek werkelijk verschoof, en nooit onder een vinger: een stip die net onder je duim vervangen wordt, verliest de tik. */
+  const verschoof=!had||Math.hypot(hierNu.X-had.X,hierNu.Y-had.Y)>=1||Math.round(hierNu.nauw)!==Math.round(had.nauw);
+  if(verschoof&&!kaartRaakt)tekenKaartPunten();
+  if(!had)bekijkZoneVoorstel();
+}
+function startHier(){
+  if(hierKlok)return;
+  hierKlok=setInterval(()=>{ hierTik().catch(()=>{}); },HIERTIK);
+}
+function hierGeraakt(sx,sy){
+  const el=document.querySelector(".kaarthier");
+  if(!el)return false;
+  const r=el.getBoundingClientRect();
+  return Math.hypot(r.x+r.width/2-sx,r.y+r.height/2-sy)<28;
+}
+/* Een tik op je eigen stip zet de speld voor een nieuw punt op je plek, als je meting goed genoeg is om het te mogen beweren. */
+function speldOpHier(){
+  const h=hierVers();
+  const b=document.getElementById("kaart").getBoundingClientRect();
+  const hb=h&&hierOpBlad(kaartPlan,h,b.width,b.height);
+  if(!hb||!hb.binnen)return false;
+  if(h.nauw>HIERPUNTNAUW){ melding("Je plek is nu ±"+Math.round(h.nauw)+" m onzeker — tik zelf aan waar het punt ligt"); return false; }
+  const x=+hb.x.toFixed(2), y=+hb.y.toFixed(2);
+  const lok=lokaalBij(x,y,kaartPlan,kaartLaag);
+  wachtendePlek={zone:kaartZone,x,y,lokaal:lok?lok.nr:null,naam:lok?lok.naam:"",laag:kaartLaag,lokaalLaag:lok?lokaalHerkomst(kaartPlan,kaartLaag):null,
+                 gps:Math.round(h.nauw)};
+  merkPlanknop(); tekenKaartPunten();
+  melding("Speld op je plek (±"+Math.round(h.nauw)+" m) — typ het punt, of tik de speld ergens anders");
+  return true;
+}
+
 /* Hoeveel pixels het blad met de fiche onderaan afdekt. Gemeten en niet geraden: het blad groeit
    met wat erin staat, en een vaste maat zou bij een lange bestekregel te klein zijn. */
 function kaartAfgedekt(){
@@ -18171,7 +19174,7 @@ function houdSpeldVrij(){
   const afgedekt=kaartAfgedekt();
   if(!afgedekt)return false;
   const k=kaartKijkNu(b.width,b.height);
-  const q=plekOpBeeld(wachtendePlek.x,wachtendePlek.y,b.width,b.height,kaartPlan.breedte,kaartPlan.hoogte);
+  const q=plekOpBeeld(wachtendePlek.x,wachtendePlek.y,b.width,b.height,kaartPlan.breedte,kaartPlan.hoogte,draaiVan(kaartPlan));
   if(!q)return false;
   const y=q.y*k.schaal+k.dy;
   const grens=b.height-afgedekt-SPELDMARGE;
@@ -18213,7 +19216,7 @@ async function springNaarPunt(p){
   const doos=document.getElementById("kaart");
   if(doos&&kaartPlan){
     const b=doos.getBoundingClientRect();
-    const q=plekOpBeeld(p.plek.x,p.plek.y,b.width,b.height,kaartPlan.breedte,kaartPlan.hoogte);
+    const q=plekOpBeeld(p.plek.x,p.plek.y,b.width,b.height,kaartPlan.breedte,kaartPlan.hoogte,draaiVan(kaartPlan));
     if(q){
       kaartKijk=kaartKlem({schaal:SPRONGSCHAAL, dx:b.width/2-q.x*SPRONGSCHAAL, dy:b.height/2-q.y*SPRONGSCHAAL},
                           b.width,b.height,kaartAfgedekt());
@@ -18270,6 +19273,8 @@ function tekenKaartPunten(){
   }
   const oud=doos.querySelector(".kaartpunten");
   if(oud)oud.remove();
+  const dk0=document.getElementById("kaartdichtbij");
+  if(dk0)dk0.hidden=true;
   if(!kaartPlan||doos.classList.contains("leeg"))return;
   const b=doos.getBoundingClientRect();
   if(!b.width||!b.height)return;
@@ -18279,7 +19284,7 @@ function tekenKaartPunten(){
      maat. Dezelfde som als de transform op het beeld -- een punt (qx,qy) landt op q*schaal+d. */
   const k=kaartKijkNu(b.width,b.height);
   const zet=(p,klasse,label,kleur)=>{
-    const q=plekOpBeeld(p.plek.x,p.plek.y,b.width,b.height,kaartPlan.breedte,kaartPlan.hoogte);
+    const q=plekOpBeeld(p.plek.x,p.plek.y,b.width,b.height,kaartPlan.breedte,kaartPlan.hoogte,draaiVan(kaartPlan));
     if(!q)return;
     const el=document.createElement("div");
     el.className="kaartpunt "+klasse;
@@ -18296,7 +19301,7 @@ function tekenKaartPunten(){
      eigen vaststelling niet meer zien: de speld blijft namelijk gelden voor het volgende punt.
      Rood, want het is het enige op dit blad dat nog geen vaststelling is. */
   if(wachtendePlek&&wachtendePlek.zone===kaartZone){
-    const q=plekOpBeeld(wachtendePlek.x,wachtendePlek.y,b.width,b.height,kaartPlan.breedte,kaartPlan.hoogte);
+    const q=plekOpBeeld(wachtendePlek.x,wachtendePlek.y,b.width,b.height,kaartPlan.breedte,kaartPlan.hoogte,draaiVan(kaartPlan));
     if(q){
       const pin=document.createElement("div");
       pin.className="kaartpin";
@@ -18317,6 +19322,28 @@ function tekenKaartPunten(){
   const nuRondgang=lopendeRondgang();
   const rid=nuRondgang?nuRondgang.id:null;
   puntenInZone(kaartZone).forEach((p,i)=>{ if(kaartToont(p,rid))zet(p,"nu",String(i+1)); });
+  /* En jij zelf, bovenop alles. */
+  const hh=hierVers(), hb=hh&&hierOpBlad(kaartPlan,hh,b.width,b.height);
+  const dk=document.getElementById("kaartdichtbij");
+  let dichtbij=[];
+  if(hb&&hb.binnen&&!hb.onzeker&&hb.pixel){
+    const px=Math.round(hb.pixel.x*k.schaal+k.dx), py=Math.round(hb.pixel.y*k.schaal+k.dy);
+    const ring=document.createElement("div");
+    ring.className="kaarthier-ring";
+    ring.style.setProperty("--px",px+"px"); ring.style.setProperty("--py",py+"px");
+    ring.style.setProperty("--r",Math.max(16,Math.round(hb.straal*2*k.schaal))+"px");
+    laag.appendChild(ring);
+    const stip=document.createElement("div");
+    stip.className="kaarthier";
+    stip.style.setProperty("--px",px+"px"); stip.style.setProperty("--py",py+"px");
+    laag.appendChild(stip);
+    dichtbij=dichtbijPunten(kaartPlan,puntenInZone(kaartZone),hh);
+  }
+  if(dk){
+    dk.hidden=!dichtbij.length;
+    dk.textContent=dichtbijTekst(dichtbij);
+    dk.onclick=e=>{ if(e&&e.stopPropagation)e.stopPropagation(); if(dichtbij.length)kiesUitKaart(dichtbij[0].p.id); };
+  }
   doos.appendChild(laag);
 }
 
@@ -18670,6 +19697,17 @@ function paneelTik(){
    lijst. Het leeft zolang het paneel openstaat en niet langer: terug naar de kaart brengt alle
    punten terug. */
 let lijstAlleen=null;
+/* "1 van 7 · alles tonen": een tik op de teller brengt de rest van de lijst terug, zonder het paneel eerst te moeten sluiten. */
+(function(){
+  const t=document.getElementById("teller");
+  if(!t)return;
+  t.style.cursor="pointer";
+  t.addEventListener("click",e=>{
+    if(!lijstAlleen)return;
+    if(e&&e.stopPropagation)e.stopPropagation();
+    lijstAlleen=null; tekenLijst();
+  });
+})();
 
 /* Welke stip op de ondergrond onder deze tik ligt. Dezelfde som als puntGeraakt() in het
    planvenster en om dezelfde reden op het scherm gemeten: een vingertop is even groot
@@ -18714,6 +19752,7 @@ function kaartBedrading(){
   };
 
   v.onpointerdown=e=>{
+    kaartRaakt=true;
     x0=e&&e.clientX; y0=e&&e.clientY; bewogen=false;
     if(!e)return;
     /* Een tik op een knop óp de kaart -- de oud-knop, het laagwoord -- is geen gebaar op de
@@ -18756,6 +19795,7 @@ function kaartBedrading(){
   };
 
   const losLaten=e=>{
+    kaartRaakt=false;
     if(e)wijzers.delete(e.pointerId);
     if(wijzers.size<2)knijp=null;
   };
@@ -18791,6 +19831,10 @@ function kaartBedrading(){
     x0=null; y0=null; bewogen=false;
     if(veegde)return;
     if(paneelStand()!=="dicht"){ zetPaneel("dicht"); return; }
+    if(verzetPunt){ if(kaartPlan)verzetOpKaart(sx,sy); return; }
+    /* Een bestaand punt gaat voor je eigen stip, en mislukt de speld op je plek (te onzeker, buiten het blad), dan valt de tik door naar de gewone afhandeling. */
+    const raakPunt=kaartPuntGeraakt(sx,sy);
+    if(!raakPunt&&hierGeraakt(sx,sy)&&speldOpHier())return;
     /* Een stip gaat vóór het planvenster. Dit was de fout die je voelde: je tikte op een bol
        en het hele scherm wisselde, want de stippen liggen in de kaartlaag ónder de app en de
        tik kwam hier binnen — bij de regel die het planvenster opent. Een bol vraagt om één
@@ -18800,6 +19844,14 @@ function kaartBedrading(){
     /* Ligt er een blad, dan prikt de tik erop. Ligt er geen, dan is het planvenster het enige
        zinnige antwoord -- daar laad je er een. */
     if(kaartPlan){ prikOpKaart(sx,sy); return; }
+    /* De knop "GRB van deze plek als plan" ligt onder deze vulling en kreeg nooit een tik. Raakt de tik de knop, dan doet ze haar werk. */
+    if(!kaartPlan){
+      const kn=document.querySelector(".kaartgrb");
+      if(kn){
+        const r=kn.getBoundingClientRect();
+        if(sx>=r.left-12&&sx<=r.right+12&&sy>=r.top-12&&sy<=r.bottom+12){ kn.onclick(); return; }
+      }
+    }
     if(planLijst.includes(staat.zone)) openPlan(staat.zone);
   };
 }
@@ -18928,7 +19980,7 @@ function sluitFasen(){
 function merkVergadering(){
   const k=document.getElementById("datumknop");
   if(!k)return;
-  const eigen=staat.datum===new Date().toISOString().slice(0,10);
+  const eigen=staat.datum===vandaag();
   /* Twee cellen in plaats van één knop: het verslagnummer staat naast de datum, zoals het
      dossiernummer naast de naam. Dat is dezelfde soort tweedeling, dus dezelfde vorm. */
   const v=document.getElementById("verslagknop");
@@ -19140,6 +20192,9 @@ async function herkenWerf(){
   const hier=await haalPlek(true);
   const vaag=!hier||hier.nauw>WERFSTRAAL/2;
   const bij=vaag?[]:wervenBij(hier);
+  /* Het venster is er één. Staat er een vraag in (de vergaderdag), dan wisselt de werf niet eronderuit en komt "Waar ben je?" niet
+     eroverheen: eerst die vraag beantwoorden, dan pas verder. */
+  await wachtOpVenster(600000);
 
   if(bij.length===1){
     const p=bij[0].p;
@@ -19202,12 +20257,53 @@ function vraagWelkeWerf(lijst,hier,meerdere){
    hier niet mag blokkeren en niet mag schreeuwen: mislukt het — geen toestemming voor de plek,
    GRB onbereikbaar, buiten Vlaanderen — dan hoort de app gewoon open te staan en zegt ze het
    in een melding. Een werf zonder plan is geen fout. */
+/* Wacht tot het gedeelde venster vrij is (de vraag over de vergaderdag kan er net in staan). */
+async function wachtOpVenster(maxMs){
+  const d=document.getElementById("dlg");
+  const tot=Date.now()+(maxMs||120000);
+  while(d&&d.open&&Date.now()<tot)await new Promise(r=>setTimeout(r,500));
+  return !(d&&d.open);
+}
+/* Staat je plek bij een bekende plek van deze werf? Alleen dan weet de app dat je er bent, en mag ze het perceel zonder vraag kiezen. */
+function opBekendeWerf(hier){
+  const pr=projecten.find(x=>x.id===actief);
+  const d=afstandTot(pr,hier);
+  return d!==null&&d<=WERFSTRAAL;
+}
 async function haalOmtrekBijStart(){
   if(omtrekGeprobeerd)return false;
   omtrekGeprobeerd=true;
-  const gelukt=await haalOmtrekDirect(null,false);
-  if(!gelukt)melding("Nog geen plan — laad er een of haal de omtrek via Plan");
-  return gelukt;
+  const zone=staat.zone;
+  grbZonesGeprobeerd.add(zone);
+  if(!(await wachtOpVenster()))return false;
+  // Zonder een bekende plek van deze werf kan de app niet weten dat je er staat (thuis? op kantoor?): dan altijd de vraag.
+  const stil=await haalPlek(true);
+  const auto=!!stil&&opBekendeWerf(stil);
+  const gelukt=(await kopieerGrbNaar(zone))||await kiesGrbPerceel(zone,{auto});
+  if(!gelukt){
+    /* Gestopt, geen locatie, buiten Vlaanderen of het GRB antwoordde niet: vandaag niet nog eens. Anders staat dezelfde vraag er bij elke
+       start, ook als je thuis zit. Je kunt het altijd zelf starten (de knop op de lege kaart, of Plan). */
+    try{ localStorage.setItem(pk(GRBSTOPSLEUTEL),vandaag()); }catch(e){}
+    if(!planLijst.length)melding("Nog geen plan \u2014 tik op de kaart voor het GRB van deze plek, of laad een plan via Plan");
+  }else{
+    /* Je stond hier en het lukte: onthoud de plek bij deze werf. De volgende keer weet de app dat je er bent, en vraagt ze niets meer. */
+    try{ const h=await haalPlek(true); if(h)onthoudPlek(projecten.find(x=>x.id===actief),h); }catch(e){}
+  }
+  return !!gelukt;
+}
+const GRBSTOPSLEUTEL="werfpunten-grbstop";
+/* Mag de app bij het opstarten zelf het GRB van je plek halen? De opdrachtgever, 08/10/2026: je bent ter plaatse en opent, dan zoekt
+   de app je locatie en legt het GRB van de straat als plan. Alleen voor de beginzone zonder plan, één keer per zitting,
+   niet op de demo (die staat in Barcelona), en alleen als de app al weet waar je bent of er nog helemaal niets ligt:
+   een vraag om je locatie hoort bij een eerste keer, niet bij elke start. */
+async function grbBijStartMag(){
+  if(actief===DEMOID||omtrekGeprobeerd)return false;
+  const zone=staat.zone;
+  if(!ZONES.includes(zone)||planLijst.includes(zone)||grbZonesGeprobeerd.has(zone))return false;
+  try{ if(localStorage.getItem(pk(GRBSTOPSLEUTEL))===vandaag())return false; }catch(e){}
+  if(!planLijst.length)return true;
+  const h=await haalPlek(true);
+  return !!h&&opBekendeWerf(h);
 }
 
 /* ---- het GRB van je locatie, met een vraag ----
@@ -19240,6 +20336,34 @@ function grbKandidaat(percelen,x,y){
     });
   });
   return beste;
+}
+/* Afstand van een punt tot een perceel: 0 als je erin staat, anders tot de dichtstbijzijnde rand. */
+function afstandTotPerceel(f,x,y){
+  if(raaktVlak(f,x,y))return 0;
+  let d=Infinity;
+  grbRingen(f).forEach(rg=>{
+    for(let k=0;k+1<rg.length;k++){
+      const a=rg[k], b=rg[k+1], dx=b[0]-a[0], dy=b[1]-a[1], l2=dx*dx+dy*dy;
+      const t=l2?Math.max(0,Math.min(1,((x-a[0])*dx+(y-a[1])*dy)/l2)):0;
+      d=Math.min(d,Math.hypot(x-(a[0]+t*dx), y-(a[1]+t*dy)));
+    }
+  });
+  return d;
+}
+/* Is er geen twijfel over welk perceel het jouwe is? Je staat in precies één perceel, je meting is niet slechter dan
+   GRBEENDUIDIGNAUW meter, en geen ander perceel ligt binnen je onzekerheid. Dan vraagt de app niets (de opdrachtgever, 08/10/2026:
+   "indien geen dubbelzinnigheid, beter niet vragen en de gebruiker zelf laten aanpassen indien verkeerd"). Geeft de
+   index terug, of -1 bij twijfel. */
+const GRBEENDUIDIGNAUW=30;
+function grbEenduidig(percelen,x,y,nauw){
+  if(!percelen||!percelen.length)return -1;
+  if(!(nauw>0)||nauw>GRBEENDUIDIGNAUW)return -1;
+  const marge=Math.max(nauw,5);
+  const binnen=[];
+  percelen.forEach((f,i)=>{ if(raaktVlak(f,x,y))binnen.push(i); });
+  if(binnen.length!==1)return -1;
+  const dicht=percelen.some((f,i)=>i!==binnen[0]&&afstandTotPerceel(f,x,y)<=marge);
+  return dicht?-1:binnen[0];
 }
 /* De tekening waar je op tikt. Alle percelen rondom, het gekozen perceel gekleurd, en jij als stip. De y-as staat
    omgekeerd: Lambert groeit naar het noorden, een scherm naar beneden. */
@@ -19288,18 +20412,42 @@ function grbVenster(){
   const dicht=()=>{ dlg.onclose=null; try{ if(dlg.open)dlg.close(); }catch(e){} };
   return {zet, open, dicht, body};
 }
+/* Het venster dat pas opengaat als er iets te vragen of te melden valt. De automatische weg (bij de start, op de lege kaart) blokkeert
+   het scherm niet meer met "Ik bepaal waar je staat…": de voortgang komt als melding, en alleen een vraag ("Juiste perceel?") of een fout
+   (geen locatie, GRB onbereikbaar) opent het venster. Het werkt dus naast je typen en foto's maken. */
+function grbStilVenster(){
+  const echt=grbVenster();
+  let open=false, klaar=null;
+  const wacht=new Promise(r=>{ klaar=r; });
+  return {
+    zet:(titel,html,knoppen)=>{
+      if(knoppen&&knoppen.length){
+        if(!open){ open=true; echt.open().then(klaar); }
+        echt.zet(titel,html,knoppen);
+      }else if(open){
+        echt.zet(titel,html,knoppen);
+      }else{
+        const t=String(html||"").replace(/<[^>]*>/g," ").replace(/\s+/g," ").trim().split(". ")[0];
+        melding("GRB: "+(t||titel));
+      }
+    },
+    open:()=>wacht,
+    dicht:()=>{ if(open)echt.dicht(); },
+    get body(){ return echt.body; }
+  };
+}
 let grbBezig=false;
 async function kiesGrbPerceel(zone,hulp){
   const h=hulp||{};
-  if(grbBezig)return false;
+  if(grbBezig){ melding("Het GRB wordt nog gezocht\u2026"); return false; }
   grbBezig=true;
-  const v=h.venster||grbVenster();
+  const v=h.venster||(h.auto?grbStilVenster():grbVenster());
   const doel=zone||staat.zone||ZONES[0];
   let gesloten=false;
   try{
     const wachten=v.open?v.open():null;
     if(wachten&&wachten.then)wachten.then(()=>{ gesloten=true; });
-    let gekozen=null, hier=null, percelen=[], x=0, y=0;
+    let gekozen=null, hier=null, percelen=[], x=0, y=0, automatisch=false;
     /* 0. kan dit toestel het plan wel bewaren? De opdrachtgever, 08/10/2026: "GRB geladen, maar geen plan." De app meldde dat het GRB
        geladen was zonder te controleren of het plan werkelijk bewaard werd. Op een iPad kan de database van de app dicht
        zitten (de app of een Safari-tabblad staat nog open na een versiewissel, of de privé-modus staat aan): dan is er niets
@@ -19341,14 +20489,16 @@ async function kiesGrbPerceel(zone,hulp){
     // 2. welke percelen liggen er?
     for(;;){
       v.zet("GRB van je locatie","<p class=\"inv-uitleg\">Je locatie is gevonden"+(nauw&&nauw<9000?" (op ongeveer "+nauw+" m na)":"")+
-            ". Nu zoek ik de percelen in het GRB. Dat kan tot een halve minuut duren; dit venster blijft staan.</p>");
+            ". Nu zoek ik de percelen in het GRB (Digitaal Vlaanderen); daarvoor gaat je plek naar die dienst. Dat kan tot een halve minuut duren; dit venster blijft staan.</p>");
       try{
         percelen=await (h.laag||grbLaag)("GRB:ADP",[x-PERCEELKADER,y-PERCEELKADER,x+PERCEELKADER,y+PERCEELKADER],200);
         break;
       }catch(e){
         if(gesloten)return false;
         const opn=await new Promise(res=>v.zet("Het GRB antwoordt niet",
-          "<p class=\"inv-uitleg\">"+veilig(e.message||"onbereikbaar")+". Het GRB is een openbare dienst en soms overbelast. Het GRB dekt alleen Vlaanderen.</p>",
+          "<p class=\"inv-uitleg\">"+veilig(e.message||"onbereikbaar")+". "+
+          (navigator.onLine===false?"Je hebt nu geen internet: het GRB ophalen heeft netwerk nodig, je plannen en punten werken ook zonder. ":"Het GRB is een openbare dienst en soms overbelast. ")+
+          "Het GRB dekt alleen Vlaanderen.</p>",
           [{naam:"Opnieuw proberen", doe:()=>res(true)},{naam:"Stoppen", doe:()=>res(false)}]));
         if(!opn||gesloten){ v.dicht(); return false; }
       }
@@ -19360,9 +20510,11 @@ async function kiesGrbPerceel(zone,hulp){
         [{naam:"Leeg kader maken", doe:()=>res(true)},{naam:"Stoppen", doe:()=>res(false)}]));
       if(!toch||gesloten){ v.dicht(); return false; }
     }else{
-      // 3. juiste perceel?
+      // 3. juiste perceel? Niet in de automatische weg als er geen twijfel is: dan leg je het meteen, en pas je het achteraf aan.
       gekozen=grbKandidaat(percelen,x,y);
-      const antw=await new Promise(res=>{
+      const eenduidig=h.auto?grbEenduidig(percelen,x,y,nauw):-1;
+      if(eenduidig>=0){ gekozen=eenduidig; automatisch=true; }
+      const antw=automatisch?"ja":await new Promise(res=>{
         const teken=()=>{
           v.zet("Juiste perceel?",
             "<p class=\"inv-uitleg\">De blauwe stip ben jij. Het gekleurde perceel is wat ik denk dat het jouwe is. <b>Tik op een ander perceel</b> als dat niet klopt.</p>"+
@@ -19398,7 +20550,7 @@ async function kiesGrbPerceel(zone,hulp){
       opZone=vrij;
     }
     // 5. het plan maken en als achtergrond leggen
-    v.zet("GRB van je locatie","<p class=\"inv-uitleg\">Ik haal de gebouwen rondom het perceel op en maak er je plan van. Dit duurt nog even.</p>");
+    v.zet("GRB van je locatie","<p class=\"inv-uitleg\">"+(automatisch?"Je staat op één duidelijk perceel. ":"")+"Ik haal de gebouwen rondom het perceel op en maak er je plan van. Dit duurt nog even.</p>");
     // Een leeg kader mag hier, want de gebruiker koos er in het venster "Geen perceel gevonden" uitdrukkelijk voor.
     const plan2=await (h.bouw||maakOmtrekplan)(hier,opZone,percelen.length?percelen[gekozen]:null,!percelen.length);
     if(gesloten)return false;
@@ -19406,7 +20558,9 @@ async function kiesGrbPerceel(zone,hulp){
       const naam=await vrijeVersienaam(doel);
       if(!(await parkeerPlan(bestaand,naam,puntenOpZone(doel)))){ v.dicht(); return false; }
     }
+    if(automatisch&&plan2&&plan2.bron&&plan2.bron.grb)plan2.bron.grb.automatisch=true;
     const bewaard=await (h.zet||zetPlan)(opZone,plan2);
+    if(bewaard!==false)onthoudKader(plan2);
     if(bewaard===false){
       v.zet("Het plan kon niet bewaard worden",
         "<p class=\"inv-uitleg\">Het GRB is wel opgehaald, maar dit toestel liet niet toe het plan op te slaan (de opslag is vol, geblokkeerd of de privé-modus staat aan). Sluit de app helemaal, open hem opnieuw en probeer het nog eens.</p>",
@@ -19419,7 +20573,7 @@ async function kiesGrbPerceel(zone,hulp){
     await tekenKaart();
     v.dicht();
     melding(opZone===doel
-      ? "GRB staat nu op de kaart — "+plan2.maten.breedte_m+"×"+plan2.maten.hoogte_m+" m"
+      ? "GRB staat nu op de kaart — "+plan2.maten.breedte_m+"×"+plan2.maten.hoogte_m+" m"+(automatisch?". Verkeerd perceel? Plan, ⋯, GRB van deze plek.":"")
       : "Op "+doel+" ligt al een echt plan: het GRB staat op "+opZone+" — "+plan2.maten.breedte_m+"×"+plan2.maten.hoogte_m+" m");
     return opZone;     // de zone waarop het GRB nu ligt, zodat de aanroeper die kan tonen
   }catch(e){
@@ -19433,9 +20587,9 @@ async function kiesGrbPerceel(zone,hulp){
 let omtrekBezig=false;
 /* Aangeroepen door wie een plan wil. Met een venster en een vraag; de oude, stille weg staat hieronder als
    haalOmtrekDirect en wordt alleen nog gebruikt bij het opstarten, waar een venster niet mag opduiken. */
-async function haalOmtrek(zone,stil){
+async function haalOmtrek(zone,stil,auto){
   if(stil)return haalOmtrekDirect(zone,stil);
-  return kiesGrbPerceel(zone);
+  return kiesGrbPerceel(zone,auto?{auto:true}:undefined);
 }
 async function haalOmtrekDirect(zone,stil){
   if(omtrekBezig)return false;
@@ -19454,6 +20608,7 @@ async function haalOmtrekDirect(zone,stil){
     const doel=zone||staat.zone||ZONES[0];
     const plan2=await maakOmtrekplan(hier,doel);
     if(!(await zetPlan(doel,plan2)))throw new Error("het plan kon niet op dit toestel bewaard worden (de opslag is niet beschikbaar)");
+    onthoudKader(plan2);
     planLijst=await planZones();
     tekenZones();
     eersteOpening=true;                 // het hele blad in beeld, dit is een nieuw plan
@@ -20132,13 +21287,19 @@ async function toonVergadering(sleutel){
    niets veilig te stellen en gaat de vraag alleen nog over het afsluiten. Twee uitgangen, en
    beide zijn onschuldig: afsluiten zet dit verslag in het archief en begint een vers blad,
    verder werken laat alles staan zoals het staat. */
-async function vraagOverVergaderdag(){
+const VERGADERDAGVERDERSLEUTEL="werfpunten-vergaderdag-verder";
+async function vraagOverVergaderdag(poging){
+  /* Het venster is er één: staat er al een vraag in (het GRB bij de start), dan komt deze erna, niet eroverheen. */
+  const _d=document.getElementById("dlg");
+  if(_d&&_d.open){ if((poging||0)<120)setTimeout(()=>vraagOverVergaderdag((poging||0)+1),1500); return false; }
   /* Gemeten op 21/09/2026: de klok van de vraag loopt op het lokale blad, en de bron kan
      intussen de vergaderdag bijgewerkt hebben (bronInlezen zet staat.datum). Dan is de vraag
      voorbij: het blad is het verslag van de bron geworden. Daarom hier opnieuw toetsen, en
      bij Afsluiten nog eens -- die knop mag nooit een verslag sluiten waar de vraag niet
      over ging. */
   if(!(staat.datum<vandaag())||!(staat.punten||[]).length)return false;
+  /* "Verder werken" geldt voor vandaag: het blad is de begindag, dus zonder dit stond dezelfde vraag bij elke koude start van de dag. */
+  try{ if(localStorage.getItem(pk(VERGADERDAGVERDERSLEUTEL))===verslagRef(staat)+"|"+vandaag())return false; }catch(e){}
   const dlg=document.getElementById("dlg");
   document.getElementById("dlg-titel").textContent="Vergadering van "+datumKort(staat.datum);
   const body=document.getElementById("dlg-body");
@@ -20159,7 +21320,9 @@ async function vraagOverVergaderdag(){
       if(!(staat.datum<vandaag())){melding("De vergaderdag is intussen bijgewerkt uit de bron");return;}
       sluitVergaderingDoor("de vergadering was geweest");
     });
-  knop("Verder werken","Dit blijft het werkblad",()=>{});
+  knop("Verder werken","Dit blijft het werkblad",()=>{
+    try{ localStorage.setItem(pk(VERGADERDAGVERDERSLEUTEL),verslagRef(staat)+"|"+vandaag()); }catch(e){}
+  });
   body.appendChild(rij);
   document.getElementById("dlg-kopieer").style.display="none";
   dlg.showModal();
@@ -20439,6 +21602,7 @@ async function nazichtBlad(){
   const img=document.createElement("img");
   img.alt=""; img.src=laagBeeld(data,laagVan(staat,data))||data.beeld;
   doos.appendChild(img);
+  kleinBladDraai(doos,data);
   nazichtStippen();
 }
 
@@ -20453,7 +21617,7 @@ function nazichtStippen(){
   const laag=document.createElement("div");
   laag.className="kaartpunten nz-stippen";
   nazichtPunten().forEach((p,i)=>{
-    const q=plekOpBeeld(p.plek.x,p.plek.y,b.width,b.height,nazicht.plan.breedte,nazicht.plan.hoogte);
+    const q=plekOpBeeld(p.plek.x,p.plek.y,b.width,b.height,nazicht.plan.breedte,nazicht.plan.hoogte,draaiVan(nazicht.plan));
     if(!q)return;
     const el=document.createElement("button");
     el.type="button";
@@ -20682,7 +21846,7 @@ function nazichtRegel(){
   kop.appendChild(maakEl("span","nz-rek"));
   const keet=maakEl("button",null,"In de keet");
   keet.type="button";
-  keet.onclick=()=>{ sluitNazicht(); bewerkPunt(p.id); };
+  keet.onclick=()=>{ sluitNazicht(); keetTerug=p.id; bewerkPunt(p.id); };
   kop.appendChild(keet);
   const plek=maakEl("button",null,p.plek?"Plek rechtzetten":"Plek aanduiden");
   plek.type="button";
@@ -21069,6 +22233,9 @@ opendb().then(async d=>{
      blad blijft hoe dan ook staan — en ze is nooit dringend, maar ze mag ook niet overgeslagen
      worden: of een vergadering afgelopen is, hoort de app niet voor je te beslissen. */
   if(staat.datum<vandaag()&&(staat.punten||[]).length)setTimeout(()=>vraagOverVergaderdag(),300);
+  laatsteDag=vandaag();
+  startHier();
+  setTimeout(()=>{ try{ meldSindsBezoek(Date.now()); bewaarLaatst(); }catch(e){} },1500);
   /* Eerst wáár, dan wát. De werf herkennen gaat vóór het blad: wissel je van werf, dan zijn
      het andere plannen, andere zones en andere punten.
 
@@ -21094,6 +22261,8 @@ opendb().then(async d=>{
        te gebeuren — het bepaalt wélk verslag je straks openslaat. */
     try{ await kijkVergaderingstand(); }catch(e){}
     try{ await herkenWerf(); }catch(e){}
+    try{ await herstelConcept(); }catch(e){}
+    conceptActief=true;
     planLijst=await planZones();          // een andere werf draagt andere plannen
     /* En op het gelijkvloers, niet op waar je gisteren ophield. Een rondgang begint waar je
        het gebouw binnenkomt; de verdieping van gisteren is een gok die er even vaak naast zit
@@ -21110,7 +22279,7 @@ opendb().then(async d=>{
        een stop op het moment dat je binnenkomt. Twee dingen houden dat draaglijk: het gebeurt
        alleen als er wérkelijk niets ligt — na één keer heeft deze werf een plan — en het
        blokkeert niets. De app staat intussen klaar; je kunt typen, foto's nemen en bewaren. */
-    if(!planLijst.length){ haalOmtrekBijStart(); return; }
+    if(await grbBijStartMag()){ haalOmtrekBijStart(); }
     kaartZone=null; tekenKaart();   // het blad hoort bij déze werf, niet bij de vorige
     }finally{ klaarMetOpstarten(); }
   },300);
