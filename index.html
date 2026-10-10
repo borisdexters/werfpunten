@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-eCpbX8dh3SzoPsjeNlUrw4gqUMlCrTDBQFTUuU61oH4=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-iLKtj7j8foO4ILVceMjpfJYigeHb0ElFl01DB629NUg='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-Fw6vAOCPnCg9C37JZdWek6Qrm77DrRLBpXDiOxObvX0=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-iLKtj7j8foO4ILVceMjpfJYigeHb0ElFl01DB629NUg='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3400,7 +3400,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v240";
+const VERSIE="v241";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -19075,6 +19075,37 @@ function zoneVoorstel(hier,huidige,bladen){
   const kand=bladen.filter(b=>b.zone!==huidige&&bevat(b));
   return kand.length===1?kand[0].zone:null;
 }
+/* ---- de locatiecheck bij het openen ----
+   de opdrachtgever, 10/10/2026: "ik open op de huidige locatie en wil zien of de app de locatie herkent en of hier al een plan voor is ingeladen."
+   Plannen zijn gekoppeld aan de locatie (`georef`, Lambert). Bij het openen vergelijkt de app je plek met de bladen van deze werf en zegt
+   in één zin wat ze vindt: welk plan hier ligt, of er hier geen plan ligt (met de knop om het GRB te halen). Zwijgt als ze niets weet:
+   geen toestemming voor de plek, niets gekoppeld, of de demo. */
+function bladenOpPlek(hier,bladen){
+  if(!hier)return [];
+  return (bladen||[]).filter(b=>{
+    const q=(b.georef&&!b.georef.plaatselijk)?naarBeeld(b,hier.X,hier.Y):null;
+    return !!q&&q.x>=0&&q.x<=100&&q.y>=0&&q.y<=100;
+  }).map(b=>b.zone);
+}
+async function locatieCheck(){
+  if(actief===DEMOID)return null;
+  const h=await haalPlek(true);
+  if(!h)return null;
+  const L=wgsNaarLambert(h.lat,h.lon);
+  const bladen=await laadRuimteBladen();
+  const gekoppeld=bladen.filter(b=>b.georef&&!b.georef.plaatselijk);
+  if(!gekoppeld.length)return null;                      // niets om mee te vergelijken
+  const zones=bladenOpPlek({X:L.x,Y:L.y},bladen);
+  const werf=((projecten.find(x=>x.id===actief)||{}).naam)||"deze werf";
+  if(zones.length){
+    meldingLang("Je staat op "+werf+" \u2014 plan "+zones.map(zoneNaam).join(", ")+" ligt hier",6000);
+    return {status:"plan",zones};
+  }
+  meldingMetActie("Geen plan voor deze plek op "+werf,"GRB halen",()=>grbVanDezePlek());
+  const el=document.getElementById("toast");
+  if(el){ clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove("aan"),9000); }
+  return {status:"geen",zones:[]};
+}
 let ruimteBladen=null, ruimteBladenSleutel="";
 async function laadRuimteBladen(){
   const sl=actief+"|"+(planLijst||[]).join(",");
@@ -22280,6 +22311,7 @@ opendb().then(async d=>{
        alleen als er wérkelijk niets ligt — na één keer heeft deze werf een plan — en het
        blokkeert niets. De app staat intussen klaar; je kunt typen, foto's nemen en bewaren. */
     if(await grbBijStartMag()){ haalOmtrekBijStart(); }
+    else { try{ locatieCheck(); }catch(e){} }
     kaartZone=null; tekenKaart();   // het blad hoort bij déze werf, niet bij de vorige
     }finally{ klaarMetOpstarten(); }
   },300);
