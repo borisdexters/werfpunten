@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-Fw6vAOCPnCg9C37JZdWek6Qrm77DrRLBpXDiOxObvX0=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-iLKtj7j8foO4ILVceMjpfJYigeHb0ElFl01DB629NUg='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-HsCyDQyfcFp6kFsvJxgD0KwpzRlnOt7uNGgSZpE44kM=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-iLKtj7j8foO4ILVceMjpfJYigeHb0ElFl01DB629NUg='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3400,7 +3400,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v241";
+const VERSIE="v242";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -20330,8 +20330,19 @@ const GRBSTOPSLEUTEL="werfpunten-grbstop";
 async function grbBijStartMag(){
   if(actief===DEMOID||omtrekGeprobeerd)return false;
   const zone=staat.zone;
-  if(!ZONES.includes(zone)||planLijst.includes(zone)||grbZonesGeprobeerd.has(zone))return false;
+  if(!ZONES.includes(zone)||grbZonesGeprobeerd.has(zone))return false;
   try{ if(localStorage.getItem(pk(GRBSTOPSLEUTEL))===vandaag())return false; }catch(e){}
+  if(planLijst.includes(zone)){
+    /* Er ligt al iets op de beginzone. Is dat een voorlopig GRB van een heel andere plek (meer dan 150 m) en staat er nog niets op, dan is het
+       overschot van een eerdere test of een andere werf: de app haalt het GRB van waar je nu staat. Een echt plan, of een GRB met punten, blijft. */
+    const pl=await haalPlan(zone);
+    const q=pl&&pl.voorlopig&&pl.bron&&pl.bron.grb&&pl.bron.grb.plek;
+    if(!q||puntenOpZone(zone).length)return false;
+    const h=await haalPlek(true);
+    if(!h)return false;
+    const L=wgsNaarLambert(h.lat,h.lon);
+    return Math.hypot(L.x-q.x,L.y-q.y)>150;
+  }
   if(!planLijst.length)return true;
   const h=await haalPlek(true);
   return !!h&&opBekendeWerf(h);
@@ -20585,7 +20596,10 @@ async function kiesGrbPerceel(zone,hulp){
     // Een leeg kader mag hier, want de gebruiker koos er in het venster "Geen perceel gevonden" uitdrukkelijk voor.
     const plan2=await (h.bouw||maakOmtrekplan)(hier,opZone,percelen.length?percelen[gekozen]:null,!percelen.length);
     if(gesloten)return false;
-    if(bestaand&&bestaand.voorlopig&&opZone===doel&&!h.zet){
+    /* Een voorlopig GRB (door de app gemaakt, niet door jou) waar nog geen punt op staat, is niets om te bewaren: het gaat gewoon weg en het
+       nieuwe komt ervoor. Alleen met punten erop gaat het opzij, want die horen bij die tekening. (de opdrachtgever, 10/10/2026: het GRB van een eerdere
+       test in een andere gemeente stond nog op het toestel.) */
+    if(bestaand&&bestaand.voorlopig&&opZone===doel&&!h.zet&&puntenOpZone(doel).length){
       const naam=await vrijeVersienaam(doel);
       if(!(await parkeerPlan(bestaand,naam,puntenOpZone(doel)))){ v.dicht(); return false; }
     }
