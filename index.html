@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-efM+XzKpcQUMhQzoDHzIOntKMPJ1xS3lSDkAW7s35b0=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-iLKtj7j8foO4ILVceMjpfJYigeHb0ElFl01DB629NUg='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-eEhd35UeI2XmtTt9y+baEartLs6nMrKHYcdLUACqB44=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-3Uml1bPSLbRBfNouJ2IRle776cBv2/cKTo6KXhFJhbw='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1381,6 +1381,9 @@
   .fiche-anr{flex:none;font-weight:400;letter-spacing:.03em;color:var(--ink-soft)}
   .fiche-atitel{flex:1;min-width:0}
   .fiche-avia{flex:none;font-size:var(--tk);color:var(--ink-soft)}
+  .fiche-artikel.met-sub{flex-wrap:wrap}
+  .fiche-asub{flex:0 0 100%;order:9;padding-left:34px;font-size:var(--tk);color:var(--ink-soft);overflow-wrap:anywhere}
+  .fiche-aextern{flex:none;color:var(--ink-soft)}
   .fiche-geen{margin:0;font-size:var(--tm);color:var(--ink-soft)}
   /* De hoofdstukken van het bestek (30/09/2026, avond): dezelfde rij als een artikel, met een
      pijl die een kwart draait als het hoofdstuk open ligt; de artikels eronder springen in. */
@@ -2100,6 +2103,11 @@
   .werfkeuze button{font:650 16px/1.2 var(--font);padding:14px 18px;
     background:var(--zone-soft);color:var(--zone);border-color:var(--zone-soft)}
   .werfkeuze button.nieuw{background:transparent;color:var(--inkt);border-color:var(--lijn)}
+  .loc-samen{padding:8px 0 6px;border-bottom:1px solid var(--lijn)}
+  .loc-samenrij{display:flex;gap:10px;padding:3px 0;font-size:var(--tk)}
+  .loc-wat{flex:0 0 38%;color:var(--ink-soft)}
+  .loc-waarde{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
+  .loc-kast{margin-top:6px}
   .door-wat{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
   .door-wat b{font-size:var(--tm);font-weight:600}
   .door-wat span{font-size:var(--tk);color:var(--ink-soft)}
@@ -3402,7 +3410,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v246";
+const VERSIE="v248";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -3423,7 +3431,11 @@ let staat={datum:vandaag(),weer:"",bezetting:"",zone:"N3",punten:[],rondgangen:[
    De melding herhaalt niet bij elke poging: bij een vol geheugen zou ze na drie punten
    onbruikbaar zijn. Ze komt wél terug zodra het opnieuw misgaat nadat het een keer lukte. */
 const schrijfklachten=new Set();
+/* Zodra Toestel wissen begint, schrijft de oude pagina niets meer weg. Tot v245 deed ze dat nog wel tijdens het herladen (pagehide,
+   bewaren van de stand), en dan stond er na het wissen toch iets van het oude project, met zijn fase. */
+let toestelWordtGewist=false;
 function bewaarVeilig(sleutel,waarde,wat){
+  if(toestelWordtGewist)return true;
   try{
     localStorage.setItem(sleutel,waarde);
     schrijfklachten.delete(sleutel);
@@ -8731,6 +8743,7 @@ async function toestelWissen(hulp){
     "Wat al online in de bron staat, blijft daar. Staat er iets alleen op dit toestel, dan is het weg: <b>maak eerst een back-up</b> (Beheer, Back-up).",
     "Dit kan niet ongedaan worden gemaakt."],"Ja, wis alles");
   if(!ja)return false;
+  toestelWordtGewist=true;
   await (h.wis||(async()=>{
     try{ if(db&&db.close)db.close(); }catch(e){}
     try{ localStorage.clear(); sessionStorage.clear(); }catch(e){}
@@ -8740,6 +8753,7 @@ async function toestelWissen(hulp){
     }catch(e){}
     try{ for(const k of await caches.keys())await caches.delete(k); }catch(e){}
     try{ for(const r of await navigator.serviceWorker.getRegistrations())await r.unregister(); }catch(e){}
+    try{ localStorage.clear(); }catch(e){}     // en nog eens, voor wat tijdens het wachten toch is teruggeschreven
   }))();
   (h.herlaad||(()=>location.reload()))();
   return true;
@@ -8963,7 +8977,7 @@ function meldingLang(t,ms){
 const LAATSTSLEUTEL="werfpunten-laatst";
 const LAATSTMIN=2*3600*1000;      // korter weg dan twee uur is wisselen van app, geen bezoek
 function bewaarLaatst(){
-  if(!actief)return;
+  if(!actief||toestelWordtGewist)return;
   try{
     localStorage.setItem(pk(LAATSTSLEUTEL),JSON.stringify({tijd:new Date().toISOString(),ref:verslagRef(staat),ids:(staat.punten||[]).map(p=>p.id)}));
   }catch(e){}
@@ -13168,6 +13182,9 @@ function bouwBestekkast(bak,koppen,opties){
       r.appendChild(maakEl("span","fiche-anr",a.nr));
       r.appendChild(maakEl("span","fiche-atitel",a.titel||""));
       if(a.via)r.appendChild(maakEl("span","fiche-avia","via "+a.via));
+      /* De Locatie draagt lange titels met een bronregel en soms een verwijzing: de regel staat eronder, het pijltje achteraan. */
+      if(a.extern)r.appendChild(maakEl("span","fiche-aextern","\u2197"));
+      if(a.sub){ r.classList.add("met-sub"); r.appendChild(maakEl("span","fiche-asub",a.sub)); }
       if(a.doe)r.onclick=a.doe;
       bak.appendChild(r); n++;
       /* De opdrachtgever, 30/09/2026, met een voorbeeld van een blad met een kop, een lijn en lopende tekst:
@@ -22058,52 +22075,399 @@ function toonDossier(){
   dlg.showModal();
 }
 
-/* ---- LOCATIE: wat er over deze grond bekend is ----
-   de opdrachtgever, 30/09/2026 (avond): "permanent raadpleegbare basisgegevens van de locatie (de openbare
-   api\'s: voorschriften, oude aanvragen, kaarten, grb, opmeting)."
+/* ---- LOCATIE: wat er over deze grond bekend is, automatisch opgehaald ----
+   de opdrachtgever, 30/09/2026: "permanent raadpleegbare basisgegevens van de locatie". De opdrachtgever, 12/10/2026, na de toesteltest: hier
+   automatisch alles ophalen, "alle openbare diensten: vergunningen, databank grond, water, natuur, erfgoed, ik wil een volledig
+   beeld", en de indeling zoals bij een opmerking: genummerd, je tikt een nummer open en ziet daaronder de verwijzingen. Boven de
+   lijst een samenvatting. Optie A van zijn keuze: alleen wat gemeten is. Hoogte, bouwdiepte en bebouwingspercentage staan in de
+   voorschriften zelf, als vrije tekst, en worden niet geraden: de samenvatting zegt dat ze daar staan.
 
-   Vijf rubrieken, in zijn woorden. Eén ervan werkt: het GRB, want dat is de enige bestemming
-   buiten de app die de beveiligingsregel vandaag toelaat (zie de CSP in de kop: Dropbox, het
-   GRB, het weer en de eigen bron, en verder niets). De vier andere staan er en zeggen dat ze er
-   nog niet zijn.
+   De bronnen zijn openbaar en zonder sleutel: Mercator (plannen, gewestplan, vergunningen, erfgoed, natuur, geluid), DOV
+   (bodem), de watertoets van de VMM, en het GRB en het hoogtemodel van Digitaal Vlaanderen. Je plek gaat daar naartoe, zoals al
+   naar het GRB. Elke dienst staat apart: valt er één uit, dan zegt die rubriek dat en blijft de rest staan. Wat binnenkomt blijft
+   op het toestel staan (per werf), zodat het ook zonder bereik te raadplegen is. */
+const MERCATORWFS="https://www.mercator.vlaanderen.be/raadpleegdienstenmercatorpubliek/ows";
+const DOVWFS="https://www.dov.vlaanderen.be/geoserver/ows";
+const WATERTOETS="https://inspirepub.waterinfo.be/arcgis/rest/services/watertoets";
+const DHMWMS="https://geo.api.vlaanderen.be/DHMV/wms";
+const LOCSLEUTEL="werfpunten-locatie";
+const LOCL72="urn:ogc:def:crs:EPSG::31370";
+const LOCVERS=24*3600*1000;          // wat jonger is dan een dag en op dezelfde plek, halen we niet opnieuw
+const LOCVERSAFSTAND=150;            // meter
+const LOCFASE={DV:"definitief vastgesteld",VV:"voorlopig vastgesteld",OW:"in opmaak",OH:"opgeheven",GO:"goedgekeurd",BG:"van kracht",NA:"aangenomen"};
+const LOCSOORT={grup:"gewestelijk RUP",rup_provinciaal:"provinciaal RUP",rup_gemeentelijk:"gemeentelijk RUP",bpa:"BPA",verordening:"verordening"};
+const LOCRUBRIEKEN=[
+  {sleutel:"voorschriften", naam:"Voorschriften"},
+  {sleutel:"aanvragen",     naam:"Oude aanvragen"},
+  {sleutel:"water",         naam:"Water"},
+  {sleutel:"natuur",        naam:"Natuur"},
+  {sleutel:"erfgoed",       naam:"Erfgoed"},
+  {sleutel:"bodem",         naam:"Grond"},
+  {sleutel:"geluid",        naam:"Geluid"},
+  {sleutel:"perceel",       naam:"GRB en perceel"},
+];
 
-   Dat is geen halfheid maar de regel van dit dossier: elke nieuwe bestemming is een plaats waar
-   gegevens van deze werf heen gaan, en die opent niemand stil. De opdrachtgever, dezelfde avond, gevraagd
-   hoe ver: het kader, met het GRB echt. Wat er per rubriek nodig is, staat in de rij zelf. */
+async function locAnt(url,tekst){
+  const stop=new AbortController();
+  const wekker=setTimeout(()=>stop.abort(),30000);
+  try{
+    const r=await fetch(url,{cache:"no-store",signal:stop.signal});
+    if(!r.ok)throw new Error("de dienst gaf "+r.status);
+    return tekst?await r.text():await r.json();
+  }catch(e){
+    throw new Error(e.name==="AbortError"?"de dienst antwoordde niet binnen 30 s":(e.message||"onbereikbaar"));
+  }finally{ clearTimeout(wekker); }
+}
+function locWfs(basis,laag,filter,extra){
+  return basis+"?service=WFS&version=2.0.0&request=GetFeature&typeNames="+laag+
+    "&outputFormat=application/json&srsName="+LOCL72+(extra||"")+(filter?"&CQL_FILTER="+encodeURIComponent(filter):"");
+}
+function locPunt(x,y,veld){ return "INTERSECTS("+veld+",POINT("+x+" "+y+"))"; }
+function locKader(x,y,r){ return "&bbox="+encodeURIComponent((x-r)+","+(y-r)+","+(x+r)+","+(y+r)+","+LOCL72); }
+function locOntdubbel(lijst){
+  const gezien=new Set();
+  return lijst.filter(r=>{ const k=r.titel+"|"+(r.sub||""); if(gezien.has(k))return false; gezien.add(k); return true; });
+}
+
+/* De omzettingen zijn los van het ophalen, zodat ze met een nepantwoord te meten zijn. */
+function locPlanRegels(features,soort){
+  return (features||[]).map(f=>{
+    const p=f.properties||{};
+    const naam=p.naam||p.dgnaam||"Onbekend plan";
+    const fase=p.fase&&(LOCFASE[p.fase]||p.fase);
+    return {titel:naam, sub:[LOCSOORT[soort]||soort,fase].filter(Boolean).join(" · "), link:p.fichelink||null};
+  });
+}
+function locGewestplan(features,x,y){
+  const raak=(features||[]).filter(f=>raaktVlak(f,x,y));
+  return locOntdubbel(raak.map(f=>{
+    const p=f.properties||{};
+    return {titel:p.svnaam||p.categorie||"Gewestplanzone", sub:"gewestplan"+(p.categorie?" · "+p.categorie:""), link:p.fichelink||null};
+  }));
+}
+function locVergunningRegels(features,soort){
+  return (features||[]).map(f=>{
+    const p=f.properties||{};
+    return {titel:(p.projectnummer?"OMV_"+p.projectnummer:"Onbekend project")+(p.handeling_omschrijving?" — "+p.handeling_omschrijving:""),
+            sub:[soort,p.huidige_toestand,(p.datum_huidige_toestand||"").slice(0,10),p.aanvrager].filter(Boolean).join(" · "),
+            datum:p.datum_huidige_toestand||"", link:p.project_link||null};
+  });
+}
+function locErfgoedRegels(features,type){
+  return (features||[]).map(f=>{
+    const p=f.properties||{};
+    return {titel:p.naam||p.type_naam||"Onbekende bescherming", sub:type, link:p.url||null};
+  });
+}
+const LOCNATUUR=[
+  {laag:"ps:ps_hbtrl", type:"habitatrichtlijn", naam:"naam", code:"gebcode"},
+  {laag:"ps:ps_vglrl", type:"vogelrichtlijn", naam:"gebnaam", code:"na2000code"},
+  {laag:"ps:ps_ven", type:"VEN", naam:"naam", code:"gebiedsnr"},
+  {laag:"ps:ps_ramsar", type:"Ramsar", naam:"naam_"},
+];
+function locNatuurRegels(features,def){
+  return (features||[]).map(f=>{
+    const p=f.properties||{};
+    const code=def.code&&p[def.code]?String(p[def.code]):"";
+    const link=code&&/richtlijn/.test(def.type)?"https://natura2000.eea.europa.eu/Natura2000/SDF.aspx?site="+encodeURIComponent(code):null;
+    return {titel:(typeof p[def.naam]==="string"&&p[def.naam])||"Onbekend gebied", sub:def.type, link};
+  });
+}
+const LOCWATERKLASSE={0:"A – geen",1:"B – kleine kans (klimaat)",2:"C – kleine kans",3:"D – middelgrote kans",4:"E – grote kans"};
+function locWaterKlasse(antwoord){
+  const codes=((antwoord&&antwoord.features)||[]).map(f=>f&&f.attributes&&f.attributes.gridcode).filter(c=>typeof c==="number");
+  if(!codes.length)return null;
+  const m=Math.max(...codes);
+  return LOCWATERKLASSE[m]||("klasse "+m);
+}
+const LOCGELUIDRANG=["Lden5559","Lden6064","Lden6569","Lden7074","LdenGreaterThan75"];
+function locGeluidLabel(c){
+  const s=String(c).replace(/^Lden/i,"");
+  if(/greaterthan75/i.test(s))return ">75 dB";
+  const m=s.match(/^(\d{2})(\d{2})$/);
+  return m?m[1]+"–"+m[2]+" dB":String(c);
+}
+function locDhmWaarde(tekst){
+  const n=String(tekst||"").match(/-?\d+\.\d+/g);
+  const v=n?parseFloat(n[n.length-1]):NaN;
+  return isFinite(v)&&v>-50&&v<600?v:null;
+}
+const LOCVEEN={1:"zeldzaam",2:"weinig waarschijnlijk",3:"mogelijk",4:"waarschijnlijk",5:"zeer waarschijnlijk",6:"bijna zeker"};
+
+/* Oppervlakte en de kleinste omhullende rechthoek van een perceel (ring in meters). De rechthoek is een omhullende: een perceel
+   is zelden een rechthoek, en de app noemt het getal dan ook "ongeveer". */
+function locPerceelMaten(ring){
+  if(!ring||ring.length<4)return null;
+  let a=0;
+  for(let i=0,j=ring.length-1;i<ring.length;j=i++)a+=(ring[j][0]*ring[i][1]-ring[i][0]*ring[j][1]);
+  const opp=Math.abs(a)/2;
+  let best=null;
+  for(let i=0;i<ring.length-1;i++){
+    const dx=ring[i+1][0]-ring[i][0], dy=ring[i+1][1]-ring[i][1];
+    const l=Math.hypot(dx,dy); if(!l)continue;
+    const c=dx/l, s=dy/l;
+    let u0=1e18,u1=-1e18,v0=1e18,v1=-1e18;
+    ring.forEach(p=>{ const u=p[0]*c+p[1]*s, v=-p[0]*s+p[1]*c; if(u<u0)u0=u; if(u>u1)u1=u; if(v<v0)v0=v; if(v>v1)v1=v; });
+    const w=u1-u0, h=v1-v0;
+    if(!best||w*h<best.w*best.h)best={w,h};
+  }
+  if(!best)return null;
+  return {opp:Math.round(opp), kort:Math.round(Math.min(best.w,best.h)*10)/10, lang:Math.round(Math.max(best.w,best.h)*10)/10};
+}
+
+/* Eén rubriek: een mislukte dienst maakt van de rubriek "fout", niet van het geheel. */
+async function locRubriek(doe){
+  try{ const regels=await doe(); return {regels:regels||[], fout:null}; }
+  catch(e){ return {regels:[], fout:String((e&&e.message)||"onbereikbaar")}; }
+}
+
+async function haalLocatie(lat,lon,hulp){
+  const h=hulp||{};
+  const json=h.json||(u=>locAnt(u,false));
+  const tekst=h.tekst||(u=>locAnt(u,true));
+  const grb=h.grb||grbLaag;
+  const L=wgsNaarLambert(lat,lon), x=L.x, y=L.y;
+  const wfs=(basis,laag,veld,extra)=>json(locWfs(basis,laag,locPunt(x,y,veld),extra));
+  const kleinKader=laag=>json(locWfs(MERCATORWFS,laag,null,locKader(x,y,2)));
+  const rubr={};
+  let perceelMaten=null, hoogte=null, bodemtype=null, gewestplanNaam=null, planNaam=null;
+
+  const taken=[];
+  const taak=(sl,doe)=>taken.push(locRubriek(doe).then(r=>{ rubr[sl]=r; }));
+
+  taak("voorschriften",async()=>{
+    const lagen=[["lu:lu_gewrup_dg","grup"],["lu:lu_gemrup_dg","rup_gemeentelijk"],["lu:lu_bpa_dg","bpa"],
+                 ["lu:lu_gemsvo_ct","verordening"],["lu:lu_prosvo_ct","verordening"]];
+    /* De filters in de zoekvraag (CQL) geven op deze lagen niets terug, de bbox-parameter wel (gemeten 12/10/2026 in Leuven: een
+       punt in een gewestplanzone kreeg met CQL nul vlakken, met bbox de zone en het RUP). Daarom een envelop van 2 m, en dan zelf
+       toetsen of het punt in het vlak ligt. */
+    const kader=laag=>json(locWfs(MERCATORWFS,laag,null,"&count=50"+locKader(x,y,2)));
+    const alle=await Promise.allSettled([kader("lu:lu_gwp_gv"),...lagen.map(([l])=>kader(l))]);
+    if(alle.every(a=>a.status==="rejected"))throw alle[0].reason;
+    let regels=[];
+    if(alle[0].status==="fulfilled"){
+      const g=locGewestplan(alle[0].value.features,x,y);
+      if(g.length)gewestplanNaam=g[0].titel;
+      regels=regels.concat(g);
+    }
+    lagen.forEach(([l,soort],i)=>{ const a=alle[i+1]; if(a.status==="fulfilled")regels=regels.concat(locPlanRegels((a.value.features||[]).filter(f=>raaktVlak(f,x,y)),soort)); });
+    regels=locOntdubbel(regels);
+    const rup=regels.find(r=>!/^gewestplan/.test(r.sub||""));
+    if(rup)planNaam=rup.titel;
+    return regels;
+  });
+  taak("aanvragen",async()=>{
+    const l=[["lu:lu_omv_gd_v2","stedenbouwkundig"],["lu:lu_omv_kh_v2","kleinhandel"]];
+    const a=await Promise.allSettled(l.map(([n])=>wfs(MERCATORWFS,n,"geom")));
+    if(a.every(z=>z.status==="rejected"))throw a[0].reason;
+    let regels=[];
+    a.forEach((z,i)=>{ if(z.status==="fulfilled")regels=regels.concat(locVergunningRegels(z.value.features,l[i][1])); });
+    return locOntdubbel(regels).sort((p,q)=>(q.datum||"").localeCompare(p.datum||""));
+  });
+  taak("water",async()=>{
+    const q=s=>locAnt(WATERTOETS+"/"+s+"/MapServer/0/query?geometry="+x+","+y+"&geometryType=esriGeometryPoint&inSR=31370&spatialRel=esriSpatialRelIntersects&outFields=gridcode&returnGeometry=false&f=json",false);
+    const [pl,fl]=await Promise.all([(h.water||q)("watertoets_pluviaal"),(h.water||q)("watertoets_fluviaal")]);
+    const regels=[];
+    const a=locWaterKlasse(pl), b=locWaterKlasse(fl);
+    regels.push({titel:"Overstroming door regen (pluviaal)", sub:a||"niet overstromingsgevoelig", link:null});
+    regels.push({titel:"Overstroming door waterlopen (fluviaal)", sub:b||"niet overstromingsgevoelig", link:null});
+    return regels;
+  });
+  taak("natuur",async()=>{
+    const a=await Promise.allSettled(LOCNATUUR.map(d=>kleinKader(d.laag)));
+    if(a.every(z=>z.status==="rejected"))throw a[0].reason;
+    let regels=[];
+    a.forEach((z,i)=>{ if(z.status==="fulfilled")regels=regels.concat(locNatuurRegels(z.value.features,LOCNATUUR[i])); });
+    return locOntdubbel(regels);
+  });
+  taak("erfgoed",async()=>{
+    const l=[["ps:ps_bes_monument","beschermd monument"],["ps:ps_bes_sd_gezicht","stads- of dorpsgezicht"],
+             ["ps:ps_bes_land","beschermd landschap"],["ps:ps_bes_arch_site","archeologische site"]];
+    const a=await Promise.allSettled(l.map(([n])=>kleinKader(n)));
+    if(a.every(z=>z.status==="rejected"))throw a[0].reason;
+    let regels=[];
+    a.forEach((z,i)=>{ if(z.status==="fulfilled")regels=regels.concat(locErfgoedRegels(z.value.features,l[i][1])); });
+    return locOntdubbel(regels);
+  });
+  taak("bodem",async()=>{
+    const bin=m=>"DWITHIN(geom,POINT("+x+" "+y+"),"+m+",meters)";
+    const veen="bodem:veenwaarschijnlijkheid_1_5_10_50m_6k";
+    const veenUrl=DOVWFS+"?service=WMS&version=1.3.0&request=GetFeatureInfo&layers="+veen+"&query_layers="+veen+
+      "&crs=EPSG:31370&bbox="+(x-25)+","+(y-25)+","+(x+25)+","+(y+25)+"&width=11&height=11&i=5&j=5&info_format=application/json";
+    const a=await Promise.allSettled([
+      wfs(DOVWFS,"bodemkaart:bodemtypes","geom","&count=1"),
+      json(locWfs(DOVWFS,"ovam:uitspraak_bodemonderzoeken",bin(50))),
+      json(locWfs(DOVWFS,"ovam:grb_bodemverontreinigingsfiche_link",locPunt(x,y,"geom"),"&count=1")),
+      json(locWfs(DOVWFS,"pfas:no_regret_huidig",bin(100))),
+      json(veenUrl)]);
+    if(a.every(z=>z.status==="rejected"))throw a[0].reason;
+    const w=i=>a[i].status==="fulfilled"?a[i].value:null;
+    const regels=[];
+    const bt=((w(0)||{}).features||[])[0];
+    if(bt&&bt.properties){
+      const p=bt.properties;
+      bodemtype=p.Bodemtype||null;
+      regels.push({titel:"Bodemtype "+(p.Bodemtype||"onbekend")+(p.Beknopte_omschrijving_bodemserie?" — "+p.Beknopte_omschrijving_bodemserie:""),
+                   sub:[p.Textuurklasse&&"textuur "+p.Textuurklasse,p.Drainageklasse&&"drainage "+p.Drainageklasse].filter(Boolean).join(" · ")||"bodemkaart", link:null});
+    }
+    const gir=((w(1)||{}).features||[]);
+    const fiche=(((w(2)||{}).features||[])[0]||{}).properties;
+    if(gir.length)regels.push({titel:stuks(gir.length,"OVAM-bodemonderzoek","OVAM-bodemonderzoeken")+" binnen 50 m",
+                               sub:gir.map(f=>(f.properties||{}).uitspraak).filter(Boolean).slice(0,3).join(" · "),
+                               link:(fiche&&fiche.bodemfiche)||null});
+    else if(a[1].status==="fulfilled")regels.push({titel:"Geen OVAM-bodemonderzoeken binnen 50 m", sub:"", link:null});
+    const pf=((w(3)||{}).features||[])[0];
+    if(pf)regels.push({titel:"PFAS no-regret-zone binnen 100 m", sub:String((pf.properties||{}).no_regret_maatregelen||""), link:null});
+    const vk=(((w(4)||{}).features||[])[0]||{}).properties;
+    if(vk&&typeof vk.Klassen==="number"&&vk.Klassen>=1)regels.push({titel:"Veen: "+(LOCVEEN[vk.Klassen]||("klasse "+vk.Klassen)), sub:"veenwaarschijnlijkheid", link:null});
+    return regels;
+  });
+  taak("geluid",async()=>{
+    const l=[["hh:hh_weg_lden_2021_c","weg"],["hh:hh_agglo_weg_lden_2021_c","weg"],["hh:hh_spoor_lden_2021_c","spoor"],
+             ["hh:hh_agglo_spoor_lden_2021_c","spoor"],["hh:hh_lucht_lden_2021_c","lucht"],["hh:hh_agglo_lucht_lden_2021_c","lucht"],
+             ["hh:hh_agglo_industrie_lden_2021_c","industrie"]];
+    const a=await Promise.allSettled(l.map(([n])=>wfs(MERCATORWFS,n,"geom")));
+    if(a.every(z=>z.status==="rejected"))throw a[0].reason;
+    const perBron={};
+    a.forEach((z,i)=>{
+      if(z.status!=="fulfilled")return;
+      (z.value.features||[]).forEach(f=>{
+        const c=(f.properties||{}).category; if(!c)return;
+        const b=l[i][1], oud=perBron[b];
+        if(!oud||LOCGELUIDRANG.indexOf(c)>LOCGELUIDRANG.indexOf(oud))perBron[b]=c;
+      });
+    });
+    return ["weg","spoor","lucht","industrie"].filter(b=>perBron[b]).map(b=>({titel:"Geluid van "+b+": "+locGeluidLabel(perBron[b]), sub:"strategische geluidskaart 2021 (Lden)", link:null}));
+  });
+  taak("perceel",async()=>{
+    const fs=await grb("GRB:ADP",[x-30,y-30,x+30,y+30],30);
+    const f=fs.find(g=>raaktVlak(g,x,y))||null;
+    if(!f)return [];
+    const p=f.properties||{};
+    const ring=grbRingen(f)[0];
+    perceelMaten=locPerceelMaten(ring);
+    const cap=p.CAPAKEY||p.capakey||"";
+    const regels=[];
+    if(perceelMaten){
+      regels.push({titel:"Perceel"+(cap?" "+cap:""), sub:"oppervlakte "+perceelMaten.opp+" m²", link:null});
+      regels.push({titel:"Ongeveer "+perceelMaten.kort+" × "+perceelMaten.lang+" m", sub:"kleinste omhullende rechthoek, geen opmeting", link:null});
+    }
+    return regels;
+  });
+  taak("hoogte",async()=>{
+    const q=laag=>(h.dhm||(u=>tekst(u)))(DHMWMS+"?service=WMS&version=1.3.0&request=GetFeatureInfo&layers="+laag+"&query_layers="+laag+
+      "&crs=EPSG:31370&bbox="+(x-1)+","+(y-1)+","+(x+1)+","+(y+1)+"&width=3&height=3&i=1&j=1&info_format=text/plain");
+    const [dtm,dsm]=await Promise.all([q("DHMVII_DTM_1m"),q("DHMVII_DSM_1m")]);
+    const m=locDhmWaarde(dtm), s=locDhmWaarde(dsm);
+    hoogte={maaiveld:m==null?null:Math.round(m*10)/10, opstand:(m!=null&&s!=null)?Math.max(0,Math.round((s-m)*10)/10):null};
+    return [];
+  });
+  await Promise.all(taken);
+  delete rubr.hoogte;
+
+  const samen=[];
+  const best=gewestplanNaam||planNaam;
+  samen.push({wat:"Bestemming", waarde:best||"niet gevonden op dit punt"});
+  if(perceelMaten){
+    samen.push({wat:"Perceel", waarde:perceelMaten.opp+" m²"});
+    samen.push({wat:"Maten (ongeveer)", waarde:perceelMaten.kort+" × "+perceelMaten.lang+" m"});
+  }
+  if(hoogte&&hoogte.maaiveld!=null)samen.push({wat:"Terrein", waarde:hoogte.maaiveld+" m TAW"});
+  if(hoogte&&hoogte.opstand!=null&&hoogte.opstand>=2)samen.push({wat:"Bebouwing hier", waarde:"ongeveer "+hoogte.opstand+" m hoog (uit lidar)"});
+  samen.push({wat:"Hoogte, diepte, bebouwing", waarde:"staan in de voorschriften (1)"});
+  return {lat,lon,x:Math.round(x),y:Math.round(y),tijd:new Date().toISOString(),samen,rubrieken:rubr};
+}
+
+function locAantal(r){ return (r&&!r.fout)?r.regels.length:0; }
+function leesLocatie(){
+  try{ const r=localStorage.getItem(pk(LOCSLEUTEL)); return r?JSON.parse(r):null; }catch(e){ return null; }
+}
+function bewaarLocatie(d){ bewaarVeilig(pk(LOCSLEUTEL),JSON.stringify(d),"de gegevens van deze locatie"); }
+/* Pas halen als er niets is, de plek meer dan 150 m verschilt, of het ouder is dan een dag. */
+function locMoetOpnieuw(oud,hier,nu){
+  if(!oud||!oud.tijd)return true;
+  if(isNaN(Date.parse(oud.tijd))||nu-Date.parse(oud.tijd)>LOCVERS)return true;
+  if(!hier)return false;
+  const L=wgsNaarLambert(hier.lat,hier.lon);
+  return Math.hypot(L.x-oud.x,L.y-oud.y)>LOCVERSAFSTAND;
+}
+
+const locUI={open:null,data:null,bezig:false,melding:""};
+function locLink(l){ try{ window.open(l,"_blank","noopener"); }catch(e){} }
+function locTeken(){
+  const body=document.getElementById("dlg-body");
+  if(!body||!document.getElementById("dlg").open||locUI.weg)return;
+  body.innerHTML="";
+  const d=locUI.data;
+  const kop=maakEl("div","door-rij");
+  const l=maakEl("div","door-wat");
+  l.appendChild(maakEl("b",null,locUI.bezig?"Ik haal de gegevens op…":(d?"Opgehaald "+new Date(d.tijd).toLocaleString("nl-BE",{day:"numeric",month:"numeric",hour:"2-digit",minute:"2-digit"}):"Nog niets opgehaald")));
+  l.appendChild(maakEl("span",null,locUI.melding||(locUI.bezig?"De openbare bronnen worden bevraagd; dat kan een halve minuut duren.":d?"Voor het punt waar je stond: de bronnen zijn openbaar; wat je hier ziet blijft op dit toestel.":"Zet je locatie aan en tik Ophalen.")));
+  kop.appendChild(l);
+  const b=maakEl("button",null,locUI.bezig?"Even…":"Opnieuw ophalen"); b.type="button"; b.disabled=locUI.bezig;
+  b.onclick=()=>locHaal(true);
+  kop.appendChild(b);
+  body.appendChild(kop);
+  if(d){
+    const s=maakEl("div","loc-samen");
+    d.samen.forEach(r=>{
+      const rij=maakEl("div","loc-samenrij");
+      rij.appendChild(maakEl("span","loc-wat",r.wat));
+      rij.appendChild(maakEl("span","loc-waarde",r.waarde));
+      s.appendChild(rij);
+    });
+    body.appendChild(s);
+  }
+  const bak=maakEl("div","loc-kast");
+  body.appendChild(bak);
+  const koppen=LOCRUBRIEKEN.map((rb,i)=>{
+    const r=d&&d.rubrieken[rb.sleutel];
+    const n=locAantal(r);
+    const kopNaam=rb.naam+(d&&r&&!r.fout&&rb.sleutel!=="water"?" ("+n+")":"");
+    return {nr:String(i+1), naam:kopNaam, open:locUI.open===rb.sleutel, lade:true,
+      doe:()=>{ locUI.open=(locUI.open===rb.sleutel)?null:rb.sleutel; locTeken(); },
+      artikels:()=>{
+        if(!d)return [{nr:"",titel:"Nog niets opgehaald."}];
+        if(!r||r.fout)return [{nr:"",titel:"Deze dienst antwoordde niet"+(r&&r.fout?": "+r.fout:"")+". Tik Opnieuw ophalen."}];
+        const uit=r.regels.map((g,j)=>({nr:(i+1)+"."+(j+1), titel:g.titel, sub:g.sub||"", extern:!!g.link, doe:g.link?(()=>locLink(g.link)):null}));
+        if(rb.sleutel==="perceel")uit.push({nr:(i+1)+"."+(uit.length+1), titel:"Omtrek als plan ophalen", via:"GRB", doe:()=>{ locUI.weg=true; document.getElementById("dlg").close(); haalOmtrek(null,false); }});
+        if(!uit.length)uit.push({nr:"",titel:"Niets gevonden op dit punt."});
+        return uit;
+      }};
+  });
+  koppen.push({nr:String(LOCRUBRIEKEN.length+1), naam:"Opmeting", open:false, lade:false});
+  bouwBestekkast(bak,koppen,{leeg:""});
+}
+async function locHaal(geforceerd,hulp){
+  if(locUI.bezig)return;
+  const h=hulp||{};
+  locUI.bezig=true; locUI.melding=""; locTeken();
+  try{
+    const hier=await (h.plek||(()=>haalPlek(!geforceerd&&!!locUI.data)))();
+    if(!hier&&!geforceerd&&locUI.data)return;
+    if(!hier){ locUI.melding="Ik vind je locatie niet. Zet locatievoorzieningen aan voor Safari en probeer opnieuw."; return; }
+    if(!geforceerd&&!locMoetOpnieuw(locUI.data,hier,Date.now()))return;
+    const d=await haalLocatie(hier.lat,hier.lon,h.haalhulp);
+    locUI.data=d; bewaarLocatie(d);
+  }catch(e){
+    locUI.melding="Het lukte niet: "+String((e&&e.message)||"onbekende fout");
+  }finally{
+    locUI.bezig=false; locTeken();
+  }
+}
 function toonLocatie(){
   const dlg=document.getElementById("dlg");
   document.getElementById("dlg-titel").textContent="Locatie";
   const body=document.getElementById("dlg-body");
   body.innerHTML="";
-  body.appendChild(maakEl("p","inv-uitleg",
-    "Wat er over deze grond bekend is, los van dit verslag: het blijft staan zolang het dossier "+
-    "bestaat. Alleen het GRB is gekoppeld; voor de rest moet er eerst een bestemming bij, en dat "+
-    "is jouw beslissing."));
-  const rij=(wat,nu,knoptekst,fn)=>{
-    const r=maakEl("div","door-rij");
-    const l=maakEl("div","door-wat");
-    l.appendChild(maakEl("b",null,wat));
-    l.appendChild(maakEl("span",null,nu));
-    r.appendChild(l);
-    const b=maakEl("button",null,knoptekst); b.type="button";
-    if(!fn)b.disabled=true;
-    b.onclick=()=>{ if(fn){ dlg.close(); fn(); } };
-    r.appendChild(b);
-    body.appendChild(r);
-  };
-  rij("Voorschriften", "nog niet gekoppeld — stedenbouwkundige voorschriften van het plan dat hier geldt",
-      "Nog niet", null);
-  rij("Oude aanvragen", "nog niet gekoppeld — de vergunningen die op dit perceel zijn aangevraagd",
-      "Nog niet", null);
-  rij("Kaarten", "nog niet gekoppeld — luchtfoto, kadaster, historische kaarten",
-      "Nog niet", null);
-  rij("GRB", planLijst.length?"de omtrek van het perceel — er ligt al een plan"
-                             :"de omtrek van het perceel, uit het Grootschalig Referentiebestand",
-      "Ophalen", ()=>haalOmtrek(null,false));
-  rij("Opmeting", "nog niet gekoppeld — de opmeting van de landmeter, met herkomst en datum",
-      "Nog niet", null);
+  locUI.weg=false;
+  locUI.data=leesLocatie();
+  locUI.open=null; locUI.melding="";
   document.getElementById("dlg-kopieer").style.display="none";
   dlg.showModal();
+  locTeken();
+  /* Automatisch: staat er niets, is het ouder dan een dag of ben je meer dan 150 m verder, dan haalt de app zelf. */
+  if(navigator.onLine!==false)locHaal(false);
 }
 
 function openVerslag(){
