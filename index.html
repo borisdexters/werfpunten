@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-eEhd35UeI2XmtTt9y+baEartLs6nMrKHYcdLUACqB44=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-3Uml1bPSLbRBfNouJ2IRle776cBv2/cKTo6KXhFJhbw='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-jhn70bxMjHWG8OcSaywf8vOQ5HzCrXvAKIP6Yd/N7GE=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-vGX1AsTcswB5pwMQif3DTJ8FMQYfzv6EpxEpcbsLJXY='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2103,6 +2103,16 @@
   .werfkeuze button{font:650 16px/1.2 var(--font);padding:14px 18px;
     background:var(--zone-soft);color:var(--zone);border-color:var(--zone-soft)}
   .werfkeuze button.nieuw{background:transparent;color:var(--inkt);border-color:var(--lijn)}
+  .wachtmerk{width:84px;margin:6px auto 2px}
+  .wachtmerk .gv{width:100%}
+  .wachttekst{text-align:center}
+  .wachtklein{flex:0 0 auto;width:34px;display:inline-flex}
+  .wachtklein.groot{width:46px;margin-right:2px}
+  .wachtklein .gv{width:100%}
+  .toast.wacht{align-items:center;gap:10px}
+  .loc-kaart{padding:8px 0 4px}
+  .loc-kaartsvg{display:block;width:100%;height:auto;border:1px solid var(--lijn)}
+  .loc-kaartuitleg{margin:6px 0 0;font-size:var(--tk);color:var(--ink-soft)}
   .loc-samen{padding:8px 0 6px;border-bottom:1px solid var(--lijn)}
   .loc-samenrij{display:flex;gap:10px;padding:3px 0;font-size:var(--tk)}
   .loc-wat{flex:0 0 38%;color:var(--ink-soft)}
@@ -3410,7 +3420,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v248";
+const VERSIE="v250";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -8934,7 +8944,7 @@ function toastEl(){
    Wat er te doen valt, blijft staan waar het hoort -- de stip op Beheer, die wél wacht tot je
    hem wegwerkt. De melding is de aankondiging, niet de weg. */
 const TOASTTIJD=1700, TOASTTIJDACTIE=4000;
-function melding(t){const el=toastEl();el.textContent=t;el.classList.add("aan");
+function melding(t){const el=toastEl();el.classList.remove("wacht");el.textContent=t;el.classList.add("aan");
   clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove("aan"),TOASTTIJD);}
 /* Wat er nu op de melding staat, zolang ze staat. Een melding met een knop erin telt niet:
    daar valt geen zin aan te plakken zonder de knop kwijt te raken. */
@@ -12530,6 +12540,28 @@ function gridveldMerk(opties){
     '</svg>';
 }
 
+/* ---- wachten met het merk ----
+   de opdrachtgever, 12/10/2026, bij het bijwerken: "ik wil tijdens het wachten het logo met het puntje dat pulseert". Waar de app je laat
+   wachten staat dus hetzelfde merk als bij het opstarten, zonder woordmerk, met het vierkantje dat ademt. Eén tekening voor
+   alle wachttijden: een eigen draaiertje per scherm zou het merk meer dan tien keer laten verschillen. */
+function wachtHtml(tekst){
+  return '<div class="wachtmerk">'+gridveldMerk({stand:"loading",woordmerk:false})+'</div>'+
+    (tekst?'<p class="inv-uitleg wachttekst">'+veilig(tekst)+'</p>':"");
+}
+/* Een melding die blijft staan tot wachtWeg(): de toast verhuist vanzelf naar een open venster (toastEl). */
+function wachtMelding(tekst){
+  const el=toastEl();
+  el.innerHTML='<span class="wachtklein">'+gridveldMerk({stand:"loading",woordmerk:false})+'</span><span>'+veilig(tekst)+'</span>';
+  el.classList.add("aan","wacht");
+  clearTimeout(el._t);
+  return el;
+}
+function wachtWeg(){
+  const el=document.getElementById("toast");
+  if(!el)return;
+  if(el.classList.contains("wacht")){ el.classList.remove("aan","wacht"); el.innerHTML=""; }
+}
+
 /* Wat er achter het merk gebeurt met de vergadering. Is het verslag verzonden en nog niet
    afgesloten, dan is het afsluiten geen vraag meer maar een gevolg — en dan hoort de app het te
    melden in plaats van het te vragen. De weg terug staat in dezelfde melding. */
@@ -13175,6 +13207,7 @@ function bouwBestekkast(bak,koppen,opties){
     if(!k.open)return;
     const art=(typeof k.artikels==="function")?k.artikels():(k.artikels||[]);
     art.forEach(a=>{
+      if(a.blok){ bak.appendChild(a.blok); n++; return; }   // een eigen blok (de kaart van de Locatie), geen keuze
       const r=maakEl("button","fiche-artikel"); r.type="button";
       r.classList.add("onder");
       if(a.gekozen)r.classList.add("gekozen");
@@ -20632,7 +20665,7 @@ async function kiesGrbPerceel(zone,hulp){
     }
     // 1. waar ben je?
     for(;;){
-      v.zet("GRB van je locatie","<p class=\"inv-uitleg\">Ik bepaal waar je staat…</p><p class=\"inv-uitleg\">Staat er een vraag van je toestel om je locatie te gebruiken, kies dan <b>Sta toe</b>.</p>");
+      v.zet("GRB van je locatie",wachtHtml("Ik bepaal waar je staat…")+"<p class=\"inv-uitleg\">Staat er een vraag van je toestel om je locatie te gebruiken, kies dan <b>Sta toe</b>.</p>");
       hier=await (h.plek||(()=>haalPlek(false)))();
       if(gesloten)return false;
       if(hier)break;
@@ -20652,7 +20685,7 @@ async function kiesGrbPerceel(zone,hulp){
     const nauw=Math.round(hier.nauw||0);
     // 2. welke percelen liggen er?
     for(;;){
-      v.zet("GRB van je locatie","<p class=\"inv-uitleg\">Je locatie is gevonden"+(nauw&&nauw<9000?" (op ongeveer "+nauw+" m na)":"")+
+      v.zet("GRB van je locatie",wachtHtml()+"<p class=\"inv-uitleg\">Je locatie is gevonden"+(nauw&&nauw<9000?" (op ongeveer "+nauw+" m na)":"")+
             ". Nu zoek ik de percelen in het GRB (Digitaal Vlaanderen); daarvoor gaat je plek naar die dienst. Dat kan tot een halve minuut duren; dit venster blijft staan.</p>");
       try{
         percelen=await (h.laag||grbLaag)("GRB:ADP",[x-PERCEELKADER,y-PERCEELKADER,x+PERCEELKADER,y+PERCEELKADER],200);
@@ -21137,14 +21170,18 @@ async function kijkNieuweVersie(){
   let reg=null;
   try{ reg=await navigator.serviceWorker.getRegistration(); }catch(e){}
   if(!reg){melding("Nog niets geïnstalleerd — open de app eerst met netwerk");return;}
-  melding("Kijken of er iets nieuws is…");
+  wachtMelding("Kijken of er iets nieuws is…");
   try{ await reg.update(); }
-  catch(e){ melding("Geen netwerk — probeer het later"); return; }
+  catch(e){ wachtWeg(); melding("Geen netwerk — probeer het later"); return; }
   const nieuw=reg.installing||reg.waiting;
-  if(!nieuw){ melding("Je hebt de nieuwste versie ("+VERSIE+")"); return; }
-  if(nieuw.state==="installed"||nieuw.state==="activated"){ biedBijwerken(); return; }
+  if(!nieuw){ wachtWeg(); melding("Je hebt de nieuwste versie ("+VERSIE+")"); return; }
+  if(nieuw.state==="installed"||nieuw.state==="activated"){ wachtWeg(); biedBijwerken(); return; }
+  /* Het binnenhalen van een nieuwe versie duurt even: het merk blijft staan tot ze klaar is, en na een minuut gaat het weg. */
+  wachtMelding("Een nieuwe versie wordt binnengehaald…");
+  const stop=setTimeout(wachtWeg,60000);
   nieuw.addEventListener("statechange",()=>{
-    if(nieuw.state==="installed"||nieuw.state==="activated")biedBijwerken();
+    if(nieuw.state==="installed"||nieuw.state==="activated"){ clearTimeout(stop); wachtWeg(); biedBijwerken(); }
+    else if(nieuw.state==="redundant"){ clearTimeout(stop); wachtWeg(); }
   });
 }
 
@@ -22221,6 +22258,67 @@ async function locRubriek(doe){
   catch(e){ return {regels:[], fout:String((e&&e.message)||"onbereikbaar")}; }
 }
 
+/* ---- het perceel met zijn buren, de maten en de TAW ----
+   de opdrachtgever, 12/10/2026: in het GRB-menu "afmetingen laten zien, dus plan met aangrenzende buren en dan de maten erop. En ook TAW."
+   Het kaartje tekent het perceel van de werf, de percelen en gebouwen eromheen uit het GRB, de lengte van elke zijde van het
+   perceel, en de terreinhoogte in m TAW op de hoeken (lidar, DHM Vlaanderen II). Het zijn de maten van het GRB-vlak, geen
+   opmeting: dat staat onder het kaartje. Noord is boven (Lambert). Alleen presentatie-attributen, geen style=: de CSP staat dat
+   niet toe. */
+function locRingKlein(ring){
+  const uit=[]; let l=null;
+  (ring||[]).forEach(p=>{
+    const q=[Math.round(p[0]*100)/100,Math.round(p[1]*100)/100];
+    if(!l||Math.hypot(q[0]-l[0],q[1]-l[1])>=0.3){ uit.push(q); l=q; }
+  });
+  if(uit.length&&(uit[0][0]!==uit[uit.length-1][0]||uit[0][1]!==uit[uit.length-1][1]))uit.push(uit[0]);
+  return uit;
+}
+/* De hoeken die ertoe doen: waar de rand echt draait, hoogstens acht, het hoogste draaihoek eerst. */
+function locHoeken(ring,max){
+  const r=ring.slice(0,-1); const n=r.length; if(n<3)return [];
+  const draai=r.map((p,i)=>{
+    const a=r[(i+n-1)%n], b=r[(i+1)%n];
+    const u=[p[0]-a[0],p[1]-a[1]], v=[b[0]-p[0],b[1]-p[1]];
+    const h=Math.abs(Math.atan2(u[0]*v[1]-u[1]*v[0],u[0]*v[0]+u[1]*v[1]))*180/Math.PI;
+    return {p,h};
+  });
+  const kies=draai.filter(d=>d.h>=25).sort((a,b)=>b.h-a.h).slice(0,max||8).map(d=>d.p);
+  return kies.length?kies:r.slice(0,max||8);
+}
+function locKaartSvg(k){
+  if(!k||!k.doel||k.doel.length<4)return "";
+  const xs=k.doel.map(p=>p[0]), ys=k.doel.map(p=>p[1]);
+  const marge=16;
+  const x0=Math.min(...xs)-marge, x1=Math.max(...xs)+marge, y0=Math.min(...ys)-marge, y1=Math.max(...ys)+marge;
+  const b=x1-x0, h=y1-y0;
+  const fs=Math.max(b,h)/38;
+  const X=x=>Math.round((x-x0)*100)/100, Y=y=>Math.round((y1-y)*100)/100;
+  const pad=r=>"M"+r.map(p=>X(p[0])+" "+Y(p[1])).join("L")+"Z";
+  let o='<svg class="loc-kaartsvg" viewBox="0 0 '+Math.round(b*100)/100+' '+Math.round(h*100)/100+'" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Perceel met aangrenzende percelen, maten en hoogtes">';
+  o+='<rect width="'+b+'" height="'+h+'" fill="#FAF9F5"/>';
+  (k.buren||[]).forEach(r=>{ o+='<path d="'+pad(r)+'" fill="#EFECE4" stroke="#B8B2A5" stroke-width="'+fs*0.05+'"/>'; });
+  (k.gebouwen||[]).forEach(r=>{ o+='<path d="'+pad(r)+'" fill="#D8D3C6" stroke="#8C8678" stroke-width="'+fs*0.05+'"/>'; });
+  o+='<path d="'+pad(k.doel)+'" fill="#CFE0F3" fill-opacity="0.55" stroke="#0A0A0A" stroke-width="'+fs*0.12+'"/>';
+  // de maten van elke zijde, evenwijdig aan de zijde, naast het perceel
+  const orient=(function(){ let a=0; for(let i=0,j=k.doel.length-1;i<k.doel.length;j=i++)a+=(k.doel[j][0]*k.doel[i][1]-k.doel[i][0]*k.doel[j][1]); return a>0?1:-1; })();
+  for(let i=0;i<k.doel.length-1;i++){
+    const A=k.doel[i], B=k.doel[i+1], dx=B[0]-A[0], dy=B[1]-A[1], l=Math.hypot(dx,dy);
+    if(l<4)continue;                                      // kortere zijden zouden over elkaar lopen; de rest staat in het GRB
+    const nx=orient*dy/l, ny=-orient*dx/l;               // naar buiten
+    const mx=(A[0]+B[0])/2+nx*fs*0.9, my=(A[1]+B[1])/2+ny*fs*0.9;
+    let ang=Math.atan2(-dy,dx)*180/Math.PI; if(ang>90)ang-=180; if(ang<-90)ang+=180;
+    o+='<text x="'+X(mx)+'" y="'+Y(my)+'" font-size="'+Math.round(fs*100)/100+'" font-family="Helvetica,Arial,sans-serif" font-weight="600" fill="#0A0A0A" text-anchor="middle" dominant-baseline="middle" transform="rotate('+Math.round(ang*10)/10+' '+X(mx)+' '+Y(my)+')">'+String(Math.round(l*100)/100).replace(".",",")+'</text>';
+  }
+  // de hoogte op de hoeken, in m TAW
+  (k.hoeken||[]).forEach(c=>{
+    o+='<circle cx="'+X(c.x)+'" cy="'+Y(c.y)+'" r="'+fs*0.22+'" fill="#B3261E"/>';
+    if(c.taw!=null)o+='<text x="'+X(c.x)+'" y="'+Y(c.y)+'" dx="'+fs*0.45+'" dy="'+(-fs*0.45)+'" font-size="'+Math.round(fs*0.9*100)/100+'" font-family="Helvetica,Arial,sans-serif" fill="#B3261E" font-weight="600">'+String(c.taw.toFixed(2)).replace(".",",")+'</text>';
+  });
+  o+='<g transform="translate('+Math.round((b-fs*1.6)*100)/100+' '+Math.round(fs*2.4*100)/100+')"><path d="M0 0L'+fs*0.55+' '+fs*1.6+'L0 '+fs*1.15+'L-'+fs*0.55+' '+fs*1.6+'Z" transform="translate(0 -'+fs*1.6+')" fill="#0A0A0A"/><text y="'+fs*1.2+'" font-size="'+Math.round(fs*0.9*100)/100+'" font-family="Helvetica,Arial,sans-serif" text-anchor="middle" fill="#0A0A0A">N</text></g>';
+  o+='</svg>';
+  return o;
+}
+
 async function haalLocatie(lat,lon,hulp){
   const h=hulp||{};
   const json=h.json||(u=>locAnt(u,false));
@@ -22230,7 +22328,7 @@ async function haalLocatie(lat,lon,hulp){
   const wfs=(basis,laag,veld,extra)=>json(locWfs(basis,laag,locPunt(x,y,veld),extra));
   const kleinKader=laag=>json(locWfs(MERCATORWFS,laag,null,locKader(x,y,2)));
   const rubr={};
-  let perceelMaten=null, hoogte=null, bodemtype=null, gewestplanNaam=null, planNaam=null;
+  let kaart=null, perceelMaten=null, hoogte=null, bodemtype=null, gewestplanNaam=null, planNaam=null;
 
   const taken=[];
   const taak=(sl,doe)=>taken.push(locRubriek(doe).then(r=>{ rubr[sl]=r; }));
@@ -22340,12 +22438,23 @@ async function haalLocatie(lat,lon,hulp){
     return ["weg","spoor","lucht","industrie"].filter(b=>perBron[b]).map(b=>({titel:"Geluid van "+b+": "+locGeluidLabel(perBron[b]), sub:"strategische geluidskaart 2021 (Lden)", link:null}));
   });
   taak("perceel",async()=>{
-    const fs=await grb("GRB:ADP",[x-30,y-30,x+30,y+30],30);
+    const kader=[x-60,y-60,x+60,y+60];
+    const [fs,gb]=await Promise.all([grb("GRB:ADP",kader,80), grb("GRB:GBG",kader,150).catch(()=>[])]);
     const f=fs.find(g=>raaktVlak(g,x,y))||null;
     if(!f)return [];
     const p=f.properties||{};
     const ring=grbRingen(f)[0];
     perceelMaten=locPerceelMaten(ring);
+    const doel=locRingKlein(ring);
+    kaart={doel, buren:fs.filter(g=>g!==f).map(g=>locRingKlein(grbRingen(g)[0])).filter(r=>r.length>=4).slice(0,40),
+           gebouwen:gb.map(g=>locRingKlein(grbRingen(g)[0])).filter(r=>r.length>=4).slice(0,80), hoeken:[]};
+    /* De hoogte op de hoeken: één meting per hoek, elk apart; een hoek zonder antwoord blijft zonder getal. */
+    const dtm=(px,py)=>(h.dhm||(u=>tekst(u)))(DHMWMS+"?service=WMS&version=1.3.0&request=GetFeatureInfo&layers=DHMVII_DTM_1m&query_layers=DHMVII_DTM_1m"+
+      "&crs=EPSG:31370&bbox="+(px-1)+","+(py-1)+","+(px+1)+","+(py+1)+"&width=3&height=3&i=1&j=1&info_format=text/plain");
+    kaart.hoeken=await Promise.all(locHoeken(doel,6).map(async c=>{
+      let t=null; try{ t=locDhmWaarde(await dtm(c[0],c[1])); }catch(e){}
+      return {x:c[0],y:c[1],taw:t};
+    }));
     const cap=p.CAPAKEY||p.capakey||"";
     const regels=[];
     if(perceelMaten){
@@ -22375,7 +22484,7 @@ async function haalLocatie(lat,lon,hulp){
   if(hoogte&&hoogte.maaiveld!=null)samen.push({wat:"Terrein", waarde:hoogte.maaiveld+" m TAW"});
   if(hoogte&&hoogte.opstand!=null&&hoogte.opstand>=2)samen.push({wat:"Bebouwing hier", waarde:"ongeveer "+hoogte.opstand+" m hoog (uit lidar)"});
   samen.push({wat:"Hoogte, diepte, bebouwing", waarde:"staan in de voorschriften (1)"});
-  return {lat,lon,x:Math.round(x),y:Math.round(y),tijd:new Date().toISOString(),samen,rubrieken:rubr};
+  return {lat,lon,x:Math.round(x),y:Math.round(y),tijd:new Date().toISOString(),samen,rubrieken:rubr,kaart};
 }
 
 function locAantal(r){ return (r&&!r.fout)?r.regels.length:0; }
@@ -22400,6 +22509,7 @@ function locTeken(){
   body.innerHTML="";
   const d=locUI.data;
   const kop=maakEl("div","door-rij");
+  if(locUI.bezig){ const m=maakEl("span","wachtklein groot"); m.innerHTML=gridveldMerk({stand:"loading",woordmerk:false}); kop.appendChild(m); }
   const l=maakEl("div","door-wat");
   l.appendChild(maakEl("b",null,locUI.bezig?"Ik haal de gegevens op…":(d?"Opgehaald "+new Date(d.tijd).toLocaleString("nl-BE",{day:"numeric",month:"numeric",hour:"2-digit",minute:"2-digit"}):"Nog niets opgehaald")));
   l.appendChild(maakEl("span",null,locUI.melding||(locUI.bezig?"De openbare bronnen worden bevraagd; dat kan een halve minuut duren.":d?"Voor het punt waar je stond: de bronnen zijn openbaar; wat je hier ziet blijft op dit toestel.":"Zet je locatie aan en tik Ophalen.")));
@@ -22430,6 +22540,12 @@ function locTeken(){
         if(!d)return [{nr:"",titel:"Nog niets opgehaald."}];
         if(!r||r.fout)return [{nr:"",titel:"Deze dienst antwoordde niet"+(r&&r.fout?": "+r.fout:"")+". Tik Opnieuw ophalen."}];
         const uit=r.regels.map((g,j)=>({nr:(i+1)+"."+(j+1), titel:g.titel, sub:g.sub||"", extern:!!g.link, doe:g.link?(()=>locLink(g.link)):null}));
+        if(rb.sleutel==="perceel"&&d.kaart){
+          const blok=maakEl("div","loc-kaart");
+          blok.innerHTML=locKaartSvg(d.kaart);
+          blok.appendChild(maakEl("p","loc-kaartuitleg","Zwart: het perceel, met de lengte van elke zijde in meter. Grijs: de buren en de gebouwen (GRB). Rood: het terrein in m TAW op de hoeken (lidar). Dit zijn maten van het GRB, geen opmeting. Noord is boven."));
+          uit.unshift({blok});
+        }
         if(rb.sleutel==="perceel")uit.push({nr:(i+1)+"."+(uit.length+1), titel:"Omtrek als plan ophalen", via:"GRB", doe:()=>{ locUI.weg=true; document.getElementById("dlg").close(); haalOmtrek(null,false); }});
         if(!uit.length)uit.push({nr:"",titel:"Niets gevonden op dit punt."});
         return uit;
