@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-df7wPQ6QkEAhs3598o53gknZhVf1JigspRP0HUzXims=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-iLKtj7j8foO4ILVceMjpfJYigeHb0ElFl01DB629NUg='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-wQ9j5DbUkZY+6gRFKBCOlGfOo6zlrbz4hdCoP1ISIV8=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-iLKtj7j8foO4ILVceMjpfJYigeHb0ElFl01DB629NUg='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2916,6 +2916,7 @@
       <button type="button" id="backup" title="Alles op dit toestel in één bestand">Back-up</button>
       <button type="button" id="backupterug" title="Een back-upbestand inlezen, bijvoorbeeld op een nieuw toestel">Back-up terugzetten</button>
       <button type="button" id="aanmeldbeheer" title="Aanmelden of afmelden bij de online bron">Aanmelden</button>
+      <button type="button" id="toestelwissen" title="Alles op dit toestel wissen: de app begint opnieuw, alsof je haar voor het eerst opent">Toestel wissen (nieuw begin)</button>
       <!-- Alleen zichtbaar als er een noodkopie van vóór de verhuizing bestaat (merkNoodknop). -->
       <button type="button" id="noodterug" hidden title="De gegevens zoals ze stonden vóór de verhuizing van de opslag">Noodkopie terugzetten</button>
     </div>
@@ -3400,7 +3401,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v244";
+const VERSIE="v245";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -8710,6 +8711,30 @@ document.getElementById("leerbeheer").onclick=toonGeleerd;
 /* Terugzetten had geen eigen knop: alleen de melding na het maken van een back-up (twee seconden) bood het aan. Op een nieuw of gewist toestel was
    er dus geen weg terug. Aanmelden zat niet in Beheer maar achter de werfnaam, waar een nieuwe gebruiker het niet zoekt. */
 document.getElementById("backupterug").onclick=()=>kiesHerstel();
+/* Een volledige reset van dit toestel, voor wie de app opnieuw wil beproeven zoals bij de eerste keer. Op een iPhone is de omweg (icoon weg, dan
+   Instellingen, Safari, Geavanceerd, Websitegegevens) lastig, en blijft er makkelijk iets staan. Eerst een duidelijke waarschuwing; wat al in de
+   online bron staat blijft daar. */
+async function toestelWissen(hulp){
+  const h=hulp||{};
+  const ja=await (h.vraag||vraagJa)("Alles op dit toestel wissen?",[
+    "Alle werven, punten, plannen, foto's en instellingen op <b>dit toestel</b> gaan weg. De app begint opnieuw, alsof je haar voor het eerst opent.",
+    "Wat al online in de bron staat, blijft daar. Staat er iets alleen op dit toestel, dan is het weg: <b>maak eerst een back-up</b> (Beheer, Back-up).",
+    "Dit kan niet ongedaan worden gemaakt."],"Ja, wis alles");
+  if(!ja)return false;
+  await (h.wis||(async()=>{
+    try{ if(db&&db.close)db.close(); }catch(e){}
+    try{ localStorage.clear(); sessionStorage.clear(); }catch(e){}
+    try{
+      const lijst=(indexedDB.databases?await indexedDB.databases():[{name:"werfpunten"}]);
+      await Promise.all(lijst.map(d=>new Promise(res=>{ const r=indexedDB.deleteDatabase(d.name); r.onsuccess=r.onerror=r.onblocked=()=>res(); setTimeout(res,3000); })));
+    }catch(e){}
+    try{ for(const k of await caches.keys())await caches.delete(k); }catch(e){}
+    try{ for(const r of await navigator.serviceWorker.getRegistrations())await r.unregister(); }catch(e){}
+  }))();
+  (h.herlaad||(()=>location.reload()))();
+  return true;
+}
+document.getElementById("toestelwissen").onclick=()=>toestelWissen();
 document.getElementById("aanmeldbeheer").onclick=()=>aanmeldToon();
 document.getElementById("onderdeelbeheer").onclick=beheerOnderdelen;
 document.getElementById("zonebeheer").onclick=beheerZones;
