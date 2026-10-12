@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-jhn70bxMjHWG8OcSaywf8vOQ5HzCrXvAKIP6Yd/N7GE=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-vGX1AsTcswB5pwMQif3DTJ8FMQYfzv6EpxEpcbsLJXY='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-hxv7dlW5CF2NhZbAX6aShc93oK6zlmn7G5+JJ9fTmBQ=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-Mnofp5X00kj5WhoIOfHMQCffjlbn1BBdi40VSFCUQEQ='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2103,13 +2103,19 @@
   .werfkeuze button{font:650 16px/1.2 var(--font);padding:14px 18px;
     background:var(--zone-soft);color:var(--zone);border-color:var(--zone-soft)}
   .werfkeuze button.nieuw{background:transparent;color:var(--inkt);border-color:var(--lijn)}
-  .wachtmerk{width:84px;margin:6px auto 2px}
+  .wachtmerk{width:112px;margin:14px auto 6px}
   .wachtmerk .gv{width:100%}
   .wachttekst{text-align:center}
   .wachtklein{flex:0 0 auto;width:34px;display:inline-flex}
   .wachtklein.groot{width:46px;margin-right:2px}
   .wachtklein .gv{width:100%}
-  .toast.wacht{align-items:center;gap:10px}
+  /* Wachten: het merk staat midden in het scherm, groot, op een lichte kaart (het merk is zwart en verdwijnt op de donkere melding). */
+  .toast.wacht{position:fixed;top:50%;bottom:auto;transform:translateY(-50%);flex-direction:column;align-items:center;gap:14px;
+    width:min(64vw,250px);padding:26px 20px 22px;border-radius:16px;background:#FAF9F5;color:#0A0A0A;text-align:center;
+    box-shadow:0 10px 40px rgba(0,0,0,.35)}
+  .wachtgroot{display:block;width:104px}
+  .wachtgroot .gv{width:100%}
+  .wachtzin{font-size:var(--tm);line-height:1.35}
   .loc-kaart{padding:8px 0 4px}
   .loc-kaartsvg{display:block;width:100%;height:auto;border:1px solid var(--lijn)}
   .loc-kaartuitleg{margin:6px 0 0;font-size:var(--tk);color:var(--ink-soft)}
@@ -2140,18 +2146,18 @@
   .gridveld-marker {
     transform-box: fill-box;
     transform-origin: center;
-    animation: gridveld-breathe 1.6s ease-in-out infinite;
+    animation: gridveld-breathe 1.3s ease-in-out infinite;
     will-change: transform;
   }
 
   @keyframes gridveld-breathe {
     0%,
     100% {
-      transform: scale(0.78);
+      transform: scale(0.45);
     }
 
     50% {
-      transform: scale(1.12);
+      transform: scale(1.6);
     }
   }
 
@@ -3420,7 +3426,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v250";
+const VERSIE="v251";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -12551,8 +12557,9 @@ function wachtHtml(tekst){
 /* Een melding die blijft staan tot wachtWeg(): de toast verhuist vanzelf naar een open venster (toastEl). */
 function wachtMelding(tekst){
   const el=toastEl();
-  el.innerHTML='<span class="wachtklein">'+gridveldMerk({stand:"loading",woordmerk:false})+'</span><span>'+veilig(tekst)+'</span>';
+  el.innerHTML='<span class="wachtgroot">'+gridveldMerk({stand:"loading",woordmerk:false})+'</span><span class="wachtzin">'+veilig(tekst)+'</span>';
   el.classList.add("aan","wacht");
+  el.style.top="50%";
   clearTimeout(el._t);
   return el;
 }
@@ -22508,8 +22515,11 @@ function locTeken(){
   if(!body||!document.getElementById("dlg").open||locUI.weg)return;
   body.innerHTML="";
   const d=locUI.data;
+  if(locUI.bezig){
+    const w=maakEl("div","loc-wacht"); w.innerHTML=wachtHtml(locUI.melding||"De openbare bronnen worden bevraagd; dat kan een halve minuut duren.");
+    body.appendChild(w);
+  }
   const kop=maakEl("div","door-rij");
-  if(locUI.bezig){ const m=maakEl("span","wachtklein groot"); m.innerHTML=gridveldMerk({stand:"loading",woordmerk:false}); kop.appendChild(m); }
   const l=maakEl("div","door-wat");
   l.appendChild(maakEl("b",null,locUI.bezig?"Ik haal de gegevens op…":(d?"Opgehaald "+new Date(d.tijd).toLocaleString("nl-BE",{day:"numeric",month:"numeric",hour:"2-digit",minute:"2-digit"}):"Nog niets opgehaald")));
   l.appendChild(maakEl("span",null,locUI.melding||(locUI.bezig?"De openbare bronnen worden bevraagd; dat kan een halve minuut duren.":d?"Voor het punt waar je stond: de bronnen zijn openbaar; wat je hier ziet blijft op dit toestel.":"Zet je locatie aan en tik Ophalen.")));
@@ -22517,7 +22527,7 @@ function locTeken(){
   const b=maakEl("button",null,locUI.bezig?"Even…":"Opnieuw ophalen"); b.type="button"; b.disabled=locUI.bezig;
   b.onclick=()=>locHaal(true);
   kop.appendChild(b);
-  body.appendChild(kop);
+  if(!locUI.bezig)body.appendChild(kop);       // tijdens het wachten staat het merk er in het midden, niet de knop
   if(d){
     const s=maakEl("div","loc-samen");
     d.samen.forEach(r=>{
