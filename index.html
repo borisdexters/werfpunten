@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-HsCyDQyfcFp6kFsvJxgD0KwpzRlnOt7uNGgSZpE44kM=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-iLKtj7j8foO4ILVceMjpfJYigeHb0ElFl01DB629NUg='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-df7wPQ6QkEAhs3598o53gknZhVf1JigspRP0HUzXims=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-iLKtj7j8foO4ILVceMjpfJYigeHb0ElFl01DB629NUg='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3400,7 +3400,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v242";
+const VERSIE="v244";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -14490,6 +14490,42 @@ function zetPlan(zone,data){try{ ruimteBladen=null; }catch(e){}   // de ligging 
   // Ook hier de vraag: wie met plannen werkt en nog geen foto nam, heeft evengoed iets te verliezen.
   t.oncomplete=()=>{vraagBlijvend();res(true)};t.onerror=()=>res(false);
 });}
+/* Is dit voorlopige GRB van een andere plek dan waar je nu staat (Lambert `L` = {x,y})? Nieuwe GRB-plannen dragen de plek waar je stond
+   (`bron.grb.plek`); oudere (van vóór v224) niet, die kennen alleen hun koppeling. Dan telt het blad zelf: ligt je plek meer dan 50 m buiten
+   het blad, dan is het van elders. Een echt plan (niet voorlopig) is nooit "van elders". */
+function grbIsVanElders(pl,L){
+  if(!pl||!pl.voorlopig||!L)return false;
+  const q=pl.bron&&pl.bron.grb&&pl.bron.grb.plek;
+  if(q)return Math.hypot(L.x-q.x,L.y-q.y)>150;
+  const g=pl.georef;
+  if(!g||g.plaatselijk||!g.eenheid_m||!pl.breedte||!pl.hoogte)return false;
+  const b=naarBeeld(pl,L.x,L.y);
+  if(!b)return false;
+  const mx=50/(g.eenheid_m*pl.breedte)*100, my=50/(g.eenheid_m*pl.hoogte)*100;
+  return b.x<-mx||b.x>100+mx||b.y<-my||b.y>100+my;
+}
+/* Een plan van dit toestel wissen. Alleen de tekening en de koppeling; je punten blijven bestaan (ze houden hun plek) maar liggen dan op een blad
+   zonder tekening. Het wist niets van wat de opdrachtgever zelf heeft geladen zonder dat hij erom vroeg: de aanroepers vragen eerst, of weten dat het een
+   voorlopig GRB zonder werk is. */
+function wisPlan(zone){return new Promise(res=>{
+  try{ ruimteBladen=null; }catch(e){}
+  if(!db)return res(false);
+  const t=db.transaction("plannen","readwrite");t.objectStore("plannen").delete(dk(zone));
+  t.oncomplete=()=>res(true);t.onerror=()=>res(false);
+});}
+/* Kopieën van een voorlopig GRB van een andere plek, zonder punten, op de andere zones: overschot van een eerdere test of een andere werf.
+   Ze gaan weg zodra het GRB van deze plek er ligt, zodat er geen "niveaus" van een plek hangen waar je niet bent. */
+async function ruimVerouderdeGrb(nieuwePlek,behalveZone){
+  let weg=0;
+  for(const z of [...(planLijst||[])]){
+    if(z===behalveZone)continue;
+    const pl=await haalPlan(z);
+    if(puntenOpZone(z).length)continue;
+    if(grbIsVanElders(pl,nieuwePlek)&&await wisPlan(z))weg++;
+  }
+  if(weg)planLijst=await planZones();
+  return weg;
+}
 function haalPlan(zone){return new Promise(res=>{
   if(!db)return res(null);
   const q=db.transaction("plannen","readonly").objectStore("plannen").get(dk(zone));
@@ -16750,6 +16786,22 @@ function toonDraaiDialoog(){
    erin gegroepeerd naar wat het is: waar je heen gaat, wat je met dit plan doet, en het beheer.
    De knoppen doen hun werk door de bestaande knop aan te klikken — zo blijft er één bedrading en
    kan er niets uit elkaar lopen. */
+async function planWissenVraag(){
+  const z=plan&&plan.zone;
+  if(!z){ melding("Geen plan om te wissen"); return false; }
+  const n=puntenOpZone(z).length;
+  const ja=await vraagJa("Plan "+zoneNaam(z)+" wissen?",[
+    "De tekening en de koppeling van dit plan gaan weg van dit toestel. Wat je erop nummerde of koppelde, ook.",
+    n?("Je <b>"+stuks(n,"punt","punten")+"</b> blijven bestaan en houden hun plek, maar liggen dan op een blad zonder tekening."):"Er staan geen punten op.",
+    "Een plan dat je als bestand bewaarde, kun je later opnieuw laden."],"Ja, wis dit plan");
+  if(!ja)return false;
+  if(!(await wisPlan(z))){ melding("Wissen lukte niet"); return false; }
+  planLijst=await planZones();
+  const dl=document.getElementById("plandlg"); if(dl.open)dl.close();
+  tekenZones(); kaartZone=null; await tekenKaart(); tekenLijst();
+  melding("Plan "+zoneNaam(z)+" gewist");
+  return true;
+}
 function planMenu(){
   const plandlg=document.getElementById("plandlg");
   const dlg=document.getElementById("dlg");
@@ -16779,6 +16831,7 @@ function planMenu(){
   knop(g2,"Lokalen nummeren",()=>tik("pl-nummer"));
   knop(g2,"Koppelen aan een ander plan",()=>tik("pl-koppel"));
   knop(g2,"Plan bewaren als bestand",()=>tik("pl-bewaar"));
+  knop(g2,"Dit plan wissen",()=>{ planWissenVraag(); });
   body.appendChild(maakEl("p","beheer-uitleg",
     "Nummeren, koppelen en bewaren zijn desktopwerk — op een werf ben je daar een uur mee bezig. "+
     "Ze staan hier omdat ze bereikbaar horen te zijn, niet omdat je ze nu nodig hebt."));
@@ -19089,7 +19142,7 @@ function bladenOpPlek(hier,bladen){
 }
 async function locatieCheck(){
   if(actief===DEMOID)return null;
-  const h=await haalPlek(true);
+  const h=await plekBijStart();
   if(!h)return null;
   const L=wgsNaarLambert(h.lat,h.lon);
   const bladen=await laadRuimteBladen();
@@ -20288,6 +20341,24 @@ function vraagWelkeWerf(lijst,hier,meerdere){
    hier niet mag blokkeren en niet mag schreeuwen: mislukt het — geen toestemming voor de plek,
    GRB onbereikbaar, buiten Vlaanderen — dan hoort de app gewoon open te staan en zegt ze het
    in een melding. Een werf zonder plan is geen fout. */
+/* Waar ben je bij het openen? Eén meting voor de hele start (GRB, locatiecheck, werf herkennen). Eerst stil: is er al toestemming, dan geen vraag. Is
+   die er nog niet (iOS geeft vaak "prompt" in een geïnstalleerde app), dan vraagt de app één keer per dag, en niet als je het eerder weigerde.
+   Zonder deze vraag bleef de locatiecheck op een toestel dat geen vaste toestemming heeft stil, en zag je nooit of de app je plek herkende. */
+const LOCVRAAGSLEUTEL="werfpunten-locvraag";
+let startPlekBelofte=null;
+function plekBijStart(){
+  if(startPlekBelofte)return startPlekBelofte;
+  startPlekBelofte=(async()=>{
+    let h=await haalPlek(true);
+    if(h)return h;
+    let stand="prompt";
+    try{ if(navigator.permissions)stand=(await navigator.permissions.query({name:"geolocation"})).state; }catch(e){}
+    if(stand==="denied"||!navigator.geolocation)return null;
+    try{ if(localStorage.getItem(LOCVRAAGSLEUTEL)===vandaag())return null; localStorage.setItem(LOCVRAAGSLEUTEL,vandaag()); }catch(e){}
+    return await haalPlek(false);
+  })();
+  return startPlekBelofte;
+}
 /* Wacht tot het gedeelde venster vrij is (de vraag over de vergaderdag kan er net in staan). */
 async function wachtOpVenster(maxMs){
   const d=document.getElementById("dlg");
@@ -20308,7 +20379,7 @@ async function haalOmtrekBijStart(){
   grbZonesGeprobeerd.add(zone);
   if(!(await wachtOpVenster()))return false;
   // Zonder een bekende plek van deze werf kan de app niet weten dat je er staat (thuis? op kantoor?): dan altijd de vraag.
-  const stil=await haalPlek(true);
+  const stil=await plekBijStart();
   const auto=!!stil&&opBekendeWerf(stil);
   const gelukt=(await kopieerGrbNaar(zone))||await kiesGrbPerceel(zone,{auto});
   if(!gelukt){
@@ -20336,15 +20407,14 @@ async function grbBijStartMag(){
     /* Er ligt al iets op de beginzone. Is dat een voorlopig GRB van een heel andere plek (meer dan 150 m) en staat er nog niets op, dan is het
        overschot van een eerdere test of een andere werf: de app haalt het GRB van waar je nu staat. Een echt plan, of een GRB met punten, blijft. */
     const pl=await haalPlan(zone);
-    const q=pl&&pl.voorlopig&&pl.bron&&pl.bron.grb&&pl.bron.grb.plek;
-    if(!q||puntenOpZone(zone).length)return false;
-    const h=await haalPlek(true);
+    if(!pl||!pl.voorlopig||puntenOpZone(zone).length)return false;
+    const h=await plekBijStart();
     if(!h)return false;
     const L=wgsNaarLambert(h.lat,h.lon);
-    return Math.hypot(L.x-q.x,L.y-q.y)>150;
+    return grbIsVanElders(pl,{x:L.x,y:L.y});
   }
   if(!planLijst.length)return true;
-  const h=await haalPlek(true);
+  const h=await plekBijStart();
   return !!h&&opBekendeWerf(h);
 }
 
@@ -20606,6 +20676,7 @@ async function kiesGrbPerceel(zone,hulp){
     if(automatisch&&plan2&&plan2.bron&&plan2.bron.grb)plan2.bron.grb.automatisch=true;
     const bewaard=await (h.zet||zetPlan)(opZone,plan2);
     if(bewaard!==false)onthoudKader(plan2);
+    if(bewaard!==false&&!h.zet){ try{ await ruimVerouderdeGrb({x,y},opZone); }catch(e){} }
     if(bewaard===false){
       v.zet("Het plan kon niet bewaard worden",
         "<p class=\"inv-uitleg\">Het GRB is wel opgehaald, maar dit toestel liet niet toe het plan op te slaan (de opslag is vol, geblokkeerd of de privé-modus staat aan). Sluit de app helemaal, open hem opnieuw en probeer het nog eens.</p>",
