@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-wQ9j5DbUkZY+6gRFKBCOlGfOo6zlrbz4hdCoP1ISIV8=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-iLKtj7j8foO4ILVceMjpfJYigeHb0ElFl01DB629NUg='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-efM+XzKpcQUMhQzoDHzIOntKMPJ1xS3lSDkAW7s35b0=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-iLKtj7j8foO4ILVceMjpfJYigeHb0ElFl01DB629NUg='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3358,7 +3358,8 @@ const BEGINZONE="N0";
    vervangen te worden door de indeling die jouw kantoor voert. */
 const RUBRIEKSLEUTEL="werfpunten-rubrieken";
 const STANDAARDRUBRIEKEN={
-  PO:[{code:"OPDR",naam:"Besproken opdracht"},
+  PO:[{code:"GRB",naam:"GRB"},
+      {code:"OPDR",naam:"Besproken opdracht"},
       {code:"VRAAG",naam:"Vragen aan opdrachtgever"},
       {code:"GEG",naam:"Te bezorgen projectgegevens"},
       {code:"DOC",naam:"Op te vragen documenten"},
@@ -3401,7 +3402,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v245";
+const VERSIE="v246";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -5441,7 +5442,7 @@ function bladHerkomst(bestand){
 }
 
 async function zorgVoorPlanzones(lijst){
-  if(faseAard(faseVan(staat))!=="werf")return false;
+  if(!faseDraagtPlan(faseVan(staat)))return false;
   const erbij=[...new Set((lijst||[]).filter(z=>z&&!ZONES.includes(z)))];
   if(!erbij.length)return false;
   /* Het etiket staat in het blad, dus moet het record gelezen worden — en een blad is honderden
@@ -5628,6 +5629,9 @@ const FASESLEUTEL="werfpunten-fasen";
 const PROJECTCODESLEUTEL="werfpunten-projectcode";
 const ALLEENOMTREKSLEUTEL="werfpunten-alleenomtrek";
 const STANDAARDFASE="UIT";
+/* Waar een nieuw project begint (de opdrachtgever, 12/10/2026): bij de projectvoorbereiding, niet bij de uitvoering. STANDAARDFASE blijft
+   UIT: een verslag zonder fase is er een van vóór de fasen, en dat was altijd uitvoering. */
+const BEGINFASE="PO";
 
 const STANDAARDFASEN=[
   {code:"PO",  naam:"Projectvoorbereiding"},
@@ -5753,6 +5757,12 @@ function zorgVoorNummer(){
    Wie een eigen fase toevoegt krijgt 'overleg', want dat is het veilige antwoord — een verslag
    dat te weinig beweert is bruikbaar, een verslag dat te veel beweert is een risico. */
 const WERFFASEN=new Set(["UIT","VOPL","DOPL","NZ"]);
+/* Een plan hangt aan een blad. Op een werf zijn dat de zones; in de projectvoorbereiding ook, want daar komen
+   opmetingsplannen en scans van de bestaande toestand binnen waarop je wilt annoteren. Andere overlegfasen
+   dragen geen plan: daar zou "Beslissingen" een plattegrond krijgen. Een eigen fase kan er `plan:true` bij zetten. */
+function faseDraagtPlan(code){
+  return faseAard(code)==="werf"||code==="PO"||faseRecord(code).plan===true;
+}
 function faseAard(code){
   const f=faseRecord(code);
   if(f.aard==="werf"||f.aard==="overleg")return f.aard;
@@ -5877,7 +5887,7 @@ function zetFaseLijsten(){
      is er niets om op aan te duiden, dus de knop hoort er niet te staan — hij zou een plan aan
      "Beslissingen" hangen. */
   const pk2=document.getElementById("planknop");
-  if(pk2)pk2.hidden=faseAard(code)!=="werf";
+  if(pk2)pk2.hidden=!faseDraagtPlan(code);
   /* Het woord "bestekhoofdstuk" beweert dat er een bestek ligt. In een voorontwerp of een
      projectvoorbereiding is dat er nog niet — de indeling wél, want die volgt de onderdelen van
      het werk. Dezelfde lijst dus, een woord dat niets beweert wat niet waar is.
@@ -8867,7 +8877,7 @@ function laadStaat(){
   // punten van de vórige werf — precies wat projecten moeten uitsluiten.
   staat={datum:vandaag(), weer:"", bezetting:"", zone:(ZONES[0]||"BUITEN"), punten:[],
          rondgangen:[],
-         fase:STANDAARDFASE, nr:0, titel:"", verslagstatus:"concept"};
+         fase:BEGINFASE, nr:0, titel:"", verslagstatus:"concept"};
   try{const r=localStorage.getItem(pk(SLEUTEL));if(r){const s=JSON.parse(r);
     if(s&&typeof s==="object")staat=s;}}catch(e){}
   // opschonen van punten uit een eerdere versie die "(enkel foto)" als tekst kregen
