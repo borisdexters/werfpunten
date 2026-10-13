@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-1Dxkg/7rRGcULqhBeiUQEuychilBinc6G+7+NSxf+yE=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-MO3/DdwE4tOXuA+6L2OKMwtsVYVOQSAiABFlDzG0sPY='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-kMzhGQKIwU9UoZa70r/4NBBcykKDrAXauZhQc1ZOiMU=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-wnTPXPSoCanuCWhaq3yUqYYNaO3dsJjem2X6hw2811E='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1068,9 +1068,9 @@
   .blad-greep{position:absolute;left:50%;top:10px;transform:translateX(-50%);width:44px;height:5px;border-radius:3px;background:var(--line-hard,#c7c7c7)}
   /* De X: een gewone X zonder bol, op dezelfde hoogte als de titel, uiterst rechts in de kop. (de opdrachtgever, 13/10/2026: de hap en de bol mogen weg.) */
   /* Paginagroot (de opdrachtgever, 13/10/2026: "maak nu de schuifkaarten paginagroot. Locatie en X mogen groter"): het blad opent altijd op volle hoogte; de titel en de X zijn groter. */
-  #dlg .dlg-kop h2,#beheerdlg .dlg-kop h2{font-size:calc(var(--tg) * 1.35)}
-  .blad-x svg{width:34px;height:34px}
-  .blad-x{margin:-10px -12px -10px auto;flex:none;width:56px;height:56px;border:none;background:none;padding:0;color:var(--ink);
+  #dlg .dlg-kop h2,#beheerdlg .dlg-kop h2{font-size:calc(var(--tg) * 2.7)}      /* de titel (Locatie, Dossier, ...) dubbel zo groot: 1,35 x 2 (de opdrachtgever, 13/10/2026) */
+  .blad-x svg{width:68px;height:68px}      /* de X dubbel zo groot: 34 x 2 (de opdrachtgever, 13/10/2026) */
+  .blad-x{margin:-14px -14px -14px auto;flex:none;width:80px;height:80px;border:none;background:none;padding:0;color:var(--ink);
     display:flex;align-items:center;justify-content:center}
   /* showModal zet de focus op de eerste knop, de X: de focusrand stond als kader om de X (de opdrachtgever, 13/10/2026: "de x geen omkadering geven"). */
   .blad-x:focus,.blad-x:focus-visible{outline:none}
@@ -2188,9 +2188,9 @@
   .loc-samenrij{display:flex;gap:10px;padding:5px 0;font-size:var(--tk)}
   .loc-wat{flex:0 0 38%;color:var(--ink-soft)}
   .loc-waarde{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
-  .loc-kast{margin-top:26px;border-top:var(--haar) solid var(--line-soft)}      /* meer lucht onder de titel, en een dun lijntje boven 0 Kaart (de opdrachtgever, 13/10/2026) */
+  .loc-kast{margin-top:52px;border-top:var(--haar) solid var(--line-soft)}      /* meer lucht onder de titel, en een dun lijntje boven 0 Kaart (de opdrachtgever, 13/10/2026) */
   /* De tekst van de hoofdstukken in Locatie: eerst 20% groter, daarna nog eens 30% (de opdrachtgever, 13/10/2026): 1,2 x 1,3 = 1,56 keer de gewone maat. */
-  .loc-kast .fiche-hoofdstuk{font-size:calc(var(--tm) * 2.34);padding-top:17px;padding-bottom:17px}   /* nog eens 50%: 1,56 x 1,5 = 2,34; en meer lucht tussen de lijnen en de tekst */
+  .loc-kast .fiche-hoofdstuk{font-size:calc(var(--tm) * 1.64);padding-top:17px;padding-bottom:17px}   /* 2,34 x 0,7 = 1,64: 30% kleiner (de opdrachtgever, 13/10/2026); en meer lucht tussen de lijnen en de tekst */
   .door-wat{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
   .door-wat b{font-size:var(--tm);font-weight:600}
   .door-wat span{font-size:var(--tk);color:var(--ink-soft)}
@@ -3503,7 +3503,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v287";
+const VERSIE="v290";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
