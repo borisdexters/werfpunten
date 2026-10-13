@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-L+AnUwr+3xAJDBLuuuc+Jy6GEm3ixz+qYXdfpDVS504=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-X0dTZcIwH6R921tcrTMLvrqUlYQQjmF02jUsn7P9/VQ='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-gb/u7uSqqeVJ7VWvpCa3Rsqp2pMW+QATjmmMzN40lW0=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-MN+RT1z12f+4iSzhCfjq9k3nxiMGSoFlOWIV7zR58Oo='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2202,9 +2202,11 @@
   /* De opdrachtgever, 13/10/2026: "de andere schermen dezelfde layout, lettertype en grootte": Dossier, Verslagen en het Menu-blad zijn rijen tussen dunne lijnen,
      met dezelfde tekstmaat en lucht als het menu van Locatie (2,19 x de gewone maat, 20 px boven en onder). */
   #dlg[data-pagina="dossier"] #dlg-body > .inv-uitleg{display:none}
+  :root{--pg-ruimte:233px}
+  #dlg[data-pagina="dossier"] #dlg-body > .door-rij:first-of-type,#dlg[data-pagina="verslagen"] #dlg-body .door-rij:first-of-type{border-top:var(--haar) solid var(--line-soft)}
   #dlg[data-pagina="dossier"] .door-rij,#dlg[data-pagina="verslagen"] .door-rij{padding:20px 4px;border-bottom:var(--haar) solid var(--line-soft)}
   #dlg[data-pagina="dossier"] .door-rij:last-child,#dlg[data-pagina="verslagen"] .door-rij:last-child{border-bottom:var(--haar) solid var(--line-soft)}
-  #dlg[data-pagina="dossier"] #dlg-body,#dlg[data-pagina="eind"] #dlg-body{padding-top:48px}
+  #dlg[data-pagina="dossier"] #dlg-body,#dlg[data-pagina="eind"] #dlg-body{padding-top:calc(var(--pg-ruimte) - 14px)}   /* dezelfde ruimte tussen titel en eerste lijn als bij Locatie (de opdrachtgever, 13/10/2026) */
   #dlg[data-pagina] .door-wat b{font-size:calc(var(--tm) * 2.19);font-weight:400}
   #dlg[data-pagina] .door-rij button{border:0;background:none;color:var(--ink-soft);text-decoration:underline;font-size:var(--tk)}
   #dlg[data-pagina="eind"] .tegels{display:block;padding:0;border-top:var(--haar) solid var(--line-soft)}
@@ -2592,6 +2594,15 @@
   #vulling.verzet #kaartdichtbij{display:none}
   .lijstkop{min-height:44px}
   .punt .puntverzet{min-height:44px}
+  /* De opdrachtgever, 13/10/2026: "het uittrekscherm van punten bij het plan krijgt ook dezelfde layout en lettertype": het paneel met de punten krijgt het
+     lettertype van het menu van Locatie (geen cijferletter, geen hoofdletters met spatiëring), grotere tekst en de lucht en lijn van die rijen. */
+  .lijstkop .vandaag,.lijstkop .meta{font-family:inherit;text-transform:none;letter-spacing:0;font-weight:400;font-size:calc(var(--tm) * 1.3);color:var(--ink)}
+  .lijstkop .meta{color:var(--ink-soft);font-size:var(--tm)}
+  .lijstkop .greepwoord{display:none}      /* past niet naast de grotere tekst; de pijl blijft */
+  .punt{padding-top:20px;padding-bottom:20px}
+  .punt p{font-size:calc(var(--tm) * 1.5)}
+  .punt .chip,.punt .tijd,.punt .spreker{font-family:inherit;font-size:var(--tm);letter-spacing:0}
+  .punt-wrap{border-bottom:var(--haar) solid var(--line-soft)}
   .puntpijl::before{content:"";position:absolute;inset:-9px}
   .keet-vouw{min-height:40px;padding:8px 0}
 </style>
@@ -3519,7 +3530,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v295";
+const VERSIE="v297";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -23670,7 +23681,20 @@ function paginaMenu(naam){
 })();
 const _toonLocatie=toonLocatie; toonLocatie=function(){ const r=_toonLocatie(); paginaMenu("locatie"); return r; };
 const _toonDossier=toonDossier; toonDossier=function(){ const r=_toonDossier(); paginaMenu("dossier"); return r; };
-const _toonVergaderingen=toonVergaderingen; toonVergaderingen=async function(f){ const r=await _toonVergaderingen(f); if(document.getElementById("dlg").open)paginaMenu("verslagen"); return r; };
+const _toonVergaderingen=toonVergaderingen; toonVergaderingen=async function(f){ const r=await _toonVergaderingen(f); if(document.getElementById("dlg").open){ paginaMenu("verslagen"); pgRuimte(); setTimeout(pgRuimte,450); } return r; };
+/* De opdrachtgever, 13/10/2026: "dezelfde whitespace tussen titels en hoofdstukken in alle bladzijden": de eerste rij van Verslagen (onder de fasebalk)
+   staat even ver onder de titel als de eerste lijn van Locatie (--pg-ruimte). */
+function pgRuimte(){
+  const rij=document.querySelector("#dlg-body .door-rij"), t=document.getElementById("dlg-titel");
+  if(!rij||!t)return;
+  rij.style.marginTop="0px";
+  const doel=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--pg-ruimte"))||0;
+  const nu=rij.getBoundingClientRect().top-t.getBoundingClientRect().bottom;
+  if(nu>=doel)return;
+  rij.style.marginTop=Math.round(doel-nu)+"px";
+  const rest=doel-(rij.getBoundingClientRect().top-t.getBoundingClientRect().bottom);      // marges van buren vallen samen met de onze: het verschil bijtellen
+  if(Math.abs(rest)>0.5)rij.style.marginTop=Math.round(doel-nu+rest)+"px";
+}
 function toonEindblad(){
   const d=document.getElementById("dlg");
   document.getElementById("dlg-titel").textContent="Menu";
