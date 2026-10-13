@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-fllNc2DM9cD7m9y43QFaTqXrk79I7SxfsgQ3BrBxZ+c=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-DzarviJBTwFT59A1Td7j3JTzOIw8mkeEMl6r7bBEDxQ='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-O8Zd5sOgO09d5wPpejW/dZ5ohYh4te7/0aCZNchP8qM=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-nAb8mNadUj1PsKOj8aUTPix+hjHg8rgcW0BEGWCr1VI='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1081,13 +1081,16 @@
   .pagina-stippen{display:flex;justify-content:center;gap:8px;padding:8px 0 4px;flex:none}
   .pagina-stippen span{width:7px;height:7px;border-radius:50%;background:var(--line-hard,#c7c7c7)}
   .pagina-stippen span.aan{background:var(--ink)}
-  @keyframes schuif-van-rechts{from{transform:translateX(100%);opacity:.35}to{transform:none;opacity:1}}
-  @keyframes schuif-van-links{from{transform:translateX(-100%);opacity:.35}to{transform:none;opacity:1}}
+  @keyframes schuif-van-rechts{from{transform:translateX(100%)}to{transform:none}}
+  @keyframes schuif-van-links{from{transform:translateX(-100%)}to{transform:none}}
   @keyframes schuif-rij{from{transform:translateX(60%);opacity:0}to{transform:none;opacity:1}}
-  .dlg-body.schuif-van-rechts{animation:schuif-van-rechts .32s ease-out}
-  .dlg-body.schuif-van-links{animation:schuif-van-links .32s ease-out}
+  #dlg .blad-pagina{flex:1;min-height:0;display:flex;flex-direction:column;will-change:transform}
+  .blad-pagina.schuif-van-rechts{animation:schuif-van-rechts .34s cubic-bezier(.22,.8,.3,1)}
+  .blad-pagina.schuif-van-links{animation:schuif-van-links .34s cubic-bezier(.22,.8,.3,1)}
+  .blad-pagina.volgt{transition:none}
+  .blad-pagina.veert{transition:transform .22s cubic-bezier(.22,.8,.3,1)}
   .schuif-rij{animation:schuif-rij .32s ease-out both}
-  @media (prefers-reduced-motion:reduce){.dlg-body.schuif-van-rechts,.dlg-body.schuif-van-links,.schuif-rij{animation:none}}
+  @media (prefers-reduced-motion:reduce){.blad-pagina.schuif-van-rechts,.blad-pagina.schuif-van-links,.schuif-rij{animation:none}.blad-pagina.veert{transition:none}}
   .tegels{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px 0}
   .tegel{min-height:128px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;font-size:var(--tm)}
   .tegel .mteken{font-size:36px}
@@ -3354,10 +3357,12 @@
 
 <dialog id="dlg">
   <div class="blad">
+    <div class="blad-pagina" id="dlg-pagina">
     <div class="dlg-kop"><span class="blad-greep" aria-hidden="true"></span><h2 id="dlg-titel">Verslagtekst</h2><button type="button" class="blad-x" id="dlg-sluit" aria-label="Sluiten"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button></div>
     <div class="dlg-body" id="dlg-body"></div>
     <div class="dlg-voet">
       <button id="dlg-kopieer">Kopieer</button>
+    </div>
     </div>
     <!-- De rij pagina's: begin, Locatie, Dossier, Verslagen, eindblad. De stippen tonen waar je bent, het menu blijft onderaan staan. -->
     <div class="pagina-stippen" id="paginastippen" hidden aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
@@ -3496,7 +3501,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v276";
+const VERSIE="v277";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -23574,9 +23579,9 @@ function toonEindblad(){
   d.showModal(); paginaMenu("eind");
 }
 function schuifIn(kant){
-  const body=document.getElementById("dlg-body");
-  body.classList.remove("schuif-van-rechts","schuif-van-links"); void body.offsetWidth; body.classList.add("schuif-"+kant);
-  setTimeout(()=>body.classList.remove("schuif-van-rechts","schuif-van-links"),360);
+  const pg=document.getElementById("dlg-pagina");
+  pg.classList.remove("schuif-van-rechts","schuif-van-links"); void pg.offsetWidth; pg.classList.add("schuif-"+kant);
+  setTimeout(()=>pg.classList.remove("schuif-van-rechts","schuif-van-links"),380);
 }
 function gaNaarPagina(naam){
   const d=document.getElementById("dlg");
@@ -23591,21 +23596,43 @@ document.getElementById("pm-plan").onclick=()=>gaNaarPagina("begin");
 ["locatie","dossier","verslagen"].forEach(n=>{ document.getElementById("pm-"+n).onclick=()=>gaNaarPagina(n); });
 document.getElementById("dlg").addEventListener("close",()=>{ if(!document.getElementById("dlg").open)paginaMenu(null); });
 (function(){
-  const d=document.getElementById("dlg"), body=document.getElementById("dlg-body");
+  const d=document.getElementById("dlg"), pg=document.getElementById("dlg-pagina");
   let sw=null;
-  body.addEventListener("touchstart",e=>{ sw=d.dataset.pagina?{x:e.touches[0].clientX,y:e.touches[0].clientY,h:null,dx:0}:null; },{passive:true});
-  body.addEventListener("touchmove",e=>{
+  const buur=r=>PAGINAROIJ[PAGINAROIJ.indexOf(paginaNu())+r];            // de volgende (+1) of vorige (-1) pagina, of niets
+  pg.addEventListener("touchstart",e=>{
+    sw=d.dataset.pagina?{x:e.touches[0].clientX,y:e.touches[0].clientY,h:null,dx:0,t0:Date.now()}:null;
+    if(sw){ pg.classList.remove("veert"); pg.classList.add("volgt"); }
+  },{passive:true});
+  pg.addEventListener("touchmove",e=>{
     if(!sw)return;
     const dx=e.touches[0].clientX-sw.x, dy=e.touches[0].clientY-sw.y;
-    if(sw.h===null&&(Math.abs(dx)>12||Math.abs(dy)>12))sw.h=Math.abs(dx)>Math.abs(dy)*1.4;
+    if(sw.h===null&&(Math.abs(dx)>10||Math.abs(dy)>10))sw.h=Math.abs(dx)>Math.abs(dy)*1.2;
+    if(!sw.h)return;
     sw.dx=dx;
-    if(sw.h&&e.cancelable)e.preventDefault();
+    if(e.cancelable)e.preventDefault();
+    // de kaart volgt je vinger; waar geen pagina meer is, geeft hij maar een derde mee: een elastieken rand
+    const ruimte=buur(dx<0?1:-1)?1:0.3;
+    pg.style.transform="translateX("+Math.round(dx*ruimte)+"px)";
   },{passive:false});
-  body.addEventListener("touchend",()=>{
-    if(sw&&sw.h&&Math.abs(sw.dx)>60){ const i=PAGINAROIJ.indexOf(paginaNu()); gaNaarPagina(PAGINAROIJ[i+(sw.dx<0?1:-1)]); }
-    sw=null;
-  });
-  body.addEventListener("touchcancel",()=>{ sw=null; });
+  const los=()=>{
+    if(!sw)return;
+    const was=sw; sw=null;
+    pg.classList.remove("volgt");
+    if(!was.h){ pg.style.transform=""; return; }
+    const v=Math.abs(was.dx)/Math.max(1,Date.now()-was.t0);              // px per ms
+    const doel=buur(was.dx<0?1:-1);
+    const genoeg=Math.abs(was.dx)>window.innerWidth*0.3||(Math.abs(was.dx)>40&&v>0.5);
+    if(doel&&genoeg){
+      // de kaart schuift weg in de richting van je vinger, en de volgende komt erachteraan
+      pg.classList.add("veert"); pg.style.transform="translateX("+(was.dx<0?"-":"")+"100%)";
+      setTimeout(()=>{ pg.classList.remove("veert"); pg.style.transform=""; gaNaarPagina(doel); },200);
+    }else{
+      pg.classList.add("veert"); pg.style.transform="";                  // terug op zijn plek, met veerkracht
+      setTimeout(()=>pg.classList.remove("veert"),260);
+    }
+  };
+  pg.addEventListener("touchend",los);
+  pg.addEventListener("touchcancel",los);
 })();
 
 async function kopieerVerslagtekst(){
