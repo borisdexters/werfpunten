@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-gb/u7uSqqeVJ7VWvpCa3Rsqp2pMW+QATjmmMzN40lW0=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-MN+RT1z12f+4iSzhCfjq9k3nxiMGSoFlOWIV7zR58Oo='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-EmXRhHY45zFSC/h0h2fzMYZbapgeFWJqJtgahfj2RPs=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-cgJvo765N3C3UMBOFpmXlBYw/pjp25XBLlX3asK0qzI='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2598,7 +2598,10 @@
      lettertype van het menu van Locatie (geen cijferletter, geen hoofdletters met spatiëring), grotere tekst en de lucht en lijn van die rijen. */
   .lijstkop .vandaag,.lijstkop .meta{font-family:inherit;text-transform:none;letter-spacing:0;font-weight:400;font-size:calc(var(--tm) * 1.3);color:var(--ink)}
   .lijstkop .meta{color:var(--ink-soft);font-size:var(--tm)}
-  .lijstkop .greepwoord{display:none}      /* past niet naast de grotere tekst; de pijl blijft */
+  /* De opdrachtgever, 13/10/2026: het scherm van opmerkingen onder het plan is afgerond, uittrekbaar en heeft een horizontaal streepje (zoals de bladen); "terug naar kaart" en de pijl zijn weg. */
+  .lijstkop .greep{display:none}
+  .lijstkop{border-radius:28px 28px 0 0;padding-top:24px;padding-bottom:12px;min-height:64px}
+  .lijstkop::before{content:"";position:absolute;left:50%;top:9px;transform:translateX(-50%);width:44px;height:5px;border-radius:3px;background:var(--line-hard,#c7c7c7)}
   .punt{padding-top:20px;padding-bottom:20px}
   .punt p{font-size:calc(var(--tm) * 1.5)}
   .punt .chip,.punt .tijd,.punt .spreker{font-family:inherit;font-size:var(--tm);letter-spacing:0}
@@ -3530,7 +3533,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v297";
+const VERSIE="v298";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
