@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-ds83SQE3+fGqZOhTiY9bwxL2FNeeRlPO31IwYmXzEt8=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-9fXZm1EVbgabECTYJHO3BAWWoYG3lP4R35C3bYgGT1o='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-j/xtEBeR2mnkqgBs7rw5fpOHhQMYfqntiuq9tHDkY7M=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-9fXZm1EVbgabECTYJHO3BAWWoYG3lP4R35C3bYgGT1o='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3501,7 +3501,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v280";
+const VERSIE="v281";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -22866,7 +22866,7 @@ async function haalLocatie(lat,lon,hulp){
     const gir=((w(1)||{}).features||[]);
     const fiche=(((w(2)||{}).features||[])[0]||{}).properties;
     if(gir.length)regels.push({titel:stuks(gir.length,"OVAM-bodemonderzoek","OVAM-bodemonderzoeken")+" binnen 50 m",
-                               sub:gir.map(f=>(f.properties||{}).uitspraak).filter(Boolean).slice(0,3).join(" · "),
+                               sub:[...new Set(gir.map(f=>(f.properties||{}).uitspraak).filter(Boolean))].slice(0,3).join(" · "),
                                link:(fiche&&fiche.bodemfiche)||null, eig:locEig(fiche)});
     else if(a[1].status==="fulfilled")regels.push({titel:"Geen OVAM-bodemonderzoeken binnen 50 m", sub:"", link:null});
     const pf=((w(3)||{}).features||[])[0];
@@ -23003,7 +23003,7 @@ function locEig(p){
   const uit=[];
   Object.keys(p||{}).forEach(k=>{
     if(uit.length>=14)return;
-    if(/geom|shape|objectid|^fid$|^id$|gml|bbox|link|url|uri|fiche|rapport|publicatie|kaart$/i.test(k))return;
+    if(/geom|shape|object_?id|^fid$|^id$|_id$|^uidn$|^oidn$|gml|bbox|link|url|uri|fiche|rapport|publicatie|kaart$/i.test(k))return;
     let v=p[k]; if(v===null||v===undefined||typeof v==="object"||typeof v==="boolean")return;
     v=String(v).trim(); if(!v||/^https?:/i.test(v)||v.length>240)return;
     if(/^\d{4}-\d\d-\d\dT/.test(v))v=v.slice(0,10);
@@ -23014,7 +23014,6 @@ function locEig(p){
 /* Het infoblok onder een regel met een bron: wat de app al weet, en een knop om de bron zelf te onderzoeken (die opent via het tussenscherm). */
 function locInfoBlok(g){
   const blok=maakEl("div","loc-info");
-  blok.appendChild(maakEl("p","loc-kaartuitleg",g.titel+(g.sub?" · "+g.sub:"")));
   (g.eig||[]).forEach(e=>{
     const rij=maakEl("div","loc-samenrij");
     rij.appendChild(maakEl("span","loc-wat",e[0]));
@@ -23295,6 +23294,11 @@ function locSneeBlok(g){
     sn.innerHTML=wachtHtml();
   }else if(st.fout){
     sn.appendChild(maakEl("p","loc-kaartuitleg",st.fout));
+    if(/aan/.test(st.fout)&&/Meld je aan|aanmelding/.test(st.fout)){        // de snede komt via je online bron: de knop opent het aanmeldvenster, het wachtwoord typ je zelf
+      const b=maakEl("button","loc-bronknop","Aanmelden"); b.type="button";
+      b.onclick=()=>{ if(typeof aanmeldToon==="function")aanmeldToon(); };
+      sn.appendChild(b);
+    }
     delete locUI.sneden[g.lithoId];                  // een volgende tik probeert opnieuw
   }else{
     sn.innerHTML=locSneeSvg(st,typeof g.z==="number"?g.z:null);
