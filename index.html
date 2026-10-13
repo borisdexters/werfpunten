@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-hwXsbtvLtqQ25PhAl89cbu5iJkwZgNBNThFIhdQyqdU=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-8Q254pzGjEAiQFR+ydg4nShcEfwsohDqi0+EjyhyWRw='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-fllNc2DM9cD7m9y43QFaTqXrk79I7SxfsgQ3BrBxZ+c=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-DzarviJBTwFT59A1Td7j3JTzOIw8mkeEMl6r7bBEDxQ='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1057,7 +1057,7 @@
      horizontale streep die aangeeft dat je kunt trekken". Er is dus geen sluitknop: wegduwen of op de donkere rand boven het blad tikken sluit het.
      De voet van het algemene venster blijft er enkel als er iets in staat (Kopieer, of de ja-knop van een vraag). */
   #dlg,#beheerdlg{width:100%;max-width:100%;max-height:none;margin:auto 0 0 0;padding:0;border:none;background:transparent;overflow:visible}
-  #dlg .blad,#beheerdlg .blad{position:relative;display:flex;flex-direction:column;max-height:min(62dvh,calc(100dvh - 64px));overflow:hidden;
+  #dlg .blad,#beheerdlg .blad{position:relative;display:flex;flex-direction:column;height:calc(100dvh - 64px);max-height:calc(100dvh - 64px);overflow:hidden;
     transition:max-height .25s ease,height .25s ease;background:var(--surface);border-radius:44px 44px 0 0;padding-bottom:env(safe-area-inset-bottom,0px)}
   /* Twee standen: kleiner (hoogstens 62% van het scherm) en volledig. Volledig is een vaste hoogte, geen maximum: bij korte inhoud verandert een
      maximum niets, en dan lijkt het alsof het blad terugvalt. (Deze regel is van v267 tot v269 per ongeluk weggevallen: de opdrachtgever, 13/10/2026,
@@ -1067,10 +1067,30 @@
   /* De streep bovenaan: zo zie je dat het blad te trekken is. */
   .blad-greep{position:absolute;left:50%;top:10px;transform:translateX(-50%);width:44px;height:5px;border-radius:3px;background:var(--line-hard,#c7c7c7)}
   /* De X: een gewone X zonder bol, op dezelfde hoogte als de titel, uiterst rechts in de kop. (de opdrachtgever, 13/10/2026: de hap en de bol mogen weg.) */
-  .blad-x{margin:-8px -10px -8px auto;flex:none;width:48px;height:48px;border:none;background:none;padding:0;color:var(--ink);
+  /* Paginagroot (de opdrachtgever, 13/10/2026: "maak nu de schuifkaarten paginagroot. Locatie en X mogen groter"): het blad opent altijd op volle hoogte; de titel en de X zijn groter. */
+  #dlg .dlg-kop h2,#beheerdlg .dlg-kop h2{font-size:calc(var(--tg) * 1.35)}
+  .blad-x svg{width:34px;height:34px}
+  .blad-x{margin:-10px -12px -10px auto;flex:none;width:56px;height:56px;border:none;background:none;padding:0;color:var(--ink);
     display:flex;align-items:center;justify-content:center}
   /* showModal zet de focus op de eerste knop, de X: de focusrand stond als kader om de X (de opdrachtgever, 13/10/2026: "de x geen omkadering geven"). */
   .blad-x:focus,.blad-x:focus-visible{outline:none}
+  /* De rij pagina's (de opdrachtgever, 13/10/2026): links het beginscherm, dan Locatie, Dossier, Verslagen, rechts een eindblad met tegels; het menu blijft onderaan. */
+
+  .pagina-menu{display:flex;flex:none;background:var(--t1);border-top:var(--haar) solid var(--line-soft);padding-bottom:var(--safe-b)}
+  .pagina-menu[hidden],.pagina-stippen[hidden]{display:none}
+  .pagina-stippen{display:flex;justify-content:center;gap:8px;padding:8px 0 4px;flex:none}
+  .pagina-stippen span{width:7px;height:7px;border-radius:50%;background:var(--line-hard,#c7c7c7)}
+  .pagina-stippen span.aan{background:var(--ink)}
+  @keyframes schuif-van-rechts{from{transform:translateX(100%);opacity:.35}to{transform:none;opacity:1}}
+  @keyframes schuif-van-links{from{transform:translateX(-100%);opacity:.35}to{transform:none;opacity:1}}
+  @keyframes schuif-rij{from{transform:translateX(60%);opacity:0}to{transform:none;opacity:1}}
+  .dlg-body.schuif-van-rechts{animation:schuif-van-rechts .32s ease-out}
+  .dlg-body.schuif-van-links{animation:schuif-van-links .32s ease-out}
+  .schuif-rij{animation:schuif-rij .32s ease-out both}
+  @media (prefers-reduced-motion:reduce){.dlg-body.schuif-van-rechts,.dlg-body.schuif-van-links,.schuif-rij{animation:none}}
+  .tegels{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px 0}
+  .tegel{min-height:128px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;font-size:var(--tm)}
+  .tegel .mteken{font-size:36px}
   #dlg,#beheerdlg{transition:transform .22s ease}
   @media (prefers-reduced-motion:reduce){#dlg,#beheerdlg,#dlg .blad,#beheerdlg .blad{transition:none}}
   #dlg .dlg-body,#beheerdlg .dlg-body{flex:1;min-height:0;max-height:none;overflow:auto}
@@ -2159,7 +2179,9 @@
   .loc-bronknop{margin-top:8px;min-height:44px;padding:0 16px}
   .loc-sneesvg{display:block;width:100%;height:auto;border:1px solid var(--lijn)}
   .loc-kaartuitleg{margin:6px 0 0;font-size:var(--tk);color:var(--ink-soft)}
-  .loc-samen{padding:8px 0 6px;border-bottom:1px solid var(--lijn)}
+  .loc-samen{padding:8px 0 10px;border-bottom:1px solid var(--lijn-hard,var(--lijn));margin-bottom:6px}
+  .loc-opnieuw{margin-top:8px;min-height:40px;padding:0 14px;font-size:var(--tk)}
+  .loc-hoofdkaart{padding:0 0 10px}
   .loc-samenrij{display:flex;gap:10px;padding:3px 0;font-size:var(--tk)}
   .loc-wat{flex:0 0 38%;color:var(--ink-soft)}
   .loc-waarde{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
@@ -3337,6 +3359,14 @@
     <div class="dlg-voet">
       <button id="dlg-kopieer">Kopieer</button>
     </div>
+    <!-- De rij pagina's: begin, Locatie, Dossier, Verslagen, eindblad. De stippen tonen waar je bent, het menu blijft onderaan staan. -->
+    <div class="pagina-stippen" id="paginastippen" hidden aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="pagina-menu" id="paginamenu" role="navigation" aria-label="Ingangen" hidden>
+      <button type="button" class="mkn" id="pm-plan"><span class="mteken">◎</span>Plan</button>
+      <button type="button" class="mkn" id="pm-locatie"><span class="mteken">⌖</span>Locatie</button>
+      <button type="button" class="mkn" id="pm-dossier"><span class="mteken">⌕</span>Dossier</button>
+      <button type="button" class="mkn" id="pm-verslagen"><span class="mteken">▤</span>Verslagen</button>
+    </div>
   </div>
 </dialog>
 
@@ -3466,7 +3496,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v274";
+const VERSIE="v276";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -13256,8 +13286,9 @@ function bouwBestekkast(bak,koppen,opties){
     if(!k.open)return;
     const art=(typeof k.artikels==="function")?k.artikels():(k.artikels||[]);
     art.forEach(a=>{
-      if(a.blok){ bak.appendChild(a.blok); n++; return; }   // een eigen blok (de kaart van de Locatie), geen keuze
+      if(a.blok){ if(k.schuif)a.blok.classList.add("schuif-rij"); bak.appendChild(a.blok); n++; return; }   // een eigen blok (de kaart van de Locatie), geen keuze
       const r=maakEl("button","fiche-artikel"); r.type="button";
+      if(k.schuif)r.classList.add("schuif-rij");           // een net geopende rubriek schuift van rechts in
       r.classList.add("onder");
       if(a.gekozen)r.classList.add("gekozen");
       if(a.voorgesteld&&!a.gekozen)r.classList.add("voorgesteld");
@@ -22351,6 +22382,22 @@ async function locRubriek(doe){
    perceel, en de terreinhoogte in m TAW op de hoeken (lidar, DHM Vlaanderen II). Het zijn de maten van het GRB-vlak, geen
    opmeting: dat staat onder het kaartje. Noord is boven (Lambert). Alleen presentatie-attributen, geen style=: de CSP staat dat
    niet toe. */
+/* De straatnamen uit het GRB (wegsegmenten): per naam het stuk lijn dat het dichtst bij je plek ligt, licht vereenvoudigd en kort gehouden. */
+function locStraten(features,x,y){
+  const per={};
+  (features||[]).forEach(f=>{
+    const p=f.properties||{};
+    const naam=[p.LSTRNM,p.RSTRNM].find(n=>n&&String(n).toLowerCase()!=="nvt"&&String(n).toLowerCase()!=="niet van toepassing");
+    const lijnen=f.geometry&&f.geometry.type==="LineString"?[f.geometry.coordinates]:(f.geometry&&f.geometry.type==="MultiLineString"?f.geometry.coordinates:[]);
+    lijnen.forEach(l=>{
+      if(!naam||!l||l.length<2)return;
+      const d=locAfstandPaden([l],x,y);
+      if(!per[naam]||d<per[naam].d)per[naam]={d,l};
+    });
+  });
+  return Object.keys(per).map(n=>({n,d:per[n].d,l:locVereenvoudig(per[n].l,1).slice(0,40).map(q=>[Math.round(q[0]*10)/10,Math.round(q[1]*10)/10])}))
+    .sort((a,b)=>a.d-b.d).slice(0,12).map(z=>({n:z.n,l:z.l}));
+}
 function locRingKlein(ring){
   const uit=[]; let l=null;
   (ring||[]).forEach(p=>{
@@ -22581,7 +22628,7 @@ function locKaartSvg(k,opties){
   (opt.labels||[]).forEach(lb=>{ o+='<text x="'+X(lb.x)+'" y="'+Y(lb.y)+'" font-size="'+Math.round(fs*0.75*100)/100+'" font-family="Helvetica,Arial,sans-serif" font-weight="700" fill="#7F0000" stroke="#fff" stroke-width="'+fs*0.22+'" paint-order="stroke" text-anchor="middle" dominant-baseline="middle">'+veilig(lb.t)+'</text>'; });
   if(punt&&(geo||cellen||opt.punten||opt.zones||opt.erfgoedWijd))o+='<circle cx="'+X(punt.x)+'" cy="'+Y(punt.y)+'" r="'+fs*0.45+'" fill="#B3261E" stroke="#fff" stroke-width="'+fs*0.15+'"/>';
   // de maten van elke zijde, evenwijdig aan de zijde, naast het perceel (alleen op het kaartje van het perceel zelf, en niet bij een kleine schaal)
-  if(doel&&!(geo||cellen||opt.punten||opt.zones)&&(!opt.schaal||opt.schaal<=1000)){
+  if(doel&&!opt.geenMaten&&!(geo||cellen||opt.punten||opt.zones)&&(!opt.schaal||opt.schaal<=1000)){
     const orient=(function(){ let a=0; for(let i=0,j=doel.length-1;i<doel.length;j=i++)a+=(doel[j][0]*doel[i][1]-doel[i][0]*doel[j][1]); return a>0?1:-1; })();
     for(let i=0;i<doel.length-1;i++){
       const A=doel[i], B=doel[i+1], dx=B[0]-A[0], dy=B[1]-A[1], l=Math.hypot(dx,dy);
@@ -22594,6 +22641,22 @@ function locKaartSvg(k,opties){
     (k.hoeken||[]).forEach(c=>{
       o+='<circle cx="'+X(c.x)+'" cy="'+Y(c.y)+'" r="'+fs*0.22+'" fill="#B3261E"/>';
       if(c.taw!=null)o+='<text x="'+X(c.x)+'" y="'+Y(c.y)+'" dx="'+fs*0.45+'" dy="'+(-fs*0.45)+'" font-size="'+Math.round(fs*0.9*100)/100+'" font-family="Helvetica,Arial,sans-serif" fill="#B3261E" font-weight="600">'+String(c.taw.toFixed(2)).replace(".",",")+'</text>';
+    });
+  }
+  /* De kadastrale nummers van het perceel en de aangrenzende percelen (alleen op de hoofdkaart bovenaan) en de straatnamen langs de weg. */
+  if(opt.nummers&&k){
+    const halo='font-family="Helvetica,Arial,sans-serif" stroke="#fff" stroke-width="'+fs*0.22+'" paint-order="stroke" text-anchor="middle" dominant-baseline="middle"';
+    const midden=rg=>{ let sx=0,sy=0; const n=rg.length>1?rg.length-1:1; for(let i=0;i<n;i++){ sx+=rg[i][0]; sy+=rg[i][1]; } return [sx/n,sy/n]; };
+    const binnen=(c,m)=>c[0]>x0+m&&c[0]<V.x1-m&&c[1]>V.y0+m&&c[1]<y1-m;
+    (k.buren||[]).forEach((rg,i)=>{ const nr=(k.burenNr||[])[i]; if(!nr||locRingOpp(rg)<25)return; const c=midden(rg); if(binnen(c,fs*0.8))
+      o+='<text x="'+X(c[0])+'" y="'+Y(c[1])+'" font-size="'+Math.round(fs*0.8*100)/100+'" '+halo+' fill="#5A5648">'+veilig(nr)+'</text>'; });
+    if(k.nr&&doel){ const c=midden(doel); o+='<text x="'+X(c[0])+'" y="'+Y(c[1])+'" font-size="'+Math.round(fs*1.1*100)/100+'" font-weight="700" '+halo+' fill="#0A0A0A">'+veilig(k.nr)+'</text>'; }
+    (k.straten||[]).forEach(st=>{
+      const pts=(st.l||[]).filter(q=>q[0]>=x0&&q[0]<=V.x1&&q[1]>=V.y0&&q[1]<=y1);
+      if(pts.length<2)return;
+      const a=pts[0], z=pts[pts.length-1], mx=(a[0]+z[0])/2, my=(a[1]+z[1])/2;
+      let ang=Math.atan2(-(z[1]-a[1]),z[0]-a[0])*180/Math.PI; if(ang>90)ang-=180; if(ang<-90)ang+=180;
+      o+='<text x="'+X(mx)+'" y="'+Y(my)+'" font-size="'+Math.round(fs*0.95*100)/100+'" font-style="italic" '+halo+' fill="#1F5FAE" transform="rotate('+Math.round(ang*10)/10+' '+X(mx)+' '+Y(my)+')">'+veilig(st.n)+'</text>';
     });
   }
   // de noordpijl, de schaal en de schaalbalk
@@ -22809,14 +22872,15 @@ async function haalLocatie(lat,lon,hulp){
     const kader=[x-150,y-150,x+150,y+150];       // 150 m: het erfgoed in de straat ligt tot daar, en het GRB eronder wordt rood
     /* Het eigen perceel apart en klein: een dienst geeft de eerste 200 percelen van het kader, niet de dichtste, en het perceel waar je staat
        mag niet wegvallen omdat de buurt groter is geworden. */
-    const [eigen,fs,gb]=await Promise.all([grb("GRB:ADP",[x-30,y-30,x+30,y+30],30), grb("GRB:ADP",kader,200).catch(()=>[]), grb("GRB:GBG",kader,500).catch(()=>[])]);
+    const [eigen,fs,gb,wg]=await Promise.all([grb("GRB:ADP",[x-30,y-30,x+30,y+30],30), grb("GRB:ADP",kader,200).catch(()=>[]), grb("GRB:GBG",kader,500).catch(()=>[]), grb("GRB:Wegsegment",kader,300).catch(()=>[])]);
     const f=eigen.find(g=>raaktVlak(g,x,y))||fs.find(g=>raaktVlak(g,x,y))||null;
     if(!f)return [];
     const p=f.properties||{};
     const ring=grbRingen(f)[0];
     perceelMaten=locPerceelMaten(ring);
     const doel=locRingKlein(ring);
-    kaart={doel, buren:fs.filter(g=>g!==f&&!(f.id&&g.id===f.id)).map(g=>locRingKlein(grbRingen(g)[0])).filter(r=>r.length>=4).slice(0,150),
+    const burenLijst=fs.filter(g=>g!==f&&!(f.id&&g.id===f.id)).map(g=>({r:locRingKlein(grbRingen(g)[0]),nr:(g.properties||{}).CANU||""})).filter(z=>z.r.length>=4).slice(0,150);
+    kaart={doel, nr:p.CANU||"", buren:burenLijst.map(z=>z.r), burenNr:burenLijst.map(z=>z.nr), straten:locStraten(wg,x,y),
            gebouwen:gb.map(g=>locRingKlein(grbRingen(g)[0])).filter(r=>r.length>=4).slice(0,350), hoeken:[]};
     /* De hoogte op de hoeken: één meting per hoek, elk apart; een hoek zonder antwoord blijft zonder getal. */
     const dtm=(px,py)=>(h.dhm||(u=>tekst(u)))(DHMWMS+"?service=WMS&version=1.3.0&request=GetFeatureInfo&layers=DHMVII_DTM_1m&query_layers=DHMVII_DTM_1m"+
@@ -23111,7 +23175,7 @@ function locMoetOpnieuw(oud,hier,nu){
   return Math.hypot(L.x-oud.x,L.y-oud.y)>LOCVERSAFSTAND;
 }
 
-const locUI={open:null,data:null,bezig:false,melding:"",kaarten:new Set(),info:new Set(),sneden:{},schaal:{},wijd:{}};
+const locUI={open:null,schuif:null,data:null,bezig:false,melding:"",kaarten:new Set(),info:new Set(),sneden:{},schaal:{},wijd:{}};
 /* Een verwijzing naar buiten: de pagina opent in een nieuw tabblad en de app blijft staan waar ze was (de opdrachtgever, 13/10/2026: eerst "A in dezelfde
    tab", daarna na de toesteltest "we verlaten nog steeds de app en dan weet ik niet hoe terug te gaan"; gekozen: nieuw tabblad). Eerst een
    tussenscherm met een X om te blijven, dat ook zegt hoe je terugkomt. Het openen gebeurt in de tik op "Openen" zelf (`opJa`). */
@@ -23213,25 +23277,33 @@ function locTeken(){
     body.appendChild(w);
     return;
   }
-  const kop=maakEl("div","door-rij");
-  const l=maakEl("div","door-wat");
-  l.appendChild(maakEl("b",null,locUI.bezig?"Ik haal de gegevens op…":(d?"Opgehaald "+new Date(d.tijd).toLocaleString("nl-BE",{day:"numeric",month:"numeric",hour:"2-digit",minute:"2-digit"}):"Nog niets opgehaald")));
-  l.appendChild(maakEl("span",null,locUI.melding||(locUI.bezig?"De openbare bronnen worden bevraagd; dat kan een halve minuut duren.":d?"Voor het punt waar je stond: de bronnen zijn openbaar; wat je hier ziet blijft op dit toestel.":"Zet je locatie aan en tik Ophalen.")));
-  kop.appendChild(l);
-  const b=maakEl("button",null,locUI.bezig?"Even…":"Opnieuw ophalen"); b.type="button"; b.disabled=locUI.bezig;
-  b.onclick=()=>locHaal(true);
-  kop.appendChild(b);
-  if(!locUI.bezig)body.appendChild(kop);       // tijdens het wachten staat het merk er in het midden, niet de knop
-  if(d){
-    const s=maakEl("div","loc-samen");
-    d.samen.forEach(r=>{
-      const rij=maakEl("div","loc-samenrij");
-      rij.appendChild(maakEl("span","loc-wat",r.wat));
-      rij.appendChild(maakEl("span","loc-waarde",r.waarde));
-      s.appendChild(rij);
-    });
-    body.appendChild(s);
+  /* De opdrachtgever, 13/10/2026: bovenaan een kaartje met het GRB, de kadastrale nummers van het perceel en de buren en de straatnamen; daaronder de samenvatting
+     in hetzelfde lettertype, met "Opgehaald" als eerste regel; dan een lijn, en dan het menu (1 voorschriften, ...). */
+  if(d&&d.kaart&&d.kaart.doel){
+    const blok=maakEl("div","loc-kaart loc-hoofdkaart");
+    const basis={nummers:true,venster:55,geenMaten:true};
+    const v0=locKaartVenster(d.kaart,basis);
+    blok.appendChild(locKaartDoos((S)=>locKaartSvg(d.kaart,Object.assign({},basis,{schaal:S||undefined,punt:{x:d.x,y:d.y}})),"hoofdkaart","perceel",d,5000,v0?v0.x1-v0.x0:100));
+    blok.appendChild(maakEl("p","loc-kaartuitleg","GRB: het perceel (zwart) met zijn kadastraal nummer en dat van de aangrenzende percelen, de gebouwen en de straatnamen (blauw). Noord is boven."+LOCSCHAALHINT));
+    body.appendChild(blok);
   }
+  const s=maakEl("div","loc-samen");
+  const rij0=maakEl("div","loc-samenrij");
+  rij0.appendChild(maakEl("span","loc-wat","Opgehaald"));
+  rij0.appendChild(maakEl("span","loc-waarde",d?new Date(d.tijd).toLocaleString("nl-BE",{day:"numeric",month:"numeric",year:"numeric",hour:"2-digit",minute:"2-digit"}).replace(","," \u00B7"):"nog niets"));
+  s.appendChild(rij0);
+  if(d)d.samen.forEach(r=>{
+    const rij=maakEl("div","loc-samenrij");
+    rij.appendChild(maakEl("span","loc-wat",r.wat));
+    rij.appendChild(maakEl("span","loc-waarde",r.waarde));
+    s.appendChild(rij);
+  });
+  const mel=locUI.melding||(!d?"Zet je locatie aan en tik Ophalen.":"");
+  if(mel)s.appendChild(maakEl("p","loc-kaartuitleg",mel));
+  const b=maakEl("button","loc-opnieuw","Opnieuw ophalen"); b.type="button";
+  b.onclick=()=>locHaal(true);
+  s.appendChild(b);
+  body.appendChild(s);
   const bak=maakEl("div","loc-kast");
   body.appendChild(bak);
   const koppen=LOCRUBRIEKEN.map((rb,i)=>{
@@ -23239,7 +23311,8 @@ function locTeken(){
     const n=locAantal(r);
     const kopNaam=rb.naam+(d&&r&&!r.fout&&rb.sleutel!=="water"?" ("+n+")":"");
     return {nr:String(i+1), naam:kopNaam, open:locUI.open===rb.sleutel, lade:true,
-      doe:()=>{ locUI.open=(locUI.open===rb.sleutel)?null:rb.sleutel; locTeken(); },
+      schuif:locUI.schuif===rb.sleutel,
+      doe:()=>{ locUI.open=(locUI.open===rb.sleutel)?null:rb.sleutel; locUI.schuif=locUI.open; locTeken(); },
       artikels:()=>{
         if(!d)return [{nr:"",titel:"Nog niets opgehaald."}];
         if(!r||r.fout)return [{nr:"",titel:"Deze dienst antwoordde niet"+(r&&r.fout?": "+r.fout:"")+". Tik Opnieuw ophalen."}];
@@ -23283,6 +23356,7 @@ function locTeken(){
   });
   koppen.push({nr:String(LOCRUBRIEKEN.length+1), naam:"Opmeting", open:false, lade:false});
   bouwBestekkast(bak,koppen,{leeg:""});
+  locUI.schuif=null;                       // de beweging hoort bij het openen, niet bij elke volgende tekening
 }
 async function locHaal(geforceerd,hulp){
   if(locUI.bezig)return;
@@ -23459,6 +23533,80 @@ function maakBladSleepbaar(dlg){
 }
 maakBladSleepbaar(document.getElementById("dlg"));
 maakBladSleepbaar(document.getElementById("beheerdlg"));
+
+/* ---- de rij pagina's ----
+   de opdrachtgever, 13/10/2026: de paginagrote schermen laten zich naar links en rechts swipen; helemaal links het beginscherm, dan Locatie, Dossier,
+   Verslagen, en helemaal rechts een eindblad met tegels van het menu. Het menu blijft onderaan. De X en naar beneden trekken brengen je telkens
+   terug op het beginscherm (het blad sluit). Een pagina meldt zich aan met `dlg.dataset.pagina`; opent iets anders in het blad, dan verdwijnt het menu. */
+const PAGINAROIJ=["begin","locatie","dossier","verslagen","eind"];
+function paginaNu(){ const d=document.getElementById("dlg"); return d.open&&d.dataset.pagina?d.dataset.pagina:"begin"; }
+function paginaMenu(naam){
+  const d=document.getElementById("dlg");
+  if(naam)d.dataset.pagina=naam; else delete d.dataset.pagina;
+  document.getElementById("paginamenu").hidden=!naam;
+  document.getElementById("paginastippen").hidden=!naam;
+  ["locatie","dossier","verslagen"].forEach(n=>{ const b=document.getElementById("pm-"+n); if(n===naam)b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
+  Array.prototype.forEach.call(document.getElementById("paginastippen").children||[],(sp,i)=>sp.classList.toggle("aan",!!naam&&i===PAGINAROIJ.indexOf(naam)));
+}
+(function(){
+  const d=document.getElementById("dlg"), orig=d.showModal.bind(d);
+  d.showModal=function(){ paginaMenu(null); if(d.open)return; return orig(); };          // een ander blad in dit venster: het menu van de rij verdwijnt
+})();
+const _toonLocatie=toonLocatie; toonLocatie=function(){ const r=_toonLocatie(); paginaMenu("locatie"); return r; };
+const _toonDossier=toonDossier; toonDossier=function(){ const r=_toonDossier(); paginaMenu("dossier"); return r; };
+const _toonVergaderingen=toonVergaderingen; toonVergaderingen=async function(f){ const r=await _toonVergaderingen(f); if(document.getElementById("dlg").open)paginaMenu("verslagen"); return r; };
+function toonEindblad(){
+  const d=document.getElementById("dlg");
+  document.getElementById("dlg-titel").textContent="Menu";
+  const body=document.getElementById("dlg-body"); body.innerHTML="";
+  document.getElementById("dlg-kopieer").style.display="none";
+  const raster=maakEl("div","tegels");
+  [["\u25CE","Plan",()=>{ d.close(); document.getElementById("planmenu").click(); }],
+   ["\u2316","Locatie",()=>gaNaarPagina("locatie")],
+   ["\u2315","Dossier",()=>gaNaarPagina("dossier")],
+   ["\u25A4","Verslagen",()=>gaNaarPagina("verslagen")],
+   ["\u22EF","Beheer",()=>{ d.close(); document.getElementById("beheerknop").click(); }]].forEach(([teken,naam,doe])=>{
+    const b=maakEl("button","tegel"); b.type="button";
+    b.appendChild(maakEl("span","mteken",teken)); b.appendChild(maakEl("span",null,naam));
+    b.onclick=doe; raster.appendChild(b);
+  });
+  body.appendChild(raster);
+  d.showModal(); paginaMenu("eind");
+}
+function schuifIn(kant){
+  const body=document.getElementById("dlg-body");
+  body.classList.remove("schuif-van-rechts","schuif-van-links"); void body.offsetWidth; body.classList.add("schuif-"+kant);
+  setTimeout(()=>body.classList.remove("schuif-van-rechts","schuif-van-links"),360);
+}
+function gaNaarPagina(naam){
+  const d=document.getElementById("dlg");
+  const van=PAGINAROIJ.indexOf(paginaNu()), naar=PAGINAROIJ.indexOf(naam);
+  if(naar<0||naar===van)return;
+  if(naam==="begin"){ d.close(); return; }
+  ({locatie:()=>toonLocatie(), dossier:()=>toonDossier(), verslagen:()=>toonVergaderingen(), eind:()=>toonEindblad()})[naam]();
+  document.getElementById("dlg-body").scrollTop=0;
+  schuifIn(naar>van?"van-rechts":"van-links");
+}
+document.getElementById("pm-plan").onclick=()=>gaNaarPagina("begin");
+["locatie","dossier","verslagen"].forEach(n=>{ document.getElementById("pm-"+n).onclick=()=>gaNaarPagina(n); });
+document.getElementById("dlg").addEventListener("close",()=>{ if(!document.getElementById("dlg").open)paginaMenu(null); });
+(function(){
+  const d=document.getElementById("dlg"), body=document.getElementById("dlg-body");
+  let sw=null;
+  body.addEventListener("touchstart",e=>{ sw=d.dataset.pagina?{x:e.touches[0].clientX,y:e.touches[0].clientY,h:null,dx:0}:null; },{passive:true});
+  body.addEventListener("touchmove",e=>{
+    if(!sw)return;
+    const dx=e.touches[0].clientX-sw.x, dy=e.touches[0].clientY-sw.y;
+    if(sw.h===null&&(Math.abs(dx)>12||Math.abs(dy)>12))sw.h=Math.abs(dx)>Math.abs(dy)*1.4;
+    sw.dx=dx;
+    if(sw.h&&e.cancelable)e.preventDefault();
+  },{passive:false});
+  body.addEventListener("touchend",()=>{
+    if(sw&&sw.h&&Math.abs(sw.dx)>60){ const i=PAGINAROIJ.indexOf(paginaNu()); gaNaarPagina(PAGINAROIJ[i+(sw.dx<0?1:-1)]); }
+    sw=null;
+  });
+  body.addEventListener("touchcancel",()=>{ sw=null; });
+})();
 
 async function kopieerVerslagtekst(){
   const t=maakTekst();
