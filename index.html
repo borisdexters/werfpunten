@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-pAbTcEat3S5H8WWaBFjiAvDnL0VbE4K6gPq0aj1BWQE=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-qS3YrITNdllcyMonCBqo5a5/VBE5fcREjafX5EF6N4k='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-vpw4mKfZxlIViR8jlVAs3gmVbzWVDdYmBlj/CPShmXI=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-BDkjxxie/uInBz/E9/sJb2mRJWzmfm4EGAK6/P9Hn7w='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1053,7 +1053,7 @@
   .dlg-voet button{flex:1}
   /* De opdrachtgever, 13/10/2026: "sluiten weg en rechtsboven een X om weg te klikken". Elk venster sluit met een grote X in de kop, niet met een knop onderaan.
      De voet van het algemene venster blijft er enkel als er iets in staat (Kopieer, of de ja-knop van een vraag). */
-  .dlg-x{margin-left:auto;flex:none;width:48px;height:48px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);
+  .dlg-x{margin-left:auto;flex:none;width:48px;height:48px;border-radius:12px;border:none;background:none;color:var(--ink);
     font-size:32px;line-height:1;padding:0;display:inline-flex;align-items:center;justify-content:center}
   #dlg .dlg-voet:has(#dlg-kopieer[style*="none"]){display:none}
   #invoerdlg{width:min(94vw,520px);max-width:94vw}
@@ -3435,7 +3435,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v260";
+const VERSIE="v261";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
