@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-qkZ68z4pZMoDF2BD2UdcS2fs9ILef0uWphOqlMzubmU=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-X7z87Mq9A67s96MaxmlTrb7EIXWNvlIe3fD0FlLn5sQ='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-txHR/x5SmZdi2ACMuYpRP7CvMZ9fHVMp2dBt5/k0vC4=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-7NXXfPiCkYVK/0XEA9QwYCBmRxwUNeiRztSm38savUs='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1060,13 +1060,13 @@
      knipt alles weg wat buiten de rand valt. */
   #dlg,#beheerdlg{width:100%;max-width:100%;max-height:none;margin:auto 0 0 0;padding:0;border:none;background:transparent;overflow:visible}
   #dlg .blad,#beheerdlg .blad{position:relative;display:flex;flex-direction:column;max-height:min(62dvh,calc(100dvh - 64px));overflow:hidden;transition:max-height .25s ease;
-    background:var(--surface);border-radius:30px 30px 0 0;padding-bottom:env(safe-area-inset-bottom,0px);
+    background:var(--surface);border-radius:44px 44px 0 0;padding-bottom:env(safe-area-inset-bottom,0px);
     /* De uitsnijding is een zachte golving (112 bij 26 px, zonder scherpe hoeken), afgetrokken van het hele blad. De opdrachtgever, 13/10/2026, bij het voorbeeld:
        "de scherpe uitsnijding van de halve cirkel ook afronden". */
-    -webkit-mask-image:linear-gradient(#000,#000),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='26' viewBox='0 0 112 26'%3E%3Cpath d='M0 0C18 0 24 4 32 12C40 20 46 26 56 26C66 26 72 20 80 12C88 4 94 0 112 0Z'/%3E%3C/svg%3E");
-    -webkit-mask-size:100% 100%,112px 26px;-webkit-mask-position:0 0,50% 0;-webkit-mask-repeat:no-repeat;-webkit-mask-composite:xor;
-    mask-image:linear-gradient(#000,#000),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='26' viewBox='0 0 112 26'%3E%3Cpath d='M0 0C18 0 24 4 32 12C40 20 46 26 56 26C66 26 72 20 80 12C88 4 94 0 112 0Z'/%3E%3C/svg%3E");
-    mask-size:100% 100%,112px 26px;mask-position:0 0,50% 0;mask-repeat:no-repeat;mask-composite:exclude}
+    -webkit-mask-image:linear-gradient(#000,#000),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='18' viewBox='0 0 112 18'%3E%3Cpath d='M0 0C18 0 24 3 32 8C40 13 46 18 56 18C66 18 72 13 80 8C88 3 94 0 112 0Z'/%3E%3C/svg%3E");
+    -webkit-mask-size:100% 100%,112px 18px;-webkit-mask-position:0 0,50% 0;-webkit-mask-repeat:no-repeat;-webkit-mask-composite:xor;
+    mask-image:linear-gradient(#000,#000),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='18' viewBox='0 0 112 18'%3E%3Cpath d='M0 0C18 0 24 3 32 8C40 13 46 18 56 18C66 18 72 13 80 8C88 3 94 0 112 0Z'/%3E%3C/svg%3E");
+    mask-size:100% 100%,112px 18px;mask-position:0 0,50% 0;mask-repeat:no-repeat;mask-composite:exclude}
   /* Twee standen: kleiner (62% van het scherm) en volledig. Trekken aan de kop of aan de inhoud (als die bovenaan staat) verplaatst het blad. */
   #dlg .blad.volledig,#beheerdlg .blad.volledig{max-height:calc(100dvh - 64px)}
   #dlg .dlg-kop,#beheerdlg .dlg-kop{padding-top:32px;border-bottom:none;touch-action:none;cursor:grab}
@@ -2950,7 +2950,7 @@
 
      De knoppen houden hun oude id, zodat de bedrading er ongewijzigd op blijft passen. -->
 <dialog id="beheerdlg">
-  <button type="button" class="blad-x" id="beheer-sluit" aria-label="Sluiten"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+  <button type="button" class="blad-x" id="beheer-sluit" aria-label="Sluiten"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></button>
   <div class="blad">
   <div class="dlg-kop"><h2 id="beheertitel">Beheer</h2></div>
   <div class="dlg-body beheer-body">
@@ -3331,7 +3331,7 @@
 </dialog>
 
 <dialog id="dlg">
-  <button type="button" class="blad-x" id="dlg-sluit" aria-label="Sluiten"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+  <button type="button" class="blad-x" id="dlg-sluit" aria-label="Sluiten"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></button>
   <div class="blad">
     <div class="dlg-kop"><h2 id="dlg-titel">Verslagtekst</h2></div>
     <div class="dlg-body" id="dlg-body"></div>
@@ -3467,7 +3467,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v265";
+const VERSIE="v266";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
