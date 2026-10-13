@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-txHR/x5SmZdi2ACMuYpRP7CvMZ9fHVMp2dBt5/k0vC4=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-7NXXfPiCkYVK/0XEA9QwYCBmRxwUNeiRztSm38savUs='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-DVNCUp1VfYr0Ln3yEkSTT7aADdyXpvoyVHvtZ+VNxDw=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-396VOU0YdLidpLE7fbbdzLgVZOtchuJ7v0u1XnWJTRY='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1051,31 +1051,20 @@
   .dlg-body img{width:100%;border-radius:8px;margin-bottom:10px;border:var(--haar) solid var(--line-soft)}
   .dlg-voet{padding:12px var(--marge);border-top:1px solid var(--line);display:flex;gap:8px}
   .dlg-voet button{flex:1}
-  /* De opdrachtgever, 13/10/2026: "sluiten weg en rechtsboven een X om weg te klikken". Elk venster sluit met een grote X in de kop, niet met een knop onderaan.
-     De voet van het algemene venster blijft er enkel als er iets in staat (Kopieer, of de ja-knop van een vraag). */
   /* ---- het uitschuifblad ----
-     de opdrachtgever, 13/10/2026, met een schermvoorbeeld: "een X, centraal, half boven het uitschuifscherm; in het scherm is een bolletje uitgesneden; het
-     schermvullende uitschuifscherm met de hoeken links en rechts mooi afgerond". Het blad ligt onderaan, over de hele breedte, schuift omhoog,
-     heeft afgeronde bovenhoeken en een rond gat in zijn bovenrand waarin de ronde X zit. De X staat naast het blad (niet erin), want een masker
-     knipt alles weg wat buiten de rand valt. */
+     de opdrachtgever, 13/10/2026, met een schermvoorbeeld: een schermbreed blad onderaan met mooi afgeronde hoeken links en rechts, dat je kunt trekken en
+     wegduwen. Eerst met een ronde X in een uitsnijding; daarna (zelfde dag): "de X en de uitsnijding mogen verdwijnen, centraal een
+     horizontale streep die aangeeft dat je kunt trekken". Er is dus geen sluitknop: wegduwen of op de donkere rand boven het blad tikken sluit het.
+     De voet van het algemene venster blijft er enkel als er iets in staat (Kopieer, of de ja-knop van een vraag). */
   #dlg,#beheerdlg{width:100%;max-width:100%;max-height:none;margin:auto 0 0 0;padding:0;border:none;background:transparent;overflow:visible}
   #dlg .blad,#beheerdlg .blad{position:relative;display:flex;flex-direction:column;max-height:min(62dvh,calc(100dvh - 64px));overflow:hidden;transition:max-height .25s ease;
-    background:var(--surface);border-radius:44px 44px 0 0;padding-bottom:env(safe-area-inset-bottom,0px);
-    /* De uitsnijding is een zachte golving (112 bij 26 px, zonder scherpe hoeken), afgetrokken van het hele blad. De opdrachtgever, 13/10/2026, bij het voorbeeld:
-       "de scherpe uitsnijding van de halve cirkel ook afronden". */
-    -webkit-mask-image:linear-gradient(#000,#000),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='18' viewBox='0 0 112 18'%3E%3Cpath d='M0 0C18 0 24 3 32 8C40 13 46 18 56 18C66 18 72 13 80 8C88 3 94 0 112 0Z'/%3E%3C/svg%3E");
-    -webkit-mask-size:100% 100%,112px 18px;-webkit-mask-position:0 0,50% 0;-webkit-mask-repeat:no-repeat;-webkit-mask-composite:xor;
-    mask-image:linear-gradient(#000,#000),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='18' viewBox='0 0 112 18'%3E%3Cpath d='M0 0C18 0 24 3 32 8C40 13 46 18 56 18C66 18 72 13 80 8C88 3 94 0 112 0Z'/%3E%3C/svg%3E");
-    mask-size:100% 100%,112px 18px;mask-position:0 0,50% 0;mask-repeat:no-repeat;mask-composite:exclude}
-  /* Twee standen: kleiner (62% van het scherm) en volledig. Trekken aan de kop of aan de inhoud (als die bovenaan staat) verplaatst het blad. */
-  #dlg .blad.volledig,#beheerdlg .blad.volledig{max-height:calc(100dvh - 64px)}
-  #dlg .dlg-kop,#beheerdlg .dlg-kop{padding-top:32px;border-bottom:none;touch-action:none;cursor:grab}
+    background:var(--surface);border-radius:44px 44px 0 0;padding-bottom:env(safe-area-inset-bottom,0px)}
+  #dlg .dlg-kop,#beheerdlg .dlg-kop{position:relative;padding-top:30px;border-bottom:none;touch-action:none;cursor:grab}
+  /* De streep bovenaan: zo zie je dat het blad te trekken is. */
+  .blad-greep{position:absolute;left:50%;top:10px;transform:translateX(-50%);width:44px;height:5px;border-radius:3px;background:var(--line-hard,#c7c7c7)}
   #dlg,#beheerdlg{transition:transform .22s ease}
   @media (prefers-reduced-motion:reduce){#dlg,#beheerdlg,#dlg .blad,#beheerdlg .blad{transition:none}}
   #dlg .dlg-body,#beheerdlg .dlg-body{flex:1;min-height:0;max-height:none;overflow:auto}
-  /* De X: klein, wit, met een dun kruisje, en hoog: zijn onderkant hangt net onder de rand, boven de golving. */
-  .blad-x{position:absolute;left:50%;top:-36px;transform:translateX(-50%);z-index:2;width:44px;height:44px;border-radius:50%;border:none;padding:0;
-    background:var(--surface);color:var(--ink);display:flex;align-items:center;justify-content:center}
   #dlg[open],#beheerdlg[open]{animation:blad-op .28s ease-out}
   @keyframes blad-op{from{transform:translateY(100%)}to{transform:none}}
   @media (prefers-reduced-motion:reduce){#dlg[open],#beheerdlg[open]{animation:none}}
@@ -2950,9 +2939,8 @@
 
      De knoppen houden hun oude id, zodat de bedrading er ongewijzigd op blijft passen. -->
 <dialog id="beheerdlg">
-  <button type="button" class="blad-x" id="beheer-sluit" aria-label="Sluiten"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></button>
   <div class="blad">
-  <div class="dlg-kop"><h2 id="beheertitel">Beheer</h2></div>
+  <div class="dlg-kop"><span class="blad-greep" aria-hidden="true"></span><h2 id="beheertitel">Beheer</h2></div>
   <div class="dlg-body beheer-body">
     <h3>Deze werf</h3>
     <p class="beheer-uitleg">Hoort bij dit dossier. Een andere werf draagt haar eigen lijsten.</p>
@@ -3331,9 +3319,8 @@
 </dialog>
 
 <dialog id="dlg">
-  <button type="button" class="blad-x" id="dlg-sluit" aria-label="Sluiten"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></button>
   <div class="blad">
-    <div class="dlg-kop"><h2 id="dlg-titel">Verslagtekst</h2></div>
+    <div class="dlg-kop"><span class="blad-greep" aria-hidden="true"></span><h2 id="dlg-titel">Verslagtekst</h2></div>
     <div class="dlg-body" id="dlg-body"></div>
     <div class="dlg-voet">
       <button id="dlg-kopieer">Kopieer</button>
@@ -3467,7 +3454,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v266";
+const VERSIE="v267";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -8872,13 +8859,12 @@ document.getElementById("beheerknop").onclick=()=>{
   toonOpslagstand();
 };
 document.getElementById("noodterug").onclick=()=>{ noodkopieTerugzetten(); };
-document.getElementById("beheer-sluit").onclick=()=>
-  document.getElementById("beheerdlg").close();
+document.getElementById("beheerdlg").addEventListener("click",e=>{ if(e.target===document.getElementById("beheerdlg"))document.getElementById("beheerdlg").close(); });
 document.getElementById("beheerdlg").addEventListener("click",e=>{
   const b=e.target.closest("button");
   /* De schakelaar van de AI-modus opent geen venster; hij wisselt van stand, en die stand wil
      je zien staan -- zoals de vliegtuigmodus. Dus daar blijft het venster open. */
-  const blijft=["beheer-sluit","aibeheer"];
+  const blijft=["aibeheer"];
   if(b&&!blijft.includes(b.id))document.getElementById("beheerdlg").close();
 },true);
 
@@ -23324,7 +23310,8 @@ async function kopieer(t){
 }
 
 const dlg=document.getElementById("dlg");
-document.getElementById("dlg-sluit").onclick=()=>dlg.close();
+/* Geen X meer (de opdrachtgever, 13/10/2026): een streep bovenaan toont dat je het blad kunt trekken, en wegduwen of op de donkere rand tikken sluit het. */
+dlg.addEventListener("click",e=>{ if(e.target===dlg)dlg.close(); });
 
 /* ---- het blad slepen ----
    de opdrachtgever, 13/10/2026: "ik wil het uitschuifscherm kunnen trekken naar boven of beneden, en het volledig kunnen wegduwen naar beneden". Trek je aan de
