@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-urJI2sphMQtpvA5aVSata2prSG5yn6UoMJeXiMUd5Uc=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-k9rbm4zeuYjReLFOdjctZ3eGbulhNfvmY1hAfJ/MEcA='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-d3qxUPKV5aqTJg18kqAFF593612dit0hxbqe2EpUfOc=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-66zYFM6N9JIjHdcyupmFhbYPhSwrzBJ/f2zEFWhA0ls='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1059,17 +1059,18 @@
   #dlg,#beheerdlg{width:100%;max-width:100%;max-height:none;margin:auto 0 0 0;padding:0;border:none;background:transparent;overflow:visible}
   #dlg .blad,#beheerdlg .blad{position:relative;display:flex;flex-direction:column;max-height:min(62dvh,calc(100dvh - 64px));overflow:hidden;transition:max-height .25s ease;
     background:var(--surface);border-radius:44px 0 0 0;padding-bottom:env(safe-area-inset-bottom,0px);
-    /* Een hap uit de rechterbovenhoek (104 bij 36 px, zachte rand), afgetrokken van het hele blad; de X zit erin, uiterst rechts. De rechterhoek is dus
-       geen afronding maar de hap zelf. De opdrachtgever, 13/10/2026: "de X met bol ... uiterst rechts en ook een hap uit de rechterbovenhoek". */
-    -webkit-mask-image:linear-gradient(#000,#000),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='104' height='36' viewBox='0 0 104 36'%3E%3Cpath d='M0 0C22 0 30 4 40 14C50 24 62 35 80 35C92 35 100 31 104 25L104 0Z'/%3E%3C/svg%3E");
-    -webkit-mask-size:100% 100%,104px 36px;-webkit-mask-position:0 0,100% 0;-webkit-mask-repeat:no-repeat;-webkit-mask-composite:xor;
-    mask-image:linear-gradient(#000,#000),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='104' height='36' viewBox='0 0 104 36'%3E%3Cpath d='M0 0C22 0 30 4 40 14C50 24 62 35 80 35C92 35 100 31 104 25L104 0Z'/%3E%3C/svg%3E");
-    mask-size:100% 100%,104px 36px;mask-position:0 0,100% 0;mask-repeat:no-repeat;mask-composite:exclude}
+    /* Een hap uit de rechterbovenhoek (104 bij 52 px), afgetrokken van het hele blad. De rand daalt zacht naar een lager stuk dat doorloopt tot de
+       rechterrand, waar een gewone afgeronde hoek omlaag gaat; hij stijgt dus niet terug naar de hoek (de opdrachtgever, 13/10/2026, bij een kaartvoorbeeld).
+       De X zit erin, uiterst rechts. De rechterhoek is dus geen afronding maar de hap zelf. De opdrachtgever, 13/10/2026: "de X met bol ... uiterst rechts en ook een hap uit de rechterbovenhoek". */
+    -webkit-mask-image:linear-gradient(#000,#000),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='104' height='52' viewBox='0 0 104 52'%3E%3Cpath d='M0 0C22 0 32 6 42 16C52 26 60 36 78 36L90 36C99 36 104 41 104 50L104 0Z'/%3E%3C/svg%3E");
+    -webkit-mask-size:100% 100%,104px 52px;-webkit-mask-position:0 0,100% 0;-webkit-mask-repeat:no-repeat;-webkit-mask-composite:xor;
+    mask-image:linear-gradient(#000,#000),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='104' height='52' viewBox='0 0 104 52'%3E%3Cpath d='M0 0C22 0 32 6 42 16C52 26 60 36 78 36L90 36C99 36 104 41 104 50L104 0Z'/%3E%3C/svg%3E");
+    mask-size:100% 100%,104px 52px;mask-position:0 0,100% 0;mask-repeat:no-repeat;mask-composite:exclude}
   #dlg .dlg-kop,#beheerdlg .dlg-kop{position:relative;padding-top:30px;border-bottom:none;touch-action:none;cursor:grab}
   /* De streep bovenaan: zo zie je dat het blad te trekken is. */
   .blad-greep{position:absolute;left:50%;top:10px;transform:translateX(-50%);width:44px;height:5px;border-radius:3px;background:var(--line-hard,#c7c7c7)}
   /* De X: een witte bol van 44 px, uiterst rechts, half boven de rand, in de hap. */
-  .blad-x{position:absolute;right:4px;top:-20px;z-index:2;width:44px;height:44px;border-radius:50%;border:none;padding:0;
+  .blad-x{position:absolute;right:2px;top:-14px;z-index:2;width:44px;height:44px;border-radius:50%;border:none;padding:0;
     background:var(--surface);color:var(--ink);display:flex;align-items:center;justify-content:center}
   #dlg,#beheerdlg{transition:transform .22s ease}
   @media (prefers-reduced-motion:reduce){#dlg,#beheerdlg,#dlg .blad,#beheerdlg .blad{transition:none}}
@@ -3465,7 +3466,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v268";
+const VERSIE="v269";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
