@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-xzSviyVGf8/FlljO9vQqThUxhScuHmFjan7S/dTgfzA=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-/2AcS2sEbxnUWWkYF9h+RXQkmti6JG0m4grjZgkaY7o='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-OSYchJLn9BbKq4WmRWjydugW7rTwhQrEmit8yY8YK+c=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-rmVp+oG9wXGip0YwX0wbKdeGxbm66YdOiAOtaoBB2+8='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2104,6 +2104,8 @@
     background:var(--zone-soft);color:var(--zone);border-color:var(--zone-soft)}
   .werfkeuze button.nieuw{background:transparent;color:var(--inkt);border-color:var(--lijn)}
   .wachtmerk{width:112px;margin:14px auto 6px}
+  .loc-wacht{display:flex;align-items:center;justify-content:center;min-height:46vh}
+  .loc-wacht .wachtmerk{width:150px;margin:0}
   .wachtmerk .gv{width:100%}
   .wachttekst{text-align:center}
   .wachtklein{flex:0 0 auto;width:34px;display:inline-flex}
@@ -3432,7 +3434,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v255";
+const VERSIE="v256";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -22813,11 +22815,11 @@ function locKaartBlok(d,g){
     const sn=maakEl("div","loc-snede");
     const st=locUI.sneden[g.lithoId];
     if(!st){
-      sn.innerHTML=wachtHtml("De lagen van deze boring worden opgehaald\u2026");
+      sn.innerHTML=wachtHtml();
       locUI.sneden[g.lithoId]={bezig:true};
       locSnede(g.lithoId).then(res=>{ locUI.sneden[g.lithoId]=res; locTeken(); });
     }else if(st.bezig){
-      sn.innerHTML=wachtHtml("De lagen van deze boring worden opgehaald\u2026");
+      sn.innerHTML=wachtHtml();
     }else if(st.fout){
       sn.appendChild(maakEl("p","loc-kaartuitleg",st.fout));
       delete locUI.sneden[g.lithoId];                  // een volgende tik probeert opnieuw
@@ -22834,9 +22836,13 @@ function locTeken(){
   if(!body||!document.getElementById("dlg").open||locUI.weg)return;
   body.innerHTML="";
   const d=locUI.data;
+  /* De opdrachtgever, 13/10/2026: "bij het ophalen van de gegevens wil ik enkel het logo zien en het pulserende dot". Tijdens het ophalen staat er
+     niets anders: geen tekst, geen lijst, geen knop. */
   if(locUI.bezig){
-    const w=maakEl("div","loc-wacht"); w.innerHTML=wachtHtml(locUI.melding||"De openbare bronnen worden bevraagd; dat kan een halve minuut duren.");
+    const w=maakEl("div","loc-wacht"); w.setAttribute("role","status"); w.setAttribute("aria-label","Gegevens worden opgehaald");
+    w.innerHTML=wachtHtml();
     body.appendChild(w);
+    return;
   }
   const kop=maakEl("div","door-rij");
   const l=maakEl("div","door-wat");
