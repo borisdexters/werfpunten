@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-C6ZEqWX6Ykpczx7uBKiGaJtFODExmSR43O/kVAbCYP4=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-LuGx13KBDFl7Ou19nIrtEFTyPMbQIC2FQv4mpPNC6M8='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-jUX8XzJd7r8VUUYMT6+wmaNe3MNZ58rMK3rnqta1gIc=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-efqgApeCGEGdPw+LiY9TwmvI4vZSYCVkTmvM3hiX/e4='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1069,6 +1069,8 @@
   /* De X: een gewone X zonder bol, op dezelfde hoogte als de titel, uiterst rechts in de kop. (de opdrachtgever, 13/10/2026: de hap en de bol mogen weg.) */
   .blad-x{margin:-8px -10px -8px auto;flex:none;width:48px;height:48px;border:none;background:none;padding:0;color:var(--ink);
     display:flex;align-items:center;justify-content:center}
+  /* showModal zet de focus op de eerste knop, de X: de focusrand stond als kader om de X (de opdrachtgever, 13/10/2026: "de x geen omkadering geven"). */
+  .blad-x:focus,.blad-x:focus-visible{outline:none}
   #dlg,#beheerdlg{transition:transform .22s ease}
   @media (prefers-reduced-motion:reduce){#dlg,#beheerdlg,#dlg .blad,#beheerdlg .blad{transition:none}}
   #dlg .dlg-body,#beheerdlg .dlg-body{flex:1;min-height:0;max-height:none;overflow:auto}
@@ -3461,7 +3463,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v271";
+const VERSIE="v272";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -15792,7 +15794,7 @@ function vraagKeuze(titel,regels,keuzes){
 
 /* Eén vraag met één bevestiging. De kopieerknop van het venster doet dienst als jaknop — dat
    venster heeft er maar twee, en een derde bijzetten voor één handeling is het niet waard. */
-function vraagJa(titel,regels,jaTekst){
+function vraagJa(titel,regels,jaTekst,opJa){
   return new Promise(res=>{
     const dlg=document.getElementById("dlg");
     document.getElementById("dlg-titel").textContent=titel;
@@ -15801,7 +15803,7 @@ function vraagJa(titel,regels,jaTekst){
     const ja=document.getElementById("dlg-kopieer");
     ja.style.display="";ja.textContent=jaTekst;
     let gekozen=false;
-    ja.onclick=()=>{gekozen=true;dlg.close();};
+    ja.onclick=()=>{gekozen=true;if(opJa)opJa();dlg.close();};   // opJa loopt in de tik zelf: Safari laat een nieuw tabblad enkel toe vanuit een tik
     /* Het close-event van een dialoog komt niet meteen maar in een volgende taak. Wie een lijst in
        dit venster sluit en er meteen een bevestiging in opent, krijgt het event van díe sluiting
        binnen op deze vraag — en dan valt ze stil op nee, zonder dat er iemand op iets drukte. Een
@@ -23073,21 +23075,22 @@ function locMoetOpnieuw(oud,hier,nu){
 }
 
 const locUI={open:null,data:null,bezig:false,melding:"",kaarten:new Set(),sneden:{},schaal:{},wijd:{}};
-/* Een verwijzing naar buiten: de pagina opent in dit tabblad, zodat de terugknop van Safari je terugbrengt in de app (de opdrachtgever, 13/10/2026:
-   "A in dezelfde tab, en ook een X om weg te klikken"). Eerst een tussenscherm met een X om te blijven: een nieuw tabblad of een andere site
-   heeft geen X die de app kan zetten, want de pagina is van een ander. Zoals bij elke bevestiging dient de kopieerknop als "Openen". */
+/* Een verwijzing naar buiten: de pagina opent in een nieuw tabblad en de app blijft staan waar ze was (de opdrachtgever, 13/10/2026: eerst "A in dezelfde
+   tab", daarna na de toesteltest "we verlaten nog steeds de app en dan weet ik niet hoe terug te gaan"; gekozen: nieuw tabblad). Eerst een
+   tussenscherm met een X om te blijven, dat ook zegt hoe je terugkomt. Het openen gebeurt in de tik op "Openen" zelf (`opJa`). */
 async function locUitstap(url,hulp){
   const h=hulp||{};
   let host="";
   try{ const u=new URL(url); if(u.protocol!=="https:"&&u.protocol!=="http:")return false; host=u.host; }catch(e){ return false; }
   const dlg=document.getElementById("dlg");
   locUI.weg=true; try{ if(dlg.open)dlg.close(); }catch(e){}
+  const open=h.ga||(u=>{ window.open(u,"_blank","noopener"); });
   const ja=await (h.vraag||vraagJa)("Naar "+host,[
-    "Je verlaat de app tijdelijk: deze pagina opent in <b>dit tabblad</b>.",
-    "Terug in de app kom je met de terugknop <b>\u2039</b> van Safari, linksonder.",
-    "<small>"+veilig(url)+"</small>"],"Openen");
+    "Deze pagina opent in een <b>nieuw tabblad</b>. De app blijft open in dit tabblad.",
+    "Terug in de app: sluit het nieuwe tabblad (Safari, tabbladenknop rechtsonder, kruisje op het tabblad), of kies de app in dat overzicht.",
+    "<small>"+veilig(url)+"</small>"],"Openen",h.vraag?undefined:()=>open(url));
   locUI.weg=false;
-  if(ja){ (h.ga||(u=>{ location.href=u; }))(url); return true; }
+  if(ja){ if(h.vraag)open(url); return true; }
   if(!h.vraag)toonLocatie();                      // je bleef: het Locatie-venster staat er weer, met zijn gegevens en de open rubriek
   return false;
 }
