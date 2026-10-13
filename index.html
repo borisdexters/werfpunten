@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-bDtkjh0DkvJhfbZj8DVZ0UYR1GPfchW1q1MJUCFTmfo=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-6ImHB4/R5ZoHVrop7rvqpSFlHJme0Qws2AG/GamSqa0='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-L+AnUwr+3xAJDBLuuuc+Jy6GEm3ixz+qYXdfpDVS504=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-X0dTZcIwH6R921tcrTMLvrqUlYQQjmF02jUsn7P9/VQ='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2199,6 +2199,18 @@
   .door-wat b{font-size:var(--tm);font-weight:600}
   .door-wat span{font-size:var(--tk);color:var(--ink-soft)}
   .door-rij button{flex:0 0 auto}
+  /* De opdrachtgever, 13/10/2026: "de andere schermen dezelfde layout, lettertype en grootte": Dossier, Verslagen en het Menu-blad zijn rijen tussen dunne lijnen,
+     met dezelfde tekstmaat en lucht als het menu van Locatie (2,19 x de gewone maat, 20 px boven en onder). */
+  #dlg[data-pagina="dossier"] #dlg-body > .inv-uitleg{display:none}
+  #dlg[data-pagina="dossier"] .door-rij,#dlg[data-pagina="verslagen"] .door-rij{padding:20px 4px;border-bottom:var(--haar) solid var(--line-soft)}
+  #dlg[data-pagina="dossier"] .door-rij:last-child,#dlg[data-pagina="verslagen"] .door-rij:last-child{border-bottom:var(--haar) solid var(--line-soft)}
+  #dlg[data-pagina="dossier"] #dlg-body,#dlg[data-pagina="eind"] #dlg-body{padding-top:48px}
+  #dlg[data-pagina] .door-wat b{font-size:calc(var(--tm) * 2.19);font-weight:400}
+  #dlg[data-pagina] .door-rij button{border:0;background:none;color:var(--ink-soft);text-decoration:underline;font-size:var(--tk)}
+  #dlg[data-pagina="eind"] .tegels{display:block;padding:0;border-top:var(--haar) solid var(--line-soft)}
+  #dlg[data-pagina="eind"] .tegel{flex-direction:row;justify-content:flex-start;gap:16px;width:100%;min-height:0;padding:20px 4px;border:0;border-radius:0;
+    border-bottom:var(--haar) solid var(--line-soft);background:none;text-align:left;font-size:calc(var(--tm) * 2.19)}
+  #dlg[data-pagina="eind"] .tegel .mteken{font-size:calc(var(--tm) * 2.19);width:1.2em;text-align:center}
 
   /* ---- het merk ----
 
@@ -3507,7 +3519,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v294";
+const VERSIE="v295";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
