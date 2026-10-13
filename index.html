@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-g2LiMrg9f+cmlpBbm57eNI3eEMPZ0AnmZQkTZZPW6cI=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-tWISdir6hKVogNaqNPgOFW/sODMVSHhfVl9jiWUA2gI='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-hwXsbtvLtqQ25PhAl89cbu5iJkwZgNBNThFIhdQyqdU=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-8Q254pzGjEAiQFR+ydg4nShcEfwsohDqi0+EjyhyWRw='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2149,9 +2149,10 @@
   .loc-svgdoos{cursor:pointer;-webkit-tap-highlight-color:transparent}
   .loc-svgdoos .loc-kaartsvg{border-radius:4px}
   .loc-kaart.onder{padding:4px 0 10px 34px}
-  .fiche-akaartpijl{flex:none;min-width:64px;min-height:34px;display:inline-flex;align-items:center;justify-content:center;margin:-6px -8px -6px 0;
+  .fiche-akaartpijl{flex:none;min-width:64px;min-height:34px;display:inline-flex;align-items:center;justify-content:center;margin:-6px 0 -6px 6px;
     padding:0 8px;border:1px solid var(--lijn);border-radius:8px;color:var(--ink);font-size:var(--tk);cursor:pointer}
   .fiche-akaartpijl.open{color:var(--ink)}
+  .fiche-pijlteken{font-size:1.5em;line-height:1;margin-left:2px}
   .loc-kaartsvg{display:block;width:100%;height:auto;border:1px solid var(--lijn)}
   .loc-snede{margin-top:8px}
   .loc-info{padding:6px 0 10px;border-bottom:1px solid var(--lijn)}
@@ -3465,7 +3466,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v273";
+const VERSIE="v274";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -13263,21 +13264,25 @@ function bouwBestekkast(bak,koppen,opties){
       r.appendChild(maakEl("span","fiche-anr",a.nr));
       r.appendChild(maakEl("span","fiche-atitel",a.titel||""));
       if(a.via)r.appendChild(maakEl("span","fiche-avia","via "+a.via));
-      /* De Locatie draagt lange titels met een bronregel en soms een verwijzing: de regel staat eronder, het pijltje achteraan. */
-      if(a.extern)r.appendChild(maakEl("span","fiche-aextern",a.infoBlok?(a.infoOpen?"info \u25B4":"info \u25BE"):"\u2197"));
-      /* Het subpijltje: klapt het kaartje van deze regel uit eronder. Een span in plaats van een knop, want een knop in een knop mag niet. */
-      if(a.kaartDoe){
-        const pijl=maakEl("span","fiche-akaartpijl"+(a.kaartOpen?" open":""),"kaart "+(a.kaartOpen?"\u25B4":"\u25BE"));
-        pijl.setAttribute("role","button"); pijl.setAttribute("tabindex","0"); pijl.setAttribute("aria-expanded",a.kaartOpen?"true":"false");
-        pijl.setAttribute("aria-label",a.kaartOpen?"Kaartje sluiten":"Kaartje tonen");
-        pijl.onclick=e=>{ if(e&&e.stopPropagation)e.stopPropagation(); a.kaartDoe(); };
+      /* De Locatie draagt lange titels met een bronregel: eronder, achteraan, twee knoppen van dezelfde maat: eerst "kaart", dan "info"
+         (de opdrachtgever, 13/10/2026: "eerst kaart, dan info; evengroot lettertype; de pijlen iets groter"). Een span in plaats van een knop, want een knop in een knop mag niet. */
+      if(a.extern&&!a.infoBlok)r.appendChild(maakEl("span","fiche-aextern","\u2197"));
+      const chip=(naam,open,doe,tonen,sluiten)=>{
+        const pijl=maakEl("span","fiche-akaartpijl"+(open?" open":""));
+        pijl.appendChild(document.createTextNode(naam+" "));
+        pijl.appendChild(maakEl("span","fiche-pijlteken",open?"\u25B4":"\u25BE"));
+        pijl.setAttribute("role","button"); pijl.setAttribute("tabindex","0"); pijl.setAttribute("aria-expanded",open?"true":"false");
+        pijl.setAttribute("aria-label",open?sluiten:tonen);
+        pijl.onclick=e=>{ if(e&&e.stopPropagation)e.stopPropagation(); doe(); };
         r.appendChild(pijl);
-      }
+      };
+      if(a.kaartDoe)chip("kaart",a.kaartOpen,a.kaartDoe,"Kaartje tonen","Kaartje sluiten");
+      if(a.infoBlok)chip("info",a.infoOpen,a.doe,"Info tonen","Info sluiten");
       if(a.sub){ r.classList.add("met-sub"); r.appendChild(maakEl("span","fiche-asub",a.sub)); }
       if(a.doe)r.onclick=a.doe;
       bak.appendChild(r); n++;
+      if(a.kaartDoe&&a.kaartOpen&&a.kaartBlok)bak.appendChild(a.kaartBlok());   // het uitgeklapte kaartje van deze regel, eronder, en dan de info
       if(a.infoOpen&&a.infoBlok)bak.appendChild(a.infoBlok());
-      if(a.kaartDoe&&a.kaartOpen&&a.kaartBlok)bak.appendChild(a.kaartBlok());   // het uitgeklapte kaartje van deze regel, eronder
       /* De opdrachtgever, 30/09/2026, met een voorbeeld van een blad met een kop, een lijn en lopende tekst:
          "wanneer je klikt op de ondercat, bv 05.21, wil ik ook uitschuiven en dan deze layout,
          zuivere tekst voorlopig." Draagt het bestek geen tekst, dan zegt het dat. */
