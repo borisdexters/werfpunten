@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-aImPqlYTD1wSEenRWQ9kH/eQBKzpSlu03wkPpT5BE0A=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-PWQLKFb1hmVOUmbFQ7UBmphL3aPuLr6GRrQQRxdDa9E='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-1Dxkg/7rRGcULqhBeiUQEuychilBinc6G+7+NSxf+yE=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-MO3/DdwE4tOXuA+6L2OKMwtsVYVOQSAiABFlDzG0sPY='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2178,19 +2178,19 @@
   .fiche-pijlteken{font-size:1.5em;line-height:1;margin-left:2px}
   .loc-kaartsvg{display:block;width:100%;height:auto;border:1px solid var(--lijn)}
   .loc-snede{margin-top:8px}
-  .loc-info{padding:6px 0 10px;border-bottom:1px solid var(--lijn)}
+  .loc-info{padding:6px 0 14px;border-bottom:var(--haar) solid var(--line-soft)}
   .loc-bronknop{margin-top:8px;min-height:44px;padding:0 16px}
   .loc-sneesvg{display:block;width:100%;height:auto;border:1px solid var(--lijn)}
   .loc-kaartuitleg{margin:6px 0 0;font-size:var(--tk);color:var(--ink-soft)}
-  .loc-samen{padding:8px 0 10px;border-bottom:1px solid var(--lijn-hard,var(--lijn));margin-bottom:6px}
+  .loc-samen{padding:8px 0 14px;border-bottom:var(--haar) solid var(--line-soft);margin-bottom:6px}      /* dezelfde lijn als de andere lijnen */
   .loc-opnieuw{margin-top:8px;min-height:40px;padding:0 14px;font-size:var(--tk)}
   .loc-hoofdkaart{padding:0 0 10px}
-  .loc-samenrij{display:flex;gap:10px;padding:3px 0;font-size:var(--tk)}
+  .loc-samenrij{display:flex;gap:10px;padding:5px 0;font-size:var(--tk)}
   .loc-wat{flex:0 0 38%;color:var(--ink-soft)}
   .loc-waarde{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
-  .loc-kast{margin-top:6px}
+  .loc-kast{margin-top:26px;border-top:var(--haar) solid var(--line-soft)}      /* meer lucht onder de titel, en een dun lijntje boven 0 Kaart (de opdrachtgever, 13/10/2026) */
   /* De tekst van de hoofdstukken in Locatie: eerst 20% groter, daarna nog eens 30% (de opdrachtgever, 13/10/2026): 1,2 x 1,3 = 1,56 keer de gewone maat. */
-  .loc-kast .fiche-hoofdstuk{font-size:calc(var(--tm) * 1.56)}
+  .loc-kast .fiche-hoofdstuk{font-size:calc(var(--tm) * 2.34);padding-top:17px;padding-bottom:17px}   /* nog eens 50%: 1,56 x 1,5 = 2,34; en meer lucht tussen de lijnen en de tekst */
   .door-wat{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
   .door-wat b{font-size:var(--tm);font-weight:600}
   .door-wat span{font-size:var(--tk);color:var(--ink-soft)}
@@ -3503,7 +3503,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v284";
+const VERSIE="v287";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -23349,21 +23349,7 @@ function locHoofdkaart(d){
     blok.appendChild(maakEl("p","loc-kaartuitleg","GRB: het perceel (zwart) met zijn kadastraal nummer en dat van de aangrenzende percelen, de gebouwen, de wegen en de straatnamen (blauw). Zoom je uit, dan blijven enkel de grotere wegen met hun naam. Noord is boven."+LOCSCHAALHINT));
   return blok;
 }
-function locTeken(){
-  const body=document.getElementById("dlg-body");
-  if(!body||!document.getElementById("dlg").open||locUI.weg)return;
-  body.innerHTML="";
-  const d=locUI.data;
-  /* De opdrachtgever, 13/10/2026: "bij het ophalen van de gegevens wil ik enkel het logo zien en het pulserende dot". Tijdens het ophalen staat er
-     niets anders: geen tekst, geen lijst, geen knop. */
-  if(locUI.bezig){
-    const w=maakEl("div","loc-wacht"); w.setAttribute("role","status"); w.setAttribute("aria-label","Gegevens worden opgehaald");
-    w.innerHTML=wachtHtml();
-    body.appendChild(w);
-    return;
-  }
-  /* De opdrachtgever, 13/10/2026: bovenaan een kaartje met het GRB, de kadastrale nummers van het perceel en de buren en de straatnamen; daaronder de samenvatting
-     in hetzelfde lettertype, met "Opgehaald" als eerste regel; dan een lijn, en dan het menu (1 voorschriften, ...). */
+function locSamenBlok(d){
   const s=maakEl("div","loc-samen");
   const rij0=maakEl("div","loc-samenrij");
   rij0.appendChild(maakEl("span","loc-wat","Opgehaald"));
@@ -23380,14 +23366,33 @@ function locTeken(){
   const b=maakEl("button","loc-opnieuw","Opnieuw ophalen"); b.type="button";
   b.onclick=()=>locHaal(true);
   s.appendChild(b);
-  body.appendChild(s);
+  return s;
+}
+function locTeken(){
+  const body=document.getElementById("dlg-body");
+  if(!body||!document.getElementById("dlg").open||locUI.weg)return;
+  body.innerHTML="";
+  const d=locUI.data;
+  /* De opdrachtgever, 13/10/2026: "bij het ophalen van de gegevens wil ik enkel het logo zien en het pulserende dot". Tijdens het ophalen staat er
+     niets anders: geen tekst, geen lijst, geen knop. */
+  if(locUI.bezig){
+    const w=maakEl("div","loc-wacht"); w.setAttribute("role","status"); w.setAttribute("aria-label","Gegevens worden opgehaald");
+    w.innerHTML=wachtHtml();
+    body.appendChild(w);
+    return;
+  }
+  /* De opdrachtgever, 13/10/2026: bovenaan een kaartje met het GRB, de kadastrale nummers van het perceel en de buren en de straatnamen; daaronder de samenvatting
+     in hetzelfde lettertype, met "Opgehaald" als eerste regel; dan een lijn, en dan het menu (1 voorschriften, ...). */
+  /* De opdrachtgever, 13/10/2026: "zet de tekst onder locatie bij kaart": de samenvatting staat onder 0 Kaart. Bovenaan staat ze alleen als er nog niets is opgehaald. */
+  if(!d)body.appendChild(locSamenBlok(d));
+  else if(locUI.melding)body.appendChild(maakEl("p","loc-kaartuitleg",locUI.melding));
   const bak=maakEl("div","loc-kast");
   body.appendChild(bak);
   /* De opdrachtgever, 13/10/2026: "ik wil 0 kaart om de kaart te openen, dan 1, 2, 3...": de kaart is de eerste kop van het menu, dicht tot je tikt. */
   const kaartKop={nr:"0", naam:"Kaart", open:locUI.open==="kaart", lade:true, schuif:locUI.schuif==="kaart",
     doe:()=>{ locUI.open=(locUI.open==="kaart")?null:"kaart"; locUI.schuif=locUI.open; locTeken(); },
     artikels:()=>{
-      const eerst=(d&&d.kaart&&d.kaart.doel)?[{blok:locHoofdkaart(d)}]:[{nr:"",titel:"Er is geen kaart voor deze plek."}];
+      const eerst=[{blok:locSamenBlok(d)}].concat((d&&d.kaart&&d.kaart.doel)?[{blok:locHoofdkaart(d)}]:[{nr:"",titel:"Er is geen kaart voor deze plek."}]);
       const rest=(perceelKop&&typeof perceelKop.artikels==="function")?perceelKop.artikels():[];
       let n=0;                                  // doorlopend genummerd: 0.1, 0.2, 0.3 (de oude nummering sloeg er één over)
       return eerst.concat(rest.filter(a=>a.nr||a.blok||a.titel).map(a=>a.nr?Object.assign({},a,{nr:"0."+(++n)}):a));
