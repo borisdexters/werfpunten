@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-jUX8XzJd7r8VUUYMT6+wmaNe3MNZ58rMK3rnqta1gIc=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-efqgApeCGEGdPw+LiY9TwmvI4vZSYCVkTmvM3hiX/e4='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-g2LiMrg9f+cmlpBbm57eNI3eEMPZ0AnmZQkTZZPW6cI=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-tWISdir6hKVogNaqNPgOFW/sODMVSHhfVl9jiWUA2gI='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2154,6 +2154,8 @@
   .fiche-akaartpijl.open{color:var(--ink)}
   .loc-kaartsvg{display:block;width:100%;height:auto;border:1px solid var(--lijn)}
   .loc-snede{margin-top:8px}
+  .loc-info{padding:6px 0 10px;border-bottom:1px solid var(--lijn)}
+  .loc-bronknop{margin-top:8px;min-height:44px;padding:0 16px}
   .loc-sneesvg{display:block;width:100%;height:auto;border:1px solid var(--lijn)}
   .loc-kaartuitleg{margin:6px 0 0;font-size:var(--tk);color:var(--ink-soft)}
   .loc-samen{padding:8px 0 6px;border-bottom:1px solid var(--lijn)}
@@ -3463,7 +3465,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v272";
+const VERSIE="v273";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -13262,7 +13264,7 @@ function bouwBestekkast(bak,koppen,opties){
       r.appendChild(maakEl("span","fiche-atitel",a.titel||""));
       if(a.via)r.appendChild(maakEl("span","fiche-avia","via "+a.via));
       /* De Locatie draagt lange titels met een bronregel en soms een verwijzing: de regel staat eronder, het pijltje achteraan. */
-      if(a.extern)r.appendChild(maakEl("span","fiche-aextern","\u2197"));
+      if(a.extern)r.appendChild(maakEl("span","fiche-aextern",a.infoBlok?(a.infoOpen?"info \u25B4":"info \u25BE"):"\u2197"));
       /* Het subpijltje: klapt het kaartje van deze regel uit eronder. Een span in plaats van een knop, want een knop in een knop mag niet. */
       if(a.kaartDoe){
         const pijl=maakEl("span","fiche-akaartpijl"+(a.kaartOpen?" open":""),"kaart "+(a.kaartOpen?"\u25B4":"\u25BE"));
@@ -13274,6 +13276,7 @@ function bouwBestekkast(bak,koppen,opties){
       if(a.sub){ r.classList.add("met-sub"); r.appendChild(maakEl("span","fiche-asub",a.sub)); }
       if(a.doe)r.onclick=a.doe;
       bak.appendChild(r); n++;
+      if(a.infoOpen&&a.infoBlok)bak.appendChild(a.infoBlok());
       if(a.kaartDoe&&a.kaartOpen&&a.kaartBlok)bak.appendChild(a.kaartBlok());   // het uitgeklapte kaartje van deze regel, eronder
       /* De opdrachtgever, 30/09/2026, met een voorbeeld van een blad met een kop, een lijn en lopende tekst:
          "wanneer je klikt op de ondercat, bv 05.21, wil ik ook uitschuiven en dan deze layout,
@@ -22229,7 +22232,7 @@ function locPlanRegels(features,soort,punt){
     const p=f.properties||{};
     const naam=p.naam||p.dgnaam||"Onbekend plan";
     const fase=p.fase&&(LOCFASE[p.fase]||p.fase);
-    const r={titel:naam, sub:[LOCSOORT[soort]||soort,fase].filter(Boolean).join(" · "), link:p.fichelink||null};
+    const r={titel:naam, sub:[LOCSOORT[soort]||soort,fase].filter(Boolean).join(" · "), link:p.fichelink||null, eig:locEig(p)};
     if(punt)r.geo=locGeo([f],punt.x,punt.y,LOCKLEUR.plan);
     return r;
   });
@@ -22238,7 +22241,7 @@ function locGewestplan(features,x,y,metGeo){
   const raak=(features||[]).filter(f=>raaktVlak(f,x,y));
   return locOntdubbel(raak.map(f=>{
     const p=f.properties||{};
-    const r={titel:p.svnaam||p.categorie||"Gewestplanzone", sub:"gewestplan"+(p.categorie?" · "+p.categorie:""), link:p.fichelink||null};
+    const r={titel:p.svnaam||p.categorie||"Gewestplanzone", sub:"gewestplan"+(p.categorie?" · "+p.categorie:""), link:p.fichelink||null, eig:locEig(p)};
     if(metGeo)r.geo=locGeo([f],x,y,LOCKLEUR.plan);
     return r;
   }));
@@ -22248,7 +22251,7 @@ function locVergunningRegels(features,soort,punt){
     const p=f.properties||{};
     const r={titel:(p.projectnummer?"OMV_"+p.projectnummer:"Onbekend project")+(p.handeling_omschrijving?" — "+p.handeling_omschrijving:""),
              sub:[soort,p.huidige_toestand,(p.datum_huidige_toestand||"").slice(0,10),p.aanvrager].filter(Boolean).join(" · "),
-             datum:p.datum_huidige_toestand||"", link:p.project_link||null};
+             datum:p.datum_huidige_toestand||"", link:p.project_link||null, eig:locEig(p)};
     if(punt)r.geo=locGeo([f],punt.x,punt.y,LOCKLEUR.aanvraag);
     return r;
   });
@@ -22256,7 +22259,7 @@ function locVergunningRegels(features,soort,punt){
 function locErfgoedRegels(features,type,punt){
   return (features||[]).map(f=>{
     const p=f.properties||{};
-    const r={titel:p.naam||p.type_naam||"Onbekende bescherming", sub:type, link:p.url||null};
+    const r={titel:p.naam||p.type_naam||"Onbekende bescherming", sub:type, link:p.url||null, eig:locEig(p)};
     if(punt)r.geo=locGeo([f],punt.x,punt.y,LOCKLEUR.erfgoed);
     return r;
   });
@@ -22745,7 +22748,7 @@ async function haalLocatie(lat,lon,hulp){
     const fiche=(((w(2)||{}).features||[])[0]||{}).properties;
     if(gir.length)regels.push({titel:stuks(gir.length,"OVAM-bodemonderzoek","OVAM-bodemonderzoeken")+" binnen 50 m",
                                sub:gir.map(f=>(f.properties||{}).uitspraak).filter(Boolean).slice(0,3).join(" · "),
-                               link:(fiche&&fiche.bodemfiche)||null});
+                               link:(fiche&&fiche.bodemfiche)||null, eig:locEig(fiche)});
     else if(a[1].status==="fulfilled")regels.push({titel:"Geen OVAM-bodemonderzoeken binnen 50 m", sub:"", link:null});
     const pf=((w(3)||{}).features||[])[0];
     if(pf)regels.push({titel:"PFAS no-regret-zone binnen 100 m", sub:String((pf.properties||{}).no_regret_maatregelen||""), link:null});
@@ -22757,12 +22760,12 @@ async function haalLocatie(lat,lon,hulp){
     if(q&&q.properties){
       const qp=q.properties;
       regels.push({titel:"Ondergrond (quartair): "+(qp.profiel||"onbekend"), sub:"quartairgeologische kaart"+(qp.type?" · type "+qp.type:""),
-                   link:qp.uitgebreide_legende||null, geo:locGeo([q],x,y,LOCKLEUR.bodem)});
+                   link:qp.uitgebreide_legende||null, eig:locEig(qp), geo:locGeo([q],x,y,LOCKLEUR.bodem)});
     }
     const kb=((w(6)||{}).features||[])[0];
     if(kb&&kb.properties){
       const kp=kb.properties;
-      regels.push({titel:"Quartairgeologische kaart, kaartblad "+(kp.kaartblad||"")+" "+(kp.naam_kaartblad||""), sub:String(kp.auteur||""), link:kp.publicatie||kp.kaart||null});
+      regels.push({titel:"Quartairgeologische kaart, kaartblad "+(kp.kaartblad||"")+" "+(kp.naam_kaartblad||""), sub:String(kp.auteur||""), link:kp.publicatie||kp.kaart||null, eig:locEig(kp)});
     }
     if(a[7].status==="fulfilled"){
       const so=locProefRegels((w(7)||{}).features,x,y,"sondering");
@@ -22863,11 +22866,40 @@ function locErfgoedLijst(features,x,y,max){
     const naam=p.naam||p.type_naam||"Onbekend";
     const dat=p.datum_ind?String(p.datum_ind).slice(0,10):"";
     uit.push({d, titel:naam, sub:[p.type_naam, d===0?"op je punt":"op "+Math.round(d)+" m", p.locatie, dat].filter(Boolean).join(" · "),
-              link:p.url||p.uri||null, geo:locGeo([f],x,y,LOCKLEUR.erfgoed)});
+              link:p.url||p.uri||null, eig:locEig(p), geo:locGeo([f],x,y,LOCKLEUR.erfgoed)});
   });
   uit.sort((a,b)=>a.d-b.d);
   const gezien=new Set();
   return uit.filter(r=>{ const k=r.titel+"|"+r.sub; if(gezien.has(k))return false; gezien.add(k); return true; }).slice(0,max||14).map(r=>{ delete r.d; return r; });
+}
+/* De velden van een dienst, leesbaar, voor het infoblok van een regel: enkel tekst en getallen (geen geometrie, geen adressen), hoogstens 14. */
+function locEig(p){
+  const uit=[];
+  Object.keys(p||{}).forEach(k=>{
+    if(uit.length>=14)return;
+    if(/geom|shape|objectid|^fid$|^id$|gml|bbox|link|url|uri|fiche|rapport|publicatie|kaart$/i.test(k))return;
+    let v=p[k]; if(v===null||v===undefined||typeof v==="object"||typeof v==="boolean")return;
+    v=String(v).trim(); if(!v||/^https?:/i.test(v)||v.length>240)return;
+    if(/^\d{4}-\d\d-\d\dT/.test(v))v=v.slice(0,10);
+    uit.push([k.charAt(0).toUpperCase()+k.slice(1).replace(/_/g," "),v]);
+  });
+  return uit;
+}
+/* Het infoblok onder een regel met een bron: wat de app al weet, en een knop om de bron zelf te onderzoeken (die opent via het tussenscherm). */
+function locInfoBlok(g){
+  const blok=maakEl("div","loc-info");
+  blok.appendChild(maakEl("p","loc-kaartuitleg",g.titel+(g.sub?" · "+g.sub:"")));
+  (g.eig||[]).forEach(e=>{
+    const rij=maakEl("div","loc-samenrij");
+    rij.appendChild(maakEl("span","loc-wat",e[0]));
+    rij.appendChild(maakEl("span","loc-waarde",e[1]));
+    blok.appendChild(rij);
+  });
+  if(!(g.eig||[]).length)blok.appendChild(maakEl("p","loc-kaartuitleg","Meer heeft de dienst niet gegeven. De bron zelf heeft misschien meer."));
+  const b=maakEl("button","loc-bronknop","Bron onderzoeken \u2197"); b.type="button";
+  b.onclick=()=>locLink(g.link);
+  blok.appendChild(b);
+  return blok;
 }
 /* Sonderingen en boringen uit de Databank Ondergrond Vlaanderen: de dichtste eerst, met diepte, jaar en een verwijzing naar de fiche of de boorstaat. */
 function locProefRegels(features,x,y,soort,max){
@@ -22884,7 +22916,7 @@ function locProefRegels(features,x,y,soort,max){
     const extra=soort==="boring"?[p.lithologische_beschrijving?"met lithologische beschrijving":"",p.dikte_quartair?"quartair "+p.dikte_quartair+" m":""]:[p.conus?"conus "+p.conus:""];
     uit.push({d, z:typeof p.Z_mTAW==="number"?p.Z_mTAW:null, titel:(soort==="boring"?"Boring ":"Sondering ")+nr,
               sub:["op "+Math.round(d)+" m",diep,jaar,p.uitvoerder].concat(extra).filter(Boolean).join(" · "),
-              link:(soort==="boring"?(p.rapport||p.fiche):p.fiche)||null, punten:[[px,py]]});
+              link:(soort==="boring"?(p.rapport||p.fiche):p.fiche)||null, eig:locEig(p), punten:[[px,py]]});
   });
   uit.sort((a,b)=>a.d-b.d);
   return uit.slice(0,max||6).map(r=>{ delete r.d; if(r.z===null)delete r.z; return r; });
@@ -23074,7 +23106,7 @@ function locMoetOpnieuw(oud,hier,nu){
   return Math.hypot(L.x-oud.x,L.y-oud.y)>LOCVERSAFSTAND;
 }
 
-const locUI={open:null,data:null,bezig:false,melding:"",kaarten:new Set(),sneden:{},schaal:{},wijd:{}};
+const locUI={open:null,data:null,bezig:false,melding:"",kaarten:new Set(),info:new Set(),sneden:{},schaal:{},wijd:{}};
 /* Een verwijzing naar buiten: de pagina opent in een nieuw tabblad en de app blijft staan waar ze was (de opdrachtgever, 13/10/2026: eerst "A in dezelfde
    tab", daarna na de toesteltest "we verlaten nog steeds de app en dan weet ik niet hoe terug te gaan"; gekozen: nieuw tabblad). Eerst een
    tussenscherm met een X om te blijven, dat ook zegt hoe je terugkomt. Het openen gebeurt in de tik op "Openen" zelf (`opJa`). */
@@ -23209,7 +23241,8 @@ function locTeken(){
         const uit=r.regels.map((g,j)=>{
           const sl=rb.sleutel+"."+j;
           const heeft=!!(g.geo||g.cellen||g.punten||g.lithoId);          // cellen mag een lege lijst zijn: dan toont het kaartje enkel je plek
-          return {nr:(i+1)+"."+(j+1), titel:g.titel, sub:g.sub||"", extern:!!g.link, doe:g.link?(()=>locLink(g.link)):null,
+          return {nr:(i+1)+"."+(j+1), titel:g.titel, sub:g.sub||"", extern:!!g.link, infoOpen:!!g.link&&locUI.info.has(sl), infoBlok:g.link?(()=>locInfoBlok(g)):null,
+                  doe:g.link?(()=>{ if(locUI.info.has(sl))locUI.info.delete(sl); else locUI.info.add(sl); locTeken(); }):null,
                   kaartDoe:heeft?(()=>{ if(locUI.kaarten.has(sl))locUI.kaarten.delete(sl); else locUI.kaarten.add(sl); locTeken(); }):null,
                   kaartOpen:heeft&&locUI.kaarten.has(sl),
                   kaartBlok:heeft?(()=>locKaartBlok(d,g,sl,rb.sleutel)):null};
