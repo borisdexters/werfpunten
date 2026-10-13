@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-DVNCUp1VfYr0Ln3yEkSTT7aADdyXpvoyVHvtZ+VNxDw=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-396VOU0YdLidpLE7fbbdzLgVZOtchuJ7v0u1XnWJTRY='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-urJI2sphMQtpvA5aVSata2prSG5yn6UoMJeXiMUd5Uc=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-k9rbm4zeuYjReLFOdjctZ3eGbulhNfvmY1hAfJ/MEcA='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1058,10 +1058,19 @@
      De voet van het algemene venster blijft er enkel als er iets in staat (Kopieer, of de ja-knop van een vraag). */
   #dlg,#beheerdlg{width:100%;max-width:100%;max-height:none;margin:auto 0 0 0;padding:0;border:none;background:transparent;overflow:visible}
   #dlg .blad,#beheerdlg .blad{position:relative;display:flex;flex-direction:column;max-height:min(62dvh,calc(100dvh - 64px));overflow:hidden;transition:max-height .25s ease;
-    background:var(--surface);border-radius:44px 44px 0 0;padding-bottom:env(safe-area-inset-bottom,0px)}
+    background:var(--surface);border-radius:44px 0 0 0;padding-bottom:env(safe-area-inset-bottom,0px);
+    /* Een hap uit de rechterbovenhoek (104 bij 36 px, zachte rand), afgetrokken van het hele blad; de X zit erin, uiterst rechts. De rechterhoek is dus
+       geen afronding maar de hap zelf. De opdrachtgever, 13/10/2026: "de X met bol ... uiterst rechts en ook een hap uit de rechterbovenhoek". */
+    -webkit-mask-image:linear-gradient(#000,#000),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='104' height='36' viewBox='0 0 104 36'%3E%3Cpath d='M0 0C22 0 30 4 40 14C50 24 62 35 80 35C92 35 100 31 104 25L104 0Z'/%3E%3C/svg%3E");
+    -webkit-mask-size:100% 100%,104px 36px;-webkit-mask-position:0 0,100% 0;-webkit-mask-repeat:no-repeat;-webkit-mask-composite:xor;
+    mask-image:linear-gradient(#000,#000),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='104' height='36' viewBox='0 0 104 36'%3E%3Cpath d='M0 0C22 0 30 4 40 14C50 24 62 35 80 35C92 35 100 31 104 25L104 0Z'/%3E%3C/svg%3E");
+    mask-size:100% 100%,104px 36px;mask-position:0 0,100% 0;mask-repeat:no-repeat;mask-composite:exclude}
   #dlg .dlg-kop,#beheerdlg .dlg-kop{position:relative;padding-top:30px;border-bottom:none;touch-action:none;cursor:grab}
   /* De streep bovenaan: zo zie je dat het blad te trekken is. */
   .blad-greep{position:absolute;left:50%;top:10px;transform:translateX(-50%);width:44px;height:5px;border-radius:3px;background:var(--line-hard,#c7c7c7)}
+  /* De X: een witte bol van 44 px, uiterst rechts, half boven de rand, in de hap. */
+  .blad-x{position:absolute;right:4px;top:-20px;z-index:2;width:44px;height:44px;border-radius:50%;border:none;padding:0;
+    background:var(--surface);color:var(--ink);display:flex;align-items:center;justify-content:center}
   #dlg,#beheerdlg{transition:transform .22s ease}
   @media (prefers-reduced-motion:reduce){#dlg,#beheerdlg,#dlg .blad,#beheerdlg .blad{transition:none}}
   #dlg .dlg-body,#beheerdlg .dlg-body{flex:1;min-height:0;max-height:none;overflow:auto}
@@ -2939,6 +2948,7 @@
 
      De knoppen houden hun oude id, zodat de bedrading er ongewijzigd op blijft passen. -->
 <dialog id="beheerdlg">
+  <button type="button" class="blad-x" id="beheer-sluit" aria-label="Sluiten"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></button>
   <div class="blad">
   <div class="dlg-kop"><span class="blad-greep" aria-hidden="true"></span><h2 id="beheertitel">Beheer</h2></div>
   <div class="dlg-body beheer-body">
@@ -3319,6 +3329,7 @@
 </dialog>
 
 <dialog id="dlg">
+  <button type="button" class="blad-x" id="dlg-sluit" aria-label="Sluiten"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></button>
   <div class="blad">
     <div class="dlg-kop"><span class="blad-greep" aria-hidden="true"></span><h2 id="dlg-titel">Verslagtekst</h2></div>
     <div class="dlg-body" id="dlg-body"></div>
@@ -3454,7 +3465,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v267";
+const VERSIE="v268";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -8859,12 +8870,14 @@ document.getElementById("beheerknop").onclick=()=>{
   toonOpslagstand();
 };
 document.getElementById("noodterug").onclick=()=>{ noodkopieTerugzetten(); };
+document.getElementById("beheer-sluit").onclick=()=>
+  document.getElementById("beheerdlg").close();
 document.getElementById("beheerdlg").addEventListener("click",e=>{ if(e.target===document.getElementById("beheerdlg"))document.getElementById("beheerdlg").close(); });
 document.getElementById("beheerdlg").addEventListener("click",e=>{
   const b=e.target.closest("button");
   /* De schakelaar van de AI-modus opent geen venster; hij wisselt van stand, en die stand wil
      je zien staan -- zoals de vliegtuigmodus. Dus daar blijft het venster open. */
-  const blijft=["aibeheer"];
+  const blijft=["beheer-sluit","aibeheer"];
   if(b&&!blijft.includes(b.id))document.getElementById("beheerdlg").close();
 },true);
 
@@ -23310,7 +23323,9 @@ async function kopieer(t){
 }
 
 const dlg=document.getElementById("dlg");
-/* Geen X meer (de opdrachtgever, 13/10/2026): een streep bovenaan toont dat je het blad kunt trekken, en wegduwen of op de donkere rand tikken sluit het. */
+/* De X staat uiterst rechts, in een hap uit de rechterbovenhoek van het blad; de streep in het midden toont dat je het blad kunt trekken.
+   Wegduwen of op de donkere rand tikken sluit het ook. */
+document.getElementById("dlg-sluit").onclick=()=>dlg.close();
 dlg.addEventListener("click",e=>{ if(e.target===dlg)dlg.close(); });
 
 /* ---- het blad slepen ----
