@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-0BZiR028b/Llkj8Utv+2r5wcS0RGAJ/efToCBCrT/wg=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-tG31NV1gSjg0ccI8f667EDoXnsTd9MTtiObtwQuxpME='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-sfd8I1ifR9Kta/IgGL5oz8CTy6HkmtlqmrPLKuBOIeQ=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-7WQ20asS4Nkk4wRnXFZcwJ0bvF39ziXwwcELznKnZKU='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1053,8 +1053,22 @@
   .dlg-voet button{flex:1}
   /* De opdrachtgever, 13/10/2026: "sluiten weg en rechtsboven een X om weg te klikken". Elk venster sluit met een grote X in de kop, niet met een knop onderaan.
      De voet van het algemene venster blijft er enkel als er iets in staat (Kopieer, of de ja-knop van een vraag). */
-  .dlg-x{margin-left:auto;flex:none;width:48px;height:48px;border-radius:12px;border:none;background:none;color:var(--ink);
-    font-size:32px;line-height:1;padding:0;display:inline-flex;align-items:center;justify-content:center}
+  /* ---- het uitschuifblad ----
+     de opdrachtgever, 13/10/2026, met een schermvoorbeeld: "een X, centraal, half boven het uitschuifscherm; in het scherm is een bolletje uitgesneden; het
+     schermvullende uitschuifscherm met de hoeken links en rechts mooi afgerond". Het blad ligt onderaan, over de hele breedte, schuift omhoog,
+     heeft afgeronde bovenhoeken en een rond gat in zijn bovenrand waarin de ronde X zit. De X staat naast het blad (niet erin), want een masker
+     knipt alles weg wat buiten de rand valt. */
+  #dlg,#beheerdlg{width:100%;max-width:100%;max-height:none;margin:auto 0 0 0;padding:0;border:none;background:transparent;overflow:visible}
+  #dlg .blad,#beheerdlg .blad{position:relative;display:flex;flex-direction:column;max-height:calc(100dvh - 64px);overflow:hidden;
+    background:var(--surface);border-radius:30px 30px 0 0;padding-bottom:env(safe-area-inset-bottom,0px);
+    -webkit-mask:radial-gradient(circle 38px at 50% 0,transparent 37px,#000 38px);mask:radial-gradient(circle 38px at 50% 0,transparent 37px,#000 38px)}
+  #dlg .dlg-kop,#beheerdlg .dlg-kop{padding-top:38px;border-bottom:none}
+  #dlg .dlg-body,#beheerdlg .dlg-body{flex:1;min-height:0;max-height:none;overflow:auto}
+  .blad-x{position:absolute;left:50%;top:-26px;transform:translateX(-50%);z-index:2;width:52px;height:52px;border-radius:50%;border:none;padding:0;
+    background:var(--surface);color:var(--ink);font-size:32px;line-height:1;display:flex;align-items:center;justify-content:center}
+  #dlg[open],#beheerdlg[open]{animation:blad-op .28s ease-out}
+  @keyframes blad-op{from{transform:translateY(100%)}to{transform:none}}
+  @media (prefers-reduced-motion:reduce){#dlg[open],#beheerdlg[open]{animation:none}}
   #dlg .dlg-voet:has(#dlg-kopieer[style*="none"]){display:none}
   #invoerdlg{width:min(94vw,520px);max-width:94vw}
   #invoerdlg textarea{width:100%;min-height:150px;border:1px solid var(--line);border-radius:var(--radius);
@@ -2926,7 +2940,9 @@
 
      De knoppen houden hun oude id, zodat de bedrading er ongewijzigd op blijft passen. -->
 <dialog id="beheerdlg">
-  <div class="dlg-kop"><h2 id="beheertitel">Beheer</h2><button type="button" class="dlg-x" id="beheer-sluit" aria-label="Sluiten">&#215;</button></div>
+  <button type="button" class="blad-x" id="beheer-sluit" aria-label="Sluiten">&#215;</button>
+  <div class="blad">
+  <div class="dlg-kop"><h2 id="beheertitel">Beheer</h2></div>
   <div class="dlg-body beheer-body">
     <h3>Deze werf</h3>
     <p class="beheer-uitleg">Hoort bij dit dossier. Een andere werf draagt haar eigen lijsten.</p>
@@ -2976,6 +2992,7 @@
       <button type="button" id="bijwerkknop">bijwerken — kijk of er een nieuwe versie is</button>
     </div>
     <p class="beheer-versie">Gridveld <span id="versie"></span></p>
+  </div>
   </div>
 </dialog>
 
@@ -3304,10 +3321,13 @@
 </dialog>
 
 <dialog id="dlg">
-  <div class="dlg-kop"><h2 id="dlg-titel">Verslagtekst</h2><button type="button" class="dlg-x" id="dlg-sluit" aria-label="Sluiten">&#215;</button></div>
-  <div class="dlg-body" id="dlg-body"></div>
-  <div class="dlg-voet">
-    <button id="dlg-kopieer">Kopieer</button>
+  <button type="button" class="blad-x" id="dlg-sluit" aria-label="Sluiten">&#215;</button>
+  <div class="blad">
+    <div class="dlg-kop"><h2 id="dlg-titel">Verslagtekst</h2></div>
+    <div class="dlg-body" id="dlg-body"></div>
+    <div class="dlg-voet">
+      <button id="dlg-kopieer">Kopieer</button>
+    </div>
   </div>
 </dialog>
 
@@ -3437,7 +3457,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v262";
+const VERSIE="v263";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -8947,8 +8967,9 @@ function toastEl(){
      omdat ze per venster verschilt. */
   if(vensters.length){
     const balk=doel.querySelector(".teken-balk, .dlg-kop, .snel-balk");
-    const h=balk?Math.round(balk.getBoundingClientRect().height):0;
-    el.style.top=(h+12)+"px";
+    /* Een blad ligt onderaan: de melding staat net onder zijn kop, dus gemeten vanaf de bovenkant van het scherm tot de onderkant van die kop. */
+    const onder=balk?Math.round(balk.getBoundingClientRect().bottom):0;
+    el.style.top=(onder+12)+"px";
   }else el.style.top="";
   return el;
 }
