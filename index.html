@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-rpXJoWwHkOmJECXq0rCfNoI2g97rAGFtygAU8m0xCOY=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-LuGx13KBDFl7Ou19nIrtEFTyPMbQIC2FQv4mpPNC6M8='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-C6ZEqWX6Ykpczx7uBKiGaJtFODExmSR43O/kVAbCYP4=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-LuGx13KBDFl7Ou19nIrtEFTyPMbQIC2FQv4mpPNC6M8='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3461,7 +3461,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v270";
+const VERSIE="v271";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -23073,7 +23073,25 @@ function locMoetOpnieuw(oud,hier,nu){
 }
 
 const locUI={open:null,data:null,bezig:false,melding:"",kaarten:new Set(),sneden:{},schaal:{},wijd:{}};
-function locLink(l){ try{ window.open(l,"_blank","noopener"); }catch(e){} }
+/* Een verwijzing naar buiten: de pagina opent in dit tabblad, zodat de terugknop van Safari je terugbrengt in de app (de opdrachtgever, 13/10/2026:
+   "A in dezelfde tab, en ook een X om weg te klikken"). Eerst een tussenscherm met een X om te blijven: een nieuw tabblad of een andere site
+   heeft geen X die de app kan zetten, want de pagina is van een ander. Zoals bij elke bevestiging dient de kopieerknop als "Openen". */
+async function locUitstap(url,hulp){
+  const h=hulp||{};
+  let host="";
+  try{ const u=new URL(url); if(u.protocol!=="https:"&&u.protocol!=="http:")return false; host=u.host; }catch(e){ return false; }
+  const dlg=document.getElementById("dlg");
+  locUI.weg=true; try{ if(dlg.open)dlg.close(); }catch(e){}
+  const ja=await (h.vraag||vraagJa)("Naar "+host,[
+    "Je verlaat de app tijdelijk: deze pagina opent in <b>dit tabblad</b>.",
+    "Terug in de app kom je met de terugknop <b>\u2039</b> van Safari, linksonder.",
+    "<small>"+veilig(url)+"</small>"],"Openen");
+  locUI.weg=false;
+  if(ja){ (h.ga||(u=>{ location.href=u; }))(url); return true; }
+  if(!h.vraag)toonLocatie();                      // je bleef: het Locatie-venster staat er weer, met zijn gegevens en de open rubriek
+  return false;
+}
+function locLink(l){ locUitstap(l); }
 /* Het kaartje van één regel: de buurt van de werf met het vlak van dit kenmerk erop, en een regel uitleg. */
 /* De doos rond een kaartje: erop tikken gaat naar de volgende schaal. `maak(schaal,wijd)` tekent het kaartje; de wijde gegevens (gewestplan, erfgoed
    in de buurt) worden pas gehaald als de schaal meer toont dan het eerste venster, met het merk als wachtbeeld. */
