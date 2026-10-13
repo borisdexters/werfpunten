@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-TzPxclf/5lRP0GsGbh9BBgMZeFxa/grky0UuYnwxWG4=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-mtlm3ne4OBkpNHg3kHw/8uxnt7Dbnw7OvF/hOyegaMI='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-aTFZUZu4I6lh8Z2jAOaXkSjfGfQJUqlViB7fJEchexk=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-mtlm3ne4OBkpNHg3kHw/8uxnt7Dbnw7OvF/hOyegaMI='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3434,7 +3434,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v258";
+const VERSIE="v259";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -22333,7 +22333,7 @@ function locHoeken(ring,max){
   const kies=draai.filter(d=>d.h>=25).sort((a,b)=>b.h-a.h).slice(0,max||8).map(d=>d.p);
   return kies.length?kies:r.slice(0,max||8);
 }
-const LOCKLEUR={plan:"#2F6DB5",aanvraag:"#B26A00",natuur:"#2E7D32",erfgoed:"#8E24AA",bodem:"#8D6E63",geluid:"#E65100"};
+const LOCKLEUR={plan:"#2F6DB5",aanvraag:"#B26A00",natuur:"#2E7D32",erfgoed:"#C62828",bodem:"#8D6E63",geluid:"#E65100"};
 const LOCWATERKLEUR={0:"#E3EFF9",1:"#BBD7F0",2:"#8FBBE3",3:"#4F8FD0",4:"#1F5FAE"};
 const LOCCEL=3.17;                                  // de watertoets is een raster van vakjes van ongeveer 3 bij 3 m
 function locRingenVan(f){
@@ -22374,6 +22374,12 @@ function locGeo(features,x,y,kleur,straal){
   }));
   return uit.length?[{r:uit,c:kleur}]:null;
 }
+/* Alleen een klein vlak (een perceel, een gebouw) kleurt het GRB eronder rood; een zone van een hele binnenstad zou alles rood maken. */
+const LOCRODEMAX=5000;                       // m²
+function locRingOpp(r){
+  let a=0; for(let i=0,j=r.length-1;i<r.length;j=i++)a+=(r[j][0]*r[i][1]-r[i][0]*r[j][1]);
+  return Math.abs(a)/2;
+}
 function locKaartSvg(k,opties){
   const opt=opties||{};
   const doel=k&&k.doel&&k.doel.length>=4?k.doel:null;
@@ -22381,10 +22387,10 @@ function locKaartSvg(k,opties){
   const geo=opt.geo||null, cellen=opt.cellen||null, punt=opt.punt||null;
   if(doel){
     const xs=doel.map(p=>p[0]), ys=doel.map(p=>p[1]);
-    const marge=cellen?100:((geo||opt.punten)?45:16);          // het water kijkt 100 m rond, de rest 45 m
+    const marge=opt.venster||(cellen?100:((geo||opt.punten)?45:16));          // het water kijkt 100 m rond, de rest 45 m
     x0=Math.min(...xs)-marge; x1=Math.max(...xs)+marge; y0=Math.min(...ys)-marge; y1=Math.max(...ys)+marge;
   }else if(punt){
-    x0=punt.x-60; x1=punt.x+60; y0=punt.y-60; y1=punt.y+60;
+    const v=opt.venster||60; x0=punt.x-v; x1=punt.x+v; y0=punt.y-v; y1=punt.y+v;
   }else return "";
   (opt.punten||[]).forEach(q=>{ x0=Math.min(x0,q[0]-12); x1=Math.max(x1,q[0]+12); y0=Math.min(y0,q[1]-12); y1=Math.max(y1,q[1]+12); });
   // een waterloop kan op 300 m liggen: het kaartje groeit mee tot de loop erop staat, hoogstens 500 m van je plek
@@ -22397,9 +22403,19 @@ function locKaartSvg(k,opties){
   const pad=r=>"M"+r.map(p=>X(p[0])+" "+Y(p[1])).join("L")+"Z";
   let o='<svg class="loc-kaartsvg" viewBox="0 0 '+Math.round(b*100)/100+' '+Math.round(h*100)/100+'" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Kaartje van deze plek">';
   o+='<rect width="'+b+'" height="'+h+'" fill="#FAF9F5"/>';
+  /* Erfgoed: het GRB op de plek van het erfgoedelement wordt rood. Een perceel of gebouw telt mee als zijn middelpunt in het vlak van het
+     erfgoed ligt (de opdrachtgever, 13/10/2026: "de locatie van de erfgoedelementen ook zien, kleur de GRB daar rood"). */
+  const rood=opt.rood||null;
+  const middenIn=r=>{
+    if(!rood||!rood.length)return false;
+    let sx=0,sy=0; const n=r.length>1?r.length-1:1;
+    for(let i=0;i<n;i++){ sx+=r[i][0]; sy+=r[i][1]; }
+    const cx=sx/n, cy=sy/n;
+    return rood.some(g=>inVlak(g,cx,cy));
+  };
   if(k){
-    (k.buren||[]).forEach(r=>{ o+='<path d="'+pad(r)+'" fill="#EFECE4" stroke="#B8B2A5" stroke-width="'+fs*0.05+'"/>'; });
-    (k.gebouwen||[]).forEach(r=>{ o+='<path d="'+pad(r)+'" fill="#D8D3C6" stroke="#8C8678" stroke-width="'+fs*0.05+'"/>'; });
+    (k.buren||[]).forEach(r=>{ const rd=middenIn(r); o+='<path d="'+pad(r)+'" fill="'+(rd?"#F4A6A6":"#EFECE4")+'" stroke="'+(rd?"#B71C1C":"#B8B2A5")+'" stroke-width="'+fs*(rd?0.12:0.05)+'"/>'; });
+    (k.gebouwen||[]).forEach(r=>{ const rd=middenIn(r); o+='<path d="'+pad(r)+'" fill="'+(rd?"#E57373":"#D8D3C6")+'" stroke="'+(rd?"#B71C1C":"#8C8678")+'" stroke-width="'+fs*(rd?0.12:0.05)+'"/>'; });
   }
   // de laag van dit kenmerk: vlakken (plan, natuur, erfgoed, ...) of watervakjes
   (geo||[]).forEach(g=>(g.l||[]).forEach(r=>{ o+='<path d="M'+r.map(q=>X(q[0])+" "+Y(q[1])).join("L")+'" fill="none" stroke="'+g.c+'" stroke-width="'+fs*0.4+'" stroke-linecap="round" stroke-linejoin="round"/>'; }));
@@ -22407,6 +22423,7 @@ function locKaartSvg(k,opties){
   (cellen||[]).forEach(c=>{ o+='<rect x="'+X(c[0]-LOCCEL/2)+'" y="'+Y(c[1]+LOCCEL/2)+'" width="'+LOCCEL+'" height="'+LOCCEL+'" fill="'+(LOCWATERKLEUR[c[2]]||"#8FBBE3")+'" fill-opacity="0.85"/>'; });
   if(doel)o+='<path d="'+pad(doel)+'" fill="'+((geo||cellen||opt.punten)?"none":"#CFE0F3")+'" fill-opacity="0.55" stroke="#0A0A0A" stroke-width="'+fs*(geo||cellen||opt.punten?0.18:0.12)+'"/>';
   (opt.punten||[]).forEach(q=>{ o+='<circle cx="'+X(q[0])+'" cy="'+Y(q[1])+'" r="'+fs*0.5+'" fill="#0A0A0A" stroke="#fff" stroke-width="'+fs*0.15+'"/>'; });
+  (opt.labels||[]).forEach(lb=>{ o+='<text x="'+X(lb.x)+'" y="'+Y(lb.y)+'" font-size="'+Math.round(fs*0.75*100)/100+'" font-family="Helvetica,Arial,sans-serif" font-weight="700" fill="#7F0000" stroke="#fff" stroke-width="'+fs*0.22+'" paint-order="stroke" text-anchor="middle" dominant-baseline="middle">'+veilig(lb.t)+'</text>'; });
   if(punt&&(geo||cellen||opt.punten))o+='<circle cx="'+X(punt.x)+'" cy="'+Y(punt.y)+'" r="'+fs*0.45+'" fill="#B3261E" stroke="#fff" stroke-width="'+fs*0.15+'"/>';
   // de maten van elke zijde, evenwijdig aan de zijde, naast het perceel (alleen op het kaartje van het perceel zelf)
   if(doel&&!(geo||cellen||opt.punten)){
@@ -22626,16 +22643,18 @@ async function haalLocatie(lat,lon,hulp){
                                                                           geo:locGeo([vlak[b]],x,y,LOCKLEUR.geluid)}));
   });
   taak("perceel",async()=>{
-    const kader=[x-60,y-60,x+60,y+60];
-    const [fs,gb]=await Promise.all([grb("GRB:ADP",kader,80), grb("GRB:GBG",kader,150).catch(()=>[])]);
-    const f=fs.find(g=>raaktVlak(g,x,y))||null;
+    const kader=[x-150,y-150,x+150,y+150];       // 150 m: het erfgoed in de straat ligt tot daar, en het GRB eronder wordt rood
+    /* Het eigen perceel apart en klein: een dienst geeft de eerste 200 percelen van het kader, niet de dichtste, en het perceel waar je staat
+       mag niet wegvallen omdat de buurt groter is geworden. */
+    const [eigen,fs,gb]=await Promise.all([grb("GRB:ADP",[x-30,y-30,x+30,y+30],30), grb("GRB:ADP",kader,200).catch(()=>[]), grb("GRB:GBG",kader,500).catch(()=>[])]);
+    const f=eigen.find(g=>raaktVlak(g,x,y))||fs.find(g=>raaktVlak(g,x,y))||null;
     if(!f)return [];
     const p=f.properties||{};
     const ring=grbRingen(f)[0];
     perceelMaten=locPerceelMaten(ring);
     const doel=locRingKlein(ring);
-    kaart={doel, buren:fs.filter(g=>g!==f).map(g=>locRingKlein(grbRingen(g)[0])).filter(r=>r.length>=4).slice(0,40),
-           gebouwen:gb.map(g=>locRingKlein(grbRingen(g)[0])).filter(r=>r.length>=4).slice(0,80), hoeken:[]};
+    kaart={doel, buren:fs.filter(g=>g!==f&&!(f.id&&g.id===f.id)).map(g=>locRingKlein(grbRingen(g)[0])).filter(r=>r.length>=4).slice(0,150),
+           gebouwen:gb.map(g=>locRingKlein(grbRingen(g)[0])).filter(r=>r.length>=4).slice(0,350), hoeken:[]};
     /* De hoogte op de hoeken: één meting per hoek, elk apart; een hoek zonder antwoord blijft zonder getal. */
     const dtm=(px,py)=>(h.dhm||(u=>tekst(u)))(DHMWMS+"?service=WMS&version=1.3.0&request=GetFeatureInfo&layers=DHMVII_DTM_1m&query_layers=DHMVII_DTM_1m"+
       "&crs=EPSG:31370&bbox="+(px-1)+","+(py-1)+","+(px+1)+","+(py+1)+"&width=3&height=3&i=1&j=1&info_format=text/plain");
@@ -22906,13 +22925,15 @@ function locLink(l){ try{ window.open(l,"_blank","noopener"); }catch(e){} }
 function locKaartBlok(d,g){
   const blok=maakEl("div","loc-kaart onder");
   const punt={x:d.x,y:d.y};
-  const svg=g.cellen?locKaartSvg(d.kaart,{cellen:g.cellen,punt}):locKaartSvg(d.kaart,{geo:g.geo,punten:g.punten,punt});
+  const erf=!!(g.geo&&g.geo[0]&&g.geo[0].c===LOCKLEUR.erfgoed);
+  const svg=g.cellen?locKaartSvg(d.kaart,{cellen:g.cellen,punt}):locKaartSvg(d.kaart,{geo:g.geo,punten:g.punten,punt,rood:erf?g.geo.reduce((a,x)=>a.concat((x.r||[]).filter(rg=>locRingOpp(rg)<=LOCRODEMAX)),[]):null,venster:erf?70:0});
   blok.innerHTML=svg;
   let uitleg="Rood punt: waar je stond. Zwart: het perceel. Grijs: de buren en gebouwen (GRB). Noord is boven.";
   if(g.cellen){
     const k=[...new Set(g.cellen.map(c=>c[2]))].sort();
     uitleg=(k.length?"Elk vakje is ongeveer 3 bij 3 m. Hoe donkerder, hoe groter de kans: "+k.map(n=>(LOCWATERKLASSE[n]||("klasse "+n))).join("; ")+". ":"Er zijn geen overstromingsgevoelige vakjes binnen 100 m rond je plek. ")+uitleg;
-  }else if(g.punten&&!g.geo)uitleg="Zwarte stip: waar deze proef is uitgevoerd. "+uitleg;
+  }else if(erf)uitleg="Rood: het GRB (perceel en gebouw) op de plek van dit erfgoedelement. "+uitleg;
+  else if(g.punten&&!g.geo)uitleg="Zwarte stip: waar deze proef is uitgevoerd. "+uitleg;
   else uitleg="Gekleurd: waar dit kenmerk geldt, in de buurt van je plek. "+uitleg;
   blok.appendChild(maakEl("p","loc-kaartuitleg",uitleg));
   if(g.lithoId){
@@ -22986,6 +23007,20 @@ function locTeken(){
                   kaartOpen:heeft&&locUI.kaarten.has(sl),
                   kaartBlok:heeft?(()=>locKaartBlok(d,g)):null};
         });
+        if(rb.sleutel==="erfgoed"){
+          const mee=r.regels.map((q,jj)=>({q,t:(i+1)+"."+(jj+1)})).filter(z=>z.q.geo&&(z.q.geo[0].r||[]).length&&locRingOpp(z.q.geo[0].r[0])<=LOCRODEMAX);
+          if(mee.length){
+            const blok=maakEl("div","loc-kaart");
+            const alleGeo=mee.reduce((a,z)=>a.concat(z.q.geo),[]);
+            const ringen=alleGeo.reduce((a,x)=>a.concat(x.r||[]),[]);
+            const labels=mee.map(z=>{ const rg=(z.q.geo[0].r||[])[0]; if(!rg||!rg.length)return null;
+              let sx=0,sy=0; const n=rg.length>1?rg.length-1:1; for(let u=0;u<n;u++){ sx+=rg[u][0]; sy+=rg[u][1]; }
+              return {x:sx/n,y:sy/n,t:z.t}; }).filter(Boolean);
+            blok.innerHTML=locKaartSvg(d.kaart,{geo:alleGeo,punt:{x:d.x,y:d.y},rood:ringen,labels,venster:150});
+            blok.appendChild(maakEl("p","loc-kaartuitleg","Overzicht: elk erfgoedelement binnen 150 m, met het GRB (perceel en gebouw) erop in het rood en zijn nummer uit de lijst. Rood punt: waar je stond. Grote zones (zoals een archeologische zone) staan hier niet op: open hun eigen kaartje. Dit zijn de gegevens van Onroerend Erfgoed: een vlak kan ruimer zijn dan het gebouw. Noord is boven."));
+            uit.unshift({blok});
+          }
+        }
         if(rb.sleutel==="perceel"&&d.kaart){
           const blok=maakEl("div","loc-kaart");
           blok.innerHTML=locKaartSvg(d.kaart);
