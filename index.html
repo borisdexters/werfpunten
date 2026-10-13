@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-OSYchJLn9BbKq4WmRWjydugW7rTwhQrEmit8yY8YK+c=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-rmVp+oG9wXGip0YwX0wbKdeGxbm66YdOiAOtaoBB2+8='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-EsK1N0P3u2Rk5p3/yDfVaTAYLDVL/8bQ5OUKkTdPI1w=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-rmVp+oG9wXGip0YwX0wbKdeGxbm66YdOiAOtaoBB2+8='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3434,7 +3434,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v256";
+const VERSIE="v257";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -22387,6 +22387,10 @@ function locKaartSvg(k,opties){
     x0=punt.x-60; x1=punt.x+60; y0=punt.y-60; y1=punt.y+60;
   }else return "";
   (opt.punten||[]).forEach(q=>{ x0=Math.min(x0,q[0]-12); x1=Math.max(x1,q[0]+12); y0=Math.min(y0,q[1]-12); y1=Math.max(y1,q[1]+12); });
+  // een waterloop kan op 300 m liggen: het kaartje groeit mee tot de loop erop staat, hoogstens 500 m van je plek
+  if(punt)(geo||[]).forEach(g=>(g.l||[]).forEach(r=>r.forEach(q=>{
+    if(Math.abs(q[0]-punt.x)<=500&&Math.abs(q[1]-punt.y)<=500){ x0=Math.min(x0,q[0]-10); x1=Math.max(x1,q[0]+10); y0=Math.min(y0,q[1]-10); y1=Math.max(y1,q[1]+10); }
+  })));
   const b=x1-x0, h=y1-y0;
   const fs=Math.max(b,h)/38;
   const X=x=>Math.round((x-x0)*100)/100, Y=y=>Math.round((y1-y)*100)/100;
@@ -22398,6 +22402,7 @@ function locKaartSvg(k,opties){
     (k.gebouwen||[]).forEach(r=>{ o+='<path d="'+pad(r)+'" fill="#D8D3C6" stroke="#8C8678" stroke-width="'+fs*0.05+'"/>'; });
   }
   // de laag van dit kenmerk: vlakken (plan, natuur, erfgoed, ...) of watervakjes
+  (geo||[]).forEach(g=>(g.l||[]).forEach(r=>{ o+='<path d="M'+r.map(q=>X(q[0])+" "+Y(q[1])).join("L")+'" fill="none" stroke="'+g.c+'" stroke-width="'+fs*0.4+'" stroke-linecap="round" stroke-linejoin="round"/>'; }));
   (geo||[]).forEach(g=>(g.r||[]).forEach(r=>{ o+='<path d="'+pad(r)+'" fill="'+g.c+'" fill-opacity="0.38" stroke="'+g.c+'" stroke-width="'+fs*0.12+'"/>'; }));
   (cellen||[]).forEach(c=>{ o+='<rect x="'+X(c[0]-LOCCEL/2)+'" y="'+Y(c[1]+LOCCEL/2)+'" width="'+LOCCEL+'" height="'+LOCCEL+'" fill="'+(LOCWATERKLEUR[c[2]]||"#8FBBE3")+'" fill-opacity="0.85"/>'; });
   if(doel)o+='<path d="'+pad(doel)+'" fill="'+((geo||cellen||opt.punten)?"none":"#CFE0F3")+'" fill-opacity="0.55" stroke="#0A0A0A" stroke-width="'+fs*(geo||cellen||opt.punten?0.18:0.12)+'"/>';
@@ -22468,30 +22473,58 @@ async function haalLocatie(lat,lon,hulp){
     return locOntdubbel(regels).sort((p,q)=>(q.datum||"").localeCompare(p.datum||""));
   });
   taak("water",async()=>{
-    /* Per soort: de klasse op je punt, de klassen in de omgeving (100 m), en de vakjes zelf voor het kaartje. Een oordeel alleen
-       ("niet overstromingsgevoelig") zegt niets over de buurt; de opdrachtgever, 13/10/2026: "bij water zie ik geen info, enkel een oordeel". */
     const R=100;
-    const q=(s,kader)=>locAnt(WATERTOETS+"/"+s+"/MapServer/0/query?geometry="+(kader?(x-R)+","+(y-R)+","+(x+R)+","+(y+R):x+","+y)+
-      "&geometryType="+(kader?"esriGeometryEnvelope":"esriGeometryPoint")+"&inSR=31370"+(kader?"&outSR=31370":"")+
-      "&spatialRel=esriSpatialRelIntersects&outFields=gridcode&returnGeometry="+(kader?"true":"false")+"&f=json",false);
-    const vraag=(s,kader)=>(h.water||q)(s,kader);
+    const arc=(d,l,r,g)=>(h.arc||((u)=>locAnt(u,false)))(locArcUrl(d,l,x,y,r,g));
+    const q=(sv,kader)=>(h.water||((sv2,k2)=>locAnt(WATERTOETS+"/"+sv2+"/MapServer/0/query?geometry="+(k2?(x-R)+","+(y-R)+","+(x+R)+","+(y+R):x+","+y)+
+      "&geometryType="+(k2?"esriGeometryEnvelope":"esriGeometryPoint")+"&inSR=31370"+(k2?"&outSR=31370":"")+
+      "&spatialRel=esriSpatialRelIntersects&outFields=gridcode&returnGeometry="+(k2?"true":"false")+"&f=json",false)))(sv,kader);
     const soorten=[["watertoets_pluviaal","Overstroming door regen (pluviaal)"],["watertoets_fluviaal","Overstroming door waterlopen (fluviaal)"],
                    ["watertoets_kust","Overstroming vanuit zee (kust)"]];
-    const uit=await Promise.allSettled(soorten.map(([sv])=>Promise.all([vraag(sv,false),vraag(sv,true)])));
-    if(uit.every(z=>z.status==="rejected"))throw uit[0].reason;
+    const gw=(laag,r)=>json(locWfs(DOVWFS,laag,null,"&count=20"+locKader(x,y,r)));
+    /* Alles tegelijk en elk apart: een dienst die uitvalt haalt de rest niet mee. */
+    const alle=await Promise.allSettled([
+      ...soorten.map(([sv])=>Promise.all([q(sv,false),q(sv,true)])),                       // 0-2
+      arc("waterinfo/Watertoetskaarten",5,R,true),                                         // 3 nog: van nature overstroombaar
+      arc("waterinfo/Watertoetskaarten",6,R,true),                                         // 4 ROG 2017
+      arc("waterinfo/VHA",2,500,true), arc("waterinfo/VHA",3,500,true),                    // 5-6 waterlopen
+      arc("waterinfo/VHA",5,0,false),                                                      // 7 bekken
+      arc("captatie/captatieverboden",1,0,false),                                          // 8 captatieverbod
+      gw("gw_beleid:gwlichamen",5),                                                        // 9 grondwaterlichaam
+      gw("gw_bescherming:beschermingszone_2026",300), gw("grondwater:beschermingszones_2014",300)]);   // 10-11 beschermingszones
+    if(alle.every(z=>z.status==="rejected"))throw alle[0].reason;
+    const ok=i=>alle[i].status==="fulfilled"?alle[i].value:null;
     const regels=[];
-    uit.forEach((z,i)=>{
-      if(z.status!=="fulfilled")return;
-      const [punt,kader]=z.value;
+    soorten.forEach(([sv,titel],i)=>{
+      const v=ok(i); if(!v)return;
+      const [punt,kader]=v;
       const hier=locWaterKlasse(punt);
       const cellen=locWaterCellen(kader);
       const omgeving=[...new Set(cellen.map(c=>c[2]))].sort().map(k=>(LOCWATERKLASSE[k]||("klasse "+k)).split(" – ")[0]);
       if(i===2&&!hier&&!cellen.length)return;          // de kust: alleen tonen als er iets te melden valt
-      const r={titel:soorten[i][1],
-               sub:"op dit punt: "+(hier||"niet overstromingsgevoelig")+(omgeving.length?" · binnen "+R+" m: klasse "+omgeving.join(", "):" · binnen "+R+" m geen overstromingsgevoelig gebied"),
-               link:null};
-      if(cellen.length)r.cellen=cellen;
-      regels.push(r);
+      regels.push({titel, sub:"op dit punt: "+(hier||"niet overstromingsgevoelig")+(omgeving.length?" · binnen "+R+" m: klasse "+omgeving.join(", "):" · binnen "+R+" m geen overstromingsgevoelig gebied"),
+                   link:null, cellen});
+    });
+    if(ok(3))regels.push(...locArcVlakken(ok(3).features,x,y,p=>"Natuurlijke overstroombaarheid (NOG): "+(p.OMSCHR||"onbekend"),p=>p.BRON?"bron: "+p.BRON:"","#1F7A8C"));
+    if(ok(4))regels.push(...locArcVlakken(ok(4).features,x,y,()=>"Recent overstroomd gebied (ROG 2017)",null,"#B3261E"));
+    let loop=[];
+    if(ok(5))loop=loop.concat(((ok(5).features)||[]));
+    if(ok(6))loop=loop.concat(((ok(6).features)||[]));
+    if(ok(5)||ok(6)){
+      const wl=locWaterlopen(loop,x,y);
+      if(wl.length)regels.push(...wl); else regels.push({titel:"Geen waterloop binnen 500 m", sub:"Vlaamse Hydrografische Atlas (categorie 0 tot 3)", link:null});
+    }
+    const bk=((ok(7)||{}).features||[])[0];
+    if(bk&&bk.attributes)regels.push({titel:"Waterloopbekken: "+(bk.attributes.naamvhazon||"onbekend"), sub:"VHA-zone "+(bk.attributes.vhazonenr||""), link:null});
+    const cp=((ok(8)||{}).features||[])[0];
+    if(cp&&cp.attributes&&cp.attributes.status===1&&!cp.attributes.eindd){
+      const dag=cp.attributes.startd?new Date(cp.attributes.startd).toISOString().slice(0,10):"";
+      regels.push({titel:"Captatieverbod-zone "+(cp.attributes.code||""), sub:["adviesstatus actief"+(dag?" sinds "+dag:""),cp.attributes.naam].filter(Boolean).join(" · "), link:null});
+    }
+    const gl=((ok(9)||{}).features||[]).filter(f=>raaktVlak(f,x,y))[0];
+    if(gl&&gl.properties)regels.push({titel:"Grondwaterlichaam: "+(gl.properties.grondwaterlichaam||"onbekend"), sub:[gl.properties.grondwatersysteem,gl.properties.EU_code].filter(Boolean).join(" · "), link:null});
+    [10,11].forEach(i=>{
+      if(!ok(i))return;
+      (ok(i).features||[]).slice(0,2).forEach(f=>{ const p=f.properties||{}; regels.push({titel:"Grondwaterbeschermingszone: "+(p.naam||p.zone||p.type||"onbekend"), sub:"binnen 300 m", link:null, geo:locGeo([f],x,y,"#1F7A8C",300)}); });
     });
     return regels;
   });
@@ -22782,6 +22815,77 @@ async function locSnede(id,hulp){
   try{ localStorage.setItem(LOCSNEDESLEUTEL+":"+id,JSON.stringify(d)); }catch(e){}
   return d;
 }
+/* ---- water, volledig ----
+   de opdrachtgever, 13/10/2026: "ik zie bij water geen info en geen kaarten". Naast de overstromingskaarten (pluviaal, fluviaal, kust) zijn er
+   de van nature overstroombare gebieden, de recent overstroomde gebieden (ROG), de waterlopen met hun afstand en hun erfdienstbaarheid,
+   het waterloopbekken, de captatieverbodszones en het grondwater. Ze staan bij de VMM (ArcGIS REST, antwoord in esri-JSON) en bij
+   DOV. Een regel zegt altijd of hij op je punt ligt of op welke afstand; elke regel heeft een kaartje. */
+const LOCARCBASIS="https://inspirepub.waterinfo.be/arcgis/rest/services/";
+function locArcUrl(dienst,laag,x,y,r,geometrie){
+  const env=r?(x-r)+","+(y-r)+","+(x+r)+","+(y+r):x+","+y;
+  return LOCARCBASIS+dienst+"/MapServer/"+laag+"/query?where=1%3D1&geometry="+env+"&geometryType="+(r?"esriGeometryEnvelope":"esriGeometryPoint")+
+    "&inSR=31370&outSR=31370&spatialRel=esriSpatialRelIntersects&outFields=*&returnGeometry="+(geometrie?"true":"false")+"&resultRecordCount=60&f=json";
+}
+/* esri-JSON naar iets waar de bestaande afstands- en vlakfuncties mee werken; de velden dragen een voorvoegsel ("ext.gis_admin_vha.wlasvl.catc"): alleen de staart telt. */
+function locArcFeature(f){
+  const a={}; Object.keys((f&&f.attributes)||{}).forEach(k=>{ a[k.split(".").pop()]=f.attributes[k]; });
+  const g=(f&&f.geometry)||{};
+  if(g.rings)return {properties:a, geometry:{type:"MultiPolygon",coordinates:g.rings.map(r=>[r])}};
+  if(g.paths)return {properties:a, paden:g.paths, geometry:{type:"MultiLineString",coordinates:g.paths}};
+  return {properties:a, geometry:null};
+}
+function locAfstandPaden(paden,x,y){
+  let d=Infinity;
+  (paden||[]).forEach(pd=>{
+    for(let k=0;k+1<pd.length;k++){
+      const a=pd[k], b=pd[k+1], dx=b[0]-a[0], dy=b[1]-a[1], l2=dx*dx+dy*dy;
+      const t=l2?Math.max(0,Math.min(1,((x-a[0])*dx+(y-a[1])*dy)/l2)):0;
+      d=Math.min(d,Math.hypot(x-(a[0]+t*dx), y-(a[1]+t*dy)));
+    }
+  });
+  return d;
+}
+function locArcAfstand(f,x,y){ return f.paden?locAfstandPaden(f.paden,x,y):afstandTotPerceel(f,x,y); }
+/* De lijnen of vlakken van één kenmerk voor het kaartje, vereenvoudigd en beperkt tot het venster rond je plek. */
+function locArcGeo(f,x,y,kleur,straal){
+  if(f.paden){
+    const r=straal||150, uit=[];
+    f.paden.forEach(pd=>{
+      let x0=1e18,x1=-1e18,y0=1e18,y1=-1e18; pd.forEach(q=>{ if(q[0]<x0)x0=q[0]; if(q[0]>x1)x1=q[0]; if(q[1]<y0)y0=q[1]; if(q[1]>y1)y1=q[1]; });
+      if(x1<x-r||x0>x+r||y1<y-r||y0>y+r)return;
+      uit.push(locVereenvoudig(pd,1).map(q=>[Math.round(q[0]*10)/10,Math.round(q[1]*10)/10]));
+    });
+    return uit.length?[{l:uit,c:kleur}]:null;
+  }
+  return locGeo([f],x,y,kleur,straal);
+}
+const LOCWATERLOOPCAT={0:"categorie 0",1:"categorie 1",2:"categorie 2",3:"categorie 3",9:"categorie 9"};
+function locWaterlopen(features,x,y,max){
+  const uit=[], gezien=new Set();
+  (features||[]).forEach(raw=>{
+    const f=locArcFeature(raw), p=f.properties;
+    const d=locArcAfstand(f,x,y);
+    if(!isFinite(d)||d>500)return;
+    const sl=String(p.vhag||"")+"|"+String(p.naam||"");
+    if(gezien.has(sl+Math.round(d)))return; gezien.add(sl+Math.round(d));
+    const erf=(typeof p.erfd_l==="number"||typeof p.erfd_r==="number")?"erfdienstbaarheid "+(p.erfd_l??"?")+" m links, "+(p.erfd_r??"?")+" m rechts":"";
+    uit.push({d, titel:"Waterloop "+(p.naam||p.namen||"zonder naam")+" — "+(LOCWATERLOOPCAT[p.catc]||"categorie "+p.catc),
+              sub:["op "+Math.round(d)+" m",erf,p.kwetsbh].filter(Boolean).join(" · "), link:null, geo:locArcGeo(f,x,y,"#1F5FAE",500)});
+  });
+  uit.sort((a,b)=>a.d-b.d);
+  return uit.slice(0,max||6).map(r=>{ delete r.d; return r; });
+}
+function locArcVlakken(features,x,y,titelVan,subVan,kleur){
+  const uit=[];
+  (features||[]).forEach(raw=>{
+    const f=locArcFeature(raw), d=locArcAfstand(f,x,y);
+    if(!isFinite(d)||d>100)return;
+    uit.push({d, titel:titelVan(f.properties), sub:[d===0?"op je punt":"op "+Math.round(d)+" m",subVan?subVan(f.properties):""].filter(Boolean).join(" · "), link:null, geo:locArcGeo(f,x,y,kleur,150)});
+  });
+  uit.sort((a,b)=>a.d-b.d);
+  const gezien=new Set();
+  return uit.filter(r=>{ const k=r.titel+r.sub; if(gezien.has(k))return false; gezien.add(k); return true; }).slice(0,4).map(r=>{ delete r.d; return r; });
+}
 function locAantal(r){ return (r&&!r.fout)?r.regels.length:0; }
 function leesLocatie(){
   try{ const r=localStorage.getItem(pk(LOCSLEUTEL)); return r?JSON.parse(r):null; }catch(e){ return null; }
@@ -22807,9 +22911,9 @@ function locKaartBlok(d,g){
   let uitleg="Rood punt: waar je stond. Zwart: het perceel. Grijs: de buren en gebouwen (GRB). Noord is boven.";
   if(g.cellen){
     const k=[...new Set(g.cellen.map(c=>c[2]))].sort();
-    uitleg="Elk vakje is ongeveer 3 bij 3 m. Hoe donkerder, hoe groter de kans: "+k.map(n=>(LOCWATERKLASSE[n]||("klasse "+n))).join("; ")+". "+uitleg;
+    uitleg=(k.length?"Elk vakje is ongeveer 3 bij 3 m. Hoe donkerder, hoe groter de kans: "+k.map(n=>(LOCWATERKLASSE[n]||("klasse "+n))).join("; ")+". ":"Er zijn geen overstromingsgevoelige vakjes binnen 100 m rond je plek. ")+uitleg;
   }else if(g.punten&&!g.geo)uitleg="Zwarte stip: waar deze proef is uitgevoerd. "+uitleg;
-  else uitleg="Gekleurd: waar dit kenmerk geldt, binnen 150 m rond je plek. "+uitleg;
+  else uitleg="Gekleurd: waar dit kenmerk geldt, in de buurt van je plek. "+uitleg;
   blok.appendChild(maakEl("p","loc-kaartuitleg",uitleg));
   if(g.lithoId){
     const sn=maakEl("div","loc-snede");
@@ -22876,7 +22980,7 @@ function locTeken(){
         if(!r||r.fout)return [{nr:"",titel:"Deze dienst antwoordde niet"+(r&&r.fout?": "+r.fout:"")+". Tik Opnieuw ophalen."}];
         const uit=r.regels.map((g,j)=>{
           const sl=rb.sleutel+"."+j;
-          const heeft=!!(g.geo||g.cellen||g.punten||g.lithoId);
+          const heeft=!!(g.geo||g.cellen||g.punten||g.lithoId);          // cellen mag een lege lijst zijn: dan toont het kaartje enkel je plek
           return {nr:(i+1)+"."+(j+1), titel:g.titel, sub:g.sub||"", extern:!!g.link, doe:g.link?(()=>locLink(g.link)):null,
                   kaartDoe:heeft?(()=>{ if(locUI.kaarten.has(sl))locUI.kaarten.delete(sl); else locUI.kaarten.add(sl); locTeken(); }):null,
                   kaartOpen:heeft&&locUI.kaarten.has(sl),
