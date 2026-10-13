@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-j/xtEBeR2mnkqgBs7rw5fpOHhQMYfqntiuq9tHDkY7M=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-9fXZm1EVbgabECTYJHO3BAWWoYG3lP4R35C3bYgGT1o='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-JRpoc2Ha/IbtcXzcy+k6/+yX2L5nthXOeQVyT2zl8ls=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-uf1jRmNHkYt7cqHnfHgNY1bdtgipckOJHhg0ObFFVzk='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1057,12 +1057,12 @@
      horizontale streep die aangeeft dat je kunt trekken". Er is dus geen sluitknop: wegduwen of op de donkere rand boven het blad tikken sluit het.
      De voet van het algemene venster blijft er enkel als er iets in staat (Kopieer, of de ja-knop van een vraag). */
   #dlg,#beheerdlg{width:100%;max-width:100%;max-height:none;margin:auto 0 0 0;padding:0;border:none;background:transparent;overflow:visible}
-  #dlg .blad,#beheerdlg .blad{position:relative;display:flex;flex-direction:column;height:100dvh;max-height:100dvh;overflow:hidden;
+  #dlg .blad,#beheerdlg .blad{position:relative;display:flex;flex-direction:column;height:calc(100dvh - 14px);max-height:calc(100dvh - 14px);overflow:hidden;
     transition:max-height .25s ease,height .25s ease;background:var(--surface);border-radius:44px 44px 0 0;padding-bottom:env(safe-area-inset-bottom,0px)}
   /* Twee standen: kleiner (hoogstens 62% van het scherm) en volledig. Volledig is een vaste hoogte, geen maximum: bij korte inhoud verandert een
      maximum niets, en dan lijkt het alsof het blad terugvalt. (Deze regel is van v267 tot v269 per ongeluk weggevallen: de opdrachtgever, 13/10/2026,
      "als ik het scherm uittrek dat ze terug naar beneden valt".) */
-  #dlg .blad.volledig,#beheerdlg .blad.volledig{height:100dvh;max-height:100dvh}
+  #dlg .blad.volledig,#beheerdlg .blad.volledig{height:calc(100dvh - 14px);max-height:calc(100dvh - 14px)}
   #dlg .dlg-kop,#beheerdlg .dlg-kop{position:relative;padding-top:calc(30px + env(safe-area-inset-top,0px));border-bottom:none;touch-action:none;cursor:grab;align-items:center}
   /* De streep bovenaan: zo zie je dat het blad te trekken is. */
   .blad-greep{position:absolute;left:50%;top:10px;transform:translateX(-50%);width:44px;height:5px;border-radius:3px;background:var(--line-hard,#c7c7c7)}
@@ -3501,7 +3501,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v281";
+const VERSIE="v282";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -23545,7 +23545,14 @@ function maakBladSleepbaar(dlg){
   const blad=dlg.querySelector(".blad"), kop=dlg.querySelector(".dlg-kop"), body=dlg.querySelector(".dlg-body");
   if(!blad||!kop||!body)return;
   let st=null;
-  const vol=()=>window.innerHeight;
+  /* De volle hoogte is die van de opmaak (het scherm min de smalle rand boven het blad), gemeten met de inline hoogte even weg. */
+  const vol=()=>{
+    const h0=blad.style.height, m0=blad.style.maxHeight, t0=blad.style.transition;
+    blad.style.transition="none"; blad.style.height=""; blad.style.maxHeight="";
+    const v=blad.getBoundingClientRect().height;
+    blad.style.height=h0; blad.style.maxHeight=m0; blad.style.transition=t0;
+    return v;
+  };
   const wis=()=>{ dlg.style.transition=""; dlg.style.transform=""; blad.style.transition=""; blad.style.maxHeight=""; blad.style.height=""; st=null; };
   dlg.addEventListener("close",wis);
   const begin=y=>{ st={y0:y, h:blad.getBoundingClientRect().height, nu:null}; };
