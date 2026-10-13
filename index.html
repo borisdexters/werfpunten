@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-vpw4mKfZxlIViR8jlVAs3gmVbzWVDdYmBlj/CPShmXI=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-BDkjxxie/uInBz/E9/sJb2mRJWzmfm4EGAK6/P9Hn7w='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-0BZiR028b/Llkj8Utv+2r5wcS0RGAJ/efToCBCrT/wg=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-tG31NV1gSjg0ccI8f667EDoXnsTd9MTtiObtwQuxpME='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2124,6 +2124,8 @@
   .wachtgroot .gv{width:100%}
   .wachtzin{font-size:var(--tm);line-height:1.35}
   .loc-kaart{padding:8px 0 4px}
+  .loc-svgdoos{cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .loc-svgdoos .loc-kaartsvg{border-radius:4px}
   .loc-kaart.onder{padding:4px 0 10px 34px}
   .fiche-akaartpijl{flex:none;min-width:64px;min-height:34px;display:inline-flex;align-items:center;justify-content:center;margin:-6px -8px -6px 0;
     padding:0 8px;border:1px solid var(--lijn);border-radius:8px;color:var(--ink);font-size:var(--tk);cursor:pointer}
@@ -3435,7 +3437,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v261";
+const VERSIE="v262";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -22336,6 +22338,89 @@ function locHoeken(ring,max){
 }
 const LOCKLEUR={plan:"#2F6DB5",aanvraag:"#B26A00",natuur:"#2E7D32",erfgoed:"#C62828",bodem:"#8D6E63",geluid:"#E65100"};
 const LOCWATERKLEUR={0:"#E3EFF9",1:"#BBD7F0",2:"#8FBBE3",3:"#4F8FD0",4:"#1F5FAE"};
+/* ---- schaal ----
+   de opdrachtgever, 13/10/2026: "ik wil de kaarten ook kunnen schalen, bv plan met erfgoedelementen of gewestplan, uitzoomen naar een groter gebied, door
+   erop te tikken", met de schalen van een tekening: 1:500 tot 1:50.000. Elke tik gaat naar de volgende schaal, en na de laatste terug naar de
+   automatische (zoals het kaartje opende). Een schaal is een verhouding op papier: de kaart rekent met 1 cm = 37,8 pixels (96 per inch) en een
+   kaartbreedte van 330 pixels. Op een toestel met een andere pixeldichtheid is het een bij benadering; de schaalbalk zegt de afstand in meter. */
+const LOCSCHALEN=[500,1000,2000,2500,5000,10000,25000,50000];
+const LOCKAARTPX=330, LOCPXPERCM=37.795;
+function locSchaalBreedte(S){ return Math.round(LOCKAARTPX/LOCPXPERCM*S/100*10)/10; }          // meter over de breedte van het kaartje
+function locSchaalTekst(S){ return "1:"+String(Math.round(S)).replace(/\B(?=(\d{3})+(?!\d))/g,"."); }
+function locNaasteSchaal(breedte){
+  let beste=LOCSCHALEN[0], verschil=1e18;
+  LOCSCHALEN.forEach(S=>{ const v=Math.abs(Math.log(locSchaalBreedte(S)/breedte)); if(v<verschil){ verschil=v; beste=S; } });
+  return beste;
+}
+/* De volgende schaal: vanuit automatisch (0) de eerste die meer toont dan het kaartje nu doet; na de laatste of na de grens van dit
+   kaartje terug naar automatisch. */
+function locSchaalVolgende(nu,maxS,autoBreedte){
+  const lijst=LOCSCHALEN.filter(S=>S<=(maxS||50000));
+  if(!nu){
+    const eerste=lijst.find(S=>locSchaalBreedte(S)>autoBreedte*1.05);
+    return eerste||0;
+  }
+  const i=lijst.indexOf(nu);
+  return (i>=0&&i+1<lijst.length)?lijst[i+1]:0;
+}
+const LOCGWPKLEUR={WON:"#F4B6B6",WLK:"#F8D2D2",WOR:"#F8D2D2",AGR:"#F5EDA0",BED:"#C9B3E0",IND:"#C9B3E0",NAT:"#9CCB9C",BOS:"#6FAF6F",REC:"#B4DFAE",OVG:"#CFCFCF",GNV:"#E5D5B5",BUF:"#BFE3C8",LAN:"#E8E2A8"};
+/* Soorten van hetzelfde woongebied dragen dezelfde categorie en verschillen enkel in hun naam: die krijgen een eigen tint, anders is de legenda onleesbaar. */
+function locGwpKleurNaam(cat,naam){
+  const n=String(naam||"").toLowerCase();
+  if(/cultureel|historisch|esthetisch/.test(n))return "#E8939A";
+  if(/stedelijke ontwikkeling/.test(n))return "#D77F95";
+  if(/landelijk/.test(n))return "#F8D2D2";
+  return locGwpKleur(cat);
+}
+function locGwpKleur(cat){
+  const c=String(cat||"").toUpperCase();
+  if(LOCGWPKLEUR[c])return LOCGWPKLEUR[c];
+  const pal=["#E8C9A0","#C5D9E8","#E3C5E0","#D6E8C5","#F0D6C0"]; let h=0; for(let i=0;i<c.length;i++)h=(h*31+c.charCodeAt(i))>>>0;
+  return pal[h%pal.length];
+}
+/* Wat er buiten het eerste venster ligt, wordt pas gehaald als je uitzoomt: de gewestplanzones en plannen rond je plek, of het erfgoed in de
+   buurt. In emmers van 300, 600, 1500 en 3000 m; wat binnen is blijft in het geheugen. */
+function locEmmer(R){ return [300,600,1500,3000].find(e=>e>=R)||3000; }
+/* Een zone met gaten: een gewestplanzone heeft vaak een andere zone binnenin. Alleen de buitenrand tekenen legt de grote zone over de kleine heen
+   (gemeten 13/10/2026: één kleur over heel Leuven); daarom blijven alle ringen bij elkaar en vult het vlak met even-oneven. */
+function locPolygonenVan(f){
+  const g=(f&&f.geometry)||{};
+  if(g.type==="Polygon")return [g.coordinates||[]];
+  if(g.type==="MultiPolygon")return g.coordinates||[];
+  return [];
+}
+function locWijdZones(features,x,y,R,kleurVan,titelVan){
+  const uit=[], tol=Math.max(1,R/250);
+  (features||[]).forEach(f=>locPolygonenVan(f).forEach(poly=>{
+    const buiten=poly[0]; if(!buiten||!buiten.length)return;
+    let x0=1e18,x1=-1e18,y0=1e18,y1=-1e18; buiten.forEach(q=>{ if(q[0]<x0)x0=q[0]; if(q[0]>x1)x1=q[0]; if(q[1]<y0)y0=q[1]; if(q[1]>y1)y1=q[1]; });
+    if(x1<x-R||x0>x+R||y1<y-R||y0>y+R)return;
+    let t=tol, ringen=poly.map(r=>locVereenvoudig(r,t));
+    while(ringen.some(r=>r.length>250)&&t<2000){ t*=2; ringen=poly.map(r=>locVereenvoudig(r,t)); }
+    uit.push({p:ringen.filter(r=>r.length>=4).map(r=>r.map(q=>[Math.round(q[0]),Math.round(q[1])])), c:kleurVan(f), t:titelVan(f)});
+  }));
+  return uit.slice(0,400);
+}
+async function locWijdHaal(soort,x,y,R,hulp){
+  const h=hulp||{};
+  const json=h.json||(u=>locAnt(u,false));
+  const E=locEmmer(R), sl=soort+":"+E;
+  if(locUI.wijd[sl])return locUI.wijd[sl];
+  const kader=laag=>json(locWfs(MERCATORWFS,laag,null,"&count=400"+locKader(x,y,E)));
+  let uit={zones:[],omtrekken:[],erfgoed:[]};
+  if(soort==="voorschriften"){
+    const a=await Promise.allSettled([kader("lu:lu_gwp_gv"),kader("lu:lu_gewrup_dg"),kader("lu:lu_gemrup_dg"),kader("lu:lu_bpa_dg")]);
+    if(a[0].status==="fulfilled")uit.zones=locWijdZones(a[0].value.features,x,y,E,f=>locGwpKleurNaam((f.properties||{}).categorie,(f.properties||{}).svnaam),f=>(f.properties||{}).svnaam||(f.properties||{}).categorie||"gewestplan");
+    for(let i=1;i<4;i++)if(a[i].status==="fulfilled")uit.omtrekken=uit.omtrekken.concat(locWijdZones(a[i].value.features,x,y,E,()=>"#2F6DB5",f=>(f.properties||{}).naam||(f.properties||{}).dgnaam||"plan"));
+    if(a.every(z=>z.status==="rejected"))throw a[0].reason;
+  }else if(soort==="erfgoed"){
+    const a=await Promise.allSettled(LOCERFGOEDLAGEN.map(kader));
+    a.forEach(z=>{ if(z.status==="fulfilled")uit.erfgoed=uit.erfgoed.concat(locWijdZones(z.value.features,x,y,E,()=>LOCKLEUR.erfgoed,f=>(f.properties||{}).naam||"erfgoed")); });
+    if(a.every(z=>z.status==="rejected"))throw a[0].reason;
+  }
+  locUI.wijd[sl]=uit;
+  return uit;
+}
 const LOCCEL=3.17;                                  // de watertoets is een raster van vakjes van ongeveer 3 bij 3 m
 function locRingenVan(f){
   const g=(f&&f.geometry)||{};
@@ -22381,29 +22466,58 @@ function locRingOpp(r){
   let a=0; for(let i=0,j=r.length-1;i<r.length;j=i++)a+=(r[j][0]*r[i][1]-r[i][0]*r[j][1]);
   return Math.abs(a)/2;
 }
-function locKaartSvg(k,opties){
-  const opt=opties||{};
+/* Het venster van een kaartje: automatisch rond het perceel of je punt, of vast op een schaal rond je punt (of het perceel). */
+function locKaartVenster(k,opt){
   const doel=k&&k.doel&&k.doel.length>=4?k.doel:null;
-  let x0,x1,y0,y1;
   const geo=opt.geo||null, cellen=opt.cellen||null, punt=opt.punt||null;
+  let x0,x1,y0,y1;
+  if(opt.schaal){
+    let cx,cy;
+    if(punt){ cx=punt.x; cy=punt.y; }
+    else if(doel){ const xs=doel.map(p=>p[0]), ys=doel.map(p=>p[1]); cx=(Math.min(...xs)+Math.max(...xs))/2; cy=(Math.min(...ys)+Math.max(...ys))/2; }
+    else return null;
+    const b=locSchaalBreedte(opt.schaal), h=b*0.8;
+    return {x0:cx-b/2,x1:cx+b/2,y0:cy-h/2,y1:cy+h/2};
+  }
   if(doel){
     const xs=doel.map(p=>p[0]), ys=doel.map(p=>p[1]);
     const marge=opt.venster||(cellen?100:((geo||opt.punten)?45:16));          // het water kijkt 100 m rond, de rest 45 m
     x0=Math.min(...xs)-marge; x1=Math.max(...xs)+marge; y0=Math.min(...ys)-marge; y1=Math.max(...ys)+marge;
   }else if(punt){
     const v=opt.venster||60; x0=punt.x-v; x1=punt.x+v; y0=punt.y-v; y1=punt.y+v;
-  }else return "";
+  }else return null;
   (opt.punten||[]).forEach(q=>{ x0=Math.min(x0,q[0]-12); x1=Math.max(x1,q[0]+12); y0=Math.min(y0,q[1]-12); y1=Math.max(y1,q[1]+12); });
   // een waterloop kan op 300 m liggen: het kaartje groeit mee tot de loop erop staat, hoogstens 500 m van je plek
   if(punt)(geo||[]).forEach(g=>(g.l||[]).forEach(r=>r.forEach(q=>{
     if(Math.abs(q[0]-punt.x)<=500&&Math.abs(q[1]-punt.y)<=500){ x0=Math.min(x0,q[0]-10); x1=Math.max(x1,q[0]+10); y0=Math.min(y0,q[1]-10); y1=Math.max(y1,q[1]+10); }
   })));
-  const b=x1-x0, h=y1-y0;
+  return {x0,x1,y0,y1};
+}
+/* Een afstand op de schaalbalk: de grootste ronde waarde die in een derde van de kaartbreedte past. */
+function locBalkLengte(breedte){
+  const waarden=[5,10,20,50,100,200,500,1000,2000,5000];
+  let l=waarden[0]; waarden.forEach(w=>{ if(w<=breedte/3)l=w; }); return l;
+}
+function locKaartSvg(k,opties){
+  const opt=opties||{};
+  const doel=k&&k.doel&&k.doel.length>=4?k.doel:null;
+  const geo=opt.geo||null, cellen=opt.cellen||null, punt=opt.punt||null;
+  const V=locKaartVenster(k,opt);
+  if(!V)return "";
+  const x0=V.x0, y1=V.y1;
+  const b=V.x1-V.x0, h=V.y1-V.y0;
   const fs=Math.max(b,h)/38;
+  const legenda=[]; (opt.zones||[]).forEach(z=>{ if(z.t&&!legenda.some(l=>l.t===z.t)&&legenda.length<8)legenda.push({t:z.t,c:z.c}); });
+  const LH=fs*1.5, extra=legenda.length?legenda.length*LH+fs:0;
   const X=x=>Math.round((x-x0)*100)/100, Y=y=>Math.round((y1-y)*100)/100;
   const pad=r=>"M"+r.map(p=>X(p[0])+" "+Y(p[1])).join("L")+"Z";
-  let o='<svg class="loc-kaartsvg" viewBox="0 0 '+Math.round(b*100)/100+' '+Math.round(h*100)/100+'" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Kaartje van deze plek">';
-  o+='<rect width="'+b+'" height="'+h+'" fill="#FAF9F5"/>';
+  let o='<svg class="loc-kaartsvg" viewBox="0 0 '+Math.round(b*100)/100+' '+Math.round((h+extra)*100)/100+'" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Kaartje van deze plek, schaal '+locSchaalTekst(opt.schaal||locNaasteSchaal(b))+'">';
+  o+='<rect width="'+b+'" height="'+(h+extra)+'" fill="#FAF9F5"/>';
+  o+='<svg x="0" y="0" width="'+b+'" height="'+h+'" viewBox="0 0 '+b+' '+h+'" overflow="hidden">';
+  // wat je bij uitzoomen erbij haalt: de gewestplanzones, de omtrekken van de plannen
+  const padZ=z=>(z.p||[z.r]).filter(Boolean).map(pad).join("");
+  (opt.zones||[]).forEach(z=>{ o+='<path d="'+padZ(z)+'" fill-rule="evenodd" fill="'+z.c+'" fill-opacity="0.75" stroke="#fff" stroke-width="'+fs*0.08+'"/>'; });
+  (opt.omtrekken||[]).forEach(z=>{ o+='<path d="'+padZ(z)+'" fill="none" stroke="'+z.c+'" stroke-width="'+fs*0.22+'" stroke-dasharray="'+fs*0.9+' '+fs*0.5+'"/>'; });
   /* Erfgoed: het GRB op de plek van het erfgoedelement wordt rood. Een perceel of gebouw telt mee als zijn middelpunt in het vlak van het
      erfgoed ligt (de opdrachtgever, 13/10/2026: "de locatie van de erfgoedelementen ook zien, kleur de GRB daar rood"). */
   const rood=opt.rood||null;
@@ -22418,16 +22532,20 @@ function locKaartSvg(k,opties){
     (k.buren||[]).forEach(r=>{ const rd=middenIn(r); o+='<path d="'+pad(r)+'" fill="'+(rd?"#F4A6A6":"#EFECE4")+'" stroke="'+(rd?"#B71C1C":"#B8B2A5")+'" stroke-width="'+fs*(rd?0.12:0.05)+'"/>'; });
     (k.gebouwen||[]).forEach(r=>{ const rd=middenIn(r); o+='<path d="'+pad(r)+'" fill="'+(rd?"#E57373":"#D8D3C6")+'" stroke="'+(rd?"#B71C1C":"#8C8678")+'" stroke-width="'+fs*(rd?0.12:0.05)+'"/>'; });
   }
+  // het erfgoed uit de wijdere omgeving, na het GRB: klein vlak gevuld, een grote zone enkel als lichte omtrek
+  (opt.erfgoedWijd||[]).forEach(z=>{ const buiten=(z.p||[z.r])[0]; const klein=locRingOpp(buiten)<=LOCRODEMAX; o+='<path d="'+padZ(z)+'" fill-rule="evenodd" fill="'+(klein?"#E57373":"none")+'" fill-opacity="0.8" stroke="#B71C1C" stroke-width="'+fs*(klein?0.12:0.1)+'" stroke-opacity="'+(klein?1:0.5)+'"/>'; });
   // de laag van dit kenmerk: vlakken (plan, natuur, erfgoed, ...) of watervakjes
   (geo||[]).forEach(g=>(g.l||[]).forEach(r=>{ o+='<path d="M'+r.map(q=>X(q[0])+" "+Y(q[1])).join("L")+'" fill="none" stroke="'+g.c+'" stroke-width="'+fs*0.4+'" stroke-linecap="round" stroke-linejoin="round"/>'; }));
-  (geo||[]).forEach(g=>(g.r||[]).forEach(r=>{ o+='<path d="'+pad(r)+'" fill="'+g.c+'" fill-opacity="0.38" stroke="'+g.c+'" stroke-width="'+fs*0.12+'"/>'; }));
+  /* Met de omringende zones erbij (uitgezoomd) is het gekozen vlak vooral een omtrek: een vlak van een hele stad zou anders alles in één kleur zetten. */
+  const dekking=(opt.zones||opt.erfgoedWijd)?0.1:0.38, rand=(opt.zones||opt.erfgoedWijd)?0.3:0.12;
+  (geo||[]).forEach(g=>(g.r||[]).forEach(r=>{ o+='<path d="'+pad(r)+'" fill="'+g.c+'" fill-opacity="'+dekking+'" stroke="'+g.c+'" stroke-width="'+fs*rand+'"/>'; }));
   (cellen||[]).forEach(c=>{ o+='<rect x="'+X(c[0]-LOCCEL/2)+'" y="'+Y(c[1]+LOCCEL/2)+'" width="'+LOCCEL+'" height="'+LOCCEL+'" fill="'+(LOCWATERKLEUR[c[2]]||"#8FBBE3")+'" fill-opacity="0.85"/>'; });
   if(doel)o+='<path d="'+pad(doel)+'" fill="'+((geo||cellen||opt.punten)?"none":"#CFE0F3")+'" fill-opacity="0.55" stroke="#0A0A0A" stroke-width="'+fs*(geo||cellen||opt.punten?0.18:0.12)+'"/>';
   (opt.punten||[]).forEach(q=>{ o+='<circle cx="'+X(q[0])+'" cy="'+Y(q[1])+'" r="'+fs*0.5+'" fill="#0A0A0A" stroke="#fff" stroke-width="'+fs*0.15+'"/>'; });
   (opt.labels||[]).forEach(lb=>{ o+='<text x="'+X(lb.x)+'" y="'+Y(lb.y)+'" font-size="'+Math.round(fs*0.75*100)/100+'" font-family="Helvetica,Arial,sans-serif" font-weight="700" fill="#7F0000" stroke="#fff" stroke-width="'+fs*0.22+'" paint-order="stroke" text-anchor="middle" dominant-baseline="middle">'+veilig(lb.t)+'</text>'; });
-  if(punt&&(geo||cellen||opt.punten))o+='<circle cx="'+X(punt.x)+'" cy="'+Y(punt.y)+'" r="'+fs*0.45+'" fill="#B3261E" stroke="#fff" stroke-width="'+fs*0.15+'"/>';
-  // de maten van elke zijde, evenwijdig aan de zijde, naast het perceel (alleen op het kaartje van het perceel zelf)
-  if(doel&&!(geo||cellen||opt.punten)){
+  if(punt&&(geo||cellen||opt.punten||opt.zones||opt.erfgoedWijd))o+='<circle cx="'+X(punt.x)+'" cy="'+Y(punt.y)+'" r="'+fs*0.45+'" fill="#B3261E" stroke="#fff" stroke-width="'+fs*0.15+'"/>';
+  // de maten van elke zijde, evenwijdig aan de zijde, naast het perceel (alleen op het kaartje van het perceel zelf, en niet bij een kleine schaal)
+  if(doel&&!(geo||cellen||opt.punten||opt.zones)&&(!opt.schaal||opt.schaal<=1000)){
     const orient=(function(){ let a=0; for(let i=0,j=doel.length-1;i<doel.length;j=i++)a+=(doel[j][0]*doel[i][1]-doel[i][0]*doel[j][1]); return a>0?1:-1; })();
     for(let i=0;i<doel.length-1;i++){
       const A=doel[i], B=doel[i+1], dx=B[0]-A[0], dy=B[1]-A[1], l=Math.hypot(dx,dy);
@@ -22442,7 +22560,15 @@ function locKaartSvg(k,opties){
       if(c.taw!=null)o+='<text x="'+X(c.x)+'" y="'+Y(c.y)+'" dx="'+fs*0.45+'" dy="'+(-fs*0.45)+'" font-size="'+Math.round(fs*0.9*100)/100+'" font-family="Helvetica,Arial,sans-serif" fill="#B3261E" font-weight="600">'+String(c.taw.toFixed(2)).replace(".",",")+'</text>';
     });
   }
+  // de noordpijl, de schaal en de schaalbalk
   o+='<g transform="translate('+Math.round((b-fs*1.6)*100)/100+' '+Math.round(fs*2.4*100)/100+')"><path d="M0 0L'+fs*0.55+' '+fs*1.6+'L0 '+fs*1.15+'L-'+fs*0.55+' '+fs*1.6+'Z" transform="translate(0 -'+fs*1.6+')" fill="#0A0A0A"/><text y="'+fs*1.2+'" font-size="'+Math.round(fs*0.9*100)/100+'" font-family="Helvetica,Arial,sans-serif" text-anchor="middle" fill="#0A0A0A">N</text></g>';
+  const S=opt.schaal||locNaasteSchaal(b);
+  o+='<text x="'+fs*0.6+'" y="'+fs*1.5+'" font-size="'+Math.round(fs*1.05*100)/100+'" font-family="Helvetica,Arial,sans-serif" font-weight="700" fill="#0A0A0A" stroke="#fff" stroke-width="'+fs*0.25+'" paint-order="stroke">'+(opt.schaal?"":"≈ ")+locSchaalTekst(S)+'</text>';
+  const L=locBalkLengte(b), by=h-fs*1.4;
+  o+='<g stroke="#0A0A0A" stroke-width="'+fs*0.14+'"><line x1="'+fs*0.6+'" x2="'+(fs*0.6+L)+'" y1="'+by+'" y2="'+by+'"/><line x1="'+fs*0.6+'" x2="'+fs*0.6+'" y1="'+(by-fs*0.45)+'" y2="'+(by+fs*0.45)+'"/><line x1="'+(fs*0.6+L)+'" x2="'+(fs*0.6+L)+'" y1="'+(by-fs*0.45)+'" y2="'+(by+fs*0.45)+'"/></g>';
+  o+='<text x="'+fs*0.6+'" y="'+(by-fs*0.7)+'" font-size="'+Math.round(fs*0.9*100)/100+'" font-family="Helvetica,Arial,sans-serif" fill="#0A0A0A" stroke="#fff" stroke-width="'+fs*0.22+'" paint-order="stroke">'+(L>=1000?(L/1000)+" km":L+" m")+'</text>';
+  o+='</svg>';
+  legenda.forEach((l,i)=>{ const ly=h+fs*0.5+i*LH; o+='<rect x="'+fs*0.6+'" y="'+ly+'" width="'+fs*1.1+'" height="'+fs*1.1+'" fill="'+l.c+'" stroke="#8C8678" stroke-width="'+fs*0.05+'"/><text x="'+fs*2.1+'" y="'+(ly+fs*0.9)+'" font-size="'+Math.round(fs*0.95*100)/100+'" font-family="Helvetica,Arial,sans-serif" fill="#0A0A0A">'+veilig(String(l.t).slice(0,44))+'</text>'; });
   o+='</svg>';
   return o;
 }
@@ -22920,15 +23046,48 @@ function locMoetOpnieuw(oud,hier,nu){
   return Math.hypot(L.x-oud.x,L.y-oud.y)>LOCVERSAFSTAND;
 }
 
-const locUI={open:null,data:null,bezig:false,melding:"",kaarten:new Set(),sneden:{}};
+const locUI={open:null,data:null,bezig:false,melding:"",kaarten:new Set(),sneden:{},schaal:{},wijd:{}};
 function locLink(l){ try{ window.open(l,"_blank","noopener"); }catch(e){} }
 /* Het kaartje van één regel: de buurt van de werf met het vlak van dit kenmerk erop, en een regel uitleg. */
-function locKaartBlok(d,g){
+/* De doos rond een kaartje: erop tikken gaat naar de volgende schaal. `maak(schaal,wijd)` tekent het kaartje; de wijde gegevens (gewestplan, erfgoed
+   in de buurt) worden pas gehaald als de schaal meer toont dan het eerste venster, met het merk als wachtbeeld. */
+function locKaartDoos(maak,sleutel,soort,d,maxS,autoBreedte){
+  const doos=maakEl("div","loc-svgdoos");
+  doos.setAttribute("role","button"); doos.setAttribute("tabindex","0");
+  doos.setAttribute("aria-label","Kaartje: tik om de schaal te wijzigen");
+  const wijdVan=S=>{
+    if(!S||(soort!=="voorschriften"&&soort!=="erfgoed"))return null;
+    const R=locSchaalBreedte(S)/2*1.2;
+    return R>150?locUI.wijd[soort+":"+locEmmer(R)]||null:null;
+  };
+  const teken=()=>{ doos.innerHTML=maak(locUI.schaal[sleutel]||0,wijdVan(locUI.schaal[sleutel]||0)); };
+  doos.onclick=async()=>{
+    const volgende=locSchaalVolgende(locUI.schaal[sleutel]||0,maxS,autoBreedte);
+    locUI.schaal[sleutel]=volgende;
+    if(volgende&&(soort==="voorschriften"||soort==="erfgoed")){
+      const R=locSchaalBreedte(volgende)/2*1.2;
+      if(R>150&&!locUI.wijd[soort+":"+locEmmer(R)]){
+        doos.innerHTML=wachtHtml();
+        try{ await locWijdHaal(soort,d.x,d.y,R); }
+        catch(e){ doos.innerHTML="<p class=\"loc-kaartuitleg\">De omgeving kon niet worden opgehaald: "+veilig(String((e&&e.message)||"onbereikbaar"))+". Tik nog eens.</p>"; locUI.schaal[sleutel]=0; return; }
+      }
+    }
+    teken();
+  };
+  teken();
+  return doos;
+}
+const LOCSCHAALHINT=" Tik op de kaart om de schaal te wijzigen (1:500 tot 1:50.000).";
+function locKaartBlok(d,g,sleutel,soort){
   const blok=maakEl("div","loc-kaart onder");
   const punt={x:d.x,y:d.y};
   const erf=!!(g.geo&&g.geo[0]&&g.geo[0].c===LOCKLEUR.erfgoed);
-  const svg=g.cellen?locKaartSvg(d.kaart,{cellen:g.cellen,punt}):locKaartSvg(d.kaart,{geo:g.geo,punten:g.punten,punt,rood:erf?g.geo.reduce((a,x)=>a.concat((x.r||[]).filter(rg=>locRingOpp(rg)<=LOCRODEMAX)),[]):null,venster:erf?70:0});
-  blok.innerHTML=svg;
+  const basis=g.cellen?{cellen:g.cellen,punt}:{geo:g.geo,punten:g.punten,punt,rood:erf?g.geo.reduce((a,x)=>a.concat((x.r||[]).filter(rg=>locRingOpp(rg)<=LOCRODEMAX)),[]):null,venster:erf?70:0};
+  const maxS=g.cellen?2000:(g.punten&&!g.geo?5000:50000);          // watervakjes bestaan enkel binnen 100 m, proeven binnen 300 m
+  const venster=locKaartVenster(d.kaart,basis);
+  blok.appendChild(locKaartDoos((S,w)=>locKaartSvg(d.kaart,Object.assign({},basis,{schaal:S||undefined},
+      w?{zones:w.zones,omtrekken:w.omtrekken,erfgoedWijd:w.erfgoed,rood:basis.rood}:{})),
+      sleutel||"rij",soort||"",d,maxS,venster?venster.x1-venster.x0:100));
   let uitleg="Rood punt: waar je stond. Zwart: het perceel. Grijs: de buren en gebouwen (GRB). Noord is boven.";
   if(g.cellen){
     const k=[...new Set(g.cellen.map(c=>c[2]))].sort();
@@ -22936,7 +23095,7 @@ function locKaartBlok(d,g){
   }else if(erf)uitleg="Rood: het GRB (perceel en gebouw) op de plek van dit erfgoedelement. "+uitleg;
   else if(g.punten&&!g.geo)uitleg="Zwarte stip: waar deze proef is uitgevoerd. "+uitleg;
   else uitleg="Gekleurd: waar dit kenmerk geldt, in de buurt van je plek. "+uitleg;
-  blok.appendChild(maakEl("p","loc-kaartuitleg",uitleg));
+  blok.appendChild(maakEl("p","loc-kaartuitleg",uitleg+LOCSCHAALHINT));
   if(g.lithoId){
     const sn=maakEl("div","loc-snede");
     const st=locUI.sneden[g.lithoId];
@@ -23006,7 +23165,7 @@ function locTeken(){
           return {nr:(i+1)+"."+(j+1), titel:g.titel, sub:g.sub||"", extern:!!g.link, doe:g.link?(()=>locLink(g.link)):null,
                   kaartDoe:heeft?(()=>{ if(locUI.kaarten.has(sl))locUI.kaarten.delete(sl); else locUI.kaarten.add(sl); locTeken(); }):null,
                   kaartOpen:heeft&&locUI.kaarten.has(sl),
-                  kaartBlok:heeft?(()=>locKaartBlok(d,g)):null};
+                  kaartBlok:heeft?(()=>locKaartBlok(d,g,sl,rb.sleutel)):null};
         });
         if(rb.sleutel==="erfgoed"){
           const mee=r.regels.map((q,jj)=>({q,t:(i+1)+"."+(jj+1)})).filter(z=>z.q.geo&&(z.q.geo[0].r||[]).length&&locRingOpp(z.q.geo[0].r[0])<=LOCRODEMAX);
@@ -23017,15 +23176,19 @@ function locTeken(){
             const labels=mee.map(z=>{ const rg=(z.q.geo[0].r||[])[0]; if(!rg||!rg.length)return null;
               let sx=0,sy=0; const n=rg.length>1?rg.length-1:1; for(let u=0;u<n;u++){ sx+=rg[u][0]; sy+=rg[u][1]; }
               return {x:sx/n,y:sy/n,t:z.t}; }).filter(Boolean);
-            blok.innerHTML=locKaartSvg(d.kaart,{geo:alleGeo,punt:{x:d.x,y:d.y},rood:ringen,labels,venster:150});
-            blok.appendChild(maakEl("p","loc-kaartuitleg","Overzicht: elk erfgoedelement binnen 150 m, met het GRB (perceel en gebouw) erop in het rood en zijn nummer uit de lijst. Rood punt: waar je stond. Grote zones (zoals een archeologische zone) staan hier niet op: open hun eigen kaartje. Dit zijn de gegevens van Onroerend Erfgoed: een vlak kan ruimer zijn dan het gebouw. Noord is boven."));
+            const basisO={geo:alleGeo,punt:{x:d.x,y:d.y},rood:ringen,labels,venster:150};
+            const vO=locKaartVenster(d.kaart,basisO);
+            blok.appendChild(locKaartDoos((S,w)=>locKaartSvg(d.kaart,Object.assign({},basisO,{schaal:S||undefined},w?{erfgoedWijd:w.erfgoed}:{})),
+              "erfgoed-overzicht","erfgoed",d,50000,vO?vO.x1-vO.x0:300));
+            blok.appendChild(maakEl("p","loc-kaartuitleg","Overzicht: elk erfgoedelement binnen 150 m, met het GRB (perceel en gebouw) erop in het rood en zijn nummer uit de lijst. Rood punt: waar je stond. Grote zones (zoals een archeologische zone) staan hier niet op: open hun eigen kaartje. Dit zijn de gegevens van Onroerend Erfgoed: een vlak kan ruimer zijn dan het gebouw. Noord is boven."+LOCSCHAALHINT));
             uit.unshift({blok});
           }
         }
         if(rb.sleutel==="perceel"&&d.kaart){
           const blok=maakEl("div","loc-kaart");
-          blok.innerHTML=locKaartSvg(d.kaart);
-          blok.appendChild(maakEl("p","loc-kaartuitleg","Zwart: het perceel, met de lengte van elke zijde in meter. Grijs: de buren en de gebouwen (GRB). Rood: het terrein in m TAW op de hoeken (lidar). Dit zijn maten van het GRB, geen opmeting. Noord is boven."));
+          const vP=locKaartVenster(d.kaart,{});
+          blok.appendChild(locKaartDoos((S)=>locKaartSvg(d.kaart,{schaal:S||undefined}),"perceel","perceel",d,5000,vP?vP.x1-vP.x0:100));
+          blok.appendChild(maakEl("p","loc-kaartuitleg","Zwart: het perceel, met de lengte van elke zijde in meter. Grijs: de buren en de gebouwen (GRB). Rood: het terrein in m TAW op de hoeken (lidar). Dit zijn maten van het GRB, geen opmeting. Noord is boven."+LOCSCHAALHINT));
           uit.unshift({blok});
         }
         if(rb.sleutel==="perceel")uit.push({nr:(i+1)+"."+(uit.length+1), titel:"Omtrek als plan ophalen", via:"GRB", doe:()=>{ locUI.weg=true; document.getElementById("dlg").close(); haalOmtrek(null,false); }});
