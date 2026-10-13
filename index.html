@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-sfd8I1ifR9Kta/IgGL5oz8CTy6HkmtlqmrPLKuBOIeQ=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-7WQ20asS4Nkk4wRnXFZcwJ0bvF39ziXwwcELznKnZKU='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-qkZ68z4pZMoDF2BD2UdcS2fs9ILef0uWphOqlMzubmU=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-X7z87Mq9A67s96MaxmlTrb7EIXWNvlIe3fD0FlLn5sQ='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1059,13 +1059,23 @@
      heeft afgeronde bovenhoeken en een rond gat in zijn bovenrand waarin de ronde X zit. De X staat naast het blad (niet erin), want een masker
      knipt alles weg wat buiten de rand valt. */
   #dlg,#beheerdlg{width:100%;max-width:100%;max-height:none;margin:auto 0 0 0;padding:0;border:none;background:transparent;overflow:visible}
-  #dlg .blad,#beheerdlg .blad{position:relative;display:flex;flex-direction:column;max-height:calc(100dvh - 64px);overflow:hidden;
+  #dlg .blad,#beheerdlg .blad{position:relative;display:flex;flex-direction:column;max-height:min(62dvh,calc(100dvh - 64px));overflow:hidden;transition:max-height .25s ease;
     background:var(--surface);border-radius:30px 30px 0 0;padding-bottom:env(safe-area-inset-bottom,0px);
-    -webkit-mask:radial-gradient(circle 38px at 50% 0,transparent 37px,#000 38px);mask:radial-gradient(circle 38px at 50% 0,transparent 37px,#000 38px)}
-  #dlg .dlg-kop,#beheerdlg .dlg-kop{padding-top:38px;border-bottom:none}
+    /* De uitsnijding is een zachte golving (112 bij 26 px, zonder scherpe hoeken), afgetrokken van het hele blad. De opdrachtgever, 13/10/2026, bij het voorbeeld:
+       "de scherpe uitsnijding van de halve cirkel ook afronden". */
+    -webkit-mask-image:linear-gradient(#000,#000),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='26' viewBox='0 0 112 26'%3E%3Cpath d='M0 0C18 0 24 4 32 12C40 20 46 26 56 26C66 26 72 20 80 12C88 4 94 0 112 0Z'/%3E%3C/svg%3E");
+    -webkit-mask-size:100% 100%,112px 26px;-webkit-mask-position:0 0,50% 0;-webkit-mask-repeat:no-repeat;-webkit-mask-composite:xor;
+    mask-image:linear-gradient(#000,#000),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='26' viewBox='0 0 112 26'%3E%3Cpath d='M0 0C18 0 24 4 32 12C40 20 46 26 56 26C66 26 72 20 80 12C88 4 94 0 112 0Z'/%3E%3C/svg%3E");
+    mask-size:100% 100%,112px 26px;mask-position:0 0,50% 0;mask-repeat:no-repeat;mask-composite:exclude}
+  /* Twee standen: kleiner (62% van het scherm) en volledig. Trekken aan de kop of aan de inhoud (als die bovenaan staat) verplaatst het blad. */
+  #dlg .blad.volledig,#beheerdlg .blad.volledig{max-height:calc(100dvh - 64px)}
+  #dlg .dlg-kop,#beheerdlg .dlg-kop{padding-top:32px;border-bottom:none;touch-action:none;cursor:grab}
+  #dlg,#beheerdlg{transition:transform .22s ease}
+  @media (prefers-reduced-motion:reduce){#dlg,#beheerdlg,#dlg .blad,#beheerdlg .blad{transition:none}}
   #dlg .dlg-body,#beheerdlg .dlg-body{flex:1;min-height:0;max-height:none;overflow:auto}
-  .blad-x{position:absolute;left:50%;top:-26px;transform:translateX(-50%);z-index:2;width:52px;height:52px;border-radius:50%;border:none;padding:0;
-    background:var(--surface);color:var(--ink);font-size:32px;line-height:1;display:flex;align-items:center;justify-content:center}
+  /* De X: klein, wit, met een dun kruisje, en hoog: zijn onderkant hangt net onder de rand, boven de golving. */
+  .blad-x{position:absolute;left:50%;top:-36px;transform:translateX(-50%);z-index:2;width:44px;height:44px;border-radius:50%;border:none;padding:0;
+    background:var(--surface);color:var(--ink);display:flex;align-items:center;justify-content:center}
   #dlg[open],#beheerdlg[open]{animation:blad-op .28s ease-out}
   @keyframes blad-op{from{transform:translateY(100%)}to{transform:none}}
   @media (prefers-reduced-motion:reduce){#dlg[open],#beheerdlg[open]{animation:none}}
@@ -2940,7 +2950,7 @@
 
      De knoppen houden hun oude id, zodat de bedrading er ongewijzigd op blijft passen. -->
 <dialog id="beheerdlg">
-  <button type="button" class="blad-x" id="beheer-sluit" aria-label="Sluiten">&#215;</button>
+  <button type="button" class="blad-x" id="beheer-sluit" aria-label="Sluiten"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
   <div class="blad">
   <div class="dlg-kop"><h2 id="beheertitel">Beheer</h2></div>
   <div class="dlg-body beheer-body">
@@ -3321,7 +3331,7 @@
 </dialog>
 
 <dialog id="dlg">
-  <button type="button" class="blad-x" id="dlg-sluit" aria-label="Sluiten">&#215;</button>
+  <button type="button" class="blad-x" id="dlg-sluit" aria-label="Sluiten"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
   <div class="blad">
     <div class="dlg-kop"><h2 id="dlg-titel">Verslagtekst</h2></div>
     <div class="dlg-body" id="dlg-body"></div>
@@ -3457,7 +3467,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v263";
+const VERSIE="v265";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -23315,6 +23325,73 @@ async function kopieer(t){
 
 const dlg=document.getElementById("dlg");
 document.getElementById("dlg-sluit").onclick=()=>dlg.close();
+
+/* ---- het blad slepen ----
+   de opdrachtgever, 13/10/2026: "ik wil het uitschuifscherm kunnen trekken naar boven of beneden, en het volledig kunnen wegduwen naar beneden". Trek je aan de
+   kop (of aan de inhoud als die bovenaan staat), dan volgt het blad je vinger. Loslaten kiest: volledig, kleiner, terug, of weg. */
+function bladBesluit(dy,hoogte,snelheid,volledig){
+  if(dy>0){
+    if(volledig)return (dy>hoogte*0.5||snelheid>1.2)?"sluit":((dy>80||snelheid>0.5)?"klein":"terug");
+    return (dy>hoogte*0.3||snelheid>0.8)?"sluit":"terug";
+  }
+  if(!volledig&&-dy>50)return "groot";
+  return "terug";
+}
+function maakBladSleepbaar(dlg){
+  if(!dlg||!dlg.querySelector)return;
+  const blad=dlg.querySelector(".blad"), kop=dlg.querySelector(".dlg-kop"), body=dlg.querySelector(".dlg-body");
+  if(!blad||!kop||!body)return;
+  let st=null;
+  const wis=()=>{ dlg.style.transition=""; dlg.style.transform=""; blad.style.transition=""; blad.style.maxHeight=""; blad.classList.remove("volledig"); st=null; };
+  dlg.addEventListener("close",wis);
+  const begin=y=>{ st={y0:y, t0:Date.now(), dy:0, h:blad.getBoundingClientRect().height, volledig:blad.classList.contains("volledig")}; };
+  const beweeg=y=>{
+    if(!st)return;
+    const dy=y-st.y0; st.dy=dy;
+    if(dy>0){ dlg.style.transition="none"; dlg.style.transform="translateY("+Math.round(dy)+"px)"; blad.style.maxHeight=""; }
+    else if(!st.volledig){
+      const vol=window.innerHeight-64;
+      blad.style.transition="none"; dlg.style.transform="";
+      blad.style.maxHeight=Math.round(Math.min(vol,st.h-dy))+"px";
+    }
+  };
+  const eind=()=>{
+    if(!st)return;
+    const dt=Math.max(1,Date.now()-st.t0), v=st.dy/dt;
+    const besluit=bladBesluit(st.dy,st.h,v,st.volledig);
+    const was=st; st=null;
+    dlg.style.transition="transform .22s ease"; blad.style.transition="max-height .25s ease";
+    if(besluit==="sluit"){
+      dlg.style.transition="transform .22s ease-in"; dlg.style.transform="translateY(110%)";
+      setTimeout(()=>{ try{ dlg.close(); }catch(e){} wis(); },230);
+    }else if(besluit==="klein"){ blad.classList.remove("volledig"); blad.style.maxHeight=""; dlg.style.transform=""; }
+    else if(besluit==="groot"){ blad.classList.add("volledig"); blad.style.maxHeight=""; dlg.style.transform=""; }
+    else{ dlg.style.transform=""; blad.style.maxHeight=""; }
+    return was;
+  };
+  // de kop: vingers en muis
+  kop.addEventListener("pointerdown",e=>{ begin(e.clientY); try{ kop.setPointerCapture(e.pointerId); }catch(x){} });
+  kop.addEventListener("pointermove",e=>{ if(st)beweeg(e.clientY); });
+  kop.addEventListener("pointerup",eind);
+  kop.addEventListener("pointercancel",eind);
+  // de inhoud: scrollt gewoon, tot de bovenkant bereikt is en je verder naar beneden trekt (of er niets te scrollen valt en je omhoog trekt)
+  let aanraking=null;
+  body.addEventListener("touchstart",e=>{ aanraking={y0:e.touches[0].clientY, neem:false}; },{passive:true});
+  body.addEventListener("touchmove",e=>{
+    if(!aanraking)return;
+    const y=e.touches[0].clientY, dy=y-aanraking.y0;
+    if(!aanraking.neem){
+      const nietsTeScrollen=body.scrollHeight<=body.clientHeight+1;
+      if((body.scrollTop<=0&&dy>8)||(nietsTeScrollen&&dy<-8&&!blad.classList.contains("volledig"))){ aanraking.neem=true; begin(aanraking.y0); }
+    }
+    if(aanraking.neem){ if(e.cancelable)e.preventDefault(); beweeg(y); }
+  },{passive:false});
+  const klaar=()=>{ if(aanraking&&aanraking.neem)eind(); aanraking=null; };
+  body.addEventListener("touchend",klaar);
+  body.addEventListener("touchcancel",klaar);
+}
+maakBladSleepbaar(document.getElementById("dlg"));
+maakBladSleepbaar(document.getElementById("beheerdlg"));
 
 async function kopieerVerslagtekst(){
   const t=maakTekst();
