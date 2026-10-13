@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-haBPjlmEYKA2PV52qzv235G6Z5ZKfBQgKRfUi/k/bpo=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-9fXZm1EVbgabECTYJHO3BAWWoYG3lP4R35C3bYgGT1o='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-ds83SQE3+fGqZOhTiY9bwxL2FNeeRlPO31IwYmXzEt8=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-9fXZm1EVbgabECTYJHO3BAWWoYG3lP4R35C3bYgGT1o='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3501,7 +3501,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v279";
+const VERSIE="v280";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -23283,6 +23283,37 @@ function locKaartDoos(maak,sleutel,soort,d,maxS,autoBreedte){
   return doos;
 }
 const LOCSCHAALHINT=" Tik op de kaart om de schaal te wijzigen (1:500 tot 1:50.000).";
+/* De snede van één boring: haalt de lagen op (met aanmelding) en tekent ze; staat er al iets, dan komt het meteen. */
+function locSneeBlok(g){
+  const sn=maakEl("div","loc-snede");
+  const st=locUI.sneden[g.lithoId];
+  if(!st){
+    sn.innerHTML=wachtHtml();
+    locUI.sneden[g.lithoId]={bezig:true};
+    locSnede(g.lithoId).then(res=>{ locUI.sneden[g.lithoId]=res; locTeken(); });
+  }else if(st.bezig){
+    sn.innerHTML=wachtHtml();
+  }else if(st.fout){
+    sn.appendChild(maakEl("p","loc-kaartuitleg",st.fout));
+    delete locUI.sneden[g.lithoId];                  // een volgende tik probeert opnieuw
+  }else{
+    sn.innerHTML=locSneeSvg(st,typeof g.z==="number"?g.z:null);
+    sn.appendChild(maakEl("p","loc-kaartuitleg","Snede van de boring: de lagen zoals de boorder ze beschreef (soms in het Frans), met de diepte onder het maaiveld"+(typeof g.z==="number"?" en het peil in m TAW (rood)":"")+". Datum: "+(st.datum||"onbekend")+", betrouwbaarheid: "+String(st.betrouwbaarheid||"onbekend").toLowerCase()+"."));
+  }
+  return sn;
+}
+/* Bovenaan Grond: de snede van de dichtstbijzijnde boring die een beschrijving van de lagen heeft (de opdrachtgever, 13/10/2026: "ik wil een snedekaartje wanneer je grond opent, en dan 6.1, etc."). */
+function locGrondSnede(regels){
+  const g=(regels||[]).find(q=>q.lithoId);
+  const blok=maakEl("div","loc-kaart loc-snedekaart");
+  if(!g){
+    blok.appendChild(maakEl("p","loc-kaartuitleg","Geen snede: binnen 300 m ligt geen boring met een beschrijving van de lagen. De sonderingen en boringen hieronder zeggen wat DOV wel heeft."));
+    return blok;
+  }
+  blok.appendChild(maakEl("p","loc-kaartuitleg",g.titel+" \u00B7 "+(g.sub||"")));
+  blok.appendChild(locSneeBlok(g));
+  return blok;
+}
 function locKaartBlok(d,g,sleutel,soort){
   const blok=maakEl("div","loc-kaart onder");
   const punt={x:d.x,y:d.y};
@@ -23301,24 +23332,7 @@ function locKaartBlok(d,g,sleutel,soort){
   else if(g.punten&&!g.geo)uitleg="Zwarte stip: waar deze proef is uitgevoerd. "+uitleg;
   else uitleg="Gekleurd: waar dit kenmerk geldt, in de buurt van je plek. "+uitleg;
   blok.appendChild(maakEl("p","loc-kaartuitleg",uitleg+LOCSCHAALHINT));
-  if(g.lithoId){
-    const sn=maakEl("div","loc-snede");
-    const st=locUI.sneden[g.lithoId];
-    if(!st){
-      sn.innerHTML=wachtHtml();
-      locUI.sneden[g.lithoId]={bezig:true};
-      locSnede(g.lithoId).then(res=>{ locUI.sneden[g.lithoId]=res; locTeken(); });
-    }else if(st.bezig){
-      sn.innerHTML=wachtHtml();
-    }else if(st.fout){
-      sn.appendChild(maakEl("p","loc-kaartuitleg",st.fout));
-      delete locUI.sneden[g.lithoId];                  // een volgende tik probeert opnieuw
-    }else{
-      sn.innerHTML=locSneeSvg(st,typeof g.z==="number"?g.z:null);
-      sn.appendChild(maakEl("p","loc-kaartuitleg","Snede van de boring: de lagen zoals de boorder ze beschreef (soms in het Frans), met de diepte onder het maaiveld"+(typeof g.z==="number"?" en het peil in m TAW (rood)":"")+". Datum: "+(st.datum||"onbekend")+", betrouwbaarheid: "+String(st.betrouwbaarheid||"onbekend").toLowerCase()+"."));
-    }
-    blok.appendChild(sn);
-  }
+  if(g.lithoId)blok.appendChild(locSneeBlok(g));
   return blok;
 }
 function locTeken(){
@@ -23382,6 +23396,7 @@ function locTeken(){
                   kaartOpen:heeft&&locUI.kaarten.has(sl),
                   kaartBlok:heeft?(()=>locKaartBlok(d,g,sl,rb.sleutel)):null};
         });
+        if(rb.sleutel==="bodem")uit.unshift({blok:locGrondSnede(r.regels)});
         if(rb.sleutel==="erfgoed"){
           const mee=r.regels.map((q,jj)=>({q,t:(i+1)+"."+(jj+1)})).filter(z=>z.q.geo&&(z.q.geo[0].r||[]).length&&locRingOpp(z.q.geo[0].r[0])<=LOCRODEMAX);
           if(mee.length){
