@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-PK1qEjAuDyxyD5QGPC54N08zFzfNkGPubSi/4BJUu+c=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-3C8xH8nGIH0A2HboPa/U8DgHrmhNCQP5bBXtMTJoJfY='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-bDtkjh0DkvJhfbZj8DVZ0UYR1GPfchW1q1MJUCFTmfo=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-6ImHB4/R5ZoHVrop7rvqpSFlHJme0Qws2AG/GamSqa0='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2188,9 +2188,13 @@
   .loc-samenrij{display:flex;gap:10px;padding:5px 0;font-size:var(--tk)}
   .loc-wat{flex:0 0 38%;color:var(--ink-soft)}
   .loc-waarde{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
-  .loc-kast{margin-top:156px;border-top:var(--haar) solid var(--line-soft)}      /* meer lucht onder de titel, en een dun lijntje boven 0 Kaart (de opdrachtgever, 13/10/2026) */
+  .loc-kop{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:28px 0 0}
+  .loc-kop-rij{font-size:var(--tk);color:var(--ink-soft)}
+  .loc-probleem{background:none;border:0;padding:8px 12px;min-height:44px;font-size:var(--tk);color:var(--ink-soft);text-decoration:underline}
+  .loc-probleemtekst{max-width:34em}
+  .loc-kast{margin-top:48px;border-top:var(--haar) solid var(--line-soft)}      /* meer lucht onder de titel, en een dun lijntje boven 0 Kaart (de opdrachtgever, 13/10/2026) */
   /* De tekst van de hoofdstukken in Locatie: eerst 20% groter, daarna nog eens 30% (de opdrachtgever, 13/10/2026): 1,2 x 1,3 = 1,56 keer de gewone maat. */
-  .loc-kast .fiche-hoofdstuk{font-size:calc(var(--tm) * 1.64);padding-top:17px;padding-bottom:17px}   /* 2,34 x 0,7 = 1,64: 30% kleiner (de opdrachtgever, 13/10/2026); en meer lucht tussen de lijnen en de tekst */
+  .loc-kast .fiche-hoofdstuk{font-size:calc(var(--tm) * 2.19);padding-top:20px;padding-bottom:20px}   /* 1,64 x 4/3 = 2,19 en 15% meer lucht (17 naar 20 px) tussen lijn en tekst (de opdrachtgever, 13/10/2026) */
   .door-wat{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
   .door-wat b{font-size:var(--tm);font-weight:600}
   .door-wat span{font-size:var(--tk);color:var(--ink-soft)}
@@ -3503,7 +3507,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v292";
+const VERSIE="v294";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -22977,7 +22981,7 @@ async function haalLocatie(lat,lon,hulp){
   if(hoogte&&hoogte.maaiveld!=null)samen.push({wat:"Terrein", waarde:hoogte.maaiveld+" m TAW"});
   if(hoogte&&hoogte.opstand!=null&&hoogte.opstand>=2)samen.push({wat:"Bebouwing hier", waarde:"ongeveer "+hoogte.opstand+" m hoog (uit lidar)"});
   samen.push({wat:"Hoogte, diepte, bebouwing", waarde:"staan in de voorschriften (1)"});
-  return {lat,lon,x:Math.round(x),y:Math.round(y),tijd:new Date().toISOString(),samen,rubrieken:rubr,kaart};
+  return {lat,lon,x:Math.round(x),y:Math.round(y),tijd:new Date().toISOString(),versie:VERSIE,samen,rubrieken:rubr,kaart};
 }
 
 /* Erfgoed: wat op je punt ligt en wat binnen 150 m. Tot 13/10/2026 keek de app alleen of je punt in een beschermd vlak lag; de vastgestelde
@@ -23349,23 +23353,39 @@ function locHoofdkaart(d){
     blok.appendChild(maakEl("p","loc-kaartuitleg","GRB: het perceel (zwart) met zijn kadastraal nummer en dat van de aangrenzende percelen, de gebouwen, de wegen en de straatnamen (blauw). Zoom je uit, dan blijven enkel de grotere wegen met hun naam. Noord is boven."+LOCSCHAALHINT));
   return blok;
 }
+/* De opdrachtgever, 13/10/2026: "alle tekst onder locatie moet weg": onder de titel staat enkel nog, gecentreerd, "Opgehaald: v\u2026, datum, uur",
+   daaronder "Opnieuw ophalen" en daaronder "Probleem oplossen" (daar staat de melding en wat je kunt doen). */
+function locKopBlok(d){
+  const s=maakEl("div","loc-kop");
+  let w="nog niets";
+  if(d){
+    const t=new Date(d.tijd);
+    w=(d.versie?d.versie+", ":"")+t.toLocaleDateString("nl-BE",{day:"numeric",month:"numeric",year:"numeric"})+", "+t.toLocaleTimeString("nl-BE",{hour:"2-digit",minute:"2-digit"});
+  }
+  s.appendChild(maakEl("div","loc-kop-rij","Opgehaald: "+w));
+  const b=maakEl("button","loc-opnieuw","Opnieuw ophalen"); b.type="button";
+  b.onclick=()=>locHaal(true);
+  s.appendChild(b);
+  const p=maakEl("button","loc-probleem","Probleem oplossen"); p.type="button";
+  p.setAttribute("aria-expanded",locUI.probleem?"true":"false");
+  p.onclick=()=>{ locUI.probleem=!locUI.probleem; locTeken(); };
+  s.appendChild(p);
+  if(locUI.probleem){
+    const u=maakEl("div","loc-probleemtekst");
+    if(locUI.melding)u.appendChild(maakEl("p","loc-kaartuitleg",locUI.melding));
+    u.appendChild(maakEl("p","loc-kaartuitleg","Lukt het ophalen niet? Op een iPad of iPhone: Instellingen, Privacy en beveiliging, Locatievoorzieningen, zet die aan en zet Safari (of de app) op Tijdens gebruik van de app. Binnen in een gebouw lukt het soms niet; ga dan even naar buiten. Tik daarna Opnieuw ophalen."));
+    s.appendChild(u);
+  }
+  return s;
+}
 function locSamenBlok(d){
   const s=maakEl("div","loc-samen");
-  const rij0=maakEl("div","loc-samenrij");
-  rij0.appendChild(maakEl("span","loc-wat","Opgehaald"));
-  rij0.appendChild(maakEl("span","loc-waarde",d?new Date(d.tijd).toLocaleString("nl-BE",{day:"numeric",month:"numeric",year:"numeric",hour:"2-digit",minute:"2-digit"}).replace(","," \u00B7"):"nog niets"));
-  s.appendChild(rij0);
   if(d)d.samen.forEach(r=>{
     const rij=maakEl("div","loc-samenrij");
     rij.appendChild(maakEl("span","loc-wat",r.wat));
     rij.appendChild(maakEl("span","loc-waarde",r.waarde));
     s.appendChild(rij);
   });
-  const mel=locUI.melding||(!d?"Zet je locatie aan en tik Ophalen.":"");
-  if(mel)s.appendChild(maakEl("p","loc-kaartuitleg",mel));
-  const b=maakEl("button","loc-opnieuw","Opnieuw ophalen"); b.type="button";
-  b.onclick=()=>locHaal(true);
-  s.appendChild(b);
   return s;
 }
 function locTeken(){
@@ -23384,15 +23404,14 @@ function locTeken(){
   /* De opdrachtgever, 13/10/2026: bovenaan een kaartje met het GRB, de kadastrale nummers van het perceel en de buren en de straatnamen; daaronder de samenvatting
      in hetzelfde lettertype, met "Opgehaald" als eerste regel; dan een lijn, en dan het menu (1 voorschriften, ...). */
   /* De opdrachtgever, 13/10/2026: "zet de tekst onder locatie bij kaart": de samenvatting staat onder 0 Kaart. Bovenaan staat ze alleen als er nog niets is opgehaald. */
-  if(!d)body.appendChild(locSamenBlok(d));
-  else if(locUI.melding)body.appendChild(maakEl("p","loc-kaartuitleg",locUI.melding));
+  body.appendChild(locKopBlok(d));
   const bak=maakEl("div","loc-kast");
   body.appendChild(bak);
   /* De opdrachtgever, 13/10/2026: "ik wil 0 kaart om de kaart te openen, dan 1, 2, 3...": de kaart is de eerste kop van het menu, dicht tot je tikt. */
   const kaartKop={nr:"0", naam:"Kaart", open:locUI.open==="kaart", lade:true, schuif:locUI.schuif==="kaart",
     doe:()=>{ locUI.open=(locUI.open==="kaart")?null:"kaart"; locUI.schuif=locUI.open; locTeken(); },
     artikels:()=>{
-      const eerst=[{blok:locSamenBlok(d)}].concat((d&&d.kaart&&d.kaart.doel)?[{blok:locHoofdkaart(d)}]:[{nr:"",titel:"Er is geen kaart voor deze plek."}]);
+      const eerst=(d&&d.samen&&d.samen.length?[{blok:locSamenBlok(d)}]:[]).concat((d&&d.kaart&&d.kaart.doel)?[{blok:locHoofdkaart(d)}]:[{nr:"",titel:"Er is geen kaart voor deze plek."}]);
       const rest=(perceelKop&&typeof perceelKop.artikels==="function")?perceelKop.artikels():[];
       let n=0;                                  // doorlopend genummerd: 0.1, 0.2, 0.3 (de oude nummering sloeg er één over)
       return eerst.concat(rest.filter(a=>a.nr||a.blok||a.titel).map(a=>a.nr?Object.assign({},a,{nr:"0."+(++n)}):a));
