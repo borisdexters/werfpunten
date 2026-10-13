@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-hxv7dlW5CF2NhZbAX6aShc93oK6zlmn7G5+JJ9fTmBQ=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-Mnofp5X00kj5WhoIOfHMQCffjlbn1BBdi40VSFCUQEQ='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-wX0CoSVQgfV+Lr0QmnMPyJ3v2+q5nrphBch+5mX8Ypo=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-Mnofp5X00kj5WhoIOfHMQCffjlbn1BBdi40VSFCUQEQ='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3426,7 +3426,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v251";
+const VERSIE="v252";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -20626,17 +20626,19 @@ function grbStilVenster(){
   return {
     zet:(titel,html,knoppen)=>{
       if(knoppen&&knoppen.length){
-        if(!open){ open=true; echt.open().then(klaar); }
+        if(!open){ open=true; wachtWeg(); echt.open().then(klaar); }
         echt.zet(titel,html,knoppen);
       }else if(open){
         echt.zet(titel,html,knoppen);
       }else{
         const t=String(html||"").replace(/<[^>]*>/g," ").replace(/\s+/g," ").trim().split(". ")[0];
-        melding("GRB: "+(t||titel));
+        /* De opdrachtgever, 13/10/2026: is het GRB nog niet binnen, dan staat het logo met het pulserende vierkantje midden in het scherm,
+           niet een kleine melding. De kaart blijft aanraakbaar: je kunt blijven typen en foto's nemen. */
+        wachtMelding("GRB: "+(t||titel));
       }
     },
     open:()=>wacht,
-    dicht:()=>{ if(open)echt.dicht(); },
+    dicht:()=>{ wachtWeg(); if(open)echt.dicht(); },
     get body(){ return echt.body; }
   };
 }
@@ -20789,7 +20791,7 @@ async function kiesGrbPerceel(zone,hulp){
       try{ v.zet("Het GRB lukte niet","<p class=\"inv-uitleg\">"+veilig(e.message||"onbekende fout")+"</p>",[{naam:"Sluiten", doe:()=>v.dicht()}]); }catch(x2){}
     }
     return false;
-  }finally{ grbBezig=false; }
+  }finally{ grbBezig=false; wachtWeg(); }
 }
 
 let omtrekBezig=false;
