@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-EmXRhHY45zFSC/h0h2fzMYZbapgeFWJqJtgahfj2RPs=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-cgJvo765N3C3UMBOFpmXlBYw/pjp25XBLlX3asK0qzI='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-g/90Tuo40LWareD6nwbdOwGTKLRgEhVU8DewmMkm4bA=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-cgJvo765N3C3UMBOFpmXlBYw/pjp25XBLlX3asK0qzI='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3396,13 +3396,13 @@
       <button id="dlg-kopieer">Kopieer</button>
     </div>
     </div>
-    <!-- De rij pagina's: begin, Locatie, Dossier, Verslagen, eindblad. De stippen tonen waar je bent, het menu blijft onderaan staan. -->
+    <!-- De rij pagina's: begin, Verslagen, Dossier, Locatie, eindblad (dezelfde volgorde als het menu onderaan het hoofdscherm). De stippen tonen waar je bent, het menu blijft onderaan staan. -->
     <div class="pagina-stippen" id="paginastippen" hidden aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
     <div class="pagina-menu" id="paginamenu" role="navigation" aria-label="Ingangen" hidden>
       <button type="button" class="mkn" id="pm-plan"><span class="mteken">◎</span>Plan</button>
-      <button type="button" class="mkn" id="pm-locatie"><span class="mteken">⌖</span>Locatie</button>
-      <button type="button" class="mkn" id="pm-dossier"><span class="mteken">⌕</span>Dossier</button>
       <button type="button" class="mkn" id="pm-verslagen"><span class="mteken">▤</span>Verslagen</button>
+      <button type="button" class="mkn" id="pm-dossier"><span class="mteken">⌕</span>Dossier</button>
+      <button type="button" class="mkn" id="pm-locatie"><span class="mteken">⌖</span>Locatie</button>
     </div>
   </div>
 </dialog>
@@ -3533,7 +3533,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v298";
+const VERSIE="v299";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -23668,14 +23668,14 @@ maakBladSleepbaar(document.getElementById("beheerdlg"));
    de opdrachtgever, 13/10/2026: de paginagrote schermen laten zich naar links en rechts swipen; helemaal links het beginscherm, dan Locatie, Dossier,
    Verslagen, en helemaal rechts een eindblad met tegels van het menu. Het menu blijft onderaan. De X en naar beneden trekken brengen je telkens
    terug op het beginscherm (het blad sluit). Een pagina meldt zich aan met `dlg.dataset.pagina`; opent iets anders in het blad, dan verdwijnt het menu. */
-const PAGINAROIJ=["begin","locatie","dossier","verslagen","eind"];
+const PAGINAROIJ=["begin","verslagen","dossier","locatie","eind"];
 function paginaNu(){ const d=document.getElementById("dlg"); return d.open&&d.dataset.pagina?d.dataset.pagina:"begin"; }
 function paginaMenu(naam){
   const d=document.getElementById("dlg");
   if(naam)d.dataset.pagina=naam; else delete d.dataset.pagina;
   document.getElementById("paginamenu").hidden=!naam;
   document.getElementById("paginastippen").hidden=!naam;
-  ["locatie","dossier","verslagen"].forEach(n=>{ const b=document.getElementById("pm-"+n); if(n===naam)b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
+  ["verslagen","dossier","locatie"].forEach(n=>{ const b=document.getElementById("pm-"+n); if(n===naam)b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
   Array.prototype.forEach.call(document.getElementById("paginastippen").children||[],(sp,i)=>sp.classList.toggle("aan",!!naam&&i===PAGINAROIJ.indexOf(naam)));
 }
 (function(){
@@ -23705,9 +23705,9 @@ function toonEindblad(){
   document.getElementById("dlg-kopieer").style.display="none";
   const raster=maakEl("div","tegels");
   [["\u25CE","Plan",()=>{ d.close(); document.getElementById("planmenu").click(); }],
-   ["\u2316","Locatie",()=>gaNaarPagina("locatie")],
-   ["\u2315","Dossier",()=>gaNaarPagina("dossier")],
    ["\u25A4","Verslagen",()=>gaNaarPagina("verslagen")],
+   ["\u2315","Dossier",()=>gaNaarPagina("dossier")],
+   ["\u2316","Locatie",()=>gaNaarPagina("locatie")],
    ["\u22EF","Beheer",()=>{ d.close(); document.getElementById("beheerknop").click(); }]].forEach(([teken,naam,doe])=>{
     const b=maakEl("button","tegel"); b.type="button";
     b.appendChild(maakEl("span","mteken",teken)); b.appendChild(maakEl("span",null,naam));
