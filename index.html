@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-MUCGEtOWSGoEZTXsccG2hyQCZAGEOHdnW8S5a9T2Buw=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-nVzSmsupCa0IAMK+R9sGuxdipzNiDqcnE0PVa26oBhk='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-jnscCcSIJJRw2qmgD0oN20vKF9HSv+RFLDwzgWGhsLk=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-Ep/yQKSGQTl8SDsMkpANPJVNBrNrJnrXVc//Zjca7zs='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -280,7 +280,11 @@
   #vulling.met-terug #kaartoud{top:50px}
   /* Open punten dichtbij je plek: linksonder op de kaart, waar je duim ligt als je loopt. */
   .kaartknop.kaartdichtbij{top:auto;bottom:10px;right:auto;left:10px}
-  .kaartknop.kaartperceel{top:auto;bottom:10px;right:10px}
+  .kaartknop.kaartperceel{top:auto;bottom:60px;right:10px}
+  /* De opdrachtgever, 13/10/2026: "zet bij plan een schuine pijl om te maximaliseren, en indien gemaximaliseerd terug te verkleinen". Rechtsonder op het plan: ↗ vergroot, ↙ brengt terug.
+     Gemaximaliseerd verdwijnen de titel, de kop, de bladenbalk en de invoerregel; het plan, de bol en deze knop blijven. */
+  .kaartknop.kaartmax{top:auto;bottom:10px;right:10px;width:44px;height:44px;padding:0;justify-content:center;font:400 22px/1 -apple-system,system-ui,sans-serif;color:var(--ink);border-radius:50%}
+  body.plan-max #wrap .hoofdkop,body.plan-max #wrap header,body.plan-max #wrap #zones,body.plan-max #wrap #lagenrij,body.plan-max #wrap #faserij,body.plan-max #wrap .invoer{display:none !important}
   .kaartknop.kaartverzet{background:repeating-linear-gradient(135deg,#ffd84a 0 7px,#f4c400 7px 14px);border-color:#8a6d00;color:#1b1500;
     right:auto;left:10px}
   /* Jij op het plan. Blauw als de speld van een nieuw punt in het planvenster, met een ring ter grootte van je onzekerheid:
@@ -1020,6 +1024,28 @@
      gewicht van de letter, hetzelfde onderscheid dat de zonebalk maakt. */
   .mkn[aria-current="page"]{font-weight:650;background:var(--t2)}
   .mkn.wacht .mteken{color:var(--warn)}
+  /* De opdrachtgever, 13/10/2026, met een schermvoorbeeld (een tentoonstellingsapp met verticale streepjes): het menu onderaan is een rij van tekstvakken, gescheiden door
+     fijne verticale lijnen die tot de bovenlijn lopen. Geen tekens, geen puntjes erboven. Waar je bent: grijs vlak met witte tekst. */
+  .fmenu .mteken,.pagina-menu .mteken{display:none}
+  .fmenu .mkn,.pagina-menu .mkn{align-items:flex-start;justify-content:flex-start;text-align:left;height:76px;min-height:76px;padding:46px 0 12px 8px;white-space:nowrap;overflow:hidden;
+    font-size:var(--tk);text-transform:uppercase;letter-spacing:0;position:relative;transition:padding-top .24s cubic-bezier(.22,.8,.3,1)}
+  /* De opdrachtgever, 13/10/2026: "tekst onderaan; indien aangeklikt schuiven de letters naar boven in het vak" en "het zwarte aanklikken even weg":
+     de tekst staat onderaan in zijn vak; waar je bent (en wat je aantikt) heeft de letters bovenaan. */
+  .fmenu .mkn[aria-current="page"],.pagina-menu .mkn[aria-current="page"],.fmenu .mkn:active,.pagina-menu .mkn:active{padding-top:12px}
+  @media (prefers-reduced-motion:reduce){.fmenu .mkn,.pagina-menu .mkn{transition:none}}
+  /* de verticale streepjes raken de bovenlijn niet: eerst de lichte lijn, dan een spatie, dan de streepjes (de opdrachtgever, 13/10/2026, naar het voorbeeld) */
+  .fmenu .mkn+.mkn::before,.pagina-menu .mkn+.mkn::before{content:"";position:absolute;left:0;top:10px;bottom:0;border-left:1px solid var(--line)}
+  @media (max-width:699px){ .fmenu .mkn.alleenbreed+.mkn::before{display:none} }
+  .fmenu .mkn[aria-current="page"],.pagina-menu .mkn[aria-current="page"]{background:none;color:var(--ink);font-weight:400}
+  #paginastippen{display:none !important}
+  /* De vijfde ingang is smal en draagt alleen het teken ⋯: "INSTELLINGEN" past niet naast vier woorden op 375 px. */
+  .fmenu .mkn.instel,.pagina-menu .mkn.instel{flex:0 0 44px;align-items:center;justify-content:center;padding:0}
+  .fmenu .mkn.instel .mteken,.pagina-menu .mkn.instel .mteken{display:block;font-size:calc(var(--tg) * 1.3)}
+  .mkn.instel.wacht .mteken{color:var(--warn)}
+  .mkn.instel[aria-current="page"] .mteken{color:var(--ink)}
+  .mkn.instel.wacht::after{content:"●";position:absolute;top:8px;right:10px;font-size:var(--tk);color:var(--warn)}
+  #beheerknop,.nek{display:none}      /* de ⋯ rechtsboven is weg; de instellingen staan onderaan */
+  #dlg .dlg-body{padding-bottom:72px}      /* de tekst scrolt ver genoeg door om boven het menu te komen (de opdrachtgever, 13/10/2026) */
   /* Een toast fadet weg; het grootste risico van deze app mag niet met hem meeverdwijnen.
      Staat er iets te wachten, dan draagt de knop het tot je hem indrukt. */
   #backup.wacht{border-color:var(--warn);color:var(--warn);font-weight:650}
@@ -1044,6 +1070,8 @@
   .toast.boven{top:calc(14px + env(safe-area-inset-top,0px));bottom:auto}
   dialog{border:none;border-radius:12px;padding:0;max-width:92vw;width:520px;background:var(--surface);color:var(--ink)}
   dialog::backdrop{background:rgba(0,0,0,.55)}
+  /* De pagina's van de rij zijn schermvullend en schuiven zijwaarts: een zwarte sluier erachter flitst tijdens het schuiven en erna weg (de opdrachtgever, 13/10/2026: "een zwarte glitch"). Geen sluier; wat eronder ligt is het hoofdscherm. */
+  #dlg[data-pagina]::backdrop,#beheerdlg::backdrop{background:transparent}
   .dlg-kop{padding:14px var(--marge);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
   .dlg-kop h2{margin:0;font-size:var(--tg)}
   .dlg-body{padding:14px var(--marge);max-height:64vh;overflow:auto}
@@ -1068,6 +1096,84 @@
   .blad-greep{position:absolute;left:50%;top:10px;transform:translateX(-50%);width:44px;height:5px;border-radius:3px;background:var(--line-hard,#c7c7c7)}
   /* De X: een gewone X zonder bol, op dezelfde hoogte als de titel, uiterst rechts in de kop. (de opdrachtgever, 13/10/2026: de hap en de bol mogen weg.) */
   /* Paginagroot (de opdrachtgever, 13/10/2026: "maak nu de schuifkaarten paginagroot. Locatie en X mogen groter"): het blad opent altijd op volle hoogte; de titel en de X zijn groter. */
+  .hoofdkop{padding-top:calc(30px + env(safe-area-inset-top,0px));border-bottom:none;min-height:calc(30px + env(safe-area-inset-top,0px) + 52px);flex:none}
+  .hoofdkop h2{font-size:calc(var(--tg) * 2.7)}
+  /* De AI-bol staat waar op de andere pagina's de X staat: rechts in de titelrij. */
+  /* De opdrachtgever, 13/10/2026: "de bol moet centraal onderaan op de voorgrond bewegen en beschikbaar zijn indien het scherm is ingeklapt": hij zweeft midden onderaan het hoofdscherm,
+     half over de bovenrand van het menu, boven alles op dat scherm; de kaart is dan dicht. Opent de kaart, dan is de bol zelf de kaart en verdwijnt hij hier. */
+  /* Het bolmenu: een anker (nul bij nul) in het midden van de bol; de bol en de bolletjes liggen er rond. Op het hoofdscherm vast onderaan boven de invoerregel, in een pagina onderaan het blad. */
+  .bolmenu{position:fixed;left:50%;bottom:var(--bol-b,64px);width:0;height:0;z-index:7}
+  .bolmenu[hidden]{display:none}
+  /* Variant D: de zwarte pil met icoontjes. Op het hoofdscherm vast onderaan; in een pagina onderaan het blad. */
+  .pilmenu,.zijmenu{display:none}
+  /* Variant E: tabbladen aan de zijkant. Op het hoofdscherm vast langs de rechterrand; in een pagina hangen ze aan de linkerrand van het blad, dat 52 px smaller is. */
+  body.menu-zij .zijmenu{display:flex;flex-direction:column;gap:4px;position:fixed;right:0;top:50%;transform:translateY(-50%);z-index:7}
+  body.menu-zij .zijmenu.zijpagina{position:absolute;right:auto;left:0;top:104px;transform:none}
+  body.menu-zij .bolmenu,body.menu-zij .pilmenu{display:none !important}
+  .zij-tab{width:52px;height:58px;border:0;border-radius:16px 0 0 16px;background:#0d0d0d;color:#fff;display:flex;align-items:center;justify-content:center;padding:0;-webkit-tap-highlight-color:transparent;
+    box-shadow:-4px 2px 14px rgba(0,0,0,.18)}
+  .zij-tab.huidig{background:var(--surface);color:var(--ink)}
+  body.menu-zij .zijmenu:not(.zijpagina) .zij-tab.huidig{background:#fff;border:1px solid var(--line);border-right:0}
+  body.menu-zij #dlg .blad,body.menu-zij #beheerdlg .blad{margin-left:52px;width:calc(100% - 52px);border-radius:22px 0 0 22px;box-shadow:-8px 0 28px rgba(0,0,0,.14)}
+  body.menu-zij #dlg .blad.volledig,body.menu-zij #beheerdlg .blad.volledig{width:calc(100% - 52px)}
+  /* de tabbladen met tekst: smal, aaneengesloten, het woord verticaal */
+  body.menu-zijtekst .zijmenu{gap:0}
+  .zij-tab.tekst{width:34px;height:var(--h,80px);background:var(--c,#ddd);color:var(--ink);writing-mode:vertical-rl;font:500 12px/1 inherit;font-family:inherit;letter-spacing:.03em;
+    border-radius:12px 0 0 12px;box-shadow:-2px 1px 8px rgba(0,0,0,.12);border-bottom:1px solid rgba(255,255,255,.7)}
+  .zij-tab.tekst[aria-label="AI"]{color:#fff}
+  .zij-tab.tekst.huidig{background:var(--surface);font-weight:700}
+  body.menu-zijtekst .zijmenu:not(.zijpagina) .zij-tab.huidig{background:#fff;border:1px solid var(--line);border-right:0}
+  body.menu-zijtekst #dlg .blad,body.menu-zijtekst #beheerdlg .blad,body.menu-zijtekst #dlg .blad.volledig,body.menu-zijtekst #beheerdlg .blad.volledig{margin-left:34px;width:calc(100% - 34px)}
+  body.menu-pil .pilmenu{display:flex;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:7;
+    align-items:center;gap:2px;padding:6px;background:#0d0d0d;border-radius:34px;box-shadow:0 10px 30px rgba(0,0,0,.28);max-width:calc(100vw - 20px)}
+  body.menu-pil .pilmenu.pilpagina{position:absolute}
+  body.menu-pil .bolmenu{display:none !important}
+  .pil-item{width:46px;height:46px;border:0;border-radius:50%;background:none;color:#fff;display:flex;align-items:center;justify-content:center;padding:0;-webkit-tap-highlight-color:transparent;transition:background .2s,color .2s}
+  .pil-item.huidig{background:#fff;color:#0d0d0d;width:52px;height:52px}
+  /* het hoofdscherm houdt ruimte vrij onder de invoerregel, anders ligt de pil erover */
+  body.menu-pil #wrap{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+  .bolmenu.bolregel{left:var(--bol-l,42px)}
+  #wrap[data-menu="regel"] .invoerrij .prompt{margin-left:60px}
+  .bolmenu.bolpagina{position:absolute;bottom:calc(46px + env(safe-area-inset-bottom,0px))}
+  .bol-knop{position:absolute;left:-34px;top:-34px;width:68px;height:68px;border:0;background:none;padding:0;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;z-index:2}
+  .bol-knop span{display:block;width:52px;height:52px;background:#161B26;border-radius:47% 53% 60% 40% / 45% 46% 54% 55%;box-shadow:0 10px 22px rgba(20,20,20,.32),0 3px 8px rgba(20,20,20,.22);animation:gv-morph 11s ease-in-out infinite,gv-adem 3.7s ease-in-out infinite}
+  .bol-veil{position:fixed;inset:0;background:rgba(255,255,255,.78);opacity:0;pointer-events:none;transition:opacity .25s}
+  .bolmenu.open .bol-veil{opacity:1;pointer-events:auto}
+  .bol-item{position:absolute;left:-32px;top:-32px;width:64px;height:64px;border:0;border-radius:50%;background:#161B26;color:#fff;font-size:11px;line-height:1.1;padding:0 4px;
+    display:flex;align-items:center;justify-content:center;text-align:center;overflow-wrap:anywhere;hyphens:manual;
+    transform:translate(0,0) scale(.2);opacity:0;pointer-events:none;z-index:1;
+    transition:transform .45s cubic-bezier(.5,0,.35,1) var(--d,0s),opacity .3s ease var(--d,0s);box-shadow:0 8px 18px rgba(20,20,20,.28)}
+  .bolmenu.open .bol-item{transform:translate(var(--x),var(--y)) scale(1);opacity:1;pointer-events:auto}
+  @media (prefers-reduced-motion:reduce){.bol-knop span{animation:none}.bol-item{transition:none}}
+  /* De balk onderaan is weg op het hoofdscherm en in de pagina's; het menu is de bol. */
+  #wrap .fmenu,.pagina-menu,#instelpaginamenu{display:none !important}
+  /* De bol is de amoebe uit de GrondNorm-app (Grid-Inzicht fieldapp, src/landing/BolKnop.tsx en index.css): een inkt-zwarte bol die traag van vorm verandert en ademt,
+     met een zachte schaduw. De opdrachtgever, 13/10/2026: "behoud deze voorlopig even". De kleurige bol uit het voorbeeld is vervangen; de maten en kleur zijn die van de ander. */
+  .ai-orb{display:block;background:#161B26;border-radius:47% 53% 60% 40% / 45% 46% 54% 55%;
+    animation:gv-morph 11s ease-in-out infinite,gv-adem 3.7s ease-in-out infinite}
+  @keyframes gv-morph{
+    0%,100%{border-radius:47% 53% 60% 40% / 45% 46% 54% 55%}
+    20%{border-radius:63% 37% 41% 59% / 59% 61% 39% 41%}
+    40%{border-radius:39% 61% 66% 34% / 64% 37% 63% 36%}
+    60%{border-radius:56% 44% 37% 63% / 41% 59% 41% 59%}
+    80%{border-radius:37% 63% 59% 41% / 61% 44% 56% 39%}}
+  @keyframes gv-adem{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+  @media (prefers-reduced-motion:reduce){.ai-orb{animation:none}}
+  .ai-kaart{position:fixed;left:12px;right:12px;top:calc(12px + env(safe-area-inset-top,0px));bottom:var(--aimenu,88px);z-index:5;max-width:616px;margin:0 auto;
+    display:flex;flex-direction:column;background:var(--surface);border-radius:28px;box-shadow:0 8px 40px rgba(20,30,60,.12);overflow:hidden}
+  .ai-kaart[hidden]{display:none}
+  .ai-dicht{position:absolute;top:10px;right:10px;width:44px;height:44px;border:0;background:none;color:var(--ink-soft);display:flex;align-items:center;justify-content:center;padding:0}
+  .ai-midden{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:24px 28px 12px;text-align:center}
+  .ai-orb{width:132px;height:132px;box-shadow:0 24px 48px rgba(20,20,20,.3),0 8px 18px rgba(20,20,20,.22)}
+  .ai-zin{margin:0;font-size:var(--tm);line-height:1.5;color:var(--ink);max-width:22em}
+  .ai-klein{margin:0;font-size:var(--tk);color:var(--ink-faint);max-width:24em}
+  .ai-invoer{margin:0 14px 14px;padding:14px 14px 12px;background:var(--surface);border-radius:24px;box-shadow:0 2px 24px rgba(40,70,140,.14)}
+  .ai-invoer textarea{display:block;width:100%;border:0;outline:none;resize:none;background:none;color:var(--ink);font:inherit;font-size:var(--tm);line-height:1.45;padding:2px 2px 10px}
+  .ai-rij{display:flex;align-items:center;gap:10px}
+  .ai-ruimte{flex:1}
+  .ai-rond{flex:none;width:40px;height:40px;border:0;border-radius:50%;background:rgba(80,110,170,.12);color:var(--ink);display:flex;align-items:center;justify-content:center;padding:0}
+  .ai-stuur{background:var(--ink);color:var(--surface)}
+  .ai-zoek{display:flex;align-items:center;gap:6px;border:0;background:none;color:var(--ink-faint);font-size:var(--tk);padding:0 4px;min-height:40px}
   #dlg .dlg-kop h2,#beheerdlg .dlg-kop h2{font-size:calc(var(--tg) * 2.7)}      /* de titel (Locatie, Dossier, ...) dubbel zo groot: 1,35 x 2 (de opdrachtgever, 13/10/2026) */
   .blad-x svg{width:68px;height:68px}      /* de X dubbel zo groot: 34 x 2 (de opdrachtgever, 13/10/2026) */
   .blad-x{margin:-14px -14px -14px auto;flex:none;width:80px;height:80px;border:none;background:none;padding:0;color:var(--ink);
@@ -1084,13 +1190,35 @@
   @keyframes schuif-van-rechts{from{transform:translateX(100%)}to{transform:none}}
   @keyframes schuif-van-links{from{transform:translateX(-100%)}to{transform:none}}
   @keyframes schuif-rij{from{transform:translateX(60%);opacity:0}to{transform:none;opacity:1}}
-  #dlg .blad-pagina{flex:1;min-height:0;display:flex;flex-direction:column;will-change:transform}
+  #dlg .blad-pagina,#beheerdlg .blad-pagina{flex:1;min-height:0;display:flex;flex-direction:column;will-change:transform}
   .blad-pagina.schuif-van-rechts{animation:schuif-van-rechts .34s cubic-bezier(.22,.8,.3,1)}
   .blad-pagina.schuif-van-links{animation:schuif-van-links .34s cubic-bezier(.22,.8,.3,1)}
   .blad-pagina.volgt{transition:none}
   .blad-pagina.veert{transition:transform .22s cubic-bezier(.22,.8,.3,1)}
   .schuif-rij{animation:schuif-rij .32s ease-out both}
   @media (prefers-reduced-motion:reduce){.blad-pagina.schuif-van-rechts,.blad-pagina.schuif-van-links,.schuif-rij{animation:none}.blad-pagina.veert{transition:none}}
+  /* De instellingen: een pagina zoals de andere (zijwaarts, schermvullend, zonder afronding), als lijst met fijne lijnen zoals het voorbeeld. */
+  #beheerdlg[open][data-opent="pagina"]{animation:schuif-van-rechts .34s cubic-bezier(.22,.8,.3,1)}
+  #beheerdlg[open][data-opent="pagina-links"]{animation:schuif-van-links .34s cubic-bezier(.22,.8,.3,1)}
+  #dlg[open][data-opent="pagina-links"]{animation:schuif-van-links .34s cubic-bezier(.22,.8,.3,1)}
+  #beheerdlg .blad{touch-action:pan-y}
+  #beheerdlg .blad{border-radius:0;height:100dvh;max-height:100dvh}
+  #beheerdlg .beheer-body{padding-top:calc(var(--pg-ruimte) - 150px);padding-bottom:72px}
+  #beheerdlg .beheer-body h3{margin:0;padding:22px 4px 10px;border-top:0;font:400 calc(var(--tm) * 1.3)/1.2 inherit;font-family:inherit;color:var(--ink);letter-spacing:0;text-transform:none}
+  #beheerdlg .beheer-uitleg{padding:0 4px;margin:0 0 8px}
+  #beheerdlg .beheer-groep{gap:0;display:grid;grid-template-columns:1fr 1fr;border-top:var(--haar) solid var(--line-soft)}
+  #beheerdlg .beheer-groep button{border:0;border-radius:0;background:none;color:var(--ink);width:100%;text-align:left;font-size:var(--tm);
+    min-height:84px;padding:54px 12px 12px;border-bottom:var(--haar) solid var(--line-soft);
+    transition:padding-top .24s cubic-bezier(.22,.8,.3,1)}
+  #beheerdlg .beheer-groep button:nth-child(even){border-left:var(--haar) solid var(--line-soft)}
+  #beheerdlg .beheer-groep button:active{padding-top:12px}
+  #beheerdlg .beheer-groep button#bijwerkknop,#beheerdlg .beheer-groep button#aibeheer{grid-column:1/-1;border-left:0;height:auto;min-height:84px}
+  #beheerdlg .beheer-groep:has(> :last-child:nth-child(odd)) > :last-child{grid-column:1/-1;border-left:0}
+  #beheerdlg .beheer-groep button[hidden]{display:none}
+  #beheerdlg .beheer-groep button[aria-pressed="true"]{font-weight:650}
+  #beheerdlg .beheer-versie{display:flex;justify-content:space-between;align-items:baseline;margin:0;padding:18px 4px;border-top:var(--haar) solid var(--line-soft);font:var(--tm) inherit;font-family:inherit;color:var(--ink);text-align:left}
+  #beheerdlg .beheer-versie span+span{font-style:italic;font-size:var(--tk);color:var(--ink-soft)}
+  #dlg[data-pagina] .blad{touch-action:pan-y}      /* een zijwaartse veeg komt bij de pagina aan in plaats van bij de browser (de opdrachtgever, 13/10/2026: "de schermen met de vinger kunnen swipen") */
   .tegels{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px 0}
   .tegel{min-height:128px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;font-size:var(--tm)}
   .tegel .mteken{font-size:36px}
@@ -1102,9 +1230,9 @@
   /* De opdrachtgever, 13/10/2026: "de schermen schuiven naar links of naar rechts, niet meer van onder naar boven; bovenaan de ronding helemaal weg":
      de pagina's van de rij (Locatie, Dossier, Verslagen, Menu) openen zijwaarts, zonder afgeronde hoeken en zonder rand erboven.
      De X en het trekken naar onder of boven blijven. Andere bladen houden hun vorm. */
-  #dlg[open][data-pagina]{animation:schuif-van-rechts .34s cubic-bezier(.22,.8,.3,1)}
+  #dlg[open][data-opent="pagina"]{animation:schuif-van-rechts .34s cubic-bezier(.22,.8,.3,1)}      /* een eigen merk, bij het openen gezet: data-pagina wisselt bij elke pagina en zou de animatie (en dus het menu onderaan) opnieuw laten lopen */
   #dlg[data-pagina] .blad,#dlg[data-pagina] .blad.volledig{border-radius:0;height:100dvh;max-height:100dvh}
-  @media (prefers-reduced-motion:reduce){#dlg[open][data-pagina]{animation:none}}
+  @media (prefers-reduced-motion:reduce){#dlg[open][data-opent="pagina"]{animation:none}}
   @media (prefers-reduced-motion:reduce){#dlg[open],#beheerdlg[open]{animation:none}}
   #dlg .dlg-voet:has(#dlg-kopieer[style*="none"]){display:none}
   #invoerdlg{width:min(94vw,520px);max-width:94vw}
@@ -2194,6 +2322,26 @@
   .loc-samenrij{display:flex;gap:10px;padding:5px 0;font-size:var(--tk)}
   .loc-wat{flex:0 0 38%;color:var(--ink-soft)}
   .loc-waarde{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
+  /* Het uittrekpaneel onder het plan is weg: de punten staan in het puntenblad (de opdrachtgever, 13/10/2026). De lijst blijft in de opmaak, zonder te tonen, zodat de rest van de app ze nog kan tekenen. */
+  #lijstkop,#lijst,.lijstmeer,#zoekrij{display:none !important}      /* ook de zoekrij: ze filtert enkel de lijst die hier niet meer staat */
+  .pt-samen{min-height:calc(var(--pg-ruimte) - 14px);justify-content:center;padding:0;gap:8px}
+  .pt-hint{color:var(--ink-faint)}
+  .pt-blok{margin:0;padding:22px 4px 10px;border-top:var(--haar) solid var(--line-soft);font:400 calc(var(--tm) * 1.3)/1.2 inherit;font-family:inherit;color:var(--ink)}
+  .pt-leeg{margin:0;padding:6px 4px 20px;font-size:var(--tk);color:var(--ink-faint)}
+  .pt-rij{display:flex;align-items:stretch;border-top:var(--haar) solid var(--line-soft)}
+  .pt-rij:last-child{border-bottom:var(--haar) solid var(--line-soft)}
+  .pt-rij .vinkvak{flex:0 0 52px;padding-top:22px;background:none}
+  .pt-kolom{flex:1;min-width:0}
+  #dlg .pt-hoofd{padding:16px 6px 16px 12px;font-size:var(--tm);border-bottom:0;align-items:flex-start}
+  .pt-tekst{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;text-align:left}
+  .pt-nr{font-size:var(--tk);color:var(--ink-soft);letter-spacing:.02em}
+  .pt-titel{font-size:calc(var(--tm) * 1.5);line-height:1.25;overflow-wrap:anywhere}
+  .pt-titel.kort{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .pt-sub{font-size:var(--tk);color:var(--ink-faint);line-height:1.4}
+  .pt-af .pt-titel{color:var(--ink-soft)}
+  .pt-uitleg{padding:0 8px 16px 12px}
+  .pt-meta{margin:0 0 10px;font-size:var(--tk);color:var(--ink-soft)}
+  .pt-knoppen{display:flex;flex-wrap:wrap;gap:8px}
   .loc-kop{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:28px 0 0}
   .loc-kop-rij{font-size:var(--tk);color:var(--ink-soft)}
   .loc-probleem{background:none;border:0;padding:8px 12px;min-height:44px;font-size:var(--tk);color:var(--ink-soft);text-decoration:underline}
@@ -2629,11 +2777,37 @@
      openstaat of al afgesloten is. Het scherm gaat weg zodra dat klaar is. -->
 <div class="opstart" id="opstart" role="status" aria-label="Gridveld start op"></div>
 
+<!-- De AI-kaart (de opdrachtgever, 13/10/2026, met een schermvoorbeeld): een kaart met een bol, een zin en een invoervak onderaan. ONTWERP, geen dienst: er is nog geen
+     AI gekoppeld (docs/AI-schakelaar-en-credits.md), er vertrekt niets van dit toestel, en wat je typt blijft staan. Ze verschijnt alleen als de AI-modus aanstaat. -->
+<div class="bolmenu" id="bolmenu"></div>
+<div class="pilmenu" id="pilmenu" role="navigation" aria-label="Menu"></div>
+<div class="zijmenu" id="zijmenu" role="navigation" aria-label="Menu"></div>
+<section class="ai-kaart" id="aikaart" role="dialog" aria-label="AI" hidden>
+  <button type="button" class="ai-dicht" id="aidicht" aria-label="Sluiten"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+  <div class="ai-midden">
+    <div class="ai-orb" aria-hidden="true"></div>
+    <p class="ai-zin">Vraag iets over dit dossier, het bestek of deze locatie.</p>
+    <p class="ai-klein" id="aigeen">Nog geen dienst gekoppeld: er vertrekt niets van dit toestel.</p>
+  </div>
+  <div class="ai-invoer">
+    <textarea id="aitekst" rows="2" placeholder="Stel een vraag over dit dossier…" autocomplete="off"></textarea>
+    <div class="ai-rij">
+      <button type="button" class="ai-rond" id="aiplus" aria-label="Iets toevoegen"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <button type="button" class="ai-zoek" id="aizoek"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M16 16l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span>Zoeken in het dossier</span></button>
+      <span class="ai-ruimte"></span>
+      <button type="button" class="ai-rond ai-mic" id="aimic" aria-label="Dicteren"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2.5" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></button>
+      <button type="button" class="ai-rond ai-stuur" id="aistuur" aria-label="Versturen"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 19V6M6 11.5l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+</section>
 <div class="wrap" id="wrap" data-paneel="dicht">
   <!-- De kop zegt alleen wáár je bent: welke werf, welke vergadering, hoeveel er staat. De naam
        van de app stond hier ook, maar wie de app open heeft weet welke app hij open heeft; op een
        telefoonscherm kostte dat de teller een tweede regel. Het versienummer is naar het
        beheervenster gegaan, waar het thuishoort. -->
+  <!-- De opdrachtgever, 13/10/2026: "het scherm plan nu aanpassen, layout hetzelfde als de andere pagina's; bovenaan staat Plan, de X hoeft niet, want dit is het hoofdscherm."
+       Dezelfde titel als bij Locatie en Dossier; het kader dat er was (werf, zones, plan) zakt eronder. -->
+  <div class="dlg-kop hoofdkop"><h2 id="hoofdtitel">Plan</h2></div>
   <header>
     <h1 class="verborgen">Gridveld</h1>
     <div class="kraster">
@@ -2682,7 +2856,7 @@
   </div>
 
   <!-- Hier is niets, en daarom zie je het plan. -->
-  <div class="vulling" id="vulling"><button type="button" class="kaartknop" id="kaartoud"
+  <div class="vulling" id="vulling"><button type="button" class="kaartknop kaartmax" id="kaartmax" aria-label="Plan maximaliseren" title="Plan maximaliseren">↗</button><button type="button" class="kaartknop" id="kaartoud"
     title="Punten van vorige vergaderingen tonen of wegzetten" hidden></button><button
     type="button" class="kaartknop kaartlaag" id="kaartlaag"
     title="De toestand die je ziet — tik voor de andere" hidden></button><button
@@ -2989,10 +3163,12 @@
        vier plaatsen waar je de hele dag heen en weer gaat. -->
   <nav class="fmenu" aria-label="Ingangen">
     <button type="button" class="mkn alleenbreed" id="keet"><span class="mteken">⌂</span>Keet</button>
-    <button type="button" class="mkn" id="planmenu"><span class="mteken">◎</span>Plan</button>
-    <button type="button" class="mkn" id="verslag"><span class="mteken">▤</span>Verslagen</button>
+    <button type="button" class="mkn" id="planmenu" aria-current="page"><span class="mteken">◎</span>Plan</button>
+    <button type="button" class="mkn" id="puntenmenu"><span class="mteken">≡</span>Punten</button>
+    <button type="button" class="mkn" id="verslag"><span class="mteken">▤</span>Verslag</button>
     <button type="button" class="mkn" id="dossiermenu"><span class="mteken">⌕</span>Dossier</button>
     <button type="button" class="mkn" id="locatiemenu"><span class="mteken">⌖</span>Locatie</button>
+    <button type="button" class="mkn instel" id="instelmenu" aria-label="Instellingen" title="Instellingen"><span class="mteken">⋯</span></button>
   </nav>
 </div>
 
@@ -3015,7 +3191,8 @@
      De knoppen houden hun oude id, zodat de bedrading er ongewijzigd op blijft passen. -->
 <dialog id="beheerdlg">
   <div class="blad">
-  <div class="dlg-kop"><span class="blad-greep" aria-hidden="true"></span><h2 id="beheertitel">Beheer</h2><button type="button" class="blad-x" id="beheer-sluit" aria-label="Sluiten"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button></div>
+  <div class="blad-pagina" id="beheer-pagina">
+  <div class="dlg-kop"><span class="blad-greep" aria-hidden="true"></span><h2 id="beheertitel">Instellingen</h2><button type="button" class="blad-x" id="beheer-sluit" aria-label="Sluiten"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button></div>
   <div class="dlg-body beheer-body">
     <h3>Deze werf</h3>
     <p class="beheer-uitleg">Hoort bij dit dossier. Een andere werf draagt haar eigen lijsten.</p>
@@ -3043,6 +3220,7 @@
       <button type="button" id="fotos">bijlagen tonen</button>
       <button type="button" id="backup" title="Alles op dit toestel in één bestand">Back-up</button>
       <button type="button" id="backupterug" title="Een back-upbestand inlezen, bijvoorbeeld op een nieuw toestel">Back-up terugzetten</button>
+      <button type="button" id="menustijl" title="Waar de bol staat: los onderaan, of in de invoerregel">Menu: bol los</button>
       <button type="button" id="aanmeldbeheer" title="Aanmelden of afmelden bij de online bron">Aanmelden</button>
       <button type="button" id="toestelwissen" title="Alles op dit toestel wissen: de app begint opnieuw, alsof je haar voor het eerst opent">Toestel wissen (nieuw begin)</button>
       <!-- Alleen zichtbaar als er een noodkopie van vóór de verhuizing bestaat (merkNoodknop). -->
@@ -3064,7 +3242,8 @@
     <div class="beheer-groep">
       <button type="button" id="bijwerkknop">bijwerken — kijk of er een nieuwe versie is</button>
     </div>
-    <p class="beheer-versie">Gridveld <span id="versie"></span></p>
+    <p class="beheer-versie"><span>App-versie</span> <span id="versie"></span></p>
+  </div>
   </div>
   </div>
 </dialog>
@@ -3362,9 +3541,11 @@
   <nav class="fmenu" aria-label="Ingangen">
     <button type="button" class="mkn alleenbreed" id="pl-mkeet"><span class="mteken">⌂</span>Keet</button>
     <button type="button" class="mkn" id="pl-mplan" aria-current="page"><span class="mteken">◎</span>Plan</button>
-    <button type="button" class="mkn" id="pl-mverslag"><span class="mteken">▤</span>Verslagen</button>
+    <button type="button" class="mkn" id="pl-mpunten"><span class="mteken">≡</span>Punten</button>
+    <button type="button" class="mkn" id="pl-mverslag"><span class="mteken">▤</span>Verslag</button>
     <button type="button" class="mkn" id="pl-mdossier"><span class="mteken">⌕</span>Dossier</button>
     <button type="button" class="mkn" id="pl-mlocatie"><span class="mteken">⌖</span>Locatie</button>
+    <button type="button" class="mkn instel" id="pl-minstel" aria-label="Instellingen" title="Instellingen"><span class="mteken">⋯</span></button>
   </nav>
 </dialog>
 
@@ -3406,9 +3587,11 @@
     <div class="pagina-stippen" id="paginastippen" hidden aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
     <div class="pagina-menu" id="paginamenu" role="navigation" aria-label="Ingangen" hidden>
       <button type="button" class="mkn" id="pm-plan"><span class="mteken">◎</span>Plan</button>
-      <button type="button" class="mkn" id="pm-verslagen"><span class="mteken">▤</span>Verslagen</button>
+      <button type="button" class="mkn" id="pm-punten"><span class="mteken">≡</span>Punten</button>
+      <button type="button" class="mkn" id="pm-verslagen"><span class="mteken">▤</span>Verslag</button>
       <button type="button" class="mkn" id="pm-dossier"><span class="mteken">⌕</span>Dossier</button>
       <button type="button" class="mkn" id="pm-locatie"><span class="mteken">⌖</span>Locatie</button>
+      <button type="button" class="mkn instel" id="pm-instel" aria-label="Instellingen" title="Instellingen"><span class="mteken">⋯</span></button>
     </div>
   </div>
 </dialog>
@@ -3539,7 +3722,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v300";
+const VERSIE="v326";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -8933,16 +9116,39 @@ async function beheerPlanbron(){
    draait — en nadrukkelijk niet via `onclose`: het browserpaneel levert die gebeurtenis
    onbetrouwbaar af bij programmatisch sluiten, en dat is vorige sessie een half uur zoeken
    geweest. Een knop doet zijn werk meteen. */
-document.getElementById("beheerknop").onclick=()=>{
-  // De versie staat in de kop, zodat je op een toestel kunt zien welke app er draait (08/10/2026: niemand wist het meer).
-  document.getElementById("beheertitel").textContent="Beheer · "+VERSIE;
+document.getElementById("beheerknop").onclick=()=>openInstellingen(false);
+function openInstellingen(links){
+  const bd=document.getElementById("beheerdlg");
+  if(!bd.open)bd.dataset.opent=links?"pagina-links":"pagina";
+  merkInstelmenu();
   merkAiknop();
   merkNoodknop();
-  document.getElementById("beheerdlg").showModal();
+  if(!bd.open)bd.showModal();
   // Meten bij het openen en niet eerder: de cijfers verouderen, en niemand kijkt ernaar als het
   // venster dicht is. Async, dus het venster wacht er niet op.
   toonOpslagstand();
-};
+}
+document.getElementById("beheerdlg").addEventListener("close",()=>{ const bd=document.getElementById("beheerdlg"); if(!bd.open)delete bd.dataset.opent; });
+/* De opdrachtgever, 13/10/2026, met een schermvoorbeeld: "ik wil nu ook een settingsmenu maken, overzichtelijk; nu staat er beheer rechtsboven, ik wil de
+   settings onderaan". De ingang is de vijfde, smalle cel van het menu onderaan (⋯, "Instellingen"); het venster zelf is een pagina zoals de andere,
+   met hetzelfde menu onderaan. De ⋯ rechtsboven is weg. */
+function merkInstelmenu(){
+  const dlg=document.getElementById("beheerdlg"), blad=dlg.querySelector(".blad");
+  let m=document.getElementById("instelpaginamenu");
+  if(!m){
+    m=document.getElementById("paginamenu").cloneNode(true);
+    m.id="instelpaginamenu"; m.hidden=false;
+    Array.prototype.forEach.call(m.querySelectorAll("button"),b=>b.removeAttribute("aria-current"));      // de kopie neemt de stand van de pagina mee die er net open stond
+    Array.prototype.forEach.call(m.querySelectorAll("[id]"),b=>{ b.id=b.id.replace(/^pm-/,"im-"); });
+    const naar={"im-punten":"punten","im-verslagen":"verslagen","im-dossier":"dossier","im-locatie":"locatie"};
+    Object.keys(naar).forEach(id=>{ m.querySelector("#"+id).onclick=()=>gaNaarPagina(naar[id]); });
+    m.querySelector("#im-plan").onclick=()=>gaNaarPagina("begin");
+    m.querySelector("#im-instel").onclick=()=>{};
+    m.querySelector("#im-instel").setAttribute("aria-current","page");
+    blad.appendChild(m);
+  }
+  bolInBlad(dlg,"instel");
+}
 document.getElementById("noodterug").onclick=()=>{ noodkopieTerugzetten(); };
 document.getElementById("beheer-sluit").onclick=()=>
   document.getElementById("beheerdlg").close();
@@ -8951,8 +9157,8 @@ document.getElementById("beheerdlg").addEventListener("click",e=>{
   const b=e.target.closest("button");
   /* De schakelaar van de AI-modus opent geen venster; hij wisselt van stand, en die stand wil
      je zien staan -- zoals de vliegtuigmodus. Dus daar blijft het venster open. */
-  const blijft=["beheer-sluit","aibeheer"];
-  if(b&&!blijft.includes(b.id))document.getElementById("beheerdlg").close();
+  const blijft=["beheer-sluit","aibeheer","menustijl"];
+  if(b&&!blijft.includes(b.id)&&!/^im-/.test(b.id))document.getElementById("beheerdlg").close();
 },true);
 
 /* ---- de AI-modus: een schakelaar zonder dienst erachter ----
@@ -9002,6 +9208,174 @@ document.getElementById("aibeheer").onclick=()=>{
   melding(nu?"AI-modus aan — nog geen dienst gekoppeld, er vertrekt niets":"AI-modus uit");
 };
 merkAiknop();
+
+/* ---- de AI-kaart: een ontwerp, nog geen dienst ----
+   de opdrachtgever, 13/10/2026, met een schermvoorbeeld: de AI-interface op het hoofdblad, een kaart met een bol, een zin en een invoervak onderaan (+, zoeken, microfoon, versturen).
+   Wat ze NIET doet: iets versturen. Er is geen dienst en de CSP laat er geen toe; de kaart zegt dat zelf, zoals de schakelaar in de instellingen. Wat je typt blijft staan. Ze
+   is er alleen als de AI-modus aanstaat (standaard uit, docs/AI-schakelaar-en-credits.md): de bol rechts in de titelrij verschijnt dan, en verdwijnt weer zodra je hem uitzet. */
+/* Het menu is de bol (de opdrachtgever, 13/10/2026: "ik wil een slimmer menu, hoe kunnen we dit combineren vanuit de bol" en "probeer A"): de balk onderaan is weg. De bol zweeft onderaan; een tik
+   laat hem uitbloeien in een boog van bolletjes met de andere pagina's (en AI, als de AI-modus aanstaat). Waar je bent, is de bol zelf: dat bolletje ontbreekt. */
+const BOLITEMS=[["plan","Plan"],["punten","Punten"],["verslagen","Verslag"],["dossier","Dossier"],["locatie","Locatie"],["instel","Instel\u00ADlingen"],["ai","AI"]];
+function bolGa(naam,context){
+  if(naam==="ai"){ if(context==="begin")openAikaart(); else { gaNaarPagina("begin"); setTimeout(openAikaart,340); } return; }
+  if(naam==="plan"){ if(context!=="begin")gaNaarPagina("begin"); return; }
+  if(context==="begin"){
+    ({punten:()=>toonPunten(),verslagen:()=>toonVergaderingen(),dossier:()=>toonDossier(),locatie:()=>toonLocatie(),instel:()=>openInstellingen(false)})[naam]();
+    return;
+  }
+  gaNaarPagina(naam);
+}
+/* Variant C, om te proberen (de opdrachtgever, 13/10/2026: "ik wil daarna ook een alternatief C testen"): de bol zit links IN de invoerregel, en bloeit omhoog uit als een stapel bolletjes.
+   Eén regel voor alles: de bol links, het veld ernaast, en de knoppen rechts. Per toestel te kiezen in de instellingen ("Menu"); standaard blijft de bol los onderaan (A). */
+const MENUSLEUTEL="werfpunten-menu";
+const MENUSTIJLEN=[["los","bol los"],["regel","bol in de invoerregel"],["pil","balk met icoontjes"],["zij","tabbladen aan de zijkant"],["zijtekst","tabbladen met tekst"]];
+function menuStijl(){ try{ const v=localStorage.getItem(MENUSLEUTEL); return MENUSTIJLEN.some(x=>x[0]===v)?v:"los"; }catch(e){ return "los"; } }
+function menuNaam(){ return (MENUSTIJLEN.find(x=>x[0]===menuStijl())||MENUSTIJLEN[0])[1]; }
+function merkMenustijl(){
+  const b=document.getElementById("menustijl"); if(b)b.textContent="Menu: "+menuNaam();
+  const w=document.getElementById("wrap"); if(w)w.dataset.menu=menuStijl();
+  document.body.classList.toggle("menu-pil",menuStijl()==="pil");
+  document.body.classList.toggle("menu-zij",menuStijl()==="zij"||menuStijl()==="zijtekst");
+  document.body.classList.toggle("menu-zijtekst",menuStijl()==="zijtekst");
+}
+/* Variant D (de opdrachtgever, 13/10/2026, met een schermvoorbeeld: een zwarte zwevende balk met lijnicoontjes, de actieve in een wit rondje): de zes ingangen (en AI) als icoontjes in een
+   zwarte pil onderaan. Geen emoji: lijntekens in SVG, in de lijn van de rest van de app. Waar je bent: wit rondje met een zwart icoon. */
+const PILICONEN={
+  plan:'<path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 12l9 4 9-4M3 17l9 4 9-4"/>',
+  punten:'<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.1"/><circle cx="4.5" cy="12" r="1.1"/><circle cx="4.5" cy="18" r="1.1"/>',
+  verslagen:'<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 13h6M9 17h6"/>',
+  dossier:'<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>',
+  locatie:'<circle cx="12" cy="12" r="6"/><path d="M12 2.5v5M12 16.5v5M2.5 12h5M16.5 12h5"/>',
+  instel:'<path d="M12 3l7.8 4.5v9L12 21l-7.8-4.5v-9z"/><circle cx="12" cy="12" r="3"/>',
+  ai:'<circle cx="12" cy="12" r="6.5" fill="currentColor" stroke="none"/>'
+};
+function pilBouw(wortel,context){
+  if(!wortel)return;
+  wortel.innerHTML="";
+  BOLITEMS.filter(([n])=>!(n==="ai"&&!aiAan())).forEach(([naam,tekst])=>{
+    const huidig=(naam===context)||(naam==="plan"&&context==="begin");
+    const b=maakEl("button","pil-item"+(huidig?" huidig":"")); b.type="button";
+    b.setAttribute("aria-label",tekst.replace("\u00AD","")); b.title=tekst.replace("\u00AD","");
+    if(huidig)b.setAttribute("aria-current","page");
+    b.innerHTML='<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+PILICONEN[naam]+'</svg>';
+    b.onclick=e=>{ e.stopPropagation(); if(!huidig)bolGa(naam,context); };
+    wortel.appendChild(b);
+  });
+}
+function bolBouw(wortel,context){
+  if(!wortel)return;
+  const stapel=wortel.id==="bolmenu"&&menuStijl()==="regel";
+  wortel.classList.toggle("bolregel",stapel);
+  wortel.innerHTML=""; wortel.classList.remove("open");
+  const veil=maakEl("div","bol-veil"); veil.onclick=()=>wortel.classList.remove("open");
+  const boog=maakEl("div","bol-boog");
+  const items=BOLITEMS.filter(([n])=>n!==context&&!(n==="ai"&&!aiAan())&&!(n==="plan"&&context==="begin"));
+  const n=items.length;
+  items.forEach(([naam,tekst],i)=>{
+    const hoek=n>1?Math.PI*(1-i/(n-1)):Math.PI/2;                  // van links over de top naar rechts
+    const R=n>5?128:112;
+    const b=maakEl("button","bol-item",tekst); b.type="button";
+    if(stapel){ b.style.setProperty("--x","0px"); b.style.setProperty("--y",-(i+1)*72+"px"); }
+    else{
+      b.style.setProperty("--x",Math.round(Math.cos(hoek)*R)+"px");
+      b.style.setProperty("--y",Math.round(-Math.sin(hoek)*R*0.92)+"px");
+    }
+    b.style.setProperty("--d",(i*0.035).toFixed(3)+"s");
+    b.onclick=e=>{ e.stopPropagation(); wortel.classList.remove("open"); bolGa(naam,context); };
+    boog.appendChild(b);
+  });
+  const knop=maakEl("button","bol-knop"); knop.type="button"; knop.setAttribute("aria-label","Menu"); knop.setAttribute("aria-expanded","false");
+  knop.appendChild(maakEl("span"));
+  knop.onclick=e=>{ e.stopPropagation(); const aan=wortel.classList.toggle("open"); knop.setAttribute("aria-expanded",String(aan)); };
+  wortel.appendChild(veil); wortel.appendChild(boog); wortel.appendChild(knop);
+}
+/* Variant E (de opdrachtgever, 13/10/2026: "menu aan de zijkant, rechts; schermen uittrekbaar naar links, gelijk tabbladen"): de ingangen als tabbladen langs de rechterrand van het
+   hoofdscherm. Een tik trekt de pagina naar links uit, en de tabbladen hangen aan de linkerrand van die pagina: ze reizen mee. De tab van de pagina waar je bent heeft de kleur
+   van de pagina. Links blijft een smalle strook van het hoofdscherm staan; een tik daarop (of een veeg naar rechts) schuift de pagina terug. */
+function zijBouw(wortel,context){
+  if(!wortel)return;
+  wortel.innerHTML="";
+  BOLITEMS.filter(([n])=>!(n==="ai"&&!aiAan())).forEach(([naam,tekst])=>{
+    const huidig=(naam===context)||(naam==="plan"&&context==="begin");
+    const b=maakEl("button","zij-tab"+(huidig?" huidig":"")); b.type="button";
+    b.setAttribute("aria-label",tekst.replace("\u00AD","")); b.title=tekst.replace("\u00AD","");
+    if(huidig)b.setAttribute("aria-current","page");
+    if(menuStijl()==="zijtekst"){
+      /* Variant F (de opdrachtgever, 13/10/2026, met een schermvoorbeeld): de tabbladen met een woord erop, verticaal gelezen, elk in een eigen zachte kleur en zo hoog als zijn woord. */
+      const woord=tekst.replace("\u00AD","");
+      b.classList.add("tekst"); b.textContent=woord;
+      b.style.setProperty("--h",(30+woord.length*9)+"px"); b.style.setProperty("--c",ZIJKLEUR[naam]||"#ddd");
+    }else{
+      b.innerHTML='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+PILICONEN[naam]+'</svg>';
+    }
+    b.onclick=e=>{ e.stopPropagation(); if(!huidig)bolGa(naam,context); };
+    wortel.appendChild(b);
+  });
+}
+const ZIJKLEUR={plan:"#ffffff",punten:"#f2a9a2",verslagen:"#a8c4d4",dossier:"#e8dfae",locatie:"#b7d2ad",instel:"#cbcbd2",ai:"#161B26"};
+function zijInDlg(dlg,context){
+  let zw=null;
+  Array.prototype.forEach.call(dlg.children,c=>{ if(c.classList&&c.classList.contains("zijpagina"))zw=c; });
+  if(!zw){ zw=maakEl("div","zijmenu zijpagina"); zw.setAttribute("role","navigation"); zw.setAttribute("aria-label","Menu"); dlg.appendChild(zw); }
+  zijBouw(zw,context);
+}
+function plaatsAibol(){
+  const w=document.getElementById("bolmenu"), inv=document.querySelector("#wrap .invoer"), rij=document.querySelector("#wrap .invoerrij");
+  if(!w||!inv)return;
+  if(document.body.classList.contains("plan-max")){
+    w.style.setProperty("--bol-b","48px"); w.style.setProperty("--bol-l","50%");
+    return;
+  }
+  if(menuStijl()==="regel"&&rij){
+    const r=rij.getBoundingClientRect();
+    w.style.setProperty("--bol-b",Math.max(0,Math.round(window.innerHeight-(r.top+r.height/2)))+"px");   // het midden van de bol ligt op het midden van de regel
+    w.style.setProperty("--bol-l",Math.round(r.left+42)+"px");
+  }else{
+    const r=inv.getBoundingClientRect();
+    w.style.setProperty("--bol-b",Math.max(0,Math.round(window.innerHeight-r.top+36))+"px");      // het midden van de bol ligt 36 px boven de invoerregel
+  }
+}
+document.getElementById("kaartmax").onclick=e=>{
+  if(e&&e.stopPropagation)e.stopPropagation();      // de knop ligt in het kaartvlak: een tik erop is geen tik op het plan
+  const aan=document.body.classList.toggle("plan-max");
+  const k=document.getElementById("kaartmax");
+  k.textContent=aan?"\u2199":"\u2197";
+  k.setAttribute("aria-label",aan?"Plan verkleinen":"Plan maximaliseren"); k.title=aan?"Plan verkleinen":"Plan maximaliseren";
+  /* De kaart ligt onder de hele app en meet haar gat aan de vulling: na het wisselen opnieuw laten meten. */
+  setTimeout(async()=>{ plaatsAibol(); try{ window.dispatchEvent(new Event("resize")); kaartZone=null; await tekenKaart(); }catch(e){} },60);
+};
+document.getElementById("menustijl").onclick=()=>{
+  const i=MENUSTIJLEN.findIndex(x=>x[0]===menuStijl());
+  try{ localStorage.setItem(MENUSLEUTEL,MENUSTIJLEN[(i+1)%MENUSTIJLEN.length][0]); }catch(e){}
+  merkMenustijl(); merkAibol(); setTimeout(plaatsAibol,50);
+  melding("Menu: "+menuNaam());
+};
+function merkAibol(){
+  const w=document.getElementById("bolmenu"), k=document.getElementById("aikaart"); if(!w)return;
+  bolBouw(w,"begin");
+  pilBouw(document.getElementById("pilmenu"),"begin");
+  zijBouw(document.getElementById("zijmenu"),"begin");
+  w.hidden=!!(k&&!k.hidden);
+  if(!aiAan())sluitAikaart();
+  plaatsAibol();
+}
+function sluitAikaart(){ const k=document.getElementById("aikaart"); if(k){ k.hidden=true; const w=document.getElementById("bolmenu"); if(w){ w.hidden=false; plaatsAibol(); } } }
+function openAikaart(){
+  const k=document.getElementById("aikaart");
+  if(!k||!aiAan())return;
+  k.style.setProperty("--aimenu",menuStijl()==="pil"?"96px":"12px");
+  k.hidden=false;
+  document.getElementById("bolmenu").hidden=true;
+}
+function aiNogNiet(){ melding("Nog geen dienst gekoppeld — er is niets verstuurd"); }
+document.getElementById("aidicht").onclick=sluitAikaart;
+["aiplus","aizoek","aimic","aistuur"].forEach(id=>{ document.getElementById(id).onclick=aiNogNiet; });
+{ const o=merkAiknop; merkAiknop=function(){ o(); merkAibol(); }; }
+merkMenustijl();
+merkAibol();
+window.addEventListener("resize",plaatsAibol);
+window.addEventListener("orientationchange",()=>setTimeout(plaatsAibol,300));
+setTimeout(plaatsAibol,600);
 
 /* De zwaarste van allemaal: hier staan de vaststellingen van de lopende vergadering in. Deze
    functie wordt na elke handeling aangeroepen. Ving ze de fout stil op, dan bleef je noteren
@@ -11132,8 +11506,10 @@ function merkBackupknop(){
   /* De knop zit in het beheervenster, dus daar ziet niemand de stip. Ze moet staan waar je hem
      wél ziet: op de beheerknop zelf. Anders kost de verhuizing je de enige waarschuwing in deze
      app die met opzet niet wegfadet — en die staat er voor het grootste risico dat erin zit. */
-  const b=document.getElementById("beheerknop");
-  if(b)b.classList.toggle("wacht",wacht);
+  ["beheerknop","instelmenu","pl-minstel","pm-instel","im-instel"].forEach(id=>{
+    const b=document.getElementById(id);
+    if(b)b.classList.toggle("wacht",wacht);
+  });
 }
 
 function backupAchterstand(){
@@ -20034,11 +20410,11 @@ function kaartPuntGeraakt(sx,sy){
 /* De hele handeling: alleen dat punt, en het paneel schuift open zoals het altijd doet. Geen
    ander scherm en geen andere beweging — alleen een kortere lijst. */
 async function kiesUitKaart(id){
-  lijstAlleen=id;
-  /* Eerst tekenen, dan meten. Het paneel wordt zo hoog als het punt, en hoe hoog dat is kan de
-     lijst pas zeggen als ze er staat. */
-  await tekenLijst();
-  zetPaneel("open");
+  /* De opdrachtgever, 13/10/2026: "dat uittrekbare puntenscherm is niet meer nodig, de punten staan ernaast; je drukt op het plan en dan opent het puntenscherm". Een tik op een stip
+     opent nu het puntenblad, met dat punt uitgeklapt. (Het uittrekpaneel onder het plan is weg; de lijst erin blijft gewoon getekend, zonder te tonen.) */
+  lijstAlleen=null;
+  puntenUit.add(id); puntenFocus=id;
+  await toonPunten();
 }
 
 const KAARTTIK=6;
@@ -23674,23 +24050,180 @@ maakBladSleepbaar(document.getElementById("beheerdlg"));
    de opdrachtgever, 13/10/2026: de paginagrote schermen laten zich naar links en rechts swipen; helemaal links het beginscherm, dan Locatie, Dossier,
    Verslagen, en helemaal rechts een eindblad met tegels van het menu. Het menu blijft onderaan. De X en naar beneden trekken brengen je telkens
    terug op het beginscherm (het blad sluit). Een pagina meldt zich aan met `dlg.dataset.pagina`; opent iets anders in het blad, dan verdwijnt het menu. */
-const PAGINAROIJ=["begin","verslagen","dossier","locatie","eind"];
-function paginaNu(){ const d=document.getElementById("dlg"); return d.open&&d.dataset.pagina?d.dataset.pagina:"begin"; }
+const PAGINAROIJ=["begin","punten","verslagen","dossier","locatie","instel","eind"];
+function paginaNu(){ const d=document.getElementById("dlg"); if(d.open)return d.dataset.pagina||"begin"; return document.getElementById("beheerdlg").open?"instel":"begin"; }      // tijdens het wisselen liggen even twee vensters op elkaar: het bovenste telt
+let opentRichting="rechts";      // waar de pagina vandaan schuift als hij opent: "rechts" (gewoon) of "links" (terug in de rij)
+function bolInBlad(dlg,context){
+  const blad=dlg.querySelector(".blad"); if(!blad)return;
+  let w=blad.querySelector(".bolmenu.bolpagina");
+  if(!w){ w=maakEl("div","bolmenu bolpagina"); blad.appendChild(w); }
+  bolBouw(w,context);
+  let pw=blad.querySelector(".pilmenu.pilpagina");
+  if(!pw){ pw=maakEl("div","pilmenu pilpagina"); pw.setAttribute("role","navigation"); pw.setAttribute("aria-label","Menu"); blad.appendChild(pw); }
+  pilBouw(pw,context);
+  zijInDlg(dlg,context);
+}
 function paginaMenu(naam){
   const d=document.getElementById("dlg");
+  if(naam)bolInBlad(d,naam);
   if(naam)d.dataset.pagina=naam; else delete d.dataset.pagina;
   document.getElementById("paginamenu").hidden=!naam;
   document.getElementById("paginastippen").hidden=!naam;
-  ["verslagen","dossier","locatie"].forEach(n=>{ const b=document.getElementById("pm-"+n); if(n===naam)b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
+  ["punten","verslagen","dossier","locatie"].forEach(n=>{ const b=document.getElementById("pm-"+n); if(n===naam)b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
   Array.prototype.forEach.call(document.getElementById("paginastippen").children||[],(sp,i)=>sp.classList.toggle("aan",!!naam&&i===PAGINAROIJ.indexOf(naam)));
 }
 (function(){
   const d=document.getElementById("dlg"), orig=d.showModal.bind(d);
   d.showModal=function(){ paginaMenu(null); if(d.open)return; return orig(); };          // een ander blad in dit venster: het menu van de rij verdwijnt
 })();
-const _toonLocatie=toonLocatie; toonLocatie=function(){ const r=_toonLocatie(); paginaMenu("locatie"); return r; };
-const _toonDossier=toonDossier; toonDossier=function(){ const r=_toonDossier(); paginaMenu("dossier"); return r; };
-const _toonVergaderingen=toonVergaderingen; toonVergaderingen=async function(f){ const r=await _toonVergaderingen(f); if(document.getElementById("dlg").open){ paginaMenu("verslagen"); pgRuimte(); setTimeout(pgRuimte,450); } return r; };
+/* ---- het puntenblad ----
+   de opdrachtgever, 13/10/2026: "we ontwerpen het puntenscherm opnieuw: een blad bijmaken en onderaan aanklikbaar; dezelfde layout en hetzelfde lettertype als Locatie, genummerd, met de tussenlijntjes
+   en de pijltjes die openklappen en dichtklappen. Links blijft het afvinken staan: bij afvinken schuift het punt naar opgelost of niet meer relevant voor dit verslag; het laatst
+   toegevoegde punt eerst, het oudste onderaan. De nummering onderscheidt duidelijk het verslag, de datum en de periode dat het openstaat."
+   Dit is een tweede kijk op dezelfde punten, niet een tweede opslag: het afvinken doet wat het vakje in de lijst doet (wisselVerholpen, of merkAfgehandeld voor een punt van eerder).
+   Drie blokken: Open, Opgelost, Niet meer relevant. Het nummer is dat van het verslag waarin het punt ontstond (UIT-01.3); eronder staat in welk verslag het nu staat, sinds wanneer
+   het open is en hoeveel dagen, of wanneer het opgelost werd. Niet meer relevant (status nvt) kan alleen voor een punt van dit verslag, zoals in de keet. */
+const puntenUit=new Set();         // welke rijen openstaan
+let puntenVerhuisd=null;            // het punt dat net van blok wisselde: schuift van rechts in
+let puntenFocus=null;               // het punt waar je via het plan naartoe kwam: in beeld scrollen
+function puntenDagen(van,tot){
+  const a=Date.parse(van+"T00:00:00"), b=Date.parse((tot||vandaag())+"T00:00:00");
+  return (isNaN(a)||isNaN(b))?0:Math.max(0,Math.round((b-a)/86400000));
+}
+function puntenRegels(){
+  const nu=(staat.punten||[]).map((p,i)=>({p,vanEerder:false,volg:i}));
+  const sorteer=l=>l.sort((a,b)=>{
+    if(a.vanEerder!==b.vanEerder)return a.vanEerder?1:-1;                      // eerst wat in dit verslag ontstond
+    if(!a.vanEerder)return b.volg-a.volg;                                      // laatst toegevoegd eerst
+    return String(b.p.datum).localeCompare(String(a.p.datum))||String(b.p.nummer||"").localeCompare(String(a.p.nummer||""));
+  });
+  return {
+    open:sorteer(nu.filter(e=>isOpen(e.p)).concat(openPunten().map(p=>({p,vanEerder:true})))),
+    klaar:sorteer(nu.filter(e=>isKlaar(e.p)).concat(inDitVerslagAfgevinkt().map(p=>({p,vanEerder:true})))),
+    nvt:sorteer(nu.filter(e=>isVervallen(e.p)))
+  };
+}
+function puntenVerslag(e){
+  if(!e.vanEerder)return verslagRef(staat);
+  const dag=archief.find(d=>verslagSleutel(d)===e.p.sleutel);
+  return e.p.vanEerder||(dag?verslagRef(dag):datumKort(e.p.datum));
+}
+function puntenPeriode(e,soort){
+  const p=e.p, sinds=sindsVan(p), tot=p.afgehandeld;
+  const dgn=n=>n+(n===1?" dag":" dagen");
+  if(soort==="open")return "open sinds "+datumKort(sinds)+" \u00B7 "+dgn(puntenDagen(sinds));
+  return (soort==="klaar"?"opgelost ":"niet meer relevant ")+datumKort(tot)+" \u00B7 stond open "+datumKort(sinds)+" tot "+datumKort(tot)+" ("+dgn(puntenDagen(sinds,tot))+")";
+}
+async function puntenVink(e,soort){
+  const p=e.p, stand=vinkStand(p,e.vanEerder);
+  if(!stand)return;
+  if(e.vanEerder){ await merkAfgehandeld(p,stand==="vol"); archief=await haalDagen(); }
+  else wisselVerholpen(p);
+  puntenVerhuisd=p.id;
+  await tekenLijst();
+  await puntenTeken();
+}
+function puntenRij(e,soort){
+  const p=e.p;
+  const rij=maakEl("div","pt-rij"+(soort==="open"?"":" pt-af")+(puntenVerhuisd===p.id?" schuif-rij":""));
+  rij.dataset.punt=p.id; rij.dataset.blok=soort;
+  const vink=maakVinkvak(p,e.vanEerder);
+  if(vink.tagName==="BUTTON")vink.onclick=ev=>{ if(ev&&ev.stopPropagation)ev.stopPropagation(); puntenVink(e,soort); };
+  rij.appendChild(vink);
+  const open=puntenUit.has(p.id);
+  const kolom=maakEl("div","pt-kolom");
+  const kop=maakEl("button","fiche-hoofdstuk pt-hoofd"+(open?" open":"")); kop.type="button";
+  kop.setAttribute("aria-expanded",open?"true":"false");
+  const tekst=maakEl("span","pt-tekst");
+  tekst.appendChild(maakEl("span","pt-nr",(p.nummer||"punt")+" \u00B7 "+puntenVerslag(e)));
+  tekst.appendChild(maakEl("span","pt-titel"+(open?"":" kort"),String(p.tekst||"").trim()||"punt zonder notitie"));
+  tekst.appendChild(maakEl("span","pt-sub",puntenPeriode(e,soort)));
+  kop.appendChild(tekst);
+  kop.appendChild(maakEl("span","fiche-hoofdstuk-pijl","\u2192"));
+  kop.onclick=()=>{ if(puntenUit.has(p.id))puntenUit.delete(p.id); else puntenUit.add(p.id); puntenTeken(); };
+  kolom.appendChild(kop);
+  if(open){
+    const u=maakEl("div","pt-uitleg");
+    const regel=[];
+    if(p.zone)regel.push(zoneNaam(p.zone));
+    if(p.tijd)regel.push(p.tijd);
+    if(p.uit)regel.push("vermelding uit "+p.uit.ref);
+    if(regel.length)u.appendChild(maakEl("p","pt-meta",regel.join(" \u00B7 ")));
+    const knoppen=maakEl("div","pt-knoppen");
+    if(p.plek&&p.plek.zone){
+      const opPlan=maakEl("button",null,"Op het plan"); opPlan.type="button";
+      opPlan.onclick=async()=>{ const d=document.getElementById("dlg"); await springNaarPunt(p); sluitMetUitschuif(d); };
+      knoppen.appendChild(opPlan);
+    }
+    if(!e.vanEerder){
+      const op=maakEl("button",null,"Openen"); op.type="button";
+      op.onclick=()=>{ const d=document.getElementById("dlg"); d.close(); springNaarPunt(p); bewerkPunt(p.id); };
+      knoppen.appendChild(op);
+      if(!isDocpunt(p)&&!isDoorgeschoven(p)){
+        const nvt=maakEl("button",null,isVervallen(p)?"Weer relevant":"Niet meer relevant"); nvt.type="button";
+        nvt.onclick=async()=>{
+          if(isVervallen(p)){ delete p.status; delete p.afgehandeld; }
+          else { p.status="nvt"; p.afgehandeld=vandaag(); }
+          raakAan(p); bewaarStaat(); puntenVerhuisd=p.id; await tekenLijst(); await puntenTeken();
+        };
+        knoppen.appendChild(nvt);
+      }
+      if(p.plek&&!isKlaar(p)){
+        const vz=maakEl("button",null,"Verzet op de kaart"); vz.type="button";
+        vz.onclick=()=>{ const d=document.getElementById("dlg"); d.close(); startVerzet(p); };
+        knoppen.appendChild(vz);
+      }
+      const wis=maakEl("button",null,"Verwijder"); wis.type="button";
+      wis.onclick=async()=>{ await verwijderPunt(p.id); await puntenTeken(); };
+      knoppen.appendChild(wis);
+    }
+    if(knoppen.children.length)u.appendChild(knoppen);
+    kolom.appendChild(u);
+  }
+  rij.appendChild(kolom);
+  return rij;
+}
+async function puntenTeken(){
+  const dlg=document.getElementById("dlg");
+  if(!dlg.open||dlg.dataset.pagina!=="punten")return;
+  const body=document.getElementById("dlg-body"), top=body.scrollTop;
+  body.innerHTML="";
+  const r=puntenRegels();
+  const kop=maakEl("div","loc-kop pt-samen");
+  kop.appendChild(maakEl("div","loc-kop-rij",r.open.length+" open \u00B7 "+r.klaar.length+" opgelost"+(r.nvt.length?" \u00B7 "+r.nvt.length+" niet meer relevant":"")));
+  kop.appendChild(maakEl("div","loc-kop-rij pt-hint","Het laatst toegevoegde punt staat bovenaan."));
+  body.appendChild(kop);
+  const blok=(titel,lijst,soort,leeg)=>{
+    if(!lijst.length&&!leeg)return;
+    body.appendChild(maakEl("h3","pt-blok",titel+" ("+lijst.length+")"));
+    if(!lijst.length){ body.appendChild(maakEl("p","pt-leeg",leeg)); return; }
+    lijst.forEach(e=>body.appendChild(puntenRij(e,soort)));
+  };
+  blok("Open",r.open,"open","Niets open.");
+  blok("Opgelost",r.klaar,"klaar","");
+  blok("Niet meer relevant",r.nvt,"nvt","");
+  puntenVerhuisd=null;
+  body.scrollTop=top;
+  if(puntenFocus){
+    const el=body.querySelector('.pt-rij[data-punt="'+puntenFocus+'"]');
+    puntenFocus=null;
+    if(el&&el.scrollIntoView)try{ el.scrollIntoView({block:"start"}); body.scrollTop=Math.max(0,body.scrollTop-12); }catch(e){}
+  }
+}
+async function toonPunten(){
+  const dlg=document.getElementById("dlg");
+  opentPagina();
+  document.getElementById("dlg-titel").textContent="Punten";
+  document.getElementById("dlg-kopieer").style.display="none";
+  document.getElementById("dlg-body").innerHTML="";
+  dlg.showModal(); paginaMenu("punten");
+  await puntenTeken();
+}
+const opentPagina=()=>{ const d=document.getElementById("dlg"); if(!d.open)d.dataset.opent=opentRichting==="links"?"pagina-links":"pagina"; };
+document.getElementById("dlg").addEventListener("close",()=>{ const d=document.getElementById("dlg"); if(!d.open)delete d.dataset.opent; });
+const _toonLocatie=toonLocatie; toonLocatie=function(){ opentPagina(); const r=_toonLocatie(); paginaMenu("locatie"); return r; };
+const _toonDossier=toonDossier; toonDossier=function(){ opentPagina(); const r=_toonDossier(); paginaMenu("dossier"); return r; };
+const _toonVergaderingen=toonVergaderingen; toonVergaderingen=async function(f){ opentPagina(); const r=await _toonVergaderingen(f); if(document.getElementById("dlg").open){ paginaMenu("verslagen"); pgRuimte(); setTimeout(pgRuimte,450); } return r; };
 /* De opdrachtgever, 13/10/2026: "dezelfde whitespace tussen titels en hoofdstukken in alle bladzijden": de eerste rij van Verslagen (onder de fasebalk)
    staat even ver onder de titel als de eerste lijn van Locatie (--pg-ruimte). */
 function pgRuimte(){
@@ -23710,44 +24243,72 @@ function toonEindblad(){
   const body=document.getElementById("dlg-body"); body.innerHTML="";
   document.getElementById("dlg-kopieer").style.display="none";
   const raster=maakEl("div","tegels");
-  [["\u25CE","Plan",()=>{ d.close(); document.getElementById("planmenu").click(); }],
+  [["\u25CE","Plan",()=>gaNaarPagina("begin")],
+   ["\u2261","Punten",()=>gaNaarPagina("punten")],
    ["\u25A4","Verslagen",()=>gaNaarPagina("verslagen")],
    ["\u2315","Dossier",()=>gaNaarPagina("dossier")],
    ["\u2316","Locatie",()=>gaNaarPagina("locatie")],
-   ["\u22EF","Beheer",()=>{ d.close(); document.getElementById("beheerknop").click(); }]].forEach(([teken,naam,doe])=>{
+   ["\u22EF","Instellingen",()=>gaNaarPagina("instel")]].forEach(([teken,naam,doe])=>{
     const b=maakEl("button","tegel"); b.type="button";
     b.appendChild(maakEl("span","mteken",teken)); b.appendChild(maakEl("span",null,naam));
     b.onclick=doe; raster.appendChild(b);
   });
   body.appendChild(raster);
-  d.showModal(); paginaMenu("eind");
+  opentPagina(); d.showModal(); paginaMenu("eind");
 }
 function schuifIn(kant){
   const pg=document.getElementById("dlg-pagina");
   pg.classList.remove("schuif-van-rechts","schuif-van-links"); void pg.offsetWidth; pg.classList.add("schuif-"+kant);
   setTimeout(()=>pg.classList.remove("schuif-van-rechts","schuif-van-links"),380);
 }
-function gaNaarPagina(naam){
-  const d=document.getElementById("dlg");
+function sluitMetUitschuif(dlg,zonder){
+  if(zonder||window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches){ dlg.close(); return; }
+  dlg.style.transition="transform .26s cubic-bezier(.22,.8,.3,1)"; dlg.style.transform="translateX(100%)";
+  setTimeout(()=>{ try{ dlg.close(); }catch(e){} dlg.style.transition=""; dlg.style.transform=""; },260);
+}
+function gaNaarPagina(naam,zonderUitschuif){
+  const d=document.getElementById("dlg"), bd=document.getElementById("beheerdlg");
   const van=PAGINAROIJ.indexOf(paginaNu()), naar=PAGINAROIJ.indexOf(naam);
   if(naar<0||naar===van)return;
-  if(naam==="begin"){ d.close(); return; }
-  ({locatie:()=>toonLocatie(), dossier:()=>toonDossier(), verslagen:()=>toonVergaderingen(), eind:()=>toonEindblad()})[naam]();
+  const uitInstel=bd.open;
+  /* De instellingen zijn een eigen venster, maar een pagina van de rij: het nieuwe venster schuift er bovenop (van rechts, of van links als je terug gaat in de rij)
+     en het oude sluit pas als dat er ligt. */
+  if(naam==="begin"&&uitInstel){ sluitMetUitschuif(bd,zonderUitschuif); return; }
+  if(naam==="instel"){
+    openInstellingen(false);
+    if(d.open)setTimeout(()=>{ try{ d.close(); }catch(e){} },360);
+    return;
+  }
+  if(uitInstel){
+    opentRichting=(naar<van)?"links":"rechts";
+    ({punten:()=>toonPunten(), verslagen:()=>toonVergaderingen(), dossier:()=>toonDossier(), locatie:()=>toonLocatie(), eind:()=>toonEindblad()})[naam]();
+    opentRichting="rechts";
+    setTimeout(()=>{ try{ bd.close(); }catch(e){} },360);
+    return;
+  }
+  if(naam==="begin"){
+    /* Het beginscherm ligt links van alles: de pagina schuift naar rechts weg, het venster sluit pas als hij weg is (of meteen na een veeg: dan is hij al weg). */
+    sluitMetUitschuif(d,zonderUitschuif);
+    return;
+  }
+  ({punten:()=>toonPunten(), locatie:()=>toonLocatie(), dossier:()=>toonDossier(), verslagen:()=>toonVergaderingen(), eind:()=>toonEindblad()})[naam]();
   document.getElementById("dlg-body").scrollTop=0;
   schuifIn(naar>van?"van-rechts":"van-links");
 }
 document.getElementById("pm-plan").onclick=()=>gaNaarPagina("begin");
-["locatie","dossier","verslagen"].forEach(n=>{ document.getElementById("pm-"+n).onclick=()=>gaNaarPagina(n); });
+document.getElementById("pm-instel").onclick=()=>gaNaarPagina("instel");
+["punten","locatie","dossier","verslagen"].forEach(n=>{ document.getElementById("pm-"+n).onclick=()=>gaNaarPagina(n); });
 document.getElementById("dlg").addEventListener("close",()=>{ if(!document.getElementById("dlg").open)paginaMenu(null); });
-(function(){
-  const d=document.getElementById("dlg"), pg=document.getElementById("dlg-pagina");
+[["dlg","dlg-pagina"],["beheerdlg","beheer-pagina"]].forEach(([dlgId,pgId])=>{
+  const d=document.getElementById(dlgId), pg=document.getElementById(pgId);
+  const vlak=(pg.closest&&pg.closest(".blad"))||pg;        // ook een veeg over het menu onderaan telt
   let sw=null;
   const buur=r=>PAGINAROIJ[PAGINAROIJ.indexOf(paginaNu())+r];            // de volgende (+1) of vorige (-1) pagina, of niets
-  pg.addEventListener("touchstart",e=>{
-    sw=d.dataset.pagina?{x:e.touches[0].clientX,y:e.touches[0].clientY,h:null,dx:0,t0:Date.now()}:null;
+  vlak.addEventListener("touchstart",e=>{
+    sw=(dlgId==="beheerdlg"||d.dataset.pagina)?{x:e.touches[0].clientX,y:e.touches[0].clientY,h:null,dx:0,t0:Date.now()}:null;
     if(sw){ pg.classList.remove("veert"); pg.classList.add("volgt"); }
   },{passive:true});
-  pg.addEventListener("touchmove",e=>{
+  vlak.addEventListener("touchmove",e=>{
     if(!sw)return;
     const dx=e.touches[0].clientX-sw.x, dy=e.touches[0].clientY-sw.y;
     if(sw.h===null&&(Math.abs(dx)>10||Math.abs(dy)>10))sw.h=Math.abs(dx)>Math.abs(dy)*1.2;
@@ -23769,15 +24330,15 @@ document.getElementById("dlg").addEventListener("close",()=>{ if(!document.getEl
     if(doel&&genoeg){
       // de kaart schuift weg in de richting van je vinger, en de volgende komt erachteraan
       pg.classList.add("veert"); pg.style.transform="translateX("+(was.dx<0?"-":"")+"100%)";
-      setTimeout(()=>{ pg.classList.remove("veert"); pg.style.transform=""; gaNaarPagina(doel); },200);
+      setTimeout(()=>{ pg.classList.remove("veert"); pg.style.transform=""; gaNaarPagina(doel,true); },200);
     }else{
       pg.classList.add("veert"); pg.style.transform="";                  // terug op zijn plek, met veerkracht
       setTimeout(()=>pg.classList.remove("veert"),260);
     }
   };
-  pg.addEventListener("touchend",los);
-  pg.addEventListener("touchcancel",los);
-})();
+  vlak.addEventListener("touchend",los);
+  vlak.addEventListener("touchcancel",los);
+});
 
 async function kopieerVerslagtekst(){
   const t=maakTekst();
@@ -23799,6 +24360,9 @@ async function kopieerVerslagtekst(){
 document.getElementById("verslag").onclick=()=>toonVergaderingen();
 document.getElementById("dossiermenu").onclick=toonDossier;
 document.getElementById("locatiemenu").onclick=toonLocatie;
+document.getElementById("puntenmenu").onclick=toonPunten;
+document.getElementById("instelmenu").onclick=()=>document.getElementById("beheerknop").click();
+document.getElementById("pm-instel").onclick=()=>{ document.getElementById("dlg").close(); document.getElementById("beheerknop").click(); };
 
 document.getElementById("fotos").onclick=async()=>{
   const rijen=[];
@@ -23877,14 +24441,17 @@ if(bronIngesteld()&&aanmeldingAanwezig()&&typeof fetch==="function"){
   .forEach(id=>{ const el=document.getElementById(id); if(el)el.onclick=toonHoofding; });
 /* De vierde ingang van het menu. Ligt er geen plan onder deze zone, dan opent het plan van de
    werf; ligt er helemaal niets, dan zegt openPlan dat zelf. */
-document.getElementById("planmenu").onclick=()=>openPlan();
+/* De opdrachtgever, 13/10/2026: "ik kan 2x drukken op plan en dan zijn er twee verschillende schermen, dit kan niet". Plan is het hoofdscherm: het plan ligt
+   daar als ondergrond, en een tik erop vergroot het in het planvenster. De knop Plan op het hoofdscherm is dus "hier ben je" (geaccentueerd) en
+   doet niets; in het planvenster brengt Plan je terug naar het hoofdscherm. Overal waar Plan staat, leidt hij naar hetzelfde scherm. */
+document.getElementById("planmenu").onclick=()=>{};
 
 /* De onderbalk in het planvenster wijst naar dezelfde vier ingangen als die op het beginscherm.
    Letterlijk dezelfde: hij tikt de knop eronder aan in plaats van de handeling over te schrijven.
    Twee kopieën van hetzelfde gedrag lopen vroeg of laat uit elkaar, en dan is er één die niemand
    meer nakijkt. Het venster gaat eerst dicht, anders opent het volgende scherm eronder. */
-[["pl-mkeet","keet"],["pl-mverslag","verslag"],["pl-mdossier","dossiermenu"],
- ["pl-mlocatie","locatiemenu"]].forEach(([hier,daar])=>{
+[["pl-mkeet","keet"],["pl-mpunten","puntenmenu"],["pl-mverslag","verslag"],["pl-mdossier","dossiermenu"],
+ ["pl-mlocatie","locatiemenu"],["pl-minstel","instelmenu"]].forEach(([hier,daar])=>{
   document.getElementById(hier).onclick=()=>{
     document.getElementById("plandlg").close();
     document.getElementById(daar).click();
@@ -23892,7 +24459,7 @@ document.getElementById("planmenu").onclick=()=>openPlan();
 });
 /* Plan is het scherm waar je al staat. De knop hoort er te staan — een balk die van scherm tot
    scherm verspringt is geen vaste balk — maar hij heeft niets te doen. */
-document.getElementById("pl-mplan").onclick=()=>{};
+document.getElementById("pl-mplan").onclick=()=>document.getElementById("plandlg").close();
 (function(){
   const veld=document.getElementById("zoek");
   let t=null;
