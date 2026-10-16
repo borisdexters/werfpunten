@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-ImOz0nBIJUwgmuMo9qR+PYx/Y+aU2Be0dvZHkAkDVDo=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-4gx5eq3vB3Yh17XQimF3qPIAD0Q4/ZjfDnmJRv0Tdm8='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-DOms+UhVODnqiVEQHWhg4VOWGnRZ4zYhG2E9XVNvePs=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-4gx5eq3vB3Yh17XQimF3qPIAD0Q4/ZjfDnmJRv0Tdm8='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3836,7 +3836,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v514";
+const VERSIE="v515";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -25093,6 +25093,7 @@ function bewaarLocatie(d){ bewaarVeilig(pk(LOCSLEUTEL),JSON.stringify(d),"de geg
 /* Pas halen als er niets is, de plek meer dan 150 m verschilt, of het ouder is dan een dag. */
 function locMoetOpnieuw(oud,hier,nu){
   if(!oud||!oud.tijd)return true;
+  if(!oud.snel)return true;      // gegevens van een oudere versie hebben de snelle gegevens niet: opnieuw halen, ook als ze jong zijn
   if(isNaN(Date.parse(oud.tijd))||nu-Date.parse(oud.tijd)>LOCVERS)return true;
   if(!hier)return false;
   const L=wgsNaarLambert(hier.lat,hier.lon);
@@ -25572,8 +25573,9 @@ async function locHaal(geforceerd,hulp){
   const h=hulp||{};
   locUI.bezig=true; locUI.melding=""; locVoortgangStart(); locTeken();
   try{
-    const hier=await (h.plek||(()=>haalPlek(!geforceerd&&!!locUI.data)))();
-    if(!hier&&!geforceerd&&locUI.data)return;
+    /* Stil meten (zonder vraag) alleen als er al volledige, recente gegevens staan. Staan er oudere gegevens of niets, dan mag het toestel om je plek vragen: anders gebeurt er op een iPhone zonder vaste toestemming precies niets (de opdrachtgever, 16/10/2026: "er wordt precies niets opgehaald"). */
+    const hier=await (h.plek||(()=>haalPlek(!geforceerd&&!!locUI.data&&!!locUI.data.snel)))();
+    if(!hier&&!geforceerd&&locUI.data&&locUI.data.snel)return;
     if(!hier){ locUI.melding="Ik vind je locatie niet. Zet locatievoorzieningen aan voor Safari en probeer opnieuw."; return; }
     if(!geforceerd&&!locMoetOpnieuw(locUI.data,hier,Date.now()))return;
     const d=await haalLocatie(hier.lat,hier.lon,locVoortgangHulp(Object.assign({},h.haalhulp||{},{vorige:locUI.data})));
