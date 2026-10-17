@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-DOms+UhVODnqiVEQHWhg4VOWGnRZ4zYhG2E9XVNvePs=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-4gx5eq3vB3Yh17XQimF3qPIAD0Q4/ZjfDnmJRv0Tdm8='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-6FUMOcVowzX6hHNHCd62uhnC0TQgbcuiLer3OBK/pUw=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-4gx5eq3vB3Yh17XQimF3qPIAD0Q4/ZjfDnmJRv0Tdm8='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3776,6 +3776,9 @@ let ZONES=[];            // alleen de codes — waar de app op toetst
    bovenaan. Alleen een werffase kent dit niveau; een overlegfase draagt rubrieken in plaats van
    zones, en dan bijt ZONES.includes() en blijft alles zoals het was. */
 const BEGINZONE="N0";
+/* Het GRB is het eerste blad (de opdrachtgever, 17/10/2026: "het GRB krijgt bovenaan de naam GRB; die staat er by default in en is het eerste blad. Wanneer plannen worden ingeladen komen er bovenaan vakken bij."). Het heeft zijn eigen zone, GRB, vooraan op de balk van elke werffase;
+   een geladen plan komt op zijn eigen zone ernaast en vervangt het GRB niet meer. */
+const GRBZONE="GRB";
 
 /* ---- rubrieken: de tussentitels van een overlegverslag ----
    Een werfverslag groepeert op zone: waar in het gebouw staat het. Een voorontwerpbespreking
@@ -3836,7 +3839,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v515";
+const VERSIE="v516";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -5747,6 +5750,13 @@ function laadZones(){
     .map(z=>typeof z==="string"?{code:z,naam:""}:z)
     .filter(z=>z&&z.code);
   ZONES=zones.map(z=>z.code);
+  zorgVoorGrbZone();
+}
+/* Een werffase heeft altijd de zone GRB, vooraan. Een overlegfase draagt rubrieken en krijgt ze niet. */
+function zorgVoorGrbZone(){
+  if(faseAard(faseVan(staat))!=="werf")return;
+  if(!zones.some(z=>z.code===GRBZONE))zones.unshift({code:GRBZONE,naam:"GRB"});
+  ZONES=zones.map(z=>z.code);
 }
 function bewaarZones(){
   bewaarVeilig(zoneSleutel(),JSON.stringify(zones),"de zones van deze werf");
@@ -6381,6 +6391,7 @@ async function beheerZones(){
   const kwijt=inGebruik.filter(z=>!lijst.some(o=>o.code===z));
   zones=lijst.concat(kwijt.map(c=>({code:c,naam:""})));
   ZONES=zones.map(z=>z.code);
+  zorgVoorGrbZone();
   bewaarZones(); tekenZones();
   melding(kwijt.length
     ? (kwijt.join(", ")+" bleef staan — daar staan punten op")
@@ -10024,7 +10035,8 @@ function zoekInArchief(getoond){
 /* Welke zones in welke volgorde op de balk staan. Eén plek: de lijst volgt dezelfde volgorde, en
    twee regels voor dezelfde vraag lopen vroeg of laat uit elkaar. */
 function balkVolgorde(){
-  return zichtbareZones().slice().sort(vergelijkBlad).map(r=>r.code);
+  const v=zichtbareZones().slice().sort(vergelijkBlad).map(r=>r.code);
+  return v.includes(GRBZONE)?[GRBZONE].concat(v.filter(c=>c!==GRBZONE)):v;      // het GRB is het eerste blad
 }
 function lijstVolgorde(vandaag,oud,zone,balk){
   const orde=[zone].concat((balk||[]).filter(z=>z!==zone));
@@ -17076,7 +17088,7 @@ async function openPlan(gevraagd,stil){
      het in een menu hoeft te zoeken. Eén poging per zone per zitting: zeg je Stoppen of lukt het niet (geen locatie, buiten
      Vlaanderen), dan blijft het daarbij en staan de gewone knoppen er nog. Een plan dat je later laadt, vervangt het GRB: dat
      is de bestaande regel (`planWissel`), en een echt plan wordt nooit door een GRB overschreven. */
-  const wensZone=gevraagd||staat.zone;
+  const wensZone=ZONES.includes(GRBZONE)?GRBZONE:(gevraagd||staat.zone);      // het GRB is het blad dat er standaard ligt; een andere zone zonder plan haalt het niet meer
   const zonderPlan=ZONES.includes(wensZone)&&!planLijst.includes(wensZone);
   if(zonderPlan&&!grbZonesGeprobeerd.has(wensZone)&&(planLijst.length?!stil:!omtrekGeprobeerd)){
     grbZonesGeprobeerd.add(wensZone);
@@ -21040,7 +21052,7 @@ function opBekendeWerf(hier){
 async function haalOmtrekBijStart(){
   if(omtrekGeprobeerd)return false;
   omtrekGeprobeerd=true;
-  const zone=staat.zone;
+  const zone=ZONES.includes(GRBZONE)?GRBZONE:staat.zone;
   grbZonesGeprobeerd.add(zone);
   if(!(await wachtOpVenster()))return false;
   // Zonder een bekende plek van deze werf kan de app niet weten dat je er staat (thuis? op kantoor?): dan altijd de vraag.
@@ -21065,7 +21077,7 @@ const GRBSTOPSLEUTEL="werfpunten-grbstop";
    een vraag om je locatie hoort bij een eerste keer, niet bij elke start. */
 async function grbBijStartMag(){
   if(actief===DEMOID||omtrekGeprobeerd)return false;
-  const zone=staat.zone;
+  const zone=ZONES.includes(GRBZONE)?GRBZONE:staat.zone;
   if(!ZONES.includes(zone)||grbZonesGeprobeerd.has(zone))return false;
   try{ if(localStorage.getItem(pk(GRBSTOPSLEUTEL))===vandaag())return false; }catch(e){}
   if(planLijst.includes(zone)){
@@ -21221,7 +21233,7 @@ async function kiesGrbPerceel(zone,hulp){
   if(grbBezig){ melding("Het GRB wordt nog gezocht\u2026"); return false; }
   grbBezig=true;
   const v=h.venster||(h.auto?grbStilVenster():grbVenster());
-  const doel=zone||staat.zone||ZONES[0];
+  const doel=ZONES.includes(GRBZONE)?GRBZONE:(zone||staat.zone||ZONES[0]);      // het GRB ligt op zijn eigen zone, het eerste blad
   let gesloten=false;
   try{
     const wachten=v.open?v.open():null;
@@ -21293,6 +21305,10 @@ async function kiesGrbPerceel(zone,hulp){
       gekozen=grbKandidaat(percelen,x,y);
       const eenduidig=h.auto?grbEenduidig(percelen,x,y,nauw):-1;
       if(eenduidig>=0){ gekozen=eenduidig; automatisch=true; }
+      /* Het perceel is al bekend (de Locatie-pagina bevestigde het): dan geen vraag, en het GRB hoort bij hetzelfde perceel als die pagina. */
+      const vast=h.perceel?h.perceel(percelen,x,y):-1;
+      if(vast>=0){ gekozen=vast; automatisch=true; }
+      else if(h.zonderVraag&&gekozen>=0)automatisch=true;
       const antw=automatisch?"ja":await new Promise(res=>{
         const teken=()=>{
           v.zet("Juiste perceel?",
@@ -25327,6 +25343,22 @@ function locGrootToon(d,opties){
   if(!kaart.querySelector("svg"))return;
   dlg.appendChild(laag);
 }
+/* De opdrachtgever, 17/10/2026: "bij een nieuwe locatie en na bevestiging wordt een nieuwe GRB geladen en moet die van de andere werf verdwijnen; die GRB correspondeert met die van de pagina Locatie." Na "Ja" op de Locatie-pagina komt het perceel van die pagina als GRB op de eerste zone. Het oude GRB verdwijnt als er niets op staat; staan er punten op, dan gaat het opzij (kiesGrbPerceel). */
+async function locGrbZetten(d,hulp){
+  const h=hulp||{};
+  try{
+    if(!ZONES.includes(GRBZONE)||actief===DEMOID||!d||!isFinite(d.lat)||!isFinite(d.lon))return false;
+    const sn=d.snel||{}, merk=sn.capakey||(d.x+","+d.y);
+    const bestaand=h.bestaand!==undefined?h.bestaand:await haalPlan(GRBZONE);
+    if(bestaand&&!bestaand.voorlopig)return false;                        // een echt plan op deze zone wordt nooit overschreven
+    if(bestaand&&d.grbVoor===merk)return false;                           // dit perceel ligt er al
+    const r=await (h.kies||kiesGrbPerceel)(GRBZONE,{venster:grbStilVenster(),zonderVraag:true,auto:true,
+      plek:()=>Promise.resolve({lat:d.lat,lon:d.lon,nauw:5}),
+      perceel:ps=>sn.capakey?ps.findIndex(f=>{ const q=f.properties||{}; return String(q.CAPAKEY||q.capakey||"")===String(sn.capakey); }):-1});
+    if(r){ d.grbVoor=merk; bewaarLocatie(d); }
+    return !!r;
+  }catch(e){ return false; }
+}
 function locSnelBlok(d){
   const blok=maakEl("div","loc-snel");
   const sn=(d&&d.snel)||{};
@@ -25362,7 +25394,7 @@ function locSnelBlok(d){
   /* De opdrachtgever, 16/10/2026: "vraag ook of de locatie klopt, en je kan dan met de vinger van plaats veranderen." */
   if(!d.klopt){
     const vraag=maakEl("div","loc-vraag");
-    const ja=maakEl("button","loc-opnieuw","Ja"); ja.type="button"; ja.onclick=()=>{ d.klopt=true; bewaarLocatie(d); locTeken(); };
+    const ja=maakEl("button","loc-opnieuw","Ja"); ja.type="button"; ja.onclick=()=>{ d.klopt=true; bewaarLocatie(d); locTeken(); locGrbZetten(d); };
     const nee=maakEl("button","loc-opnieuw","Nee, verplaats"); nee.type="button"; nee.onclick=()=>locGrootToon(d,{verplaats:true});
     vraag.appendChild(ja); vraag.appendChild(nee);
     vraag.insertBefore(maakEl("span","loc-vraag-tekst","Klopt het?"),vraag.firstChild);      // naast het adres is "Klopt het?" genoeg, en dan passen de twee knoppen op dezelfde regel
@@ -26240,7 +26272,9 @@ opendb().then(async d=>{
     /* En op het gelijkvloers, niet op waar je gisteren ophield. Een rondgang begint waar je
        het gebouw binnenkomt; de verdieping van gisteren is een gok die er even vaak naast zit
        als raak. Verzetten doe je zelf op de balk bovenaan, en die licht nu op waar je staat. */
-    if(ZONES.includes(BEGINZONE)&&staat.zone!==BEGINZONE){ staat.zone=BEGINZONE; bewaarStaat(); }
+    /* Een verslag begint met het GRB, als dat er ligt (de opdrachtgever, 17/10/2026: "het volgende verslag begint dan met het GRB"); anders op het gelijkvloers. */
+    const beginZone=(ZONES.includes(GRBZONE)&&planLijst.includes(GRBZONE))?GRBZONE:BEGINZONE;
+    if(ZONES.includes(beginZone)&&staat.zone!==beginZone){ staat.zone=beginZone; bewaarStaat(); }
     tekenZones();
     /* Geen enkel plan op deze werf? Dan is er niets om te openen, en is de omtrek wat er te
        halen valt. Hier, op het beginscherm, en niet pas als je de kaart opent: je hebt zonet
