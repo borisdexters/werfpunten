@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-kRfKjgc5/zdpO6Q48qjFQ4V0H62y1D2foQQ2QswDv60=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-J47WV1lGHJcUjNnszdlI2LeZdoey+8Bj9V0IlCzI7vY='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-oYIv5O/zIv4AIBlVcId9basykKOVQEKf5DqEvfGuL4A=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-J47WV1lGHJcUjNnszdlI2LeZdoey+8Bj9V0IlCzI7vY='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3913,7 +3913,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v557";
+const VERSIE="v558";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -9491,12 +9491,17 @@ function menuStart(){
   const nu=menuNu(), glas=maakEl("div","menu-glas");
   glas.appendChild(menubalk(true));
   const namen=maakEl("div","menu-namen");
+  let nr=0;
   MENUGA.forEach(([naam,tekst])=>{
     if(naam==="ai"&&!aiAan())return;
     const huidig=naam===nu;
-    const b=maakEl("button","menu-naam"+(huidig?" huidig":""),tekst); b.type="button";
+    nr++;
+    /* Genummerd, zoals de rijen op de pagina's (1 Bestekteksten, 2 Opmerkingen...): 1 Punten, 2 Verslag, 3 Dossier, 4 Locatie, 5 Instellingen (de opdrachtgever, 17/10/2026). */
+    const label=nr+" "+tekst;
+    const b=maakEl("button","menu-naam"+(huidig?" huidig":""),label); b.type="button";
     if(huidig)b.setAttribute("aria-current","page");
-    b.dataset.naam=naam; b.dataset.tekst=tekst;
+    b.setAttribute("aria-label",tekst);
+    b.dataset.naam=naam; b.dataset.tekst=label;
     b.onclick=e=>{ e.stopPropagation(); menuGa(naam); menuBlijf(); };      // het menu blijft staan: alleen de pijl omlaag sluit het (de opdrachtgever, 16/10/2026)
     namen.appendChild(b);
   });
