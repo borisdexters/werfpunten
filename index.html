@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-f4Kzc/PmHHPgJdgkYBfdfbTD4X003k9c1Z4UFe1548A=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-pVlhjtsHCsYgF1SBZq8W+TGba2qLa2wKcGbP+friYNg='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-/SXco2+yNY6c4bqZK5eL5QyhpI4Bm8RlqKzz3koGA78=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-kDy4Tz0om/U3XA8E0LAacqsdTCULfHLAvLBGP7PqD0s='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1350,6 +1350,13 @@
   /* Het vel rust op de lijn van de onderste balk: een dunne rand en een zachte schaduw, en de achtergrond erachter wordt niet donker, want de balk eronder blijft zichtbaar. */
   #plandlg[style*="height"]{border-bottom:var(--haar) solid var(--line);box-shadow:0 3px 14px rgba(0,0,0,.16);border-radius:0 0 14px 14px}
   #plandlg::backdrop{background:transparent}
+  /* Het calqueblad als film: een heel licht geel, doorzichtig vel. De balken erop worden glas, het vlak met de halen is helemaal doorzichtig, en de zoomknoppen vervallen want de kijkstand is die van het plan eronder. */
+  #plandlg.film{background:rgba(255,247,190,.16)}
+  #plandlg.film .plan-vlak,#plandlg.film #plancanvas{background:transparent}
+  #plandlg.film .plan-zoom{display:none}
+  #plandlg.film #pl-voet,#plandlg.film .plan-voet{display:none}      /* de balk onderaan het vel (de tekstregel, het aantal punten, Benoem) hoort er niet bij (de opdrachtgever, 17/10/2026: "dit deel gewoon weglaten") */
+  #plandlg.film .pentrek-op{bottom:14px}
+  #plandlg.film>div:not(.plan-vlak),#plandlg.film>nav,#plandlg.film>header{background:rgba(255,255,255,.55) !important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
   .pentrek.trekt{transition:none}
   .pentrek,.pentrek-op{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
   body:has(dialog[open]) .pentrek,html.fiche-open .pentrek,html.menu-open .pentrek{display:none}
@@ -4006,7 +4013,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v591";
+const VERSIE="v594";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -9698,8 +9705,8 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&menuGlas)menuEinde
     const hoog=()=>H;
     const zet=(y,animeer)=>{ dlg.style.transition=animeer?("transform "+SCHUIFTIJD+"ms cubic-bezier(.2,.8,.2,1)"):"none"; dlg.style.transform="translateY("+Math.round(y)+"px)"; };
     const schoon=()=>{ dlg.style.transition=""; dlg.style.transform=""; };
-    const dicht=()=>{ penAuto=false; try{ koppelStop(); }catch(e){} if(dlg.open)dlg.close(); schoon(); dlg.style.height=""; delete dlg.dataset.blad; };
-    dlg.addEventListener("close",()=>{ dlg.style.height=""; delete dlg.dataset.blad; });      // elke andere weg naar buiten (Escape, het kruis): terug naar het hele scherm
+    const dicht=()=>{ penAuto=false; penFilm=false; dlg.classList.remove("film"); try{ koppelStop(); }catch(e){} if(dlg.open)dlg.close(); schoon(); dlg.style.height=""; delete dlg.dataset.blad; };
+    dlg.addEventListener("close",()=>{ dlg.style.height=""; delete dlg.dataset.blad; penFilm=false; dlg.classList.remove("film"); });      // elke andere weg naar buiten (Escape, het kruis): terug naar het hele scherm
     /* Gelukt als je voorbij een vijfde van het scherm trok, of snel en een stuk (een vluchtige veeg). */
     const genoeg=(dy,ms)=>dy>hoog()*SCHUIFDEEL||(dy>PENTREKDREMPEL&&dy/Math.max(1,ms)>SCHUIFSNEL);
     const p=maakEl("button","pentrek"); p.id="pentrek"; p.type="button"; p.setAttribute("aria-label","Tekenen: trek omlaag"); p.title="Trek omlaag om te tekenen op het calqueblad";
@@ -9710,6 +9717,8 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&menuGlas)menuEinde
       if(opent)return opent;
       penAuto=true;
       try{ window.getSelection().removeAllRanges(); }catch(e){}      // het slepen mag geen tekst op het volgende scherm blauw laten staan
+      penFilm=!!kaartPlan;                                           // zonder plan op het hoofdscherm valt er niets onder het vel te zien: dan blijft het het gewone planvenster
+      dlg.classList.toggle("film",penFilm);
       H=meetBlad();                                                  // gemeten nu het hoofdscherm er nog staat
       dlg.dataset.blad=String(H); dlg.style.height=H+"px";
       zet(-hoog(),false);
@@ -16047,6 +16056,26 @@ function tekenHaal(x,h){
   x.restore();
 }
 
+/* De kijkstand van het vel gelijkzetten met die van het plan op het hoofdscherm. Beide zijn gelijkvormigheden (zelfde draaiing, ander midden en andere schaal), dus drie punten volstaan: het midden van het blad geeft de plaats, de afstand tussen linker- en rechterrand de schaal. De som van het hoofdscherm is dezelfde als die van de meetlijnen en de spelden (plekOpBeeld met de kijkstand erbovenop). */
+function filmUitlijnen(c){
+  const doos=document.getElementById("kaart");
+  if(!doos||!kaartPlan||!plan)return false;
+  const kb=doos.getBoundingClientRect(), cb=c.getBoundingClientRect();
+  if(!(kb.width>0&&kb.height>0&&cb.width>0))return false;
+  /* De plek van het vlak op het vel zelf, niet op het scherm: het vel kan op dit ogenblik nog boven het scherm hangen (het schuift in beeld), en dan zou de uitlijning op die tussenstand rekenen. Het vel komt rustend op (0,0) te liggen. */
+  const dl=document.getElementById("plandlg"), db=dl?dl.getBoundingClientRect():{left:0,top:0};
+  const ox=cb.left-db.left, oy=cb.top-db.top;
+  const k=kaartKijkNu(kb.width,kb.height), d=draaiVan(plan);
+  const H=(x,y)=>{ const q=plekOpBeeld(x,y,kb.width,kb.height,plan.breedte,plan.hoogte,d); return q?{x:kb.left+q.x*k.schaal+k.dx, y:kb.top+q.y*k.schaal+k.dy}:null; };
+  const m=H(50,50), l=H(0,50), r=H(100,50);
+  if(!m||!l||!r)return false;
+  const schaal=Math.hypot(r.x-l.x,r.y-l.y)/plan.breedte;
+  if(!(schaal>0))return false;
+  pl.schaal=schaal;
+  pl.dx=m.x-ox-plan.breedte*schaal/2;
+  pl.dy=m.y-oy-plan.hoogte*schaal/2;
+  return true;
+}
 function planTeken(){
   const c=document.getElementById("plancanvas");
   const dpr=Math.min(devicePixelRatio||1,2);
@@ -16056,6 +16085,17 @@ function planTeken(){
   }
   const x=c.getContext("2d");
   x.setTransform(dpr,0,0,dpr,0,0);
+  /* HET CALQUEBLAD ALS FILM (de opdrachtgever, 17/10/2026: "het is gewoon een heel licht geel blad dat over het bestaande schuift, transparant, ik wil het bestaande blad eronder zien"): het vel tekent geen plan en geen witte grond, alleen je halen, en legt zijn kijkstand precies op die van het plan op het hoofdscherm. Het plan, de spelden en de knoppen van het hoofdscherm schemeren er dan gewoon doorheen. */
+  if(penFilm&&kaartPlan&&plan){
+    x.clearRect(0,0,b.width,b.height);
+    filmUitlijnen(c);
+    calqueBladen(calque).forEach(bl=>{
+      if(bl.zicht===false)return;
+      (bl.halen||[]).forEach(h=>tekenHaal(x,h));
+    });
+    if(calqueBezig)tekenHaal(x,calqueBezig);
+    return;
+  }
   x.fillStyle=velKleur();x.fillRect(0,0,b.width,b.height);
   if(!planBeeld)return;
   x.imageSmoothingQuality="high";
@@ -17777,6 +17817,7 @@ const SCHUIFDEEL=0.2;         // voorbij een vijfde van het scherm loslaten: het
 const SCHUIFSNEL=0.5;         // of sneller dan 0,5 px per ms (een vluchtige veeg)
 const SCHUIFTIJD=240;         // ms voor het blad om zelf de rest te schuiven
 let penAuto=false;            // na het trekken maakt de eerste streep vanzelf een punt
+let penFilm=false;            // het calqueblad is een doorzichtig geel vel over het plan van het hoofdscherm
 async function trekCalque(){
   penAuto=true;
   try{ window.getSelection().removeAllRanges(); }catch(e){}      // het slepen mag geen tekst op het volgende scherm blauw laten staan
@@ -20961,7 +21002,7 @@ function kaartKompas(laag,doos,b,k){
   /* De opdrachtgever, 17/10/2026: "zet de noordpijl mooi boven de A": rechts, onder de schaalbalk, op de plaats waar de A stond; de A en de liniaal schuiven een plaats omlaag. De bol is even groot (44 px) als de knoppen eronder. */
   const rechtsRand=(vb&&vb.width?vb.right-db.left:b.width)-16;
   const balkY0=Math.round(midY-4);
-  noord.style.setProperty("--px",Math.round(rechtsRand-44)+"px"); noord.style.setProperty("--py",(balkY0-18)+"px");      // het kompas staat op de hoogte van de titel (de opdrachtgever, 17/10/2026: "schuif naar boven, uitgelijnd met de titel Plan") noord.style.setProperty("--a",a.toFixed(1)+"deg");
+  noord.style.setProperty("--px",Math.round(rechtsRand-44)+"px"); noord.style.setProperty("--py",(balkY0-18)+"px"); /* het kompas staat op de hoogte van de titel (de opdrachtgever, 17/10/2026: "schuif naar boven, uitgelijnd met de titel Plan") */ noord.style.setProperty("--a",a.toFixed(1)+"deg");
   const draai=document.createElement("div"); draai.className="kaartnoord-draai";
   const pijl=document.createElement("span"); pijl.className="kaartnoord-pijl";      // zonder letter (de opdrachtgever, 17/10/2026: "de N mag je weglaten")
   draai.appendChild(pijl); noord.appendChild(draai); laag.appendChild(noord);
