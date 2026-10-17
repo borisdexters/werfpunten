@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-aaKtlASBi8l5RA5ULHYPbwmEsMYsmxRwtqGreiLcV8o=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-jKOqx9IjlRbIVH1ptuLHt3WO987fluCgnNA1ylF0Z5w='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-TWFshvJXU6g9sSztAmmyXJC5CYHgDPw23wNu36khowM=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-RuQrX1GlhyNabdfdhYy19b8JK+RcDHXHHusmfva5aj0='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -239,7 +239,7 @@
      plekOpBeeld(), de opmaak staat hier. */
   .kaartpunten{position:absolute;inset:0;pointer-events:none}
   /* de noordpijl en de schaalbalk (de opdrachtgever, 17/10/2026): dun, zwart, met een witte rand zodat ze op elk beeld te lezen zijn */
-  .kaartnoord{position:absolute;left:var(--px);top:var(--py);width:28px;height:44px;pointer-events:none;z-index:4}
+  .kaartnoord{position:absolute;left:var(--px);top:var(--py);width:28px;height:44px;pointer-events:none;z-index:4;cursor:pointer}
   .kaartnoord-draai{position:absolute;inset:0;transform:rotate(var(--a));transform-origin:14px 30px}
   .kaartnoord-pijl{position:absolute;left:8px;top:14px;width:12px;height:30px;background:var(--ink);clip-path:polygon(50% 0,100% 100%,50% 78%,0 100%)}
   .kaartnoord-n{position:absolute;left:0;right:0;top:-2px;text-align:center;font:600 11px ui-monospace,Menlo,monospace;color:var(--ink);-webkit-text-stroke:3px var(--surface);paint-order:stroke fill}
@@ -3850,7 +3850,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v525";
+const VERSIE="v527";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -19737,6 +19737,42 @@ function kaartDraaiBij(graden,mx,my,m){
   plan.weergave={draai:+nu.toFixed(2), door:"vrij"};
   kaartKijk=kaartKlem({schaal:s, dx:mx-s*nx, dy:my-s*ny},m.breed,m.hoog);
 }
+/* Een tik op de noordpijl draait het blad, kort en zacht, met de kortste weg naar noord boven (de opdrachtgever, 17/10/2026: "als ik op de noordpijl druk moet de pijl automatisch naar het noorden draaien, samen met de kaart"). De pijl draait mee omdat hij uit dezelfde draai volgt; de schaalbalk blijft staan en wordt herberekend. Het tikvlak is ruimer dan de pijl, en ligt in de tik van de vulling omdat de pijl onder de vulling zit (zoals je eigen stip). */
+function noordGeraakt(sx,sy){
+  const el=document.querySelector(".kaartnoord");
+  if(!el)return false;
+  const r=el.getBoundingClientRect();
+  return sx>=r.left-14&&sx<=r.right+14&&sy>=r.top-14&&sy<=r.bottom+14;
+}
+let kaartNoordLus=null;
+function kaartNoordDoel(plan){
+  const g=plan&&plan.georef;
+  return (g&&!g.plaatselijk&&typeof g.noord==="number"&&isFinite(g.noord))?g.noord:0;
+}
+function kaartNaarNoord(opties){
+  const plan=kaartPlan, doos=document.getElementById("kaart");
+  if(!plan||!doos)return false;
+  const o=opties||{};
+  const hoek=normaalHoek(kaartNoordDoel(plan)-draaiVan(plan));
+  const klaar=()=>{ delete plan.weergave; kaartBewaarDraai(); kaartKijkZet(); kaartNoordLus=null; };
+  if(Math.abs(hoek)<0.05){ if(plan.weergave)klaar(); return false; }
+  const vul=document.getElementById("vulling"), vb=vul?vul.getBoundingClientRect():null, db=doos.getBoundingClientRect();
+  const m={breed:db.width, hoog:db.height};
+  const mx=vb&&vb.width?vb.left-db.left+vb.width/2:m.breed/2, my=vb&&vb.height?vb.top-db.top+vb.height/2:m.hoog/2;      // om het midden van wat je ziet
+  if(kaartNoordLus){ try{ cancelAnimationFrame(kaartNoordLus); }catch(e){} kaartNoordLus=null; }
+  if(o.zonderAnimatie||typeof requestAnimationFrame!=="function"){ kaartDraaiBij(hoek,mx,my,m); klaar(); return true; }
+  const T=420, t0=performance.now();
+  let gedaan=0;
+  const stap=nu=>{
+    const f=Math.min(1,(nu-t0)/T), e=1-Math.pow(1-f,3);      // vertraagt naar het einde
+    const nieuw=hoek*e, d=nieuw-gedaan; gedaan=nieuw;
+    if(d)kaartDraaiBij(d,mx,my,m);
+    kaartKijkZet();
+    if(f<1)kaartNoordLus=requestAnimationFrame(stap); else klaar();
+  };
+  kaartNoordLus=requestAnimationFrame(stap);
+  return true;
+}
 async function kaartBewaarDraai(){
   if(!kaartPlan||!kaartZone)return;
   try{ await zetPlan(kaartZone,kaartPlan); }catch(e){}
@@ -20242,7 +20278,9 @@ function kaartKompas(laag,doos,b,k){
   const lang=m/mpp;
   if(lang<18)return;
   const balk=document.createElement("div"); balk.className="kaartschaal";
-  balk.style.setProperty("--px",(x0+40)+"px"); balk.style.setProperty("--py",(y0+14)+"px"); balk.style.setProperty("--w",Math.round(lang)+"px");
+  /* rechts in het zichtbare vlak (de opdrachtgever, 17/10/2026): de noordpijl links, de schaalbalk met de verhouding rechts */
+  const rechts=(vb&&vb.width?vb.right-db.left:b.width)-16-Math.round(lang);
+  balk.style.setProperty("--px",rechts+"px"); balk.style.setProperty("--py",(y0+14)+"px"); balk.style.setProperty("--w",Math.round(lang)+"px");
   const t=document.createElement("span"); t.textContent=m<1?(m*100)+" cm":m+" m"; balk.appendChild(t);
   /* De verhouding eronder (de opdrachtgever, 17/10/2026: "en onder de schaalbalk 1:getal"): meter per pixel gedeeld door de grootte van een CSS-pixel (1/96 inch, 0,26 mm), op twee cijfers afgerond. Op een toestel is dat de schaal op een standaardscherm: de werkelijke pixelgrootte verschilt per toestel, dus de balk is de maat en 1:getal de aanduiding. */
   const v=document.createElement("span"); v.className="kaartschaal-v"; v.textContent=kaartVerhouding(mpp); balk.appendChild(v);
@@ -20832,6 +20870,7 @@ function kaartBedrading(){
     x0=null; y0=null; bewogen=false;
     if(veegde)return;
     if(paneelStand()!=="dicht"){ zetPaneel("dicht"); return; }
+    if(kaartPlan&&noordGeraakt(sx,sy)){ kaartNaarNoord(); return; }      // een tik op de noordpijl draait het blad met het noorden boven
     if(verzetPunt){ if(kaartPlan)verzetOpKaart(sx,sy); return; }
     /* Een bestaand punt gaat voor je eigen stip, en mislukt de speld op je plek (te onzeker, buiten het blad), dan valt de tik door naar de gewone afhandeling. */
     const raakPunt=kaartPuntGeraakt(sx,sy);
