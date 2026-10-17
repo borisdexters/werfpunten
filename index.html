@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-bORot9cdGjwilabuIet8D2w6sQw+Ww55ZI8ONlfB/V8=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-Cgk1X6i8LoxgRDCcbD9k/gIXyfwAgrWbSew/DIi7Sls='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-0NTBoBbDLLe4zrLAZlAlUs9n+HuH1KwvKxIJd3oNtBI=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-iTKozCpawXNnHQJGV9W2GValSHt8mOa2mfLNKVAT0z4='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -239,16 +239,19 @@
      plekOpBeeld(), de opmaak staat hier. */
   .kaartpunten{position:absolute;inset:0;pointer-events:none}
   /* de noordpijl en de schaalbalk (de opdrachtgever, 17/10/2026): dun, zwart, met een witte rand zodat ze op elk beeld te lezen zijn */
-  .kaartnoord{position:absolute;left:var(--px);top:var(--py);width:28px;height:44px;pointer-events:none;z-index:4;cursor:pointer}
+  /* De noordpijl in een witte glazen bol (de opdrachtgever, 17/10/2026): doorschijnend wit met een zachte vervaging, zodat het plan er zacht doorheen schemert en de pijl overal te lezen blijft. */
+  .kaartnoord{position:absolute;left:var(--px);top:var(--py);width:48px;height:48px;border-radius:50%;pointer-events:none;z-index:4;cursor:pointer;
+    background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(10px) saturate(1.15);backdrop-filter:blur(10px) saturate(1.15);
+    border:1px solid rgba(255,255,255,.75);box-shadow:0 1px 8px rgba(0,0,0,.14);box-sizing:border-box}
   /* het meetgereedschap (de opdrachtgever, 17/10/2026): een knop onder de schaalbalk, rechts; lijnstukken en vlakken */
   /* de A: de tekst op het plan groter, in drie stappen (de opdrachtgever, 17/10/2026); onder de schaalbalk, dan de liniaal */
-  .kaartknop.kaarttekst{top:64px;right:16px;width:38px;height:38px;min-height:0;padding:0;display:inline-flex;align-items:center;justify-content:center;color:var(--ink);font:600 18px Inter,Helvetica,Arial,sans-serif}
+  .kaartknop.kaarttekst{top:var(--btop,64px);right:16px;width:38px;height:38px;min-height:0;padding:0;display:inline-flex;align-items:center;justify-content:center;color:var(--ink);font:600 18px Inter,Helvetica,Arial,sans-serif}
   .kaartknop.kaarttekst[hidden]{display:none}
-  .kaartknop.kaartmeet{top:110px;right:16px;width:38px;height:38px;min-height:0;padding:0;display:inline-flex;align-items:center;justify-content:center;color:var(--ink)}
+  .kaartknop.kaartmeet{top:calc(var(--btop,64px) + 46px);right:16px;width:38px;height:38px;min-height:0;padding:0;display:inline-flex;align-items:center;justify-content:center;color:var(--ink)}
   .kaartknop.kaartmeet[hidden]{display:none}
   .kaartknop.kaartmeet.aan{background:var(--ink);color:var(--surface);border-color:var(--ink)}
   /* onder het liniaal-icoon, rechts, onder elkaar; de tekst blijft horizontaal (de opdrachtgever, 17/10/2026) */
-  .kaartmeetbalk{position:absolute;top:156px;right:16px;z-index:3;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+  .kaartmeetbalk{position:absolute;top:calc(var(--btop,64px) + 92px);right:16px;z-index:3;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
   .kaartmeetbalk[hidden]{display:none}
   .meetrij{display:flex;flex-direction:column;gap:6px}
   .meetrij .kaartknop{position:static;width:38px;height:38px;min-height:0;min-width:0;padding:0;display:inline-flex;align-items:center;justify-content:center;color:var(--ink)}      /* vierkante icoontjes, even groot als het liniaal-icoon erboven */
@@ -260,9 +263,19 @@
   .meetlijn.sluit{border-top-style:dashed;border-top-width:1.5px}
   .meetpunt{position:absolute;left:var(--px);top:var(--py);width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:var(--surface);border:2px solid var(--ink);box-sizing:border-box;pointer-events:none;z-index:4}
   .meetmaat{position:absolute;left:var(--px);top:var(--py);transform:translate(-50%,-130%);font:600 11px ui-monospace,Menlo,monospace;color:var(--ink);-webkit-text-stroke:3px var(--surface);paint-order:stroke fill;white-space:nowrap;pointer-events:none;z-index:4}
-  .kaartnoord-draai{position:absolute;inset:0;transform:rotate(var(--a));transform-origin:14px 30px}
-  .kaartnoord-pijl{position:absolute;left:8px;top:14px;width:12px;height:30px;background:var(--ink);clip-path:polygon(50% 0,100% 100%,50% 78%,0 100%)}
-  .kaartnoord-n{position:absolute;left:0;right:0;top:-2px;text-align:center;font:600 11px ui-monospace,Menlo,monospace;color:var(--ink);-webkit-text-stroke:3px var(--surface);paint-order:stroke fill}
+  /* De knoppen op de kaart (A, liniaal en de meetknoppen) zoals de noordpijl: rond, doorschijnend wit en glazig, zonder zwarte rand (de opdrachtgever, 17/10/2026). De actieve stand is een donker glas met een witte tekening. */
+  .vulling .kaartknop.kaarttekst,.vulling .kaartknop.kaartmeet,.vulling .meetrij .kaartknop{
+    width:44px;height:44px;min-height:0;min-width:0;padding:0;border-radius:50%;box-sizing:border-box;
+    border:1px solid rgba(255,255,255,.75);background:rgba(255,255,255,.62);color:var(--ink);
+    -webkit-backdrop-filter:blur(10px) saturate(1.15);backdrop-filter:blur(10px) saturate(1.15);box-shadow:0 1px 8px rgba(0,0,0,.14)}
+  .vulling .kaartknop.kaartmeet{top:calc(var(--btop,64px) + 52px)}
+  .vulling .kaartmeetbalk{top:calc(var(--btop,64px) + 104px);gap:8px}
+  .vulling .meetrij{gap:8px}
+  .vulling .kaartknop.kaartmeet.aan,.vulling .meetrij .kaartknop.actief{background:rgba(22,26,30,.78);color:#fff;border-color:rgba(255,255,255,.25)}
+  .vulling .meetuit{background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(10px) saturate(1.15);backdrop-filter:blur(10px) saturate(1.15);border:1px solid rgba(255,255,255,.75);box-shadow:0 1px 8px rgba(0,0,0,.14)}
+  .kaartnoord-draai{position:absolute;inset:0;transform:rotate(var(--a));transform-origin:50% 50%}
+  .kaartnoord-pijl{position:absolute;left:17px;top:13px;width:12px;height:26px;background:var(--ink);clip-path:polygon(50% 0,100% 100%,50% 78%,0 100%)}
+  .kaartnoord-n{position:absolute;left:0;right:0;top:1px;text-align:center;font:600 10px ui-monospace,Menlo,monospace;line-height:12px;color:var(--ink)}
   .kaartschaal{position:absolute;left:var(--px);top:var(--py);width:var(--w);height:7px;border:1.5px solid var(--ink);border-top:none;pointer-events:none;z-index:4;box-sizing:content-box}
   .kaartschaal-v{top:11px;bottom:auto !important;font-weight:500}
   .kaartschaal span{position:absolute;left:0;right:0;bottom:7px;text-align:center;font:600 11px ui-monospace,Menlo,monospace;color:var(--ink);paint-order:stroke;-webkit-text-stroke:3px var(--surface);white-space:nowrap}
@@ -3888,7 +3901,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v547";
+const VERSIE="v551";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -20466,7 +20479,11 @@ function kaartKompas(laag,doos,b,k){
   const x0=(vb&&vb.width?vb.left-db.left:0)+14, y0=(vb&&vb.height?vb.top-db.top:0)+14;
   const a=(draaiVan(plan)-(g.noord||0));
   const noord=document.createElement("div"); noord.className="kaartnoord"; noord.setAttribute("aria-label","Noord");
-  noord.style.setProperty("--px",x0+"px"); noord.style.setProperty("--py",y0+"px"); noord.style.setProperty("--a",a.toFixed(1)+"deg");
+  /* De opdrachtgever, 17/10/2026: "noordpijl in het midden bovenaan, rechts de schaalbalk uitlijnen met Plan": de pijl staat in het midden van het zichtbare vlak, de schaalbalk rechts, en beide op de hoogte van de titel. */
+  const titel0=document.getElementById("hoofdtitel"), tb0=titel0?titel0.getBoundingClientRect():null;
+  const midY=tb0&&tb0.height?tb0.top+tb0.height/2-db.top:y0;
+  const midX=(vb&&vb.width?vb.left-db.left+vb.width/2:b.width/2);
+  noord.style.setProperty("--px",Math.round(midX-24)+"px"); noord.style.setProperty("--py",Math.round(midY-24)+"px"); noord.style.setProperty("--a",a.toFixed(1)+"deg");
   const draai=document.createElement("div"); draai.className="kaartnoord-draai";
   const letter=document.createElement("span"); letter.className="kaartnoord-n"; letter.textContent="N";
   const pijl=document.createElement("span"); pijl.className="kaartnoord-pijl";
@@ -20480,7 +20497,10 @@ function kaartKompas(laag,doos,b,k){
   const balk=document.createElement("div"); balk.className="kaartschaal";
   /* rechts in het zichtbare vlak (de opdrachtgever, 17/10/2026): de noordpijl links, de schaalbalk met de verhouding rechts */
   const rechts=(vb&&vb.width?vb.right-db.left:b.width)-16-Math.round(lang);
-  balk.style.setProperty("--px",rechts+"px"); balk.style.setProperty("--py",(y0+14)+"px"); balk.style.setProperty("--w",Math.round(lang)+"px");
+  /* De opdrachtgever, 17/10/2026: "dit naar boven": de schaalbalk, de A en de liniaal staan rechts op de hoogte van de titel, in de lege ruimte naast "Plan", en niet onder de titel. De knoppen zitten in de vulling; hun top volgt de schaalbalk via --btop. */
+  const balkY=Math.round(midY-4);      // de balk zelf in het midden van de titelregel; het getal erboven en de verhouding eronder staan er symmetrisch omheen
+  balk.style.setProperty("--px",rechts+"px"); balk.style.setProperty("--py",balkY+"px");
+  if(vul&&vul.style&&vb)vul.style.setProperty("--btop",Math.round(balkY+36-(vb.top-db.top))+"px"); balk.style.setProperty("--w",Math.round(lang)+"px");
   const t=document.createElement("span"); t.textContent=m<1?(m*100)+" cm":m+" m"; balk.appendChild(t);
   /* De verhouding eronder (de opdrachtgever, 17/10/2026: "en onder de schaalbalk 1:getal"): meter per pixel gedeeld door de grootte van een CSS-pixel (1/96 inch, 0,26 mm), op twee cijfers afgerond. Op een toestel is dat de schaal op een standaardscherm: de werkelijke pixelgrootte verschilt per toestel, dus de balk is de maat en 1:getal de aanduiding. */
   const v=document.createElement("span"); v.className="kaartschaal-v"; v.textContent=kaartVerhouding(mpp); balk.appendChild(v);
