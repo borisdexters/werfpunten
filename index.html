@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-vPC0JrkyFBWzL91hTm7436ix4FuoOGfidTtp5RyevVM=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-O874xsKWrolEgCgrHIRq0YX8uN7c4xk2GbyJF8EhQKU='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-QexaPjzT7zB0RsrvSV88n757lGzXAJQ3ZOrnzzMEia4=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-O874xsKWrolEgCgrHIRq0YX8uN7c4xk2GbyJF8EhQKU='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3872,7 +3872,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v531";
+const VERSIE="v533";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -17114,10 +17114,12 @@ async function maakOmtrekplan(hier,zone,gekozen,toegestaanLeeg){
   /* Het voetpad (de opdrachtgever, 17/10/2026: "kan je ook het voetpad tekenen?"). Het GRB kent het voetpad niet als vlak: het is de strook tussen de rand van de rijbaan of de boordsteen en de perceelsgrens. Wat het wel geeft zijn die randen: de rand van de rijbaan en de grens van de zone voor zwakke weggebruikers (stippellijn), en de verhoogde boordsteen (dunne lijn). Daartussen leest het voetpad. */
   grbLijnen(wegranden,()=>true).forEach(l=>stuk.push('<path d="M'+l.map(q=>naarBeeldXY(q).join(",")).join("L")+'" fill="none" stroke="'+ZWART+'" stroke-width="3" stroke-dasharray="26 20"/>'));
   grbLijnen(boordstenen,p=>/boord|kant/i.test(String(p.LBLTYPE||""))).forEach(l=>stuk.push('<path d="M'+l.map(q=>naarBeeldXY(q).join(",")).join("L")+'" fill="none" stroke="'+ZWART+'" stroke-width="3"/>'));
-  percelen.forEach(f=>{ if(f!==mijn&&!(mijn&&mijn.id&&f.id===mijn.id))stuk.push('<path d="'+pad(f)+'" fill="none" stroke="'+ZWART+'" stroke-width="5"/>'); });
-  /* Een gebouwlijn die op een perceelsgrens ligt (binnen 15 cm) wordt niet nog eens getekend: de twee GRB-lagen liggen een paar centimeter uit elkaar en dat gaf dubbele lijnen (de opdrachtgever, 17/10/2026). */
-  const gebouwPad=grbGebouwLijnen(gebouwen.map(f=>grbRingen(f)),percelen.map(f=>grbRingen(f)),0.15,naarBeeldXY);
-  if(gebouwPad)stuk.push('<path d="'+gebouwPad+'" fill="none" stroke="'+ZWART+'" stroke-width="5"/>');
+  /* De gebouwen blijven te zien (de opdrachtgever, 17/10/2026: "ik zie nu enkel de percelen, hoe kan ik de gebouwen zien?"). In een dichte straat valt het gebouw samen met het perceel, en dan waren alle gebouwlijnen als dubbel weggelaten. Nu is het omgekeerd: het gebouw heeft een stevigere lijn, en de perceelsgrens die er al op ligt (binnen 15 cm) wordt niet nog eens getekend. Zo is er geen dubbele lijn en zie je wat gebouw is en wat perceel. */
+  const buren=percelen.filter(f=>f!==mijn&&!(mijn&&mijn.id&&f.id===mijn.id));
+  const burenPad=grbGebouwLijnen(buren.map(f=>grbRingen(f)),gebouwen.map(f=>grbRingen(f)),0.15,naarBeeldXY);
+  if(burenPad)stuk.push('<path d="'+burenPad+'" fill="none" stroke="'+ZWART+'" stroke-width="3"/>');
+  const gebouwPad=grbGebouwLijnen(gebouwen.map(f=>grbRingen(f)),[],0.15,naarBeeldXY);
+  if(gebouwPad)stuk.push('<path d="'+gebouwPad+'" fill="none" stroke="'+ZWART+'" stroke-width="15" stroke-linejoin="round"/>');
   if(mijn)stuk.push('<path d="'+pad(mijn)+'" fill="none" stroke="'+ZWART+'" stroke-width="30"/>');
   grbStraatLabels(wegen,mijn?grbRingen(mijn)[0]:null,x,y).forEach(t=>{
     const b=naarBeeldXY([t.x,t.y]);
