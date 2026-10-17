@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-v4nKgsX5k0HHT2urd0TNN9j9RZVGLfwloNxJNZjpX9E=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-kC3IdMoPqH2oXMtblMEn3YVOdUn1iXCeI9riqlNRVmw='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-RXPolWMgGHQdZLQuGD00FVWqPqzaejw0HFAqdLXfRmM=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-KUMXhVgqvyKubfLh/8DvgU2MhSEGgz6sjY53VyyrNwQ='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1355,13 +1355,13 @@
   #plandlg.film{background:rgba(255,247,190,.16)}
   #plandlg.film .plan-vlak,#plandlg.film #plancanvas{background:transparent}
   #plandlg.film .plan-zoom{display:none}
-  /* Allemaal weg, enkel het calqueblad (de opdrachtgever, 17/10/2026): de balken bovenaan het vel en de knoppen van het hoofdscherm die erdoorheen schemeren staan er niet, tot we de functies van het calqueblad uitwerken. De spelden en het plan blijven zichtbaar. */
-  #plandlg.film>*:not(.plan-vlak):not(.pentrek-op){display:none !important}
-  html.film-open .vulling .kaartknop,html.film-open .kaartnoord,html.film-open .kaartschaal,html.film-open .schaalkeuze,html.film-open .kaartmeetbalk{visibility:hidden !important}
+  /* Enkel het calqueblad (de opdrachtgever, 17/10/2026): de balken bovenaan het vel staan er niet, tot we de functies van het calqueblad uitwerken. Alles wat op het plan staat (de schaal, het kompas, A, de liniaal, de pen, de spelden) schemert er wél doorheen: het vel is doorzichtig en laat het plan eronder zien zoals het is. */
+  #plandlg.film>*:not(.plan-vlak):not(.pentrek-op):not(#filmlaag):not(#filmkaart){display:none !important}
+  #filmlaag>*{pointer-events:auto}
   #plandlg.film #planzones{display:none}      /* GRB en GRB oud staan niet op het vel (de opdrachtgever, 17/10/2026: "dit gaan we allemaal anders organiseren: doe de GRB en GRB oud weg"); de bladenbalk onderaan het hoofdscherm zegt al op welk blad je zit */
   #plandlg.film #pl-voet,#plandlg.film .plan-voet{display:none}      /* de balk onderaan het vel (de tekstregel, het aantal punten, Benoem) hoort er niet bij (de opdrachtgever, 17/10/2026: "dit deel gewoon weglaten") */
   #plandlg.film .pentrek-op{bottom:14px}
-  #plandlg.film>div:not(.plan-vlak),#plandlg.film>nav,#plandlg.film>header{background:rgba(255,255,255,.55) !important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+  #plandlg.film>div:not(.plan-vlak):not(#filmlaag):not(#filmkaart),#plandlg.film>nav,#plandlg.film>header{background:rgba(255,255,255,.55) !important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
   .pentrek.trekt{transition:none}
   .pentrek:focus,.pentrek:focus-visible,.pentrek-op:focus,.pentrek-op:focus-visible{outline:0}
   .pentrek,.pentrek-op{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
@@ -4021,7 +4021,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v601";
+const VERSIE="v605";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -9712,9 +9712,33 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&menuGlas)menuEinde
     };
     const hoog=()=>H;
     const zet=(y,animeer)=>{ dlg.style.transition=animeer?("transform "+SCHUIFTIJD+"ms cubic-bezier(.2,.8,.2,1)"):"none"; dlg.style.transform="translateY("+Math.round(y)+"px)"; };
-    const schoon=()=>{ dlg.style.transition=""; dlg.style.transform=""; };
-    const dicht=()=>{ penAuto=false; penFilm=false; dlg.classList.remove("film"); document.documentElement.classList.remove("film-open"); try{ koppelStop(); }catch(e){} if(dlg.open)dlg.close(); schoon(); dlg.style.height=""; delete dlg.dataset.blad; };
-    dlg.addEventListener("close",()=>{ dlg.style.height=""; delete dlg.dataset.blad; penFilm=false; dlg.classList.remove("film"); document.documentElement.classList.remove("film-open"); try{ tekenKaartPunten(); }catch(e){} });      // het punt uit je tekening hoort meteen op de kaart eronder      // elke andere weg naar buiten (Escape, het kruis): terug naar het hele scherm
+    const schoon=()=>{ dlg.style.transition=""; dlg.style.transform=""; dlg.style.pointerEvents=""; };
+    /* DE ICONEN STAAN OP DE VOORGROND (de opdrachtgever, 17/10/2026: "de icoontjes zijn steeds op de voorgrond, nu liggen ze precies onder het calque"): het vel is een venster in de bovenste laag, en daar kan niets van het hoofdscherm bovenuit. Dus verhuizen de echte knoppen en tikvlakken van het plan (A, liniaal, pen, de tikvlakken van kompas en schaalbalk) zolang het vel open staat naar een laag erboven, op dezelfde plek en met dezelfde opmaak; het getekende kompas en de schaalbalk komen als kopie mee. Bij sluiten gaat alles terug waar het stond. */
+    let verhuisd=[];
+    const ICONEN=["kaarttekst","kaartmeet","kaartpen","kaartmeetbalk","schaaltik","noordtik","schaalkeuze","noordmenu"];
+    const iconenOp=()=>{
+      if(verhuisd.length)return;
+      const vul=document.getElementById("vulling"), doos=document.getElementById("kaart");
+      if(!vul||!doos)return;
+      const vb=vul.getBoundingClientRect(), kb=doos.getBoundingClientRect();
+      const laag=document.createElement("div"); laag.id="filmlaag"; laag.className="vulling";
+      laag.style.cssText="position:fixed;left:"+vb.left+"px;top:"+vb.top+"px;width:"+vb.width+"px;height:"+vb.height+"px;pointer-events:none;z-index:9;flex:none";
+      const bt=vul.style.getPropertyValue("--btop"); if(bt)laag.style.setProperty("--btop",bt);
+      ICONEN.forEach(id=>{ const e=document.getElementById(id); if(!e||!e.parentNode)return; verhuisd.push({e,ouder:e.parentNode,voor:e.nextSibling}); laag.appendChild(e); });
+      const kl=document.createElement("div"); kl.id="filmkaart";
+      kl.style.cssText="position:fixed;left:"+kb.left+"px;top:"+kb.top+"px;width:"+kb.width+"px;height:"+kb.height+"px;pointer-events:none;z-index:9";
+      doos.querySelectorAll(".kaartnoord,.kaartschaal").forEach(n=>kl.appendChild(n.cloneNode(true)));
+      dlg.appendChild(kl); dlg.appendChild(laag);
+      /* Verandert een tik op een icoon de kijkstand van het plan eronder (het kompas draait, de tekst wordt groter), dan legt het vel zich opnieuw op het plan. */
+      laag.addEventListener("click",()=>{ [80,400].forEach(t=>setTimeout(()=>{ if(penFilm)planTeken(); },t)); });
+    };
+    const iconenTerug=()=>{
+      verhuisd.reverse().forEach(({e,ouder,voor})=>{ ouder.insertBefore(e,(voor&&voor.parentNode===ouder)?voor:null); });
+      verhuisd=[];
+      dlg.querySelectorAll("#filmlaag,#filmkaart").forEach(n=>n.remove());
+    };
+    const dicht=()=>{ iconenTerug(); penAuto=false; penFilm=false; dlg.classList.remove("film"); document.documentElement.classList.remove("film-open"); try{ koppelStop(); }catch(e){} if(dlg.open)dlg.close(); schoon(); dlg.style.height=""; delete dlg.dataset.blad; };
+    dlg.addEventListener("close",()=>{ iconenTerug(); dlg.style.height=""; delete dlg.dataset.blad; penFilm=false; dlg.classList.remove("film"); document.documentElement.classList.remove("film-open"); try{ tekenKaartPunten(); }catch(e){} });      // het punt uit je tekening hoort meteen op de kaart eronder      // elke andere weg naar buiten (Escape, het kruis): terug naar het hele scherm
     /* Gelukt als je voorbij een vijfde van het scherm trok, of snel en een stuk (een vluchtige veeg). */
     const genoeg=(dy,ms)=>dy>hoog()*SCHUIFDEEL||(dy>PENTREKDREMPEL&&dy/Math.max(1,ms)>SCHUIFSNEL);
     const p=maakEl("button","pentrek"); p.id="pentrek"; p.type="button"; p.setAttribute("aria-label","Tekenen: trek omlaag"); p.title="Trek omlaag om te tekenen op het calqueblad";
@@ -9725,6 +9749,7 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&menuGlas)menuEinde
       if(opent)return opent;
       penAuto=true;
       try{ window.getSelection().removeAllRanges(); }catch(e){}      // het slepen mag geen tekst op het volgende scherm blauw laten staan
+      dlg.style.pointerEvents="none";                                // tijdens het trekken en schuiven neemt het vel geen aanraking aan: de sleep die het opent mag geen streep worden
       penFilm=!!kaartPlan;                                           // zonder plan op het hoofdscherm valt er niets onder het vel te zien: dan blijft het het gewone planvenster
       dlg.classList.toggle("film",penFilm); document.documentElement.classList.toggle("film-open",penFilm);
       H=meetBlad();                                                  // gemeten nu het hoofdscherm er nog staat
@@ -9734,6 +9759,7 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&menuGlas)menuEinde
         await penNaarPlan();
         if(!plan||!dlg.open){ penAuto=false; schoon(); return false; }
         zet(-hoog()+Math.min(dy,hoog()),false);
+        if(penFilm)iconenOp();
         return true;
       })();
       return opent;
