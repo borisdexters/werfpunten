@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-ecra9c2Y9sWJDabybeLGtSUcH5V+Hq4R/phzfX+84m4=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-X0qF6jjvOz2mW3GpgGZUO+vCc4rqJ0BhU/K+91yNWgU='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-xxGfnQzpTTb2IQyWr1rcv97PpCd2gTyHavpH0TK1pQE=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-H//hhKS7/d7CTqwYeR+WEjLuyaWb8tvPvyAUXQtphW8='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1304,6 +1304,7 @@
   #fichedlg .dlg-body>.fiche-media{order:8}
   #fichedlg .dlg-body>.fiche-knoppen{order:9}
   #fichedlg #fiche-beschrijving{display:none}
+  #fichedlg #fiche-persoon,#fichedlg #fiche-aan{display:none !important}
   #fichedlg .fiche-tekstvak,#fichedlg .fiche-tekstvak[hidden]{display:block;position:relative;padding:4px 2px 0;border-bottom:0}
   #fichedlg .fiche-tekstvak .fiche-veld{display:block;width:100%;min-height:132px;padding:10px 54px 14px 2px;font-size:18px;line-height:1.55;resize:none;box-sizing:border-box}
   #fichedlg .fiche-tekstvak .fiche-veld::placeholder{color:var(--ink-faint)}
@@ -1327,6 +1328,15 @@
   #fichedlg .fiche-knoprij .fiche-rij-waarde.leegwaarde{visibility:visible;color:var(--ink-faint)}      /* wat er nog niet is, staat er zacht: geen, niet op plan, niemand */
   html.fiche-open .kaartknop.kaartperceel,
   /* De knoppen op de kaart horen er niet te staan zolang je een notitie schrijft: ze lagen over het kruisje. */
+  /* Het vlak vult het scherm (de opdrachtgever, 17/10/2026: "doe dit subscherm volledig. De info onderaan heeft bij noteren geen meerwaarde"): het plan, de bladen, het adres met kadaster en de invoerregel staan er niet zolang je noteert. De titel en het menu blijven. */
+  html.fiche-open .wrap>.vulling,html.fiche-open .wrap>.zones,html.fiche-open .wrap>header,html.fiche-open .wrap>.invoer{display:none !important}
+  /* Zoals het voorbeeld (de NOTES-kaart): een afgeronde kaart met lucht rondom, het schrijfvak neemt de ruimte, Wissen en Bewaren staan vast onderaan. */
+  html.fiche-open .wrap>.hoofdkop{display:none}
+  html.fiche-open #fichedlg{flex:1 1 auto;max-height:none;min-height:0;margin:max(12px,env(safe-area-inset-top)) 12px 12px;border-radius:22px}
+  html.fiche-open #fichedlg>.dlg-body{flex:1 1 auto;min-height:0;max-height:none;overflow-y:auto}   /* de grens blijft die van het blad: schermvullend heft de 64vh van .dlg-body op */
+  html.fiche-open #fichedlg .dlg-body>.fiche-tekstvak{flex:1 0 auto;display:flex;flex-direction:column}
+  html.fiche-open #fichedlg .fiche-tekstvak .fiche-veld{flex:1 1 auto;min-height:132px}
+  html.fiche-open #fichedlg .fiche-knoppen{margin-top:auto}
   html.fiche-open .kaarttik,html.fiche-open .kaartnoord,html.fiche-open .kaartschaal,html.fiche-open .kaartknop.kaarttekst,html.fiche-open .kaartknop.kaartmeet,html.fiche-open .kaartmeetbalk,html.fiche-open .schaalkeuze{display:none !important}
   /* DE GREEP IS DE HELE KOPRIJ.
      Tot 28/09/2026 stond hier een streepje van 38 x 4 px in een raakvlak van 26 px, de vorm
@@ -3962,7 +3972,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v566";
+const VERSIE="v568";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -14087,8 +14097,8 @@ function vulFiche(opties){
      "hoofdstuk onzeker" staat zo in het ontwerpblad van de fiches, en dat is met opzet dezelfde
      zin: wat op het scherm staat en wat achteraan het verslag komt, horen elkaar te dekken. */
   const hs=fiche.keuze?hoofdstukNr(fiche.keuze):null;
-  const twijfel = hoofdstukOnzeker(fiche.onzeker) ? " · hoofdstuk onzeker"
-                : fiche.onzeker ? " · artikel onzeker" : "";
+  /* De opdrachtgever, 17/10/2026: "categorie mag ook inschatting zijn (schrijf: suggestie, niet geraden)". Wat de app schat, heet een suggestie. */
+  const twijfel = fiche.onzeker ? " · suggestie" : "";
   /* Het ARTIKEL en niet het hoofdstuk. Gemeten op 390 px: met de kop erbij las de rij
      "53.41 #53 Buitenschrijnwerk e…" -- het nummer van het artikel gevolgd door de naam van iets
      anders, afgekapt. De kop staat al in de lijst eronder; wat de app zélf koos bij het maken
@@ -14125,13 +14135,13 @@ function vulFiche(opties){
   }
   /* PERSOON. De rij zegt wie het is; de lijst eronder staat dicht tot je hem opent. */
   /* TOEWIJZEN: de app schat zelf (de opdrachtgever, 17/10/2026: "de app moet zelf inschatten: categorie en toewijzen"). Zolang jij niet zelf koos, komt de beste gok uit de vaststelling erin te staan, en ze loopt mee met wat je typt. Ze is gemerkt als geraden; een tik op de rij laat je veranderen, en wat je zelf kiest blijft staan. */
-  if(!fiche.aanHand){
+  if(FICHEWIJSTTOE&&!fiche.aanHand){
     const v=aanVoorstellen(fiche.tekst);
     if(v.length){ fiche.aan=v[0]; fiche.aanOok=[]; fiche.aanGeraden=true; }
     else if(fiche.aanGeraden){ fiche.aan=null; fiche.aanOok=[]; fiche.aanGeraden=false; }
   }
   const wieAllen=aanSet(fiche).map(code=>{const c=contacten.find(x=>x.code===code);return c?c.naam:code;});
-  zetWaarde("fiche-persoon-waarde", wieAllen.length?wieAllen.join(", ")+(fiche.aanGeraden&&!fiche.aanHand?" \u00B7 geraden":""):"niemand", !wieAllen.length, !!(fiche.aanGeraden&&!fiche.aanHand));
+  zetWaarde("fiche-persoon-waarde", wieAllen.length?wieAllen.join(", ")+(fiche.aanGeraden&&!fiche.aanHand?" \u00B7 suggestie":""):"niemand", !wieAllen.length, !!(fiche.aanGeraden&&!fiche.aanHand));
   const pers=document.getElementById("fiche-persoon");
   if(pers)pers.setAttribute("aria-expanded",fiche.uit.persoon?"true":"false");
   const bak=document.getElementById("fiche-aan");
@@ -14447,6 +14457,9 @@ function aanKnoppen(bak,huidig,kies,tekst){
 }
 
 /* De microfoon staat in het tekstvak, rechtsonder (de opdrachtgever, 17/10/2026: "één mooi vlak"): dicteren is dezelfde handeling als schrijven, en hoort niet op een eigen rij. De rij Beschrijving valt weg; het vak is altijd open. */
+/* De opdrachtgever, 17/10/2026: "laat het toewijzen voor in de keet of thuis". Op de werf schrijf je alleen de gedachte op; wie er iets mee moet, wijs je later aan op het punt zelf. De rij en de gok blijven in de code, uit; de proef zet ze aan. */
+let FICHEWIJSTTOE=false;
+function zetFicheWijstToe(v){ FICHEWIJSTTOE=!!v; }
 function ficheMicVerhuis(){
   const mic=document.getElementById("fiche-mic"), vak=document.getElementById("fiche-tekstvak");
   if(mic&&vak&&mic.parentNode!==vak)vak.appendChild(mic);
@@ -14499,6 +14512,11 @@ function openFiche(tekst,opties){
   /* De onderbalk gaat weg zolang het blad staat. In de klasse en niet in een stijl, zodat de
      opmaak op één plaats staat en een proef de beslissing kan nalezen. */
   ficheOpen(true);
+  /* Meteen typen (de opdrachtgever, 17/10/2026: "als de opmerkingen-tab opent moet je meteen kunnen typen"): het schrijfvak krijgt de cursor, en het toetsenbord komt mee. Synchroon in dezelfde beurt als de tik, want iOS opent het toetsenbord alleen binnen een tik. De cursor staat achter de tekst die er al is. */
+  try{
+    const v=document.getElementById("fiche-tekst");
+    if(v){ v.focus({preventScroll:true}); const n=v.value.length; if(v.setSelectionRange)v.setSelectionRange(n,n); }
+  }catch(e){}
 }
 /* Eén ingang voor die klasse, en hij hangt aan het openen en sluiten van de fiche zelf. Twee
    plaatsen die hem zetten is een plaats te veel: dan blijft de balk een keer weg. */
