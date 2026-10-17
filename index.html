@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-MyqF4e++ys+Ws6LIqJW/OXi+rWYHRUnjNzBhQVUuH18=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-9coUMDHIx8/R64ZKDz+us097rCg9tGg2lF3/hwjZpgE='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-7vJpqxDmoQ0FSPGbDXmumjQl3UnEkR9igUHZISHv3t0=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-9coUMDHIx8/R64ZKDz+us097rCg9tGg2lF3/hwjZpgE='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4014,7 +4014,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v595";
+const VERSIE="v596";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -9707,7 +9707,7 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&menuGlas)menuEinde
     const zet=(y,animeer)=>{ dlg.style.transition=animeer?("transform "+SCHUIFTIJD+"ms cubic-bezier(.2,.8,.2,1)"):"none"; dlg.style.transform="translateY("+Math.round(y)+"px)"; };
     const schoon=()=>{ dlg.style.transition=""; dlg.style.transform=""; };
     const dicht=()=>{ penAuto=false; penFilm=false; dlg.classList.remove("film"); try{ koppelStop(); }catch(e){} if(dlg.open)dlg.close(); schoon(); dlg.style.height=""; delete dlg.dataset.blad; };
-    dlg.addEventListener("close",()=>{ dlg.style.height=""; delete dlg.dataset.blad; penFilm=false; dlg.classList.remove("film"); });      // elke andere weg naar buiten (Escape, het kruis): terug naar het hele scherm
+    dlg.addEventListener("close",()=>{ dlg.style.height=""; delete dlg.dataset.blad; penFilm=false; dlg.classList.remove("film"); try{ tekenKaartPunten(); }catch(e){} });      // het punt uit je tekening hoort meteen op de kaart eronder      // elke andere weg naar buiten (Escape, het kruis): terug naar het hele scherm
     /* Gelukt als je voorbij een vijfde van het scherm trok, of snel en een stuk (een vluchtige veeg). */
     const genoeg=(dy,ms)=>dy>hoog()*SCHUIFDEEL||(dy>PENTREKDREMPEL&&dy/Math.max(1,ms)>SCHUIFSNEL);
     const p=maakEl("button","pentrek"); p.id="pentrek"; p.type="button"; p.setAttribute("aria-label","Tekenen: trek omlaag"); p.title="Trek omlaag om te tekenen op het calqueblad";
