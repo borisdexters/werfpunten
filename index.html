@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-9wQcPDGeIJK50o82ls67G/8xQdM398h1gazbg11USpY=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-+qIHSxzCqaSI7E5zq4mYn65TiFvySkxXck763qM7ZVc='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-giz66hO7rkwh6pfMRm+Fu0dZUGXnbm50KslQzwOCvn8=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-W+IYZfYcOYH2xB5cyDnDK55OLr5XWXXGxQdXOrddHyU='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -98,7 +98,7 @@
 
        Eén waarde voor allebei de modussen, want `--vel` is in de donkere modus óók wit: een
        plan is papier, en papier verandert niet van kleur omdat je toestel dat doet. */
-    --calquevel:rgba(252,240,170,.10);
+    --calquevel:rgba(170,205,248,.14);
     --vel-ink:#1a1c1e; --vel-ink-zacht:#5c6166;
     --vel-lijn:rgba(0,0,0,.26); --vel-lijn-dun:rgba(0,0,0,.12);
   }
@@ -1352,7 +1352,7 @@
   #plandlg[style*="height"]{border-bottom:var(--haar) solid var(--line);box-shadow:0 3px 14px rgba(0,0,0,.16);border-radius:0 0 14px 14px}
   #plandlg::backdrop{background:transparent}
   /* Het calqueblad als film: een heel licht geel, doorzichtig vel. De balken erop worden glas, het vlak met de halen is helemaal doorzichtig, en de zoomknoppen vervallen want de kijkstand is die van het plan eronder. */
-  #plandlg.film{background:rgba(255,247,190,.16);overflow:visible}      /* de iconenlagen vallen soms buiten het vel terwijl het schuift */
+  #plandlg.film{background:rgba(170,205,248,.20);overflow:visible}      /* de iconenlagen vallen soms buiten het vel terwijl het schuift */
   #plandlg.film .plan-vlak,#plandlg.film #plancanvas{background:transparent}
   #plandlg.film .plan-zoom{display:none}
   /* Enkel het calqueblad (de opdrachtgever, 17/10/2026): de balken bovenaan het vel staan er niet, tot we de functies van het calqueblad uitwerken. Alles wat op het plan staat (de schaal, het kompas, A, de liniaal, de pen, de spelden) schemert er wél doorheen: het vel is doorzichtig en laat het plan eronder zien zoals het is. */
@@ -1365,7 +1365,7 @@
   #filmlaag #calque-balk button{width:44px;height:44px;min-width:0;min-height:0;padding:0;border-radius:50%;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;font-size:13px;border:1px solid rgba(255,255,255,.75);background:rgba(255,255,255,.62);color:var(--ink);-webkit-backdrop-filter:blur(10px) saturate(1.15);backdrop-filter:blur(10px) saturate(1.15);box-shadow:0 1px 8px rgba(0,0,0,.14)}
   #filmlaag #calque-balk .cq-lang,#filmlaag #calque-balk .cq-kort,#filmlaag #calque-balk .cq-telling{display:none}
   /* De balk onderaan (camera, menu, plus) schuift weg zolang je tekent (de opdrachtgever, 17/10/2026: "tijdens tekenen mag dit deel wegschuiven") en komt terug als het vel sluit. */
-  #menubalk,.wrap>.zones,.wrap>header{transition:transform .24s cubic-bezier(.2,.8,.2,1)}
+  #menubalk,.wrap>.zones,.wrap>header{transition:transform .56s cubic-bezier(.4,.1,.2,1)}      /* even traag als het vel zelf (de opdrachtgever, 17/10/2026: "beweging calque trager laten zakken") */
   html.film-open .wrap>.zones,html.film-open .wrap>header{transform:translateY(var(--filmzak,0px));pointer-events:none}      /* de onderkant is er om te zien op welk blad je tekent, niet om aan te tikken: een pagina die opent boven het vel liet het scherm in een tussenstand achter */
   html.film-open #menubalk{transform:translateY(110%)}
   /* De witruimte onder het adres is effen wit: geen plan dat erdoorheen schemert. */
@@ -4034,7 +4034,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v614";
+const VERSIE="v616";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -9726,7 +9726,7 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&menuGlas)menuEinde
     const hoog=()=>H;
     /* De iconenlagen schuiven tegen het blad in, zodat de icoontjes stilstaan terwijl het vel erachter beweegt (de opdrachtgever, 17/10/2026: "de icoontjes verdwijnen tijdens de pull down"): ze hangen aan het blad en vielen er anders buiten. */
     const gegen=(y,tr)=>{ ["filmlaag","filmkaart"].forEach(id=>{ const n=document.getElementById(id); if(n){ n.style.transition=tr; n.style.transform="translateY("+(-Math.round(y))+"px)"; } }); };
-    const zet=(y,animeer)=>{ const tr=animeer?("transform "+SCHUIFTIJD+"ms cubic-bezier(.2,.8,.2,1)"):"none"; dlg.style.transition=tr; dlg.style.transform="translateY("+Math.round(y)+"px)"; gegen(y,tr); };
+    const zet=(y,animeer)=>{ const tr=animeer?("transform "+SCHUIFTIJD+"ms cubic-bezier(.4,.1,.2,1)"):"none"; dlg.style.transition=tr; dlg.style.transform="translateY("+Math.round(y)+"px)"; gegen(y,tr); };
     const schoon=()=>{ dlg.style.transition=""; dlg.style.transform=""; dlg.style.pointerEvents=""; gegen(0,""); ["filmlaag","filmkaart"].forEach(id=>{ const n=document.getElementById(id); if(n){ n.style.transform=""; n.style.transition=""; } }); };
     /* DE ICONEN STAAN OP DE VOORGROND (de opdrachtgever, 17/10/2026: "de icoontjes zijn steeds op de voorgrond, nu liggen ze precies onder het calque"): het vel is een venster in de bovenste laag, en daar kan niets van het hoofdscherm bovenuit. Dus verhuizen de echte knoppen en tikvlakken van het plan (A, liniaal, pen, de tikvlakken van kompas en schaalbalk) zolang het vel open staat naar een laag erboven, op dezelfde plek en met dezelfde opmaak; het getekende kompas en de schaalbalk komen als kopie mee. Bij sluiten gaat alles terug waar het stond. */
     let verhuisd=[];
@@ -16083,7 +16083,7 @@ let calqueVelGelezen=null;
 function calqueVelKleur(){
   if(calqueVelGelezen===null)
     calqueVelGelezen=getComputedStyle(document.documentElement)
-      .getPropertyValue("--calquevel").trim()||"rgba(252,240,170,.10)";
+      .getPropertyValue("--calquevel").trim()||"rgba(170,205,248,.14)";
   return calqueVelGelezen;
 }
 
@@ -17876,7 +17876,7 @@ document.getElementById("planknop").onclick=openPlan;
 const PENTREKDREMPEL=36;      // zoveel pixel trekken aan de pijl is een bedoelde veeg
 const SCHUIFDEEL=0.2;         // voorbij een vijfde van het scherm loslaten: het blad schuift verder open (of dicht)
 const SCHUIFSNEL=0.5;         // of sneller dan 0,5 px per ms (een vluchtige veeg)
-const SCHUIFTIJD=240;         // ms voor het blad om zelf de rest te schuiven
+const SCHUIFTIJD=560;         // ms voor het blad om zelf de rest te schuiven (trager gemaakt, de opdrachtgever, 17/10/2026: "beweging calque trager laten zakken")
 let penAuto=false;            // na het trekken maakt de eerste streep vanzelf een punt
 let penFilm=false;            // het calqueblad is een doorzichtig geel vel over het plan van het hoofdscherm
 let penGrace=false;           // zolang het vel opent (en kort daarna) neemt het geen streep aan: de sleep die het opent mag er geen worden
