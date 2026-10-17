@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-l7/kY1j3o9GT/4th1V6sJhWokVmx+Gdxh6Bn6m2Btjo=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-zE00NCxo7gPlR2t6v+hWKDa9OOsgKFBnkj3vUdXPtME='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-ecra9c2Y9sWJDabybeLGtSUcH5V+Hq4R/phzfX+84m4=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-X0qF6jjvOz2mW3GpgGZUO+vCc4rqJ0BhU/K+91yNWgU='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1289,6 +1289,45 @@
      de schermrand loopt, staat "Punt bewaren" precies waar de pijl stond: onder je duim. */
   #fichedlg .dlg-voet{border-top:1px solid var(--line)}
   #fichedlg:not([open]){display:none}
+  /* ---- DE NOTITIE: ÉÉN VLAK ----
+     de opdrachtgever, 17/10/2026, met een voorbeeld van een rustige notitie-app: "notities nemen veranderen: één mooi vlak dat zich opent. De app moet zelf inschatten: categorie en toewijzen."
+     Eén vlak, met bovenaan het schrijfvak (een uitnodiging, geen rij), dan wat de app zelf koos (categorie, lokaal, aan wie) als rustige regels, dan foto, scan en tekenen als kleine knoppen, en onderaan Wissen en Bewaren.
+     Alleen de volgorde en de opmaak veranderen: elk onderdeel en elke werking blijft zoals ze was. */
+  #fichedlg .dlg-body{display:flex;flex-direction:column;padding-bottom:6px}
+  #fichedlg .dlg-body>.fiche-tekstvak{order:1}
+  #fichedlg .dlg-body>#fiche-cat{order:2}
+  #fichedlg .dlg-body>.fiche-artikels{order:3}
+  #fichedlg .dlg-body>#fiche-plek{order:4}
+  #fichedlg .dlg-body>#fiche-persoon{order:5}
+  #fichedlg .dlg-body>.fiche-aan{order:6}
+  #fichedlg .dlg-body>.fiche-haalrij{order:7}
+  #fichedlg .dlg-body>.fiche-media{order:8}
+  #fichedlg .dlg-body>.fiche-knoppen{order:9}
+  #fichedlg #fiche-beschrijving{display:none}
+  #fichedlg .fiche-tekstvak,#fichedlg .fiche-tekstvak[hidden]{display:block;position:relative;padding:4px 2px 0;border-bottom:0}
+  #fichedlg .fiche-tekstvak .fiche-veld{display:block;width:100%;min-height:132px;padding:10px 54px 14px 2px;font-size:18px;line-height:1.55;resize:none;box-sizing:border-box}
+  #fichedlg .fiche-tekstvak .fiche-veld::placeholder{color:var(--ink-faint)}
+  #fichedlg .fiche-tekstvak .fiche-micknop{position:absolute;right:2px;bottom:12px;margin:0}
+  /* wat de app koos: rustige regels, zonder nummer en zonder pijl in een bol */
+  #fichedlg .fiche-knoprij .fiche-rij-nr{display:none}
+  #fichedlg .fiche-knoprij{padding-top:12px;padding-bottom:12px;font-size:15px;min-height:0}
+  #fichedlg .fiche-knoprij .fiche-rij-naam{font-size:13px;color:var(--ink-soft);min-width:84px}
+  #fichedlg .fiche-knoprij .fiche-rij-waarde{text-align:left;flex:1;color:var(--ink)}
+  #fichedlg .fiche-knoprij .fiche-rij-pijl{width:auto;height:auto;border:0;background:none;font-size:15px;color:var(--ink-soft)}
+  /* foto, scan en tekenen: kleine knoppen in één rij, onder de regels */
+  #fichedlg .fiche-media:not(:has(.groot)){height:auto;border-bottom:0;gap:8px;margin:10px 0 2px}
+  #fichedlg .fiche-media:not(:has(.groot)) .fiche-doos{height:46px;flex-direction:row;gap:8px;align-items:center;justify-content:center;border:var(--haar) solid var(--line);border-radius:14px;background:rgba(255,255,255,.5)}
+  #fichedlg .fiche-media:not(:has(.groot)) .fiche-doos+.fiche-doos{border-left:var(--haar) solid var(--line)}
+  #fichedlg .fiche-media:not(:has(.groot)) .fiche-doos-teken{font-size:18px}
+  #fichedlg .fiche-media:not(:has(.groot)) .fiche-doos-svg svg{width:18px;height:18px}
+  #fichedlg .fiche-media:not(:has(.groot)) .fiche-doos-woord{font-size:14px}
+  /* Wissen en Bewaren: woorden, in een rij onderaan, zoals Edit en Delete in het voorbeeld */
+  #fichedlg .fiche-knoppen{margin:6px calc(-1 * var(--marge)) -14px;border-top:var(--haar) solid var(--line)}
+  #fichedlg .fiche-weg,#fichedlg .fiche-bewaar{padding:16px var(--marge);font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+  #fichedlg .fiche-knoprij .fiche-rij-waarde.leegwaarde{visibility:visible;color:var(--ink-faint)}      /* wat er nog niet is, staat er zacht: geen, niet op plan, niemand */
+  html.fiche-open .kaartknop.kaartperceel,
+  /* De knoppen op de kaart horen er niet te staan zolang je een notitie schrijft: ze lagen over het kruisje. */
+  html.fiche-open .kaarttik,html.fiche-open .kaartnoord,html.fiche-open .kaartschaal,html.fiche-open .kaartknop.kaarttekst,html.fiche-open .kaartknop.kaartmeet,html.fiche-open .kaartmeetbalk,html.fiche-open .schaalkeuze{display:none !important}
   /* DE GREEP IS DE HELE KOPRIJ.
      Tot 28/09/2026 stond hier een streepje van 38 x 4 px in een raakvlak van 26 px, de vorm
      die elke kaartapp gebruikt, als echt element en geen `::before` omdat aan een
@@ -3265,7 +3304,7 @@
         </button>
       </div>
       <div class="fiche-tekstvak" id="fiche-tekstvak" hidden>
-        <textarea class="fiche-veld" id="fiche-tekst" rows="1" placeholder=""
+        <textarea class="fiche-veld" id="fiche-tekst" rows="4" placeholder="Schrijf één gedachte…"
                   autocomplete="off" enterkeyhint="done" aria-label="Beschrijving"></textarea>
       </div>
       <!-- De volgorde was die van de opdrachtgever op 28/09/2026: vaststelling, toewijzen aan, categorie,
@@ -3923,7 +3962,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v564";
+const VERSIE="v566";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -14085,8 +14124,14 @@ function vulFiche(opties){
     }
   }
   /* PERSOON. De rij zegt wie het is; de lijst eronder staat dicht tot je hem opent. */
+  /* TOEWIJZEN: de app schat zelf (de opdrachtgever, 17/10/2026: "de app moet zelf inschatten: categorie en toewijzen"). Zolang jij niet zelf koos, komt de beste gok uit de vaststelling erin te staan, en ze loopt mee met wat je typt. Ze is gemerkt als geraden; een tik op de rij laat je veranderen, en wat je zelf kiest blijft staan. */
+  if(!fiche.aanHand){
+    const v=aanVoorstellen(fiche.tekst);
+    if(v.length){ fiche.aan=v[0]; fiche.aanOok=[]; fiche.aanGeraden=true; }
+    else if(fiche.aanGeraden){ fiche.aan=null; fiche.aanOok=[]; fiche.aanGeraden=false; }
+  }
   const wieAllen=aanSet(fiche).map(code=>{const c=contacten.find(x=>x.code===code);return c?c.naam:code;});
-  zetWaarde("fiche-persoon-waarde", wieAllen.length?wieAllen.join(", "):"niemand", !wieAllen.length, false);
+  zetWaarde("fiche-persoon-waarde", wieAllen.length?wieAllen.join(", ")+(fiche.aanGeraden&&!fiche.aanHand?" \u00B7 geraden":""):"niemand", !wieAllen.length, !!(fiche.aanGeraden&&!fiche.aanHand));
   const pers=document.getElementById("fiche-persoon");
   if(pers)pers.setAttribute("aria-expanded",fiche.uit.persoon?"true":"false");
   const bak=document.getElementById("fiche-aan");
@@ -14103,6 +14148,7 @@ function vulFiche(opties){
   aanKnoppen(bak,aanSet(fiche),code=>{
     /* Nog eens tikken laat los. Dezelfde greep als bij de categorie: wie zich vergist, kost het
        één tik en geen dialoog. Meer dan één mag: elke tik zet erbij of haalt eraf. */
+    fiche.aanHand=true; fiche.aanGeraden=false;      // wie zelf kiest, heeft gekeken: de app schat niet meer over je keuze heen
     wisselAan(fiche,code);
     vulFiche();
   },fiche.tekst);
@@ -14400,7 +14446,13 @@ function aanKnoppen(bak,huidig,kies,tekst){
   return bak;
 }
 
+/* De microfoon staat in het tekstvak, rechtsonder (de opdrachtgever, 17/10/2026: "één mooi vlak"): dicteren is dezelfde handeling als schrijven, en hoort niet op een eigen rij. De rij Beschrijving valt weg; het vak is altijd open. */
+function ficheMicVerhuis(){
+  const mic=document.getElementById("fiche-mic"), vak=document.getElementById("fiche-tekstvak");
+  if(mic&&vak&&mic.parentNode!==vak)vak.appendChild(mic);
+}
 function openFiche(tekst,opties){
+  try{ ficheMicVerhuis(); }catch(e){}
   fiche.tekst=String(tekst||"").trim();
   /* En de bron erbij gelijkgezet. `#tekst` is waar de vaststelling stáát -- `bewaarPunt` leest
      daar, en nergens anders. Vandaag komt elke weg hierheen mét die waarde in de hand, dus het
@@ -14415,7 +14467,7 @@ function openFiche(tekst,opties){
   const o=opties||{};
   /* Wie terugkomt van het plan, komt terug bij zijn eigen punt: dan blijft de toewijzing staan,
      om dezelfde reden als de keuze hierboven. Elke andere ingang is een nieuw punt. */
-  if(!o.behoudKeuze){ fiche.aan=null; fiche.aanOok=[]; fiche.uit={cat:false, persoon:false, tekst:false}; }
+  if(!o.behoudKeuze){ fiche.aan=null; fiche.aanOok=[]; fiche.aanHand=false; fiche.aanGeraden=false; fiche.uit={cat:false, persoon:false, tekst:false}; }
   /* Waar de zin vandaan kwam. Alleen een dienst zegt {via:"ai"}; elke andere ingang is een zin
      van jezelf, en die draagt geen teken. Zie de kop "de AI-modus". */
   if(!o.behoudKeuze)fiche.via=(o.via==="ai")?"ai":null;
@@ -15038,7 +15090,7 @@ function ficheWeggooien(){
   isScan=false;
   if(scanVoorbeeld){ try{ URL.revokeObjectURL(scanVoorbeeld); }catch(e){} scanVoorbeeld=null; }
   wachtendeHaal=null; wachtendeAan=null; wachtendeAanOok=[]; wachtendeVia=null;
-  fiche.keuze=null; fiche.onzeker=null; fiche.aan=null; fiche.aanOok=[]; fiche.via=null; fiche.kop=null;
+  fiche.keuze=null; fiche.onzeker=null; fiche.aan=null; fiche.aanOok=[]; fiche.aanHand=false; fiche.aanGeraden=false; fiche.via=null; fiche.kop=null;
   try{ toonWachtendeFoto(); }catch(e){}
   sluitFiche();
   return true;
