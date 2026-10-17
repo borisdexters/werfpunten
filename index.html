@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-giz66hO7rkwh6pfMRm+Fu0dZUGXnbm50KslQzwOCvn8=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-W+IYZfYcOYH2xB5cyDnDK55OLr5XWXXGxQdXOrddHyU='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-chUxEYPW4zsRQQzDEIWUX81E8MqVt5Hf6/NY8tGPw7k=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-jrxz+mTDo34UnSz7QqSIWm6nuBEti3Mlv39Fcpkff88='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -98,7 +98,7 @@
 
        Eén waarde voor allebei de modussen, want `--vel` is in de donkere modus óók wit: een
        plan is papier, en papier verandert niet van kleur omdat je toestel dat doet. */
-    --calquevel:rgba(170,205,248,.14);
+    --calquevel:rgba(195,220,250,.10);
     --vel-ink:#1a1c1e; --vel-ink-zacht:#5c6166;
     --vel-lijn:rgba(0,0,0,.26); --vel-lijn-dun:rgba(0,0,0,.12);
   }
@@ -1352,7 +1352,7 @@
   #plandlg[style*="height"]{border-bottom:var(--haar) solid var(--line);box-shadow:0 3px 14px rgba(0,0,0,.16);border-radius:0 0 14px 14px}
   #plandlg::backdrop{background:transparent}
   /* Het calqueblad als film: een heel licht geel, doorzichtig vel. De balken erop worden glas, het vlak met de halen is helemaal doorzichtig, en de zoomknoppen vervallen want de kijkstand is die van het plan eronder. */
-  #plandlg.film{background:rgba(170,205,248,.20);overflow:visible}      /* de iconenlagen vallen soms buiten het vel terwijl het schuift */
+  #plandlg.film{background:rgba(195,220,250,.13);overflow:visible}      /* de iconenlagen vallen soms buiten het vel terwijl het schuift */
   #plandlg.film .plan-vlak,#plandlg.film #plancanvas{background:transparent}
   #plandlg.film .plan-zoom{display:none}
   /* Enkel het calqueblad (de opdrachtgever, 17/10/2026): de balken bovenaan het vel staan er niet, tot we de functies van het calqueblad uitwerken. Alles wat op het plan staat (de schaal, het kompas, A, de liniaal, de pen, de spelden) schemert er wél doorheen: het vel is doorzichtig en laat het plan eronder zien zoals het is. */
@@ -4034,7 +4034,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v616";
+const VERSIE="v617";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -16083,7 +16083,7 @@ let calqueVelGelezen=null;
 function calqueVelKleur(){
   if(calqueVelGelezen===null)
     calqueVelGelezen=getComputedStyle(document.documentElement)
-      .getPropertyValue("--calquevel").trim()||"rgba(170,205,248,.14)";
+      .getPropertyValue("--calquevel").trim()||"rgba(195,220,250,.10)";
   return calqueVelGelezen;
 }
 
