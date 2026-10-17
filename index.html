@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-DuV3S9ElVKck7n/TZU0f+IQ8IOPdYUuj/mo36KyWZIk=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-xGTMcEZlhnw+r8nEgceppZZE/VRAwKwfaMBcQzknzdo='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-U3Vgc+wv9NZvVwMizLF+UCu9q8+87pqaBpM5YM1TDw4=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-VH/AQHE3/q/HjrHnafxSYe4xYDek5+oIBT48e/k/mzY='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1338,7 +1338,7 @@
   /* Zoals het voorbeeld (de NOTES-kaart): een afgeronde kaart met lucht rondom, het schrijfvak neemt de ruimte, Wissen en Bewaren staan vast onderaan. */
   /* Foto, Scan en Tekenen staan in de balk helemaal onderaan (de opdrachtgever, 17/10/2026, met een pijl naar de onderste balk): zolang je noteert zijn de camera, het menu en de plus daar toch niet nodig. De tegels blijven dezelfde elementen, met hun vinkje of beeld; alleen hun plaats verandert. Staat een vak open (de calque, het fotovak), dan liggen ze weer in de kaart. */
   /* DE PIJL BOVENAAN HET PLAN (de opdrachtgever, 17/10/2026): "ik wil bovenaan een pijl die je naar beneden kan trekken; hierom verschijnt het calqueblad om op te tekenen, automatisch wordt er dan een punt aangemaakt". Het spiegelbeeld van de pijl onderaan: die trekt het menu omhoog, deze trekt het calqueblad omlaag. Alleen op het hoofdscherm: elk geopend venster (een pagina, de notitie) dekt haar af. */
-  .pentrek{position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);left:50%;transform:translateX(-50%) translateY(var(--trek,0px));z-index:4;width:64px;height:38px;border:0;border-radius:19px;padding:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 1px 6px rgba(0,0,0,.12);color:var(--ink);touch-action:none;cursor:pointer}
+  .pentrek{position:fixed;top:calc(env(safe-area-inset-top,0px) + 37px);left:50%;transform:translateX(-50%) translateY(var(--trek,0px));z-index:4;width:64px;height:38px;border:0;border-radius:19px;padding:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 1px 6px rgba(0,0,0,.12);color:var(--ink);touch-action:none;cursor:pointer}
   .pentrek svg{width:26px;height:26px}
   .pentrek.trekt{transition:none}
   body:has(dialog[open]) .pentrek,html.fiche-open .pentrek,html.menu-open .pentrek{display:none}
@@ -3992,7 +3992,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v581";
+const VERSIE="v582";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
