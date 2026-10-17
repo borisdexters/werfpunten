@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-z8ZIRyfzorRQ0sDOcShBt6qItEVarsuunyJhxE8zU3k=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-agmnnOCZdqpLhhE/6lKXE61y14Tsnve9ik9pvW9MCm4='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-v4nKgsX5k0HHT2urd0TNN9j9RZVGLfwloNxJNZjpX9E=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-kC3IdMoPqH2oXMtblMEn3YVOdUn1iXCeI9riqlNRVmw='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1040,6 +1040,7 @@
   #dlg .dlg-kop,#beheerdlg .dlg-kop{position:relative;padding-top:calc(30px + env(safe-area-inset-top,0px));border-bottom:none;touch-action:none;cursor:grab;align-items:center}
   /* De streep bovenaan: zo zie je dat het blad te trekken is. */
   .blad-greep{position:absolute;left:50%;top:10px;transform:translateX(-50%);width:44px;height:5px;border-radius:3px;background:var(--line-hard,#c7c7c7)}
+  .hoofdkop .blad-greep{display:none}      /* op het Plan sluit niets: de streep boven de titel heeft daar geen nut (de opdrachtgever, 17/10/2026) en zou naast de trekpijl een tweede greep lijken */
   /* De X: een gewone X zonder bol, op dezelfde hoogte als de titel, uiterst rechts in de kop. (de opdrachtgever, 13/10/2026: de hap en de bol mogen weg.) */
   /* Paginagroot (de opdrachtgever, 13/10/2026: "maak nu de schuifkaarten paginagroot. Locatie en X mogen groter"): het blad opent altijd op volle hoogte; de titel en de X zijn groter. */
   .hoofdkop{position:relative;padding-top:calc(30px + env(safe-area-inset-top,0px));border-bottom:none;min-height:calc(30px + env(safe-area-inset-top,0px) + 52px);flex:none}
@@ -1354,11 +1355,15 @@
   #plandlg.film{background:rgba(255,247,190,.16)}
   #plandlg.film .plan-vlak,#plandlg.film #plancanvas{background:transparent}
   #plandlg.film .plan-zoom{display:none}
+  /* Allemaal weg, enkel het calqueblad (de opdrachtgever, 17/10/2026): de balken bovenaan het vel en de knoppen van het hoofdscherm die erdoorheen schemeren staan er niet, tot we de functies van het calqueblad uitwerken. De spelden en het plan blijven zichtbaar. */
+  #plandlg.film>*:not(.plan-vlak):not(.pentrek-op){display:none !important}
+  html.film-open .vulling .kaartknop,html.film-open .kaartnoord,html.film-open .kaartschaal,html.film-open .schaalkeuze,html.film-open .kaartmeetbalk{visibility:hidden !important}
   #plandlg.film #planzones{display:none}      /* GRB en GRB oud staan niet op het vel (de opdrachtgever, 17/10/2026: "dit gaan we allemaal anders organiseren: doe de GRB en GRB oud weg"); de bladenbalk onderaan het hoofdscherm zegt al op welk blad je zit */
   #plandlg.film #pl-voet,#plandlg.film .plan-voet{display:none}      /* de balk onderaan het vel (de tekstregel, het aantal punten, Benoem) hoort er niet bij (de opdrachtgever, 17/10/2026: "dit deel gewoon weglaten") */
   #plandlg.film .pentrek-op{bottom:14px}
   #plandlg.film>div:not(.plan-vlak),#plandlg.film>nav,#plandlg.film>header{background:rgba(255,255,255,.55) !important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
   .pentrek.trekt{transition:none}
+  .pentrek:focus,.pentrek:focus-visible,.pentrek-op:focus,.pentrek-op:focus-visible{outline:0}
   .pentrek,.pentrek-op{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
   body:has(dialog[open]) .pentrek,html.fiche-open .pentrek,html.menu-open .pentrek{display:none}
   /* Het calqueblad heeft maar twee ingangen (de opdrachtgever, 17/10/2026: "ik wil enkel een calqueblad bij de pijl bovenaan en de stift"): de pijl bovenaan het Plan en de pen op de kaart. Tekenen staat dus niet meer in de balk van de notitie, en omhoog vegen op de notitie opent het calqueblad niet meer. */
@@ -4016,7 +4021,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v597";
+const VERSIE="v601";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -9708,8 +9713,8 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&menuGlas)menuEinde
     const hoog=()=>H;
     const zet=(y,animeer)=>{ dlg.style.transition=animeer?("transform "+SCHUIFTIJD+"ms cubic-bezier(.2,.8,.2,1)"):"none"; dlg.style.transform="translateY("+Math.round(y)+"px)"; };
     const schoon=()=>{ dlg.style.transition=""; dlg.style.transform=""; };
-    const dicht=()=>{ penAuto=false; penFilm=false; dlg.classList.remove("film"); try{ koppelStop(); }catch(e){} if(dlg.open)dlg.close(); schoon(); dlg.style.height=""; delete dlg.dataset.blad; };
-    dlg.addEventListener("close",()=>{ dlg.style.height=""; delete dlg.dataset.blad; penFilm=false; dlg.classList.remove("film"); try{ tekenKaartPunten(); }catch(e){} });      // het punt uit je tekening hoort meteen op de kaart eronder      // elke andere weg naar buiten (Escape, het kruis): terug naar het hele scherm
+    const dicht=()=>{ penAuto=false; penFilm=false; dlg.classList.remove("film"); document.documentElement.classList.remove("film-open"); try{ koppelStop(); }catch(e){} if(dlg.open)dlg.close(); schoon(); dlg.style.height=""; delete dlg.dataset.blad; };
+    dlg.addEventListener("close",()=>{ dlg.style.height=""; delete dlg.dataset.blad; penFilm=false; dlg.classList.remove("film"); document.documentElement.classList.remove("film-open"); try{ tekenKaartPunten(); }catch(e){} });      // het punt uit je tekening hoort meteen op de kaart eronder      // elke andere weg naar buiten (Escape, het kruis): terug naar het hele scherm
     /* Gelukt als je voorbij een vijfde van het scherm trok, of snel en een stuk (een vluchtige veeg). */
     const genoeg=(dy,ms)=>dy>hoog()*SCHUIFDEEL||(dy>PENTREKDREMPEL&&dy/Math.max(1,ms)>SCHUIFSNEL);
     const p=maakEl("button","pentrek"); p.id="pentrek"; p.type="button"; p.setAttribute("aria-label","Tekenen: trek omlaag"); p.title="Trek omlaag om te tekenen op het calqueblad";
@@ -9721,7 +9726,7 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&menuGlas)menuEinde
       penAuto=true;
       try{ window.getSelection().removeAllRanges(); }catch(e){}      // het slepen mag geen tekst op het volgende scherm blauw laten staan
       penFilm=!!kaartPlan;                                           // zonder plan op het hoofdscherm valt er niets onder het vel te zien: dan blijft het het gewone planvenster
-      dlg.classList.toggle("film",penFilm);
+      dlg.classList.toggle("film",penFilm); document.documentElement.classList.toggle("film-open",penFilm);
       H=meetBlad();                                                  // gemeten nu het hoofdscherm er nog staat
       dlg.dataset.blad=String(H); dlg.style.height=H+"px";
       zet(-hoog(),false);
@@ -14719,6 +14724,8 @@ function openFiche(tekst,opties){
    plaatsen die hem zetten is een plaats te veel: dan blijft de balk een keer weg. */
 function ficheOpen(aan){
   try{ document.documentElement.classList.toggle("fiche-open",!!aan); }catch(e){}
+  /* Sluit de notitie, dan is het hoofdscherm er weer, en het plan moet zich opnieuw meten: stond de notitie al open bij het laden (een herstelde notitie na een herstart), dan mat het plan een verborgen vlak en bleef er een hoek van over. */
+  if(!aan)setTimeout(()=>{ try{ window.dispatchEvent(new Event("resize")); }catch(e){} try{ tekenKaartPunten(); }catch(e){} },60);
   /* De pijl hangt aan deze stand: met het blad open is er altijd iets te bevestigen, ook zonder
      zin. Hier en niet bij het typen, want een speld zetten is geen aanslag -- zonder dit stond
      je na een tik op het plan met een blad zonder uitgang. */
