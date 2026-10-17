@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-41n+epJiONkmenzvTDFNyQGdq/NyGFR8HjA4P3tEVrM=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-H//hhKS7/d7CTqwYeR+WEjLuyaWb8tvPvyAUXQtphW8='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-71SuWwd6yxOtP4t0bm4LdPtSPx/7qIkdsKonLHye2cc=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-yQvq89v4Kh3FXa1luI3rgM8KbVkgJI2U2G4KFo9aUYg='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1945,6 +1945,7 @@
     padding:calc(12px + env(safe-area-inset-top,0px)) var(--marge) 12px;color:#fff;z-index:4;
     background:linear-gradient(#000c,#0000)}
   .snel-kop button{background:#ffffff22;color:#fff;border:1px solid var(--lijn-op);font-size:var(--tm);padding:9px 13px}
+  #sneldlg.voor-fiche #snel-plek,#sneldlg.voor-fiche .snel-teller{display:none}
   .snel-teller{margin-left:auto;font:600 var(--tk) ui-monospace,Menlo,monospace;color:#fff}
   .snel-voet{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;
     justify-content:center;gap:22px;padding:20px var(--marge) calc(24px + env(safe-area-inset-bottom,0px));
@@ -3972,7 +3973,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v570";
+const VERSIE="v572";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -12850,7 +12851,7 @@ document.getElementById("keet-klaar").onclick=async()=>{
    tussen elke opname. Een eigen sluiter op de videostroom heeft die stap niet. Lukt dat niet —
    geen toestemming, geen camera — dan valt het terug op de gewone fotoknop, mét die tussenstap,
    want een trage weg is nog altijd beter dan geen. */
-let snel={stroom:null,aantal:0,bezig:false,vanPlan:false};
+let snel={stroom:null,aantal:0,bezig:false,vanPlan:false,voorFiche:false};
 
 function snelPlekTekst(){
   if(!wachtendePlek)return "Plek";
@@ -12862,6 +12863,9 @@ async function openSnel(){
   const mislukt=document.getElementById("snel-mislukt");
   snel.aantal=0;
   document.getElementById("snel-teller").textContent="0";
+  /* Voor de notitie (de opdrachtgever, 17/10/2026: "als je op foto drukt wil ik een schermgrote fotosluiter"): hetzelfde schermvullende venster, maar één foto die bij deze notitie hoort en geen reeks punten. Geen teller, geen Plek; Klaar heet dan Annuleer. */
+  dlg.classList.toggle("voor-fiche",!!snel.voorFiche);
+  document.getElementById("snel-stop").textContent=snel.voorFiche?"Annuleer":"Klaar";
   /* "Plan", niet het lokaalnummer: de knop is de weg terug naar het plan, en niemand herkent "12,40" als knop. */
   document.getElementById("snel-plek").textContent=wachtendePlek?("Plan \u00b7 "+snelPlekTekst()):"Plan";
   mislukt.hidden=true;
@@ -12901,6 +12905,7 @@ function sluitSnel(){
   if(v)v.srcObject=null;
   const dlg=document.getElementById("sneldlg");
   if(dlg.open)dlg.close();
+  snel.voorFiche=false;
 }
 
 async function knip(){
@@ -12915,6 +12920,15 @@ async function knip(){
     c.getContext("2d").drawImage(v,0,0,c.width,c.height);
     const blob=await new Promise(r=>c.toBlob(r,"image/jpeg",.75));
     if(!blob)throw new Error("geen beeld");
+    if(snel.voorFiche){
+      /* Eén foto, voor de notitie die openstaat: ze wordt de wachtende foto, net als via de gewone fotoknop, en het venster sluit. */
+      const f=document.getElementById("snelflits");
+      f.classList.remove("aan"); void f.offsetWidth; f.classList.add("aan");
+      sluitSnel();
+      await fotoGenomen(blob);
+      snel.bezig=false;
+      return;
+    }
     const id="p"+Date.now()+"-"+snel.aantal;
     const rondgangId=zorgVoorRondgang();
     const punt=raakAan({id,zone:staat.zone,tekst:"",spreker:null,
@@ -12935,6 +12949,7 @@ async function knip(){
 
 document.getElementById("snel-knip").onclick=knip;
 document.getElementById("snel-stop").onclick=async()=>{
+  if(snel.voorFiche){ sluitSnel(); return; }       // annuleren: terug naar de notitie, zonder foto
   const n=snel.aantal, terug=snel.vanPlan;
   sluitSnel();
   await tekenLijst();
@@ -12948,10 +12963,10 @@ document.getElementById("snel-plek").onclick=()=>{
   sluitSnel();
   openPlan(wachtendePlek?wachtendePlek.zone:undefined);
 };
-document.getElementById("snelknop").onclick=()=>{ snel.vanPlan=false; openSnel(); };
+document.getElementById("snelknop").onclick=()=>{ snel.vanPlan=false; snel.voorFiche=false; openSnel(); };
 document.getElementById("pl-snel").onclick=()=>{
   /* De speld die je zette wordt de plek van de reeks (zoals bij "Lijst"); zonder speld blijft een eerdere plek staan. */
-  snel.vanPlan=true;
+  snel.vanPlan=true; snel.voorFiche=false;
   if(pl&&pl.pin)plekUitPin(); else document.getElementById("plandlg").close();
   openSnel();
 };
@@ -12983,6 +12998,8 @@ function verkleinFoto(file){return new Promise(res=>{
 function fotoDrukken(){
   if(wachtendeFoto && (!wachtendeBijlage || wachtendeBijlage.beeld!==false)){
     openTekenscherm(wachtendeFoto,"nieuw");
+  }else if(document.getElementById("fichedlg").open&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){
+    snel.vanPlan=false; snel.voorFiche=true; openSnel();      // op de notitie: de schermgrote sluiter
   }else{
     document.getElementById("foto").click();
   }
@@ -13565,6 +13582,15 @@ document.getElementById("scan").onchange=async e=>{
   if(document.getElementById("fichedlg").open)vulFiche();
   e.target.value="";
 };
+/* Een foto is genomen, langs welke weg ook: de toestelcamera of de schermgrote sluiter. Eén plaats waar ze de wachtende foto wordt. */
+async function fotoGenomen(blob){
+  wachtendeFoto=blob;
+  isScan=false; wachtendeBijlage=null;
+  merkFotoknop(); merkGo(); merkVakken();
+  if(document.getElementById("fichedlg").open)vulFiche();
+  const pf=document.getElementById("pl-foto");
+  if(pf)pf.classList.add("heeft");
+}
 document.getElementById("foto").onchange=async e=>{
   const f=e.target.files[0];if(!f)return;
   wachtendeFoto=await verkleinFoto(f);
@@ -13687,7 +13713,11 @@ document.getElementById("fiche-beschrijving").onclick=e=>{
 const VAKKEN={foto:"fiche-foto", scan:"fiche-scan", teken:"fiche-pen"};
 /* De vakken. Een tik zet uit of weer klein; het kruisje op het vak zet alleen dát vak klein --
    het kruisje van het blad sluit je punt, en die twee horen niet door elkaar te lopen. */
-function vakTik(welk){ return ()=>zetGroot(fiche.groot===welk?null:welk); }
+function vakTik(welk){
+  /* Foto zonder foto: meteen de schermgrote sluiter, geen tussenvak met uitleg (de opdrachtgever, 17/10/2026). Staat er al een foto, dan opent het vak om ze te bekijken en aan te duiden. */
+  if(welk==="foto"&&!wachtendeFoto&&fiche.groot!=="foto")return ()=>fotoDrukken();
+  return ()=>zetGroot(fiche.groot===welk?null:welk);
+}
 Object.keys(VAKKEN).forEach(welk=>{
   const el=document.getElementById(VAKKEN[welk]);
   if(!el)return;
