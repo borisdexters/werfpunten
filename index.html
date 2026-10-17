@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-TRJg6maKdHJ2BDwiNUX1ZDpL7GhdUZ1LVfu8paWCngY=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-ucw8Xkcw4Dzg5aJIN55dUp9V72tzFWSqJx4eNlX712s='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-3n3N+5zuSxagw05Pre1lTSvHjgsNOkufVUHfhI1/5cE=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-D5KMhiKPQonl8XlUpUe3LYALgocviwHFS/Pj3Ug1S7U='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1384,6 +1384,10 @@
   .pentrek svg,.pentrek-op svg{display:none}
   /* Een gevulde zwarte driehoek (de opdrachtgever, 17/10/2026: "ik wil zo een pijl", met een zwarte driehoek omlaag als voorbeeld): omlaag bovenaan het Plan, omhoog onderaan het vel. */
   .pentrek::after,.pentrek-op::after{content:"";position:absolute;left:50%;top:50%;width:22px;height:18px;margin:-9px 0 0 -11px;background:var(--ink)}
+  /* De driehoeken ademen heel lichtjes (de opdrachtgever, 17/10/2026: "heel lichtjes laten ademen, vergroten en verkleinen, subtiel"): 10 % groter en weer terug in 3,6 seconden, met de aparte eigenschap `scale` zodat de draaiing van de menupijl er niet door verandert. Wie "beweging beperken" aan heeft, ziet een stilstaande pijl. */
+  @keyframes pijlAdem{0%,100%{scale:1}50%{scale:1.1}}
+  .pentrek::after,.pentrek-op::after,.menustreep::after{animation:pijlAdem 3.6s ease-in-out infinite}
+  @media (prefers-reduced-motion:reduce){ .pentrek::after,.pentrek-op::after,.menustreep::after{animation:none} }
   .pentrek::after{clip-path:polygon(0 0,100% 0,50% 100%)}
   .pentrek-op::after{clip-path:polygon(50% 0,100% 100%,0 100%)}
   .pentrek:focus,.pentrek:focus-visible,.pentrek-op:focus,.pentrek-op:focus-visible{outline:0}
@@ -4044,7 +4048,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v628";
+const VERSIE="v629";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
