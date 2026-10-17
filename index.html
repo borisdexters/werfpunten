@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-b013UOvBve2NyDn6dLkWyOQfQDwBoEEaYJKUTikghng=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-O874xsKWrolEgCgrHIRq0YX8uN7c4xk2GbyJF8EhQKU='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-bORot9cdGjwilabuIet8D2w6sQw+Ww55ZI8ONlfB/V8=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-Cgk1X6i8LoxgRDCcbD9k/gIXyfwAgrWbSew/DIi7Sls='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -241,11 +241,14 @@
   /* de noordpijl en de schaalbalk (de opdrachtgever, 17/10/2026): dun, zwart, met een witte rand zodat ze op elk beeld te lezen zijn */
   .kaartnoord{position:absolute;left:var(--px);top:var(--py);width:28px;height:44px;pointer-events:none;z-index:4;cursor:pointer}
   /* het meetgereedschap (de opdrachtgever, 17/10/2026): een knop onder de schaalbalk, rechts; lijnstukken en vlakken */
-  .kaartknop.kaartmeet{top:64px;right:16px;width:38px;height:38px;min-height:0;padding:0;display:inline-flex;align-items:center;justify-content:center;color:var(--ink)}
+  /* de A: de tekst op het plan groter, in drie stappen (de opdrachtgever, 17/10/2026); onder de schaalbalk, dan de liniaal */
+  .kaartknop.kaarttekst{top:64px;right:16px;width:38px;height:38px;min-height:0;padding:0;display:inline-flex;align-items:center;justify-content:center;color:var(--ink);font:600 18px Inter,Helvetica,Arial,sans-serif}
+  .kaartknop.kaarttekst[hidden]{display:none}
+  .kaartknop.kaartmeet{top:110px;right:16px;width:38px;height:38px;min-height:0;padding:0;display:inline-flex;align-items:center;justify-content:center;color:var(--ink)}
   .kaartknop.kaartmeet[hidden]{display:none}
   .kaartknop.kaartmeet.aan{background:var(--ink);color:var(--surface);border-color:var(--ink)}
   /* onder het liniaal-icoon, rechts, onder elkaar; de tekst blijft horizontaal (de opdrachtgever, 17/10/2026) */
-  .kaartmeetbalk{position:absolute;top:110px;right:16px;z-index:3;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+  .kaartmeetbalk{position:absolute;top:156px;right:16px;z-index:3;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
   .kaartmeetbalk[hidden]{display:none}
   .meetrij{display:flex;flex-direction:column;gap:6px}
   .meetrij .kaartknop{position:static;width:38px;height:38px;min-height:0;min-width:0;padding:0;display:inline-flex;align-items:center;justify-content:center;color:var(--ink)}      /* vierkante icoontjes, even groot als het liniaal-icoon erboven */
@@ -292,8 +295,9 @@
     border-color:#8a6d00;color:#1b1500}
   #vulling.met-terug #kaartoud{top:50px}
   /* Open punten dichtbij je plek: linksonder op de kaart, waar je duim ligt als je loopt. */
-  .kaartknop.kaartdichtbij{top:auto;bottom:10px;right:auto;left:10px}
-  .kaartknop.kaartperceel{top:auto;bottom:60px;right:10px}
+  /* boven de menubalk, die over de kaart ligt (de opdrachtgever, 17/10/2026: "onderaan staat iets onleesbaar"): de knop "Ander perceel?" stond half achter de balk */
+  .kaartknop.kaartdichtbij{top:auto;bottom:12px;right:auto;left:10px}
+  .kaartknop.kaartperceel{top:auto;bottom:12px;right:10px}
   .kaartknop.kaartverzet{background:repeating-linear-gradient(135deg,#ffd84a 0 7px,#f4c400 7px 14px);border-color:#8a6d00;color:#1b1500;
     right:auto;left:10px}
   /* Jij op het plan. Blauw als de speld van een nieuw punt in het planvenster, met een ring ter grootte van je onzekerheid:
@@ -323,6 +327,14 @@
   @media (min-width:700px){
     .kaart{left:calc((100vw - 640px) / 2);right:calc((100vw - 640px) / 2)}
   }
+  /* DE BALK ONDERAAN (de opdrachtgever, 17/10/2026: "heel de balk proberen onderaan te plaatsen"): de werf (adres en kadaster), het verslagnummer en de datum, en daaronder de bladen, staan vlak boven het menu in plaats van bovenaan. De titel Plan blijft bovenaan; het plan krijgt de ruimte ertussen. Alleen de volgorde en de ruimte onder de wrap veranderen, niet wat de balk doet. */
+  .wrap{padding-bottom:calc(var(--streep-b) + 63px)}      /* de menubalk is 62 px hoog en ligt vast onderaan, plus de streep en een haarlijn */
+  .wrap>*{order:2}
+  .wrap>.hoofdkop{order:0}
+  .wrap>.vulling{order:1}
+  .wrap>.uitrol,.wrap>.zoekrij{order:3}
+  .wrap>.zones{order:4}
+  .wrap>header{order:5;position:relative;top:auto;padding-top:0}
   /* De ruimte tussen de zonerij en het paneel: hier is niets, en daarom zie je het plan. */
   /* De vingers op dit gat horen bij het plan eronder, niet bij de pagina: zonder dit zoomt
      de browser het hele scherm, menu en balken inbegrepen. */
@@ -405,6 +417,9 @@
      als tegel naast een horizontale fasetegel hield ze 90 px over; als losse titel naast de
      verticale fase 174 px. */
   #projectknop{background:none;padding-left:8px;font-weight:600;letter-spacing:.02em}
+  #projectknop.met-adres{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;line-height:1.2;min-width:0;overflow:hidden;text-align:left}
+  #projectknop .pk-adres{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #projectknop .pk-kad{display:block;font-size:.78em;font-weight:400;color:var(--ink-soft);white-space:nowrap}
   /* Niet `leeg`: die klasse bestaat al in deze app met padding:32px en gecentreerde tekst, en
      ze won van .kcel omdat ze later in het blok staat. Gemeten op 28/09/2026 in de open stand:
      de dossiercel was 88 px hoog en rekte de hele eerste rij mee op. Zelfde les als bij de
@@ -3046,6 +3061,7 @@
     title="Het verzetten van een punt stoppen" hidden>Annuleer verzetten</button><button
     type="button" class="kaartknop kaartperceel" id="kaartperceel"
     title="De app koos dit perceel zelf; tik als het niet klopt" hidden>Ander perceel?</button><button
+    type="button" class="kaartknop kaarttekst" id="kaarttekst" title="Tekst op het plan groter of kleiner" aria-label="Tekst groter" hidden>A</button><button
     type="button" class="kaartknop kaartmeet" id="kaartmeet" title="Meten: lijnstukken en oppervlakte" aria-label="Meten" hidden><svg
     viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"
     aria-hidden="true"><path d="M3.5 16.5 16.5 3.5l4 4-13 13z"/><path d="M7 13l2 2M10 10l1.6 1.6M13 7l2 2"/></svg></button><div
@@ -3872,7 +3888,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v543";
+const VERSIE="v547";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -6910,10 +6926,22 @@ function merkProject(){
   const p=projectNu();
   const k=document.getElementById("projectknop");
   if(k){
-    k.textContent=p.naam;
-    k.title=projecten.length>1
+    /* De opdrachtgever, 17/10/2026: "hier moet adres en afd/sn/nr": staat er een locatie bewaard, dan toont de cel het adres en eronder afdeling / sectie / nummer van het perceel. Zonder locatie staat er de naam van de werf. De naam blijft in de hulptekst en de cel doet nog altijd wat ze deed: de werf wisselen. */
+    let sn=null; try{ const ld=leesLocatie(); sn=ld&&ld.snel||null; }catch(e){}
+    const kad=sn&&sn.kad?[sn.kad.afd,sn.kad.sectie,sn.kad.nr].filter(Boolean).join(" / "):"";
+    if(sn&&(sn.adres||kad)){
+      k.textContent="";
+      const a1=document.createElement("span"); a1.className="pk-adres"; a1.textContent=sn.adres||p.naam;
+      k.appendChild(a1);
+      if(kad){ const a2=document.createElement("span"); a2.className="pk-kad"; a2.textContent=kad; k.appendChild(a2); }
+      k.classList.add("met-adres");
+    }else{
+      k.textContent=p.naam;
+      k.classList.remove("met-adres");
+    }
+    k.title=(sn&&(sn.adres||kad)?p.naam+" \u2014 ":"")+(projecten.length>1
       ? "Werf wisselen — "+projecten.length+" op dit toestel"
-      : "Werf benoemen, of er een tweede bijzetten";
+      : "Werf benoemen, of er een tweede bijzetten");
   }
   /* Het dossiernummer staat naast de naam, in de smalle cel. Het is van het kantoor en niet
      van de app, dus de app verzint er geen: staat het er niet, dan staat er een streep en
@@ -17017,6 +17045,23 @@ function grbLijnen(features,houd){
   });
   return uit;
 }
+/* ---- de stijl van het GRB, één standaard ----
+   de opdrachtgever, 17/10/2026, na een reeks proeven op het toestel: "kan dit gestandaardiseerd voor de app?" Elke dikte, tint en maat van de GRB-tekening staat hier, op één plek; maakOmtrekplan leest alleen nog dit. Eenheid: één beeldeenheid is een centimeter op de grond.
+
+   De volgorde is de afspraak, en een proef bewaakt haar: wegen en randen <= percelen van de buren < bebouwing < het GRB van je eigen perceel.
+   - percelen van de buren: een dunne lijn
+   - wegen, rijbaanrand (stippellijn), boordsteen: niet dikker dan de buren
+   - bebouwing: iets dikker, met een hele fijne dotarcering
+   - je eigen perceel: de dikste lijn
+   - geen vulling in kleur of grijs; de wegenis heeft geen achtergrond
+   - de straatnamen: horizontaal langs de weg, met een witte rand */
+const GRBSTIJL={
+  inkt:"#161a1e",
+  buren:2, weg:2, wegrand:2, boordsteen:2, gebouw:5, eigen:20,
+  wegrandStreep:"26 20",
+  dot:{raster:36, straal:2.3},
+  naam:{grootte:120, letterafstand:6, rand:36, maten:[1,1.7,2.6]}      // de straatnamen in drie maten: normaal, groter, nog groter
+};
 /* De randen van de gebouwen, zonder de stukken die op een perceelsgrens liggen. `gebouwen` en `percelen` zijn lijsten van lijsten ringen (Lambert-meters); `tol` in meter. Geeft het SVG-pad terug, of "" als er niets overblijft. */
 function grbGebouwLijnen(gebouwen,percelen,tol,naarXY){
   const grenzen=[];
@@ -17107,41 +17152,41 @@ async function maakOmtrekplan(hier,zone,gekozen,toegestaanLeeg){
   const pad=f=>grbRingen(f).map(r=>"M"+r.map(p=>naarBeeldXY(p).join(",")).join("L")+"Z").join("");
 
   /* De opdrachtgever, 17/10/2026: "GRB uitwerken: de buren een zwarte dunne lijn; de wegen mee intekenen, nog dunner, met de aangrenzende straatnaam erop; geen grijze of zwarte invullingen; het perceel mag een dikkere zwarte lijn krijgen." Eenheid: één beeldeenheid is een centimeter. */
-  const ZWART="#161a1e";
+  const ZWART=GRBSTIJL.inkt, ST=GRBSTIJL;
   const stuk=[];
   stuk.push('<rect width="'+bw+'" height="'+bh+'" fill="#fff"/>');
   /* De bebouwing in een hele fijne dotarcering (de opdrachtgever, 17/10/2026): een raster van kleine stippen, om de 36 cm, zonder vulkleur, zodat bebouwd en onbebouwd te onderscheiden zijn en de lijnen leesbaar blijven. */
-  stuk.push('<defs><pattern id="dot" width="36" height="36" patternUnits="userSpaceOnUse"><circle cx="18" cy="18" r="2.3" fill="'+ZWART+'"/></pattern></defs>');
+  stuk.push('<defs><pattern id="dot" width="'+ST.dot.raster+'" height="'+ST.dot.raster+'" patternUnits="userSpaceOnUse"><circle cx="'+(ST.dot.raster/2)+'" cy="'+(ST.dot.raster/2)+'" r="'+ST.dot.straal+'" fill="'+ZWART+'"/></pattern></defs>');
   /* De wegenis heeft geen achtergrond meer (de opdrachtgever, 17/10/2026): alleen de lijnen van de wegen, de rijbaanrand en de boordsteen, zonder vlak. */
   const dotVlak=gebouwen.map(f=>pad(f)).join("");
   if(dotVlak)stuk.push('<path d="'+dotVlak+'" fill="url(#dot)" stroke="none" fill-rule="evenodd"/>');
   const wegen=locWegen(wegsegmenten,300).filter(w=>w.l&&w.l.length>=2);
-  wegen.forEach(w=>stuk.push('<path d="M'+w.l.map(q=>naarBeeldXY(q).join(",")).join("L")+'" fill="none" stroke="'+ZWART+'" stroke-width="2" stroke-linejoin="round"/>'));
+  wegen.forEach(w=>stuk.push('<path d="M'+w.l.map(q=>naarBeeldXY(q).join(",")).join("L")+'" fill="none" stroke="'+ZWART+'" stroke-width="'+ST.weg+'" stroke-linejoin="round"/>'));
   /* Het voetpad (de opdrachtgever, 17/10/2026: "kan je ook het voetpad tekenen?"). Het GRB kent het voetpad niet als vlak: het is de strook tussen de rand van de rijbaan of de boordsteen en de perceelsgrens. Wat het wel geeft zijn die randen: de rand van de rijbaan en de grens van de zone voor zwakke weggebruikers (stippellijn), en de verhoogde boordsteen (dunne lijn). Daartussen leest het voetpad. */
-  grbLijnen(wegranden,()=>true).forEach(l=>stuk.push('<path d="M'+l.map(q=>naarBeeldXY(q).join(",")).join("L")+'" fill="none" stroke="'+ZWART+'" stroke-width="2" stroke-dasharray="26 20"/>'));
-  grbLijnen(boordstenen,p=>/boord|kant/i.test(String(p.LBLTYPE||""))).forEach(l=>stuk.push('<path d="M'+l.map(q=>naarBeeldXY(q).join(",")).join("L")+'" fill="none" stroke="'+ZWART+'" stroke-width="2"/>'));
+  grbLijnen(wegranden,()=>true).forEach(l=>stuk.push('<path d="M'+l.map(q=>naarBeeldXY(q).join(",")).join("L")+'" fill="none" stroke="'+ZWART+'" stroke-width="'+ST.wegrand+'" stroke-dasharray="'+ST.wegrandStreep+'"/>'));
+  grbLijnen(boordstenen,p=>/boord|kant/i.test(String(p.LBLTYPE||""))).forEach(l=>stuk.push('<path d="M'+l.map(q=>naarBeeldXY(q).join(",")).join("L")+'" fill="none" stroke="'+ZWART+'" stroke-width="'+ST.boordsteen+'"/>'));
   /* De gebouwen blijven te zien (de opdrachtgever, 17/10/2026: "ik zie nu enkel de percelen, hoe kan ik de gebouwen zien?"). In een dichte straat valt het gebouw samen met het perceel, en dan waren alle gebouwlijnen als dubbel weggelaten. Nu is het omgekeerd: het gebouw heeft een stevigere lijn, en de perceelsgrens die er al op ligt (binnen 15 cm) wordt niet nog eens getekend. Zo is er geen dubbele lijn en zie je wat gebouw is en wat perceel. */
   const buren=percelen.filter(f=>f!==mijn&&!(mijn&&mijn.id&&f.id===mijn.id));
   const burenPad=grbGebouwLijnen(buren.map(f=>grbRingen(f)),gebouwen.map(f=>grbRingen(f)),0.15,naarBeeldXY);
-  if(burenPad)stuk.push('<path d="'+burenPad+'" fill="none" stroke="'+ZWART+'" stroke-width="2"/>');
+  if(burenPad)stuk.push('<path d="'+burenPad+'" fill="none" stroke="'+ZWART+'" stroke-width="'+ST.buren+'"/>');
   const gebouwPad=grbGebouwLijnen(gebouwen.map(f=>grbRingen(f)),[],0.15,naarBeeldXY);
-  if(gebouwPad)stuk.push('<path d="'+gebouwPad+'" fill="none" stroke="'+ZWART+'" stroke-width="5" stroke-linejoin="round"/>');
+  if(gebouwPad)stuk.push('<path d="'+gebouwPad+'" fill="none" stroke="'+ZWART+'" stroke-width="'+ST.gebouw+'" stroke-linejoin="round"/>');
   /* De dikte loopt op (de opdrachtgever, 17/10/2026): percelen dun (2), bebouwing iets dikker (5), het GRB van je eigen perceel nog dikker (20). */
-  if(mijn)stuk.push('<path d="'+pad(mijn)+'" fill="none" stroke="'+ZWART+'" stroke-width="20"/>');
-  grbStraatLabels(wegen,mijn?grbRingen(mijn)[0]:null,x,y).forEach(t=>{
-    const b=naarBeeldXY([t.x,t.y]);
-    stuk.push('<text x="'+b[0]+'" y="'+b[1]+'" transform="rotate('+t.hoek.toFixed(1)+' '+b[0]+' '+b[1]+')" text-anchor="middle" dominant-baseline="central" '+
-              'font-family="Inter,Helvetica,Arial,sans-serif" font-size="120" font-weight="500" letter-spacing="6" fill="'+ZWART+'" stroke="#fff" stroke-width="36" paint-order="stroke" stroke-linejoin="round">'+
-              veilig(t.n)+'</text>');
-  });
+  if(mijn)stuk.push('<path d="'+pad(mijn)+'" fill="none" stroke="'+ZWART+'" stroke-width="'+ST.eigen+'"/>');
+  /* De straatnamen in drie maten (de opdrachtgever, 17/10/2026: "onder de schaalbalk een A om de tekst te vergroten, zoals de straatnamen"). De tekst zit in het beeld zelf, en alles wat het beeld leest (de kaart, het planvenster, het verslag) moet dezelfde maat tonen; daarom draagt het plan drie uitvoeringen van hetzelfde beeld, en kiest de A welke `beeld` is. */
+  const labels=grbStraatLabels(wegen,mijn?grbRingen(mijn)[0]:null,x,y).map(t=>({t,b:naarBeeldXY([t.x,t.y])}));
+  const namenSvg=f=>labels.map(({t,b})=>'<text x="'+b[0]+'" y="'+b[1]+'" transform="rotate('+t.hoek.toFixed(1)+' '+b[0]+' '+b[1]+')" text-anchor="middle" dominant-baseline="central" '+
+              'font-family="Inter,Helvetica,Arial,sans-serif" font-size="'+Math.round(ST.naam.grootte*f)+'" font-weight="500" letter-spacing="'+Math.round(ST.naam.letterafstand*f)+'" fill="'+ZWART+'" stroke="#fff" stroke-width="'+Math.round(ST.naam.rand*f)+'" paint-order="stroke" stroke-linejoin="round">'+
+              veilig(t.t?t.t.n:t.n)+'</text>').join("");
 
   /* De eigen maat van de tekening mag niet reusachtig zijn. Eén eenheid is een centimeter, dus 85 m is 8500 breed en het
      geheel 75 miljoen pixels. Safari op iPhone en iPad geeft zo'n SVG als beeld soms niet of blanco weer (de opdrachtgever, 08/10/2026:
      "omtrek geladen, maar ik zie niets"). viewBox blijft de volle maat, dus alle coördinaten van het plan blijven kloppen;
      alleen de maat die de browser als uitgangspunt neemt, wordt begrensd. De tekening blijft scherp: het is vector. */
   const GRBBEELDMAX=3072, bk=Math.min(1,GRBBEELDMAX/Math.max(bw,bh));
-  const svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+Math.max(1,Math.round(bw*bk))+'" height="'+Math.max(1,Math.round(bh*bk))+'" '+
-            'viewBox="0 0 '+bw+' '+bh+'">'+stuk.join("")+'</svg>';
+  const basis=stuk.join("");
+  const beeldUrl=f=>"data:image/svg+xml;charset=utf-8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="'+Math.max(1,Math.round(bw*bk))+'" height="'+Math.max(1,Math.round(bh*bk))+'" '+
+            'viewBox="0 0 '+bw+' '+bh+'">'+basis+namenSvg(f)+'</svg>');
   /* De vakken (A1, B3...) en de maat horen bij het perceel en zijn rand, niet bij de wijde omgeving: anders worden de vakken van 5 m er van 25 m. */
   const sB=sMaxX-sMinX, sH=sMaxY-sMinY;
   const vak=grbVakmaat(sB,sH);
@@ -17157,7 +17202,7 @@ async function maakOmtrekplan(hier,zone,gekozen,toegestaanLeeg){
     ...(kaderHoekWaarde!==null?{kader:{hoek:kaderHoekWaarde}}:{}),
     bron:{grb:{lagen:["GRB:ADP","GRB:GBG"], opgehaald:vandaag(), zicht,
                plek:{x:+x.toFixed(1), y:+y.toFixed(1)}}},       // Lambert-meters van waar je stond; zie kopieerGrbNaar
-    beeld:"data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg),
+    beeld:beeldUrl(ST.naam.maten[0]), beeldVarianten:ST.naam.maten.map(beeldUrl), tekstmaat:0,
     breedte:bw, hoogte:bh,
     georef:{epsg:31370, eenheid_m:+(1/GRBCM).toFixed(4),
             x:+minX.toFixed(3), y:+maxY.toFixed(3), noord:0},
@@ -20326,7 +20371,24 @@ function meetUitZet(){
   else
     uit.textContent=d.punten.length>1?("Totaal "+meetFmt(m.lengte)+" m"):"Tik het volgende punt";
 }
+function tekstKnopZet(){
+  const kn=document.getElementById("kaarttekst");
+  if(!kn)return;
+  kn.hidden=!(kaartPlan&&Array.isArray(kaartPlan.beeldVarianten)&&kaartPlan.beeldVarianten.length>1);
+}
+/* De volgende tekstmaat: normaal, groter, nog groter, en weer normaal. Het beeld wisselt ter plekke (zoom en draai blijven), en de keuze blijft bij het plan. */
+function tekstVolgende(){
+  const p=kaartPlan;
+  if(!p||!Array.isArray(p.beeldVarianten)||p.beeldVarianten.length<2)return false;
+  const i=((p.tekstmaat||0)+1)%p.beeldVarianten.length;
+  p.tekstmaat=i; p.beeld=p.beeldVarianten[i];
+  const doos=document.getElementById("kaart"), img=doos&&doos.querySelector?doos.querySelector("img"):null;
+  if(img)img.src=laagBeeld(p,laagVan(staat,p))||p.beeld;
+  kaartBewaarDraai();
+  return true;
+}
 function meetKnopZet(){
+  try{ tekstKnopZet(); }catch(e){}
   const kn=document.getElementById("kaartmeet"), balk=document.getElementById("kaartmeetbalk");
   if(!kn)return;
   const kan=!!(kaartPlan&&kaartMeterPerPixel(kaartPlan,{width:1,height:1},{schaal:1}));
@@ -20380,6 +20442,7 @@ function meetPrik(sx,sy){
 }
 function meetBedrading(){
   const zet=(id,fn)=>{ const e=document.getElementById(id); if(e)e.onclick=ev=>{ if(ev&&ev.stopPropagation)ev.stopPropagation(); fn(); tekenKaartPunten(); meetKnopZet(); }; };
+  const ta=document.getElementById("kaarttekst"); if(ta)ta.onclick=ev=>{ if(ev&&ev.stopPropagation)ev.stopPropagation(); tekstVolgende(); };
   zet("kaartmeet",()=>{ kaartMeet.aan=!kaartMeet.aan; });
   zet("meetlijn",()=>{ meetData().modus="lijn"; });
   zet("meetvlak",()=>{ meetData().modus="vlak"; });
@@ -25502,7 +25565,7 @@ function locAantal(r){ return (r&&!r.fout)?r.regels.length:0; }
 function leesLocatie(){
   try{ const r=localStorage.getItem(pk(LOCSLEUTEL)); return r?JSON.parse(r):null; }catch(e){ return null; }
 }
-function bewaarLocatie(d){ bewaarVeilig(pk(LOCSLEUTEL),JSON.stringify(d),"de gegevens van deze locatie"); }
+function bewaarLocatie(d){ bewaarVeilig(pk(LOCSLEUTEL),JSON.stringify(d),"de gegevens van deze locatie"); try{ merkProject(); }catch(e){} }
 /* Pas halen als er niets is, de plek meer dan 150 m verschilt, of het ouder is dan een dag. */
 function locMoetOpnieuw(oud,hier,nu){
   if(!oud||!oud.tijd)return true;
