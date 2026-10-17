@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-ku4oSA+WgiyYzfRPMB2WHijJZcLlCqs3NH18zIkV0NQ=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-mMGbH1F8pKgOqrFGOExA2uJcMNzl4uHAc1ItyEJg4WE='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-TtrSPsWcorl1z29+GnKO+3YxX0IyJBVGckjzSX10Msw=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-/nvOouia0ZpqwHciUu1mx/XKw4rj0M0BjB0Qe4I5kuk='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -360,7 +360,7 @@
   .wrap>.vulling{order:1}
   .wrap>.uitrol,.wrap>.zoekrij{order:3}
   .wrap>.zones{order:4}
-  .wrap>header{order:5;position:relative;top:auto;padding-top:0}
+  .wrap>header{order:5;position:relative;top:auto;padding-top:0;border-bottom:0}      /* de lijn onder het adres is de rand boven het menu (de opdrachtgever, 17/10/2026: "deze lijn moet even dik als alle andere"): een tweede haarlijn ernaast maakte er een dikke van */
   /* Over de volle breedte van het scherm, links en rechts (de opdrachtgever, 17/10/2026): op een breder scherm dan de kolom van 640 px loopt de balk door tot de randen, en de inhoud blijft in de kolom staan. Op een telefoon is het hetzelfde als eerst. Met een haarlijn tussen de bladen en de rij met het adres. */
   .wrap>header,.wrap>.zones{margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw)}
   .wrap>header{padding-left:calc(50vw - 50%);padding-right:calc(50vw - 50%)}
@@ -1341,7 +1341,10 @@
   .pentrek,.pentrek-op{position:fixed;top:calc(env(safe-area-inset-top,0px) + 37px);left:50%;transform:translateX(-50%) translateY(var(--trek,0px));z-index:4;width:64px;height:38px;border:0;border-radius:19px;padding:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 1px 6px rgba(0,0,0,.12);color:var(--ink);touch-action:none;cursor:pointer}
   .pentrek svg,.pentrek-op svg{width:26px;height:26px}
   /* Terug omhoog (de opdrachtgever, 17/10/2026: "ik wil ook terug naar boven kunnen schuiven"): het calqueblad ging omlaag, dus gaat het ook weer omhoog. Boven in het planvenster staan al knoppen, dus de pijl omhoog staat onderaan, vlak boven de onderste balk; omhoog trekken of tikken schuift het blad weg. */
-  .pentrek-op{top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 78px);transform:translateX(-50%) translateY(calc(-1 * var(--trek,0px)));z-index:7}
+  .pentrek-op{position:absolute;top:auto;bottom:72px;transform:translateX(-50%) translateY(calc(-1 * var(--trek,0px)));z-index:7}
+  /* Het vel rust op de lijn van de onderste balk: een dunne rand en een zachte schaduw, en de achtergrond erachter wordt niet donker, want de balk eronder blijft zichtbaar. */
+  #plandlg[style*="height"]{border-bottom:var(--haar) solid var(--line);box-shadow:0 3px 14px rgba(0,0,0,.16);border-radius:0 0 14px 14px}
+  #plandlg::backdrop{background:transparent}
   .pentrek.trekt{transition:none}
   .pentrek,.pentrek-op{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
   body:has(dialog[open]) .pentrek,html.fiche-open .pentrek,html.menu-open .pentrek{display:none}
@@ -3995,7 +3998,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v585";
+const VERSIE="v588";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -9677,10 +9680,18 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&menuGlas)menuEinde
   { const b=menubalk(false); b.id="menubalk"; document.body.appendChild(b); }
   /* HET SCHUIVEN IS FYSIEK (de opdrachtgever, 17/10/2026: "het schuiven moet fysiek zichtbaar worden"): het calqueblad is het planvenster zelf, en dat hangt aan je vinger. Trek je de pijl bovenaan omlaag, dan komt het blad van boven in beeld precies zoveel als jij trekt; laat je los voorbij een vijfde van het scherm, dan zakt het verder open, anders veert het terug omhoog en gaat dicht. Met de pijl onderaan in het blad gaat het omgekeerd. */
   { const dlg=document.getElementById("plandlg");
-    const hoog=()=>Math.max(1,window.innerHeight||800);
+    /* Het calqueblad komt tot tegen de onderste balk (de opdrachtgever, 17/10/2026: "het calqueblad wordt uitgetrokken tot tegen de onderkant, tegen de lijn waar GRB staat, zo weten we tijdens het tekenen op welk blad we bezig zijn"): de bladen, het adres en het menu blijven zichtbaar, en de bovenrand van die balk is de onderrand van het vel. */
+    let H=Math.max(1,window.innerHeight||800);
+    const meetBlad=()=>{
+      const z=document.querySelector(".wrap>.zones");
+      const t=z&&z.getBoundingClientRect?Math.round(z.getBoundingClientRect().top):0;
+      return (t>120&&t<(window.innerHeight||800))?t:Math.max(1,window.innerHeight||800);
+    };
+    const hoog=()=>H;
     const zet=(y,animeer)=>{ dlg.style.transition=animeer?("transform "+SCHUIFTIJD+"ms cubic-bezier(.2,.8,.2,1)"):"none"; dlg.style.transform="translateY("+Math.round(y)+"px)"; };
     const schoon=()=>{ dlg.style.transition=""; dlg.style.transform=""; };
-    const dicht=()=>{ penAuto=false; try{ koppelStop(); }catch(e){} if(dlg.open)dlg.close(); schoon(); };
+    const dicht=()=>{ penAuto=false; try{ koppelStop(); }catch(e){} if(dlg.open)dlg.close(); schoon(); dlg.style.height=""; delete dlg.dataset.blad; };
+    dlg.addEventListener("close",()=>{ dlg.style.height=""; delete dlg.dataset.blad; });      // elke andere weg naar buiten (Escape, het kruis): terug naar het hele scherm
     /* Gelukt als je voorbij een vijfde van het scherm trok, of snel en een stuk (een vluchtige veeg). */
     const genoeg=(dy,ms)=>dy>hoog()*SCHUIFDEEL||(dy>PENTREKDREMPEL&&dy/Math.max(1,ms)>SCHUIFSNEL);
     const p=maakEl("button","pentrek"); p.id="pentrek"; p.type="button"; p.setAttribute("aria-label","Tekenen: trek omlaag"); p.title="Trek omlaag om te tekenen op het calqueblad";
@@ -9691,6 +9702,8 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&menuGlas)menuEinde
       if(opent)return opent;
       penAuto=true;
       try{ window.getSelection().removeAllRanges(); }catch(e){}      // het slepen mag geen tekst op het volgende scherm blauw laten staan
+      H=meetBlad();                                                  // gemeten nu het hoofdscherm er nog staat
+      dlg.dataset.blad=String(H); dlg.style.height=H+"px";
       zet(-hoog(),false);
       opent=(async()=>{
         await penNaarPlan();
@@ -22669,7 +22682,8 @@ function pasVenstersAan(){
     const d=document.getElementById(id);
     if(!d)return;
     if(!d.open){ d.style.height=""; d.style.transform=""; return; }
-    d.style.height=Math.round(vv.height)+"px";
+    /* Het calqueblad dat je omlaag trok blijft tot de lijn boven de bladen: zijn maat staat in data-blad en wint van de volle hoogte. */
+    d.style.height=(d.dataset.blad?Math.min(+d.dataset.blad,Math.round(vv.height)):Math.round(vv.height))+"px";
     // Verschuift het zichtbare deel — bij zoomen of scrollen — dan schuift het venster mee,
     // zodat de balk bovenaan blijft waar je hem kunt zien.
     const dx=Math.round(vv.offsetLeft), dy=Math.round(vv.offsetTop);
