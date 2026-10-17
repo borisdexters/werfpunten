@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-x1GPO6s51qMxewmCyCdpNYW+1gJn7lEE6obBD3+aEdE=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-H//hhKS7/d7CTqwYeR+WEjLuyaWb8tvPvyAUXQtphW8='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-41n+epJiONkmenzvTDFNyQGdq/NyGFR8HjA4P3tEVrM=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-H//hhKS7/d7CTqwYeR+WEjLuyaWb8tvPvyAUXQtphW8='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3972,7 +3972,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v569";
+const VERSIE="v570";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -8555,6 +8555,13 @@ function hoofdVan(woord){
    verkeerde. Op Deel 5 vonden uitvullaag, buitenraam en binnenraam niets, en isolatieplaat een
    te betegelen plaat. Nu vinden ze allemaal hun artikel, en de zinnenreeks verandert op geen van
    beide. Eén bekende ruis: `schuur` wordt `schur` en vindt *opschuren*. */
+/* Het enkelvoud, als laatste redmiddel (de opdrachtgever, 17/10/2026: "ik had plinten los: dan zou de app het hoofdstuk uit het lastenboek moeten weten"). Je typt het meervoud, een bestek noemt het artikel soms in het enkelvoud ("Plint"), en dan past jouw woord er niet in: de zoektocht loopt één kant op. Dus: vindt je woord niets, dan probeert de app het zonder -en of -s. Minstens zes letters over het meervoud, zodat de stam minstens vier heeft. */
+function enkelvoudVan(woord){
+  const w=String(woord||"").toLowerCase();
+  if(w.length>=6&&w.endsWith("en"))return w.slice(0,-2);
+  if(w.length>=5&&w.endsWith("s")&&!w.endsWith("ss"))return w.slice(0,-1);
+  return null;
+}
 function kortVan(woord){
   const m=String(woord||"").match(/^(.*[^aeiou])(aa|ee|oo|uu)([^aeiouy])$/);
   return m?m[1]+m[2][0]+m[3]:null;
@@ -8669,6 +8676,7 @@ function bestekTreffers(tekst,hoeveel){
     // en als laatste redmiddel het hoofd van je samenstelling: alleen als niets hierboven iets vindt
     const blok=bestekVocabulaire().blok;
     {const kort=kortVan(w); if(kort&&kort.length>=5&&!rij.some(k=>blok.indexOf(k.stam)>=0))rij.push({stam:kort,via:null});}
+    {const enk=enkelvoudVan(w); if(enk&&!rij.some(k=>blok.indexOf(k.stam)>=0))rij.push({stam:enk,via:null});}
     const h=rij.some(k=>blok.indexOf(k.stam)>=0)?null:hoofdVan(w);
     if(h&&!rij.some(k=>k.stam===h))rij.push({stam:h,via:w});
     return rij;
