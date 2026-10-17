@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-ESoewpNC6j2rhFTJu0RGHuFFXdhTw46EJeP2zpBzPmo=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-9mkNFpAh12717OL513whlmOURhCGi8MqeGCj9OIpnYQ='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-49WJgTYJyjQvBUXs1cr0MdHMs3tCabxrJJAzbZymE7M=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-6M07a3gEMCFVBKj9mNYqqCjlA+/dGVRWMWHS2x0u7yk='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -98,7 +98,7 @@
 
        Eén waarde voor allebei de modussen, want `--vel` is in de donkere modus óók wit: een
        plan is papier, en papier verandert niet van kleur omdat je toestel dat doet. */
-    --calquevel:rgba(252,238,150,.30);
+    --calquevel:rgba(252,240,170,.10);
     --vel-ink:#1a1c1e; --vel-ink-zacht:#5c6166;
     --vel-lijn:rgba(0,0,0,.26); --vel-lijn-dun:rgba(0,0,0,.12);
   }
@@ -3982,7 +3982,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v575";
+const VERSIE="v576";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -15885,7 +15885,7 @@ let calqueVelGelezen=null;
 function calqueVelKleur(){
   if(calqueVelGelezen===null)
     calqueVelGelezen=getComputedStyle(document.documentElement)
-      .getPropertyValue("--calquevel").trim()||"rgba(252,238,150,.30)";
+      .getPropertyValue("--calquevel").trim()||"rgba(252,240,170,.10)";
   return calqueVelGelezen;
 }
 
