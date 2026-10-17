@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-6FUMOcVowzX6hHNHCd62uhnC0TQgbcuiLer3OBK/pUw=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-4gx5eq3vB3Yh17XQimF3qPIAD0Q4/ZjfDnmJRv0Tdm8='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-tAjHh17cksN5/alwgWxcRBaLel7rwwEDy4l8Czhke7Q=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-zggdeV5mrMCJC0FTswOcUdjo7Q7h/0obeigytlDsG5E='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -274,7 +274,10 @@
   /* Jij op het plan. Blauw als de speld van een nieuw punt in het planvenster, met een ring ter grootte van je onzekerheid:
      de ring is de eerlijke helft van de stip. */
   .kaarthier{position:absolute;left:var(--px);top:var(--py);width:14px;height:14px;margin:-7px 0 0 -7px;
-    border-radius:50%;background:#1b5fd6;box-shadow:0 0 0 3px #fff;z-index:3}
+    border-radius:50%;background:#1b5fd6;box-shadow:0 0 0 3px #fff;z-index:3;animation:hier-klop 1.8s ease-in-out infinite}
+  /* Een blinkende bol (de opdrachtgever, 17/10/2026): de witte rand blijft, eromheen klopt een blauwe gloed die uitdijt en uitdooft. */
+  @keyframes hier-klop{0%,100%{box-shadow:0 0 0 3px #fff,0 0 0 3px rgba(27,95,214,.65)}50%{box-shadow:0 0 0 3px #fff,0 0 0 16px rgba(27,95,214,0)}}
+  @media (prefers-reduced-motion:reduce){.kaarthier{animation:none}}
   .kaarthier-ring{position:absolute;left:var(--px);top:var(--py);width:var(--r);height:var(--r);
     margin:calc(var(--r) / -2) 0 0 calc(var(--r) / -2);border-radius:50%;
     background:rgba(27,95,214,.12);border:1px solid rgba(27,95,214,.45);pointer-events:none;z-index:2}
@@ -3839,7 +3842,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v516";
+const VERSIE="v519";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -15767,6 +15770,7 @@ function planTeken(){
   });
   x.textAlign="start";x.textBaseline="alphabetic";
 
+  tekenJijBol(x);
   if(pl.pin){
     const pq=bladNaarScherm(plan,pl,pl.pin.x,pl.pin.y), px=pq.x, py=pq.y;
     x.lineWidth=2.5;x.strokeStyle="#fff";x.fillStyle="#d92b06";
@@ -15783,6 +15787,37 @@ function planTeken(){
   }
   tekenSchaal(x,b);
   tekenNoord(x,b);
+}
+
+/* ---- waar je staat, op het GRB ----
+   de opdrachtgever, 17/10/2026: "een blinkende bol om te laten zien waar je staat". Dezelfde meting als de blauwe stip op het hoofdscherm (hierVers, die de app elke paar seconden ververst als het toestel toestemming gaf), hier als bol die zacht klopt met een ring die uitdijt. Zonder verse meting geen bol: een bol die liegt is erger dan geen. */
+let planPulsTimer=null;
+function tekenJijBol(x){
+  if(!plan||!plan.voorlopig||!(plan.bron&&plan.bron.grb))return;
+  const h=hierVers(); if(!h||h.nauw>HIERMAXNAUW)return;
+  const nb=naarBeeld(plan,h.X,h.Y); if(!nb)return;
+  const sq=bladNaarScherm(plan,pl,nb.x,nb.y);
+  const t=(Date.now()%1800)/1800;
+  x.save();
+  x.beginPath(); x.arc(sq.x,sq.y,9+18*t,0,7);
+  x.lineWidth=2; x.strokeStyle="rgba(27,95,214,"+(0.55*(1-t)).toFixed(3)+")"; x.stroke();
+  x.shadowColor="rgba(27,95,214,.8)"; x.shadowBlur=10+8*Math.sin(t*2*Math.PI);
+  x.beginPath(); x.arc(sq.x,sq.y,8,0,7);
+  x.fillStyle="#1b5fd6"; x.fill();
+  x.shadowBlur=0; x.lineWidth=2.5; x.strokeStyle="#fff"; x.stroke();
+  x.restore();
+  planPulsStart();      // blijft kloppen zolang het GRB in beeld is; zonder beeld stopt de klok vanzelf
+}
+function planPulsStart(){
+  if(planPulsTimer)return;
+  planPulsTimer=setInterval(()=>{
+    const c=document.getElementById("plancanvas");
+    if(!plan||!plan.voorlopig||!(plan.bron&&plan.bron.grb)||!c||!c.offsetParent||!hierVers()){
+      clearInterval(planPulsTimer); planPulsTimer=null;
+      return;
+    }
+    planTeken();
+  },70);
 }
 
 /* ---- de noordpijl ----
@@ -16935,6 +16970,25 @@ function grbRaster(breedteM,hoogteM,vak){
   return uit;
 }
 
+/* De namen van de wegen die het dichtst bij het perceel (of bij je plek) liggen, hoogstens drie, elk één keer: op het stuk weg dat het dichtst bij ligt, evenwijdig met die weg en niet ondersteboven. */
+function grbStraatLabels(wegen,ring,x,y){
+  const dist=(px,py)=>ring&&ring.length?Math.min(...ring.map(q=>Math.hypot(q[0]-px,q[1]-py))):Math.hypot(x-px,y-py);
+  const per={};
+  (wegen||[]).forEach(w=>{
+    if(!w.n)return;
+    for(let i=0;i+1<w.l.length;i++){
+      const a=w.l[i], b=w.l[i+1], len=Math.hypot(b[0]-a[0],b[1]-a[1]);
+      if(len<4)continue;
+      const mx=(a[0]+b[0])/2, my=(a[1]+b[1])/2, d=dist(mx,my);
+      if(!per[w.n]||d<per[w.n].d){
+        let h=Math.atan2(-(b[1]-a[1]),b[0]-a[0])*180/Math.PI;      // de beeld-y wijst omlaag, en SVG draait met de klok mee: dit is de hoek zoals het beeld hem toont
+        if(h>90)h-=180; if(h<-90)h+=180;
+        per[w.n]={n:w.n,x:mx,y:my,hoek:h,d};
+      }
+    }
+  });
+  return Object.values(per).sort((p,q)=>p.d-q.d).slice(0,3);
+}
 async function maakOmtrekplan(hier,zone,gekozen,toegestaanLeeg){
   const L=wgsNaarLambert(hier.lat,hier.lon);    // nagemeten op 0,197 mm over zes ijkpunten
   const x=L.x, y=L.y;
@@ -16955,8 +17009,8 @@ async function maakOmtrekplan(hier,zone,gekozen,toegestaanLeeg){
   minX-=rand; maxX+=rand; minY-=rand; maxY+=rand;
   const kader=[minX,minY,maxX,maxY];
 
-  const [percelen,gebouwen]=await Promise.all([
-    grbLaag("GRB:ADP",kader,120), grbLaag("GRB:GBG",kader,200)]);
+  const [percelen,gebouwen,wegsegmenten]=await Promise.all([
+    grbLaag("GRB:ADP",kader,120), grbLaag("GRB:GBG",kader,200), grbLaag("GRB:Wegsegment",kader,200).catch(()=>[])]);
   /* De opdrachtgever, 08/10/2026: "omtrek geladen, maar ik zie niets." Op een plek waar het GRB niets kent (buiten Vlaanderen, of een
      plek zonder perceel) tekende deze functie toch een wit kader en de app meldde "geladen". Nu is dat een fout, behalve
      als iemand er uitdrukkelijk om vroeg (het lege kader uit het venster "Geen perceel gevonden"). */
@@ -16968,14 +17022,21 @@ async function maakOmtrekplan(hier,zone,gekozen,toegestaanLeeg){
   const naarBeeldXY=p=>[((p[0]-minX)*GRBCM).toFixed(1),((maxY-p[1])*GRBCM).toFixed(1)];
   const pad=f=>grbRingen(f).map(r=>"M"+r.map(p=>naarBeeldXY(p).join(",")).join("L")+"Z").join("");
 
+  /* De opdrachtgever, 17/10/2026: "GRB uitwerken: de buren een zwarte dunne lijn; de wegen mee intekenen, nog dunner, met de aangrenzende straatnaam erop; geen grijze of zwarte invullingen; het perceel mag een dikkere zwarte lijn krijgen." Eenheid: één beeldeenheid is een centimeter. */
+  const ZWART="#161a1e";
   const stuk=[];
   stuk.push('<rect width="'+bw+'" height="'+bh+'" fill="#fff"/>');
-  percelen.forEach(f=>{ if(f!==mijn)stuk.push('<path d="'+pad(f)+'" fill="none" stroke="#c9ccc6" stroke-width="18"/>'); });
-  gebouwen.forEach(f=>{
-    const vanMij=mijn&&grbRingen(f).some(r=>r.some(p=>raaktVlak(mijn,p[0],p[1])));
-    stuk.push('<path d="'+pad(f)+'" fill="'+(vanMij?"#5d646b":"#e6e8e3")+'" stroke="#8c9299" stroke-width="12"/>');
+  const wegen=locWegen(wegsegmenten,200).filter(w=>w.l&&w.l.length>=2);
+  wegen.forEach(w=>stuk.push('<path d="M'+w.l.map(q=>naarBeeldXY(q).join(",")).join("L")+'" fill="none" stroke="'+ZWART+'" stroke-width="5" stroke-linejoin="round"/>'));
+  percelen.forEach(f=>{ if(f!==mijn)stuk.push('<path d="'+pad(f)+'" fill="none" stroke="'+ZWART+'" stroke-width="9"/>'); });
+  gebouwen.forEach(f=>stuk.push('<path d="'+pad(f)+'" fill="none" stroke="'+ZWART+'" stroke-width="9"/>'));
+  if(mijn)stuk.push('<path d="'+pad(mijn)+'" fill="none" stroke="'+ZWART+'" stroke-width="30"/>');
+  grbStraatLabels(wegen,mijn?grbRingen(mijn)[0]:null,x,y).forEach(t=>{
+    const b=naarBeeldXY([t.x,t.y]);
+    stuk.push('<text x="'+b[0]+'" y="'+b[1]+'" transform="rotate('+t.hoek.toFixed(1)+' '+b[0]+' '+b[1]+')" text-anchor="middle" dominant-baseline="central" '+
+              'font-family="Inter,Helvetica,Arial,sans-serif" font-size="120" font-weight="500" letter-spacing="6" fill="'+ZWART+'" stroke="#fff" stroke-width="36" paint-order="stroke" stroke-linejoin="round">'+
+              veilig(t.n)+'</text>');
   });
-  if(mijn)stuk.push('<path d="'+pad(mijn)+'" fill="none" stroke="#b04527" stroke-width="34"/>');
 
   /* De eigen maat van de tekening mag niet reusachtig zijn. Eén eenheid is een centimeter, dus 85 m is 8500 breed en het
      geheel 75 miljoen pixels. Safari op iPhone en iPad geeft zo'n SVG als beeld soms niet of blanco weer (de opdrachtgever, 08/10/2026:
