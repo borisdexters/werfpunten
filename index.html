@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-rpbghUhtVPZMCUlKWA6mhXwLAKHy6e9srUnHxXKm8XY=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-utEZqjYqGeSQBDUgTrAC6z7GYs5K88zmCzqiqwX2U94='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-ESoewpNC6j2rhFTJu0RGHuFFXdhTw46EJeP2zpBzPmo=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-9mkNFpAh12717OL513whlmOURhCGi8MqeGCj9OIpnYQ='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1336,6 +1336,10 @@
   /* Het vlak vult het scherm (de opdrachtgever, 17/10/2026: "doe dit subscherm volledig. De info onderaan heeft bij noteren geen meerwaarde"): het plan, de bladen, het adres met kadaster en de invoerregel staan er niet zolang je noteert. De titel en het menu blijven. */
   html.fiche-open .wrap>.vulling,html.fiche-open .wrap>.zones,html.fiche-open .wrap>header,html.fiche-open .wrap>.invoer{display:none !important}
   /* Zoals het voorbeeld (de NOTES-kaart): een afgeronde kaart met lucht rondom, het schrijfvak neemt de ruimte, Wissen en Bewaren staan vast onderaan. */
+  /* Foto, Scan en Tekenen staan in de balk helemaal onderaan (de opdrachtgever, 17/10/2026, met een pijl naar de onderste balk): zolang je noteert zijn de camera, het menu en de plus daar toch niet nodig. De tegels blijven dezelfde elementen, met hun vinkje of beeld; alleen hun plaats verandert. Staat een vak open (de calque, het fotovak), dan liggen ze weer in de kaart. */
+  html.fiche-open #menubalk{visibility:hidden}
+  html.fiche-open #fichedlg:not(.groot) .fiche-media{position:fixed;left:0;right:0;bottom:0;z-index:9;margin:0;height:calc(var(--streep-b) + 62px);padding:0 max(12px,calc(50vw - 320px + 12px)) var(--streep-b);box-sizing:border-box;display:flex;align-items:center;gap:8px;background:var(--surface,#fff);border-top:var(--haar) solid var(--line)}
+  html.fiche-open #fichedlg:not(.groot) .fiche-media .fiche-doos{flex:1 1 0;min-width:0}
   html.fiche-open .wrap>.hoofdkop{display:none}
   html.fiche-open #fichedlg{flex:1 1 auto;max-height:none;min-height:0;margin:max(12px,env(safe-area-inset-top)) 12px 12px;border-radius:22px}
   html.fiche-open #fichedlg>.dlg-body{flex:1 1 auto;min-height:0;max-height:none;overflow-y:auto}   /* de grens blijft die van het blad: schermvullend heft de 64vh van .dlg-body op */
@@ -3978,7 +3982,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v574";
+const VERSIE="v575";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
