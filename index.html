@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-/SXco2+yNY6c4bqZK5eL5QyhpI4Bm8RlqKzz3koGA78=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-kDy4Tz0om/U3XA8E0LAacqsdTCULfHLAvLBGP7PqD0s='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-MyqF4e++ys+Ws6LIqJW/OXi+rWYHRUnjNzBhQVUuH18=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-9coUMDHIx8/R64ZKDz+us097rCg9tGg2lF3/hwjZpgE='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1354,6 +1354,7 @@
   #plandlg.film{background:rgba(255,247,190,.16)}
   #plandlg.film .plan-vlak,#plandlg.film #plancanvas{background:transparent}
   #plandlg.film .plan-zoom{display:none}
+  #plandlg.film #planzones{display:none}      /* GRB en GRB oud staan niet op het vel (de opdrachtgever, 17/10/2026: "dit gaan we allemaal anders organiseren: doe de GRB en GRB oud weg"); de bladenbalk onderaan het hoofdscherm zegt al op welk blad je zit */
   #plandlg.film #pl-voet,#plandlg.film .plan-voet{display:none}      /* de balk onderaan het vel (de tekstregel, het aantal punten, Benoem) hoort er niet bij (de opdrachtgever, 17/10/2026: "dit deel gewoon weglaten") */
   #plandlg.film .pentrek-op{bottom:14px}
   #plandlg.film>div:not(.plan-vlak),#plandlg.film>nav,#plandlg.film>header{background:rgba(255,255,255,.55) !important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
@@ -4013,7 +4014,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v594";
+const VERSIE="v595";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
