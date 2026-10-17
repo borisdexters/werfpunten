@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-tAjHh17cksN5/alwgWxcRBaLel7rwwEDy4l8Czhke7Q=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-zggdeV5mrMCJC0FTswOcUdjo7Q7h/0obeigytlDsG5E='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-B6fdfov692Rw/uK6pBVRbWPQV6hurRiCb5ovDuGjzgw=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-zggdeV5mrMCJC0FTswOcUdjo7Q7h/0obeigytlDsG5E='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3842,7 +3842,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v519";
+const VERSIE="v520";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -16970,6 +16970,31 @@ function grbRaster(breedteM,hoogteM,vak){
   return uit;
 }
 
+/* De randen van de gebouwen, zonder de stukken die op een perceelsgrens liggen. `gebouwen` en `percelen` zijn lijsten van lijsten ringen (Lambert-meters); `tol` in meter. Geeft het SVG-pad terug, of "" als er niets overblijft. */
+function grbGebouwLijnen(gebouwen,percelen,tol,naarXY){
+  const grenzen=[];
+  percelen.forEach(ringen=>ringen.forEach(r=>{ for(let i=0;i+1<r.length;i++)grenzen.push([r[i][0],r[i][1],r[i+1][0],r[i+1][1]]); }));
+  const af=(px,py,g)=>{
+    const dx=g[2]-g[0], dy=g[3]-g[1], l2=dx*dx+dy*dy;
+    const t=l2?Math.max(0,Math.min(1,((px-g[0])*dx+(py-g[1])*dy)/l2)):0;
+    return Math.hypot(px-(g[0]+t*dx), py-(g[1]+t*dy));
+  };
+  const opGrens=(px,py)=>{ for(let k=0;k<grenzen.length;k++){ const g=grenzen[k];
+    if(px<Math.min(g[0],g[2])-tol||px>Math.max(g[0],g[2])+tol||py<Math.min(g[1],g[3])-tol||py>Math.max(g[1],g[3])+tol)continue;
+    if(af(px,py,g)<=tol)return true; } return false; };
+  const d=[];
+  gebouwen.forEach(ringen=>ringen.forEach(r=>{
+    let open=false;
+    for(let i=0;i+1<r.length;i++){
+      const a=r[i], b=r[i+1];
+      const samen=opGrens(a[0],a[1])&&opGrens(b[0],b[1])&&opGrens((a[0]+b[0])/2,(a[1]+b[1])/2);
+      if(samen){ open=false; continue; }
+      if(!open){ d.push("M"+naarXY(a).join(",")); open=true; }
+      d.push("L"+naarXY(b).join(","));
+    }
+  }));
+  return d.join("");
+}
 /* De namen van de wegen die het dichtst bij het perceel (of bij je plek) liggen, hoogstens drie, elk één keer: op het stuk weg dat het dichtst bij ligt, evenwijdig met die weg en niet ondersteboven. */
 function grbStraatLabels(wegen,ring,x,y){
   const dist=(px,py)=>ring&&ring.length?Math.min(...ring.map(q=>Math.hypot(q[0]-px,q[1]-py))):Math.hypot(x-px,y-py);
@@ -17027,9 +17052,11 @@ async function maakOmtrekplan(hier,zone,gekozen,toegestaanLeeg){
   const stuk=[];
   stuk.push('<rect width="'+bw+'" height="'+bh+'" fill="#fff"/>');
   const wegen=locWegen(wegsegmenten,200).filter(w=>w.l&&w.l.length>=2);
-  wegen.forEach(w=>stuk.push('<path d="M'+w.l.map(q=>naarBeeldXY(q).join(",")).join("L")+'" fill="none" stroke="'+ZWART+'" stroke-width="5" stroke-linejoin="round"/>'));
-  percelen.forEach(f=>{ if(f!==mijn)stuk.push('<path d="'+pad(f)+'" fill="none" stroke="'+ZWART+'" stroke-width="9"/>'); });
-  gebouwen.forEach(f=>stuk.push('<path d="'+pad(f)+'" fill="none" stroke="'+ZWART+'" stroke-width="9"/>'));
+  wegen.forEach(w=>stuk.push('<path d="M'+w.l.map(q=>naarBeeldXY(q).join(",")).join("L")+'" fill="none" stroke="'+ZWART+'" stroke-width="3" stroke-linejoin="round"/>'));
+  percelen.forEach(f=>{ if(f!==mijn)stuk.push('<path d="'+pad(f)+'" fill="none" stroke="'+ZWART+'" stroke-width="5"/>'); });
+  /* Een gebouwlijn die op een perceelsgrens ligt (binnen 15 cm) wordt niet nog eens getekend: de twee GRB-lagen liggen een paar centimeter uit elkaar en dat gaf dubbele lijnen (de opdrachtgever, 17/10/2026). */
+  const gebouwPad=grbGebouwLijnen(gebouwen.map(f=>grbRingen(f)),percelen.map(f=>grbRingen(f)),0.15,naarBeeldXY);
+  if(gebouwPad)stuk.push('<path d="'+gebouwPad+'" fill="none" stroke="'+ZWART+'" stroke-width="5"/>');
   if(mijn)stuk.push('<path d="'+pad(mijn)+'" fill="none" stroke="'+ZWART+'" stroke-width="30"/>');
   grbStraatLabels(wegen,mijn?grbRingen(mijn)[0]:null,x,y).forEach(t=>{
     const b=naarBeeldXY([t.x,t.y]);
