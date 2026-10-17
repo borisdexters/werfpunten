@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-DIeQyk0e6aru4ilKHRyf/Mypxa3CzlFerC3+GKHAfOU=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-PyWKLzPSy9j6NZZvqjpjVLnaND6eP+JNlF1G50WktpE='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-CNG83zIH0gwi63O7qeHCkiOJYlGFnabhvVeRvqJMvzw=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-axj48o4PeN1ATT2tGsLEL/p6FlA3uAuuDenHRNycd24='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1362,6 +1362,8 @@
   #menubalk,.wrap>.zones,.wrap>header{transition:transform .24s cubic-bezier(.2,.8,.2,1)}
   html.film-open .wrap>.zones,html.film-open .wrap>header{transform:translateY(var(--filmzak,0px));pointer-events:none}      /* de onderkant is er om te zien op welk blad je tekent, niet om aan te tikken: een pagina die opent boven het vel liet het scherm in een tussenstand achter */
   html.film-open #menubalk{transform:translateY(110%)}
+  /* De witruimte onder het adres is effen wit: geen plan dat erdoorheen schemert. */
+  html.film-open .wrap::after{content:"";position:fixed;left:0;right:0;bottom:0;height:var(--filmwit,0px);background:var(--surface,#fff);z-index:1;pointer-events:none}
   html.film-open #kaartperceel{visibility:hidden !important}      /* wie annoteert, weet dat het perceel klopt: "Ander perceel?" hoort er dan niet te staan (de opdrachtgever, 17/10/2026) */
   #plandlg.film #planzones{display:none}      /* GRB en GRB oud staan niet op het vel (de opdrachtgever, 17/10/2026: "dit gaan we allemaal anders organiseren: doe de GRB en GRB oud weg"); de bladenbalk onderaan het hoofdscherm zegt al op welk blad je zit */
   #plandlg.film #pl-voet,#plandlg.film .plan-voet{display:none}      /* de balk onderaan het vel (de tekstregel, het aantal punten, Benoem) hoort er niet bij (de opdrachtgever, 17/10/2026: "dit deel gewoon weglaten") */
@@ -4026,7 +4028,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v612";
+const VERSIE="v613";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -9763,7 +9765,9 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&menuGlas)menuEinde
       dlg.classList.toggle("film",penFilm); document.documentElement.classList.toggle("film-open",penFilm);
       /* De hele onderkant zakt tot de bodem van het scherm (de opdrachtgever, 17/10/2026: "en dit geheel schuift dan helemaal tot de bodem van het scherm"): de bladen en het adres schuiven zoveel omlaag als het menu hoog was, en het vel wordt even veel hoger. Gemeten nu het hoofdscherm er nog staat. */
       const mb=document.getElementById("menubalk");
-      const zak=mb?Math.max(0,Math.round(mb.getBoundingClientRect().height)):0;      // de volle hoogte van het menu, ook de marge eronder: de onderkant komt tegen de rand van het scherm
+      const wit=mb?Math.max(0,Math.round(parseFloat(getComputedStyle(mb).paddingBottom)||0)):0;      // de marge die het menu onderaan had: die blijft als witruimte onder het adres (de opdrachtgever, 17/10/2026: "beneden mag iets meer whitespace, maar niet transparant")
+      const zak=mb?Math.max(0,Math.round(mb.getBoundingClientRect().height)-wit):0;
+      document.documentElement.style.setProperty("--filmwit",wit+"px");
       document.documentElement.style.setProperty("--filmzak",zak+"px");
       H=meetBlad()+zak;
       dlg.dataset.blad=String(H); dlg.style.height=H+"px";
