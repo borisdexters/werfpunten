@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-rV6CIGIU+i50z2GLeX0lsIyIvSrMiEOp9O30AFpneXk=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-lEwlMS/v112zcpKjdFEHc+V94pOFeo0qHbhWIsSMXAg='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-TRJg6maKdHJ2BDwiNUX1ZDpL7GhdUZ1LVfu8paWCngY=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-ucw8Xkcw4Dzg5aJIN55dUp9V72tzFWSqJx4eNlX712s='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1074,7 +1074,7 @@
   .menubol-plus::after{content:"";position:absolute;left:50%;top:50%;width:2px;height:28px;margin:-14px 0 0 -1px;border-radius:1px;background:var(--ink)}
 
   .menustreep{position:relative;width:56px;height:56px;margin:0;padding:0;border:0;background:none;touch-action:none;-webkit-tap-highlight-color:transparent}
-  .menustreep::after{content:"";position:absolute;left:50%;top:50%;width:20px;height:20px;margin:-6px 0 0 -10px;border:solid var(--ink);border-width:2px 0 0 2px;border-radius:1px;transform:rotate(45deg)}      /* een fijne pijlkop omhoog, in het midden */
+  .menustreep::after{content:"";position:absolute;left:50%;top:50%;width:22px;height:18px;margin:-9px 0 0 -11px;background:var(--ink);clip-path:polygon(50% 0,100% 100%,0 100%)}      /* een gevulde zwarte driehoek omhoog, in het midden (de opdrachtgever, 17/10/2026: "beneden ook. Overal") */
   .menubalk.menubalk-pagina{position:absolute;z-index:14}
   #dlg:not([data-pagina]) > .menubalk-pagina{display:none}      /* het venster dient ook voor vragen en meldingen: daar horen ze niet */
   body #dlg[data-pagina] .dlg-body,body #beheerdlg .dlg-body{padding-bottom:calc(var(--streep-b) + 68px)}      /* de tekst scrolt ver genoeg door om boven de streep uit te komen */
@@ -1085,7 +1085,7 @@
   .menu-glas.in-body{position:fixed;z-index:9}      /* op het plan hangt het aan de pagina zelf; in een pagina hangt het aan dat venster, zodat de pagina bedienbaar blijft */
   .menu-glas .menubalk{position:static;transform:none;background:none;border-top:0}
   .menu-glas .menubol{opacity:calc(1 - var(--f,0));pointer-events:none}
-  .menu-glas .menustreep::after{margin-top:calc(-6px - 8px * var(--f,0));transform:rotate(calc(45deg + 180deg * var(--f,0)))}      /* de pijlpunt draait om: omlaag = sluiten */
+  .menu-glas .menustreep::after{transform:rotate(calc(180deg * var(--f,0)))}      /* de driehoek draait om: omlaag = sluiten */
   html.menu-open .menubalk:not(.menubalk-glas){visibility:hidden}      /* de rij in het glas neemt de plaats over */
   .menu-namen{display:flex;align-items:center;gap:0;height:var(--namenh);box-sizing:border-box;padding:0 var(--marge) var(--streep-b);overflow-x:auto;white-space:nowrap;scrollbar-width:none;opacity:var(--f,0)}
   .menu-namen::-webkit-scrollbar{display:none}
@@ -1377,6 +1377,15 @@
   #plandlg.film .pentrek-op{bottom:14px}
   #plandlg.film>div:not(.plan-vlak):not(#filmlaag):not(#filmkaart),#plandlg.film>nav,#plandlg.film>header{background:rgba(255,255,255,.55) !important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
   .pentrek.trekt{transition:none}
+  /* Dezelfde pijl als onderaan (de opdrachtgever, 17/10/2026: "deze moeten even groot zijn, zelfde vorm, dikte"): een fijne pijlpunt van 2 punten dik in een knop van 56 x 56, zonder achtergrond. Boven wijst hij omlaag, onderaan het vel omhoog. */
+  /* Rond en glazig, zoals de knoppen van het plan (de opdrachtgever, 17/10/2026: "hier ook glassy achtergrond"): 44 punten, doorschijnend wit met vervaging; de pijlpunt zelf blijft dezelfde als die van het menu. */
+  .pentrek,.pentrek-op{width:84px;height:44px;box-sizing:border-box;border-radius:22px;background:none;border:0;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none}      /* alleen de zwarte driehoek, zonder achtergrond (de opdrachtgever, 17/10/2026: "achtergrond weg"); het vlak van 84 x 44 blijft als doel voor je duim */
+  .pentrek{top:calc(env(safe-area-inset-top,0px) + 47px)}      /* het midden van de knop (69 punten) op het midden van de titel Plan en van het kompas */
+  .pentrek svg,.pentrek-op svg{display:none}
+  /* Een gevulde zwarte driehoek (de opdrachtgever, 17/10/2026: "ik wil zo een pijl", met een zwarte driehoek omlaag als voorbeeld): omlaag bovenaan het Plan, omhoog onderaan het vel. */
+  .pentrek::after,.pentrek-op::after{content:"";position:absolute;left:50%;top:50%;width:22px;height:18px;margin:-9px 0 0 -11px;background:var(--ink)}
+  .pentrek::after{clip-path:polygon(0 0,100% 0,50% 100%)}
+  .pentrek-op::after{clip-path:polygon(50% 0,100% 100%,0 100%)}
   .pentrek:focus,.pentrek:focus-visible,.pentrek-op:focus,.pentrek-op:focus-visible{outline:0}
   .pentrek,.pentrek-op{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
   body:has(dialog[open]) .pentrek,html.fiche-open .pentrek,html.menu-open .pentrek{display:none}
@@ -4035,7 +4044,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v620";
+const VERSIE="v628";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
