@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-o2UVYGJIF4UAgxqe9mFt7dPLDjnvU5FWSlN1oPDWIPk=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-oiqgglpW8k4Wmqn0BdolaMrbPr+DzuZHjC0qcimBMlY='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-5um2XVoMk5a7L5Ypl2m/tOwRY5NAnKvnaVvj7eA276o=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-NCQOZ8aVlg+/werPv2BqIZClEpDzgp9M4leVG3Y4yT0='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -442,7 +442,7 @@
      als tegel naast een horizontale fasetegel hield ze 90 px over; als losse titel naast de
      verticale fase 174 px. */
   #projectknop{background:none;padding-left:8px;font-weight:600;letter-spacing:.02em}
-  #projectknop.met-adres{display:flex;flex-direction:row;align-items:baseline;justify-content:flex-start;gap:16px;line-height:1.2;min-width:0;overflow-x:auto;overflow-y:hidden;text-align:left;white-space:nowrap;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  #projectknop.met-adres{display:flex;flex-direction:row;align-items:baseline;justify-content:flex-start;gap:16px;line-height:1.2;min-width:0;overflow-x:auto;overflow-y:hidden;text-align:left;white-space:nowrap;scrollbar-width:none;-webkit-overflow-scrolling:touch;-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 26px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 26px),transparent)}      /* een zachte uitloop rechts: er staat meer, schuif maar */
   #projectknop.met-adres::-webkit-scrollbar{display:none}
   #projectknop .pk-adres{display:block;flex:none;white-space:nowrap}
   #projectknop .pk-kad{display:block;flex:none;font-size:.82em;font-weight:400;white-space:nowrap}
@@ -3919,7 +3919,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v560";
+const VERSIE="v561";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
