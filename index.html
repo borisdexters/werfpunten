@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-DxpTtLwluXAlbgoDG69WeeVAtMej73L8KitpZRjpiqg=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-aH+bj+d/yrk5FYeFsAji2jmaaBaX5xWyafQsemlfNA4='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-S3HtdsqNDbIRw0OHmygg5cPWv6lLeSizPaf53c7zkDE=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-hV8t7ArPWstDungU2fI4+K21QWAQvM7/Pzso58r/7tU='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -270,11 +270,19 @@
     -webkit-backdrop-filter:blur(10px) saturate(1.15);backdrop-filter:blur(10px) saturate(1.15);box-shadow:0 1px 8px rgba(0,0,0,.14)}
   .vulling .kaartknop.kaartmeet{top:calc(var(--btop,64px) + 52px)}
   .vulling .kaartmeetbalk{top:calc(var(--btop,64px) + 104px);gap:8px}
+  /* de lijst met ronde schalen, links van de knoppenkolom, op de hoogte van de noordpijl */
+  .vulling .schaalkeuze{position:absolute;top:calc(var(--btop,64px) - 52px);right:70px;z-index:3;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+  .vulling .schaalkeuze[hidden]{display:none}
+  .vulling .noordmenu-kop{font:600 11px ui-monospace,Menlo,monospace;color:var(--ink);padding:3px 10px;border-radius:10px;background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+  .vulling .schaalkeuze .kaartknop{position:static;min-height:0;min-width:74px;height:34px;padding:0 14px;border-radius:17px;border:1px solid rgba(255,255,255,.75);background:rgba(255,255,255,.62);color:var(--ink);
+    -webkit-backdrop-filter:blur(10px) saturate(1.15);backdrop-filter:blur(10px) saturate(1.15);box-shadow:0 1px 8px rgba(0,0,0,.14);font:600 13px ui-monospace,Menlo,monospace;text-align:center;display:inline-flex;align-items:center;justify-content:center}
+  .vulling .schaalkeuze .kaartknop.actief{background:rgba(22,26,30,.78);color:#fff;border-color:rgba(255,255,255,.25)}
+  .kaartschaal{cursor:pointer}
   .vulling .meetrij{gap:8px}
   .vulling .kaartknop.kaartmeet.aan,.vulling .meetrij .kaartknop.actief{background:rgba(22,26,30,.78);color:#fff;border-color:rgba(255,255,255,.25)}
   .vulling .meetuit{background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(10px) saturate(1.15);backdrop-filter:blur(10px) saturate(1.15);border:1px solid rgba(255,255,255,.75);box-shadow:0 1px 8px rgba(0,0,0,.14)}
   .kaartnoord-draai{position:absolute;inset:0;transform:rotate(var(--a));transform-origin:50% 50%}
-  .kaartnoord-pijl{position:absolute;left:15px;top:12px;width:12px;height:24px;background:var(--ink);clip-path:polygon(50% 0,100% 100%,50% 78%,0 100%)}
+  .kaartnoord-pijl{position:absolute;left:15px;top:12px;width:14px;height:20px;background:var(--ink);clip-path:polygon(50% 0,100% 100%,50% 78%,0 100%)}
   .kaartnoord-n{position:absolute;left:0;right:0;top:0;text-align:center;font:600 10px ui-monospace,Menlo,monospace;line-height:12px;color:var(--ink)}
   .kaartschaal{position:absolute;left:var(--px);top:var(--py);width:var(--w);height:7px;border:1.5px solid var(--ink);border-top:none;pointer-events:none;z-index:4;box-sizing:content-box}
   .kaartschaal-v{top:11px;bottom:auto !important;font-weight:500}
@@ -3073,7 +3081,7 @@
     type="button" class="kaartknop kaartverzet" id="kaartverzet"
     title="Het verzetten van een punt stoppen" hidden>Annuleer verzetten</button><button
     type="button" class="kaartknop kaartperceel" id="kaartperceel"
-    title="De app koos dit perceel zelf; tik als het niet klopt" hidden>Ander perceel?</button><button
+    title="De app koos dit perceel zelf; tik als het niet klopt" hidden>Ander perceel?</button><div class="schaalkeuze" id="schaalkeuze" hidden></div><div class="schaalkeuze noordmenu" id="noordmenu" hidden></div><button
     type="button" class="kaartknop kaarttekst" id="kaarttekst" title="Tekst op het plan groter of kleiner" aria-label="Tekst groter" hidden>A</button><button
     type="button" class="kaartknop kaartmeet" id="kaartmeet" title="Meten: lijnstukken en oppervlakte" aria-label="Meten" hidden><svg
     viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"
@@ -3901,7 +3909,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v553";
+const VERSIE="v556";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -9547,7 +9555,7 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&menuGlas)menuEinde
     const open=[...document.querySelectorAll("dialog[open]")];
     return open.every(d=>d.id==="beheerdlg"||(d.id==="dlg"&&d.dataset.pagina));
   };
-  const vrij=e=>toegestaan()&&!(e.target.closest&&e.target.closest("button,a,input,textarea,select,label,summary,canvas,[contenteditable],.lb-tekst"));
+  const vrij=e=>toegestaan()&&!(e.target.closest&&e.target.closest("button,a,input,textarea,select,label,summary,canvas,[contenteditable],.lb-tekst"))&&!(kaartPlan&&typeof noordGeraakt==="function"&&noordGeraakt(e.clientX,e.clientY));      // niet op de noordpijl: die heeft een eigen lange druk (1 s)
   document.addEventListener("pointerdown",e=>{
     stop();
     if(e.pointerType==="mouse"||!e.isPrimary||!vrij(e))return;
@@ -19805,7 +19813,7 @@ function oudeStipkleur(dagen){
 
    `schaal` 1 is passend -- wat `object-fit:contain` uit zichzelf doet. Verder inzoomen mag tot
    acht keer; verder uitzoomen dan passend heeft geen zin, want dan zie je het blad al helemaal. */
-const KAARTZOOMMAX=16;      // 8 tot 17/10/2026: het GRB heeft een wijde omgeving en je wilt tot op de perceelsgrens kunnen
+const KAARTZOOMMAX=64;      // 8 tot 17/10/2026: het GRB heeft een wijde omgeving en je wilt tot op de perceelsgrens kunnen
 let kaartKijk={schaal:1, dx:0, dy:0};
 
 /* Nooit een rand naast het blad: bij elke schaal dekt het geschaalde vlak het venster. Zo kun je
@@ -19838,13 +19846,20 @@ function kaartNoordDoel(plan){
   const g=plan&&plan.georef;
   return (g&&!g.plaatselijk&&typeof g.noord==="number"&&isFinite(g.noord))?g.noord:0;
 }
-function kaartNaarNoord(opties){
+function kaartNaarNoord(opties){ return kaartDraaiNaar(kaartNoordDoel(kaartPlan),opties); }
+/* Naar een vaste draai, zacht en langs de kortste weg. Is het doel noord boven, dan wordt de weergave weer de standaard; elke andere richting is een vrije keuze die bij het plan blijft. */
+function kaartDraaiNaar(doel,opties){
   const plan=kaartPlan, doos=document.getElementById("kaart");
   if(!plan||!doos)return false;
   const o=opties||{};
-  const hoek=normaalHoek(kaartNoordDoel(plan)-draaiVan(plan));
-  const klaar=()=>{ delete plan.weergave; kaartBewaarDraai(); kaartKijkZet(); kaartNoordLus=null; };
-  if(Math.abs(hoek)<0.05){ if(plan.weergave)klaar(); return false; }
+  const noordDoel=kaartNoordDoel(plan);
+  const hoek=normaalHoek(doel-draaiVan(plan));
+  const klaar=()=>{
+    if(Math.abs(normaalHoek(doel-noordDoel))<0.05)delete plan.weergave;
+    else plan.weergave={draai:+normaalHoek(doel).toFixed(2), door:"vrij"};
+    kaartBewaarDraai(); kaartKijkZet(); kaartNoordLus=null;
+  };
+  if(Math.abs(hoek)<0.05){ klaar(); return false; }
   const vul=document.getElementById("vulling"), vb=vul?vul.getBoundingClientRect():null, db=doos.getBoundingClientRect();
   const m={breed:db.width, hoog:db.height};
   const mx=vb&&vb.width?vb.left-db.left+vb.width/2:m.breed/2, my=vb&&vb.height?vb.top-db.top+vb.height/2:m.hoog/2;      // om het midden van wat je ziet
@@ -19861,6 +19876,33 @@ function kaartNaarNoord(opties){
   };
   kaartNoordLus=requestAnimationFrame(stap);
   return true;
+}
+/* ---- het kompasmenu ----
+   de opdrachtgever, 17/10/2026: "op de noordpijl 1 keer klikken en de naald plus het plan roteren naar boven; één seconde ingedrukt houden activeert een menu met O, NO, W, ZW, Z...: vaste maten, 90 of 45 graden." De keuze is de richting die bovenaan komt te staan. */
+const NOORDKEUZE=[["N",0],["NO",45],["O",90],["ZO",135],["Z",180],["ZW",225],["W",270],["NW",315]];
+const NOORDLANG=1000;
+let noordMenuOpen=false, noordTimer=null, noordLang=false;
+function noordMenuSluit(){
+  noordMenuOpen=false;
+  const el=document.getElementById("noordmenu");
+  if(el){ el.hidden=true; el.textContent=""; }
+}
+/* De draai waarmee richting `bovenGraden` (0 = noord, 90 = oost) bovenaan staat. */
+function noordDraaiVoor(plan,bovenGraden){ return normaalHoek(kaartNoordDoel(plan)-bovenGraden); }
+function noordMenuToon(){
+  const el=document.getElementById("noordmenu");
+  if(!el||!kaartPlan)return;
+  schaalKeuzeSluit();
+  el.textContent="";
+  const kop=document.createElement("div"); kop.className="noordmenu-kop"; kop.textContent="Boven"; el.appendChild(kop);
+  const bovenNu=normaalHoek(kaartNoordDoel(kaartPlan)-draaiVan(kaartPlan));
+  NOORDKEUZE.forEach(([naam,gr])=>{
+    const b=document.createElement("button"); b.type="button"; b.className="kaartknop"; b.textContent=naam; b.title="Met "+naam+" naar boven";
+    if(Math.abs(normaalHoek(gr-bovenNu))<1)b.classList.add("actief");
+    b.onclick=ev=>{ if(ev&&ev.stopPropagation)ev.stopPropagation(); kaartDraaiNaar(noordDraaiVoor(kaartPlan,gr)); noordMenuSluit(); };
+    el.appendChild(b);
+  });
+  el.hidden=false; noordMenuOpen=true;
 }
 async function kaartBewaarDraai(){
   if(!kaartPlan||!kaartZone)return;
@@ -20464,6 +20506,62 @@ function meetBedrading(){
   zet("meetklaar",()=>{ kaartMeet.aan=false; });
 }
 meetBedrading();
+/* ---- de schaalkeuze ----
+   de opdrachtgever, 17/10/2026: "je tikt de schaalbalk aan, dan wil ik vast kunnen zoomen op ronde getallen: 1:25, 50, 75, 100, 200, 250, 500 enzovoort." Een tik op de schaalbalk opent een lijstje met de ronde schalen die het plan kan tonen; een keuze zoomt daar exact naartoe, om het midden van wat je ziet. De verhouding rekent met de standaardgrootte van een pixel (zie kaartVerhouding), net als het getal onder de balk. */
+const SCHAALKEUZE=[25,50,75,100,200,250,500,1000,2000,2500,5000];
+let schaalKeuzeOpen=false;
+function schaalDoel(plan,b,n){
+  const m0=kaartMeterPerPixel(plan,b,{schaal:1});
+  return m0?m0/(n*CSSPIXEL_M):null;
+}
+/* Welke ronde schalen het plan kan tonen: tussen helemaal uitgezoomd (schaal 1) en de grootste zoom. */
+function schaalKeuzeLijst(plan,b){
+  return SCHAALKEUZE.filter(n=>{ const s=schaalDoel(plan,b,n); return s!==null&&s>=1-1e-6&&s<=KAARTZOOMMAX+1e-6; });
+}
+function schaalNaar(n){
+  const doos=document.getElementById("kaart");
+  if(!kaartPlan||!doos)return false;
+  const db=doos.getBoundingClientRect();
+  let s1=schaalDoel(kaartPlan,db,n);
+  if(s1===null)return false;
+  s1=Math.max(1,Math.min(KAARTZOOMMAX,s1));
+  const vul=document.getElementById("vulling"), vb=vul?vul.getBoundingClientRect():null;
+  const cx=vb&&vb.width?vb.left-db.left+vb.width/2:db.width/2, cy=vb&&vb.height?vb.top-db.top+vb.height/2:db.height/2;
+  const s0=kaartKijk.schaal||1, qx=(cx-kaartKijk.dx)/s0, qy=(cy-kaartKijk.dy)/s0;
+  kaartKijk=kaartKlem({schaal:s1, dx:cx-s1*qx, dy:cy-s1*qy},db.width,db.height);
+  kaartKijkZet();
+  return true;
+}
+function schaalGeraakt(sx,sy){
+  const el=document.querySelector(".kaartschaal");
+  if(!el)return false;
+  const r=el.getBoundingClientRect();
+  return sx>=r.left-12&&sx<=r.right+12&&sy>=r.top-22&&sy<=r.bottom+22;
+}
+function schaalKeuzeSluit(){
+  schaalKeuzeOpen=false;
+  const el=document.getElementById("schaalkeuze");
+  if(el){ el.hidden=true; el.textContent=""; }
+}
+function schaalKeuzeSchakel(){
+  if(schaalKeuzeOpen){ schaalKeuzeSluit(); return; }
+  const el=document.getElementById("schaalkeuze"), doos=document.getElementById("kaart");
+  if(!el||!doos||!kaartPlan)return;
+  noordMenuSluit();
+  const db=doos.getBoundingClientRect();
+  const lijst=schaalKeuzeLijst(kaartPlan,db);
+  if(!lijst.length)return;
+  el.textContent="";
+  const nu=(kaartMeterPerPixel(kaartPlan,db,kaartKijk)||0)/CSSPIXEL_M;
+  lijst.forEach(n=>{
+    const b=document.createElement("button"); b.type="button"; b.className="kaartknop";
+    b.textContent="1:"+n;
+    if(nu&&Math.abs(nu-n)/n<0.06)b.classList.add("actief");
+    b.onclick=ev=>{ if(ev&&ev.stopPropagation)ev.stopPropagation(); schaalNaar(n); schaalKeuzeSluit(); };
+    el.appendChild(b);
+  });
+  el.hidden=false; schaalKeuzeOpen=true;
+}
 const CSSPIXEL_M=0.0254/96;
 function kaartVerhouding(mpp){
   const n=mpp/CSSPIXEL_M;
@@ -20488,9 +20586,8 @@ function kaartKompas(laag,doos,b,k){
   const balkY0=Math.round(midY-4);
   noord.style.setProperty("--px",Math.round(rechtsRand-44)+"px"); noord.style.setProperty("--py",(balkY0+36)+"px"); noord.style.setProperty("--a",a.toFixed(1)+"deg");
   const draai=document.createElement("div"); draai.className="kaartnoord-draai";
-  const letter=document.createElement("span"); letter.className="kaartnoord-n"; letter.textContent="N";
-  const pijl=document.createElement("span"); pijl.className="kaartnoord-pijl";
-  draai.appendChild(letter); draai.appendChild(pijl); noord.appendChild(draai); laag.appendChild(noord);
+  const pijl=document.createElement("span"); pijl.className="kaartnoord-pijl";      // zonder letter (de opdrachtgever, 17/10/2026: "de N mag je weglaten")
+  draai.appendChild(pijl); noord.appendChild(draai); laag.appendChild(noord);
   // een balk van een rond aantal meter, hoogstens een derde van de breedte van het zichtbare vlak
   const ruimte=Math.min(140,(vb&&vb.width?vb.width:b.width)*0.34);
   const passen=SCHAALMATEN.filter(v=>v/mpp<=ruimte);
@@ -21013,6 +21110,8 @@ function kaartBedrading(){
        in Chromium, met een haak op de knop: pointerdown kwam aan, click nooit. Dus voor een
        knop niet vangen; haar eigen onclick houdt de tik met stopPropagation bij zich. */
     if(e.target&&e.target.closest&&e.target.closest(".kaartknop"))return;
+    clearTimeout(noordTimer); noordLang=false;
+    if(kaartPlan&&noordGeraakt(e.clientX,e.clientY)&&(e.isPrimary!==false))noordTimer=setTimeout(()=>{ noordTimer=null; noordLang=true; noordMenuToon(); },NOORDLANG);
     try{v.setPointerCapture(e.pointerId);}catch(err){}
     wijzers.set(e.pointerId,{x:e.clientX, y:e.clientY});
     if(wijzers.size===2){
@@ -21024,7 +21123,7 @@ function kaartBedrading(){
 
   v.onpointermove=e=>{
     if(!e)return;
-    if(x0!=null&&(Math.abs(e.clientX-x0)>KAARTTIK||Math.abs(e.clientY-y0)>KAARTTIK))bewogen=true;
+    if(x0!=null&&(Math.abs(e.clientX-x0)>KAARTTIK||Math.abs(e.clientY-y0)>KAARTTIK)){ bewogen=true; clearTimeout(noordTimer); noordTimer=null; }
     if(!wijzers.has(e.pointerId))return;
     const vorig=wijzers.get(e.pointerId), nu={x:e.clientX, y:e.clientY};
     wijzers.set(e.pointerId,nu);
@@ -21055,7 +21154,7 @@ function kaartBedrading(){
   };
 
   const losLaten=e=>{
-    kaartRaakt=false;
+    kaartRaakt=false; clearTimeout(noordTimer); noordTimer=null;
     if(e)wijzers.delete(e.pointerId);
     if(wijzers.size<2)knijp=null;
     if(wijzers.size===0&&kaartGedraaid){ kaartGedraaid=false; kaartBewaarDraai(); }      // de draai blijft bij het plan, zoals bij Plan draaien
@@ -21094,8 +21193,12 @@ function kaartBedrading(){
     const veegde=bewogen;
     const sx=(e&&e.clientX!=null)?e.clientX:x0, sy=(e&&e.clientY!=null)?e.clientY:y0;
     x0=null; y0=null; bewogen=false;
+    if(noordLang){ noordLang=false; return; }      // het loslaten na de lange druk is geen tik op de noordpijl
     if(veegde)return;
     if(paneelStand()!=="dicht"){ zetPaneel("dicht"); return; }
+    if(kaartPlan&&schaalGeraakt(sx,sy)){ schaalKeuzeSchakel(); return; }      // een tik op de schaalbalk opent de ronde schalen
+    if(schaalKeuzeOpen){ schaalKeuzeSluit(); return; }
+    if(noordMenuOpen){ noordMenuSluit(); return; }
     if(kaartPlan&&noordGeraakt(sx,sy)){ kaartNaarNoord(); return; }
     if(kaartMeet.aan){ if(kaartPlan)meetPrik(sx,sy); return; }      // in de meetstand prikt een tik een meetpunt, geen punt van het verslag      // een tik op de noordpijl draait het blad met het noorden boven
     if(verzetPunt){ if(kaartPlan)verzetOpKaart(sx,sy); return; }
