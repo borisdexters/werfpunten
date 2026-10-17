@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-5um2XVoMk5a7L5Ypl2m/tOwRY5NAnKvnaVvj7eA276o=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-NCQOZ8aVlg+/werPv2BqIZClEpDzgp9M4leVG3Y4yT0='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-l7/kY1j3o9GT/4th1V6sJhWokVmx+Gdxh6Bn6m2Btjo=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-zE00NCxo7gPlR2t6v+hWKDa9OOsgKFBnkj3vUdXPtME='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -268,7 +268,12 @@
     width:44px;height:44px;min-height:0;min-width:0;padding:0;border-radius:50%;box-sizing:border-box;
     border:1px solid rgba(255,255,255,.75);background:rgba(255,255,255,.62);color:var(--ink);
     -webkit-backdrop-filter:blur(10px) saturate(1.15);backdrop-filter:blur(10px) saturate(1.15);box-shadow:0 1px 8px rgba(0,0,0,.14)}
+  /* De tikvlakken van de schaalbalk en de noordpijl. De schaalbalk staat op de hoogte van de titel, boven het gat waarin het plan ligt, en daar vangt de titelrij de tik: een tik op de balk deed niets (de opdrachtgever, 17/10/2026: "de functie van de pijl en de schaal zijn verdwenen"). Een knop in de vulling ligt boven de titelrij, ook als hij uit de vulling steekt. Onzichtbaar; de tekening zelf staat in de kaartlaag. */
+  .vulling .kaartknop.kaarttik{position:absolute;left:var(--l,0);top:var(--t,0);width:var(--w,44px);height:var(--h,44px);min-height:0;min-width:0;padding:0;margin:0;border:0;border-radius:22px;background:transparent;box-shadow:none;z-index:6;-webkit-tap-highlight-color:transparent;cursor:pointer}
+  .vulling .kaartknop.kaarttik[hidden]{display:none}
   .vulling .kaartknop.kaartmeet{top:calc(var(--btop,64px) + 52px)}
+  .vulling.zonder-tekst .kaartknop.kaartmeet{top:var(--btop,64px)}
+  .vulling.zonder-tekst .kaartmeetbalk{top:calc(var(--btop,64px) + 52px)}
   .vulling .kaartmeetbalk{top:calc(var(--btop,64px) + 104px);gap:8px}
   /* de lijst met ronde schalen, links van de knoppenkolom, op de hoogte van de noordpijl */
   .vulling .schaalkeuze{position:absolute;top:calc(var(--btop,64px) - 52px);right:70px;z-index:3;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
@@ -2284,10 +2289,9 @@
   #dlg-body .dossier-kast > .fiche-hoofdstuk[aria-expanded="true"]{padding-top:8px;padding-bottom:8px;line-height:1.15}
   #dlg-body .dossier-kast .fiche-hoofdstuk.lb-deel{padding-top:22px;padding-bottom:22px;line-height:1.2}      /* dezelfde lucht voor een deel als voor een hoofdstuk, open of dicht (de opdrachtgever, 16/10/2026) */
   #dlg-body .dossier-kast .fiche-hoofdstuk.lb-hfst{padding-top:22px;padding-bottom:22px;line-height:1.2}      /* De opdrachtgever, 16/10/2026: meer lucht, en dezelfde lucht voor een hoofdstuk dat open of dicht staat (34 hoofdstuk 34) */
-  #dlg-body .dossier-kast .lb-rij{--rp:11px;padding-top:var(--rp);padding-bottom:var(--rp)}
+  #dlg-body .dossier-kast .lb-rij{--rp:20px;padding-top:var(--rp);padding-bottom:var(--rp)}      /* dezelfde lucht voor een artikel dat open of dicht staat: de tekst springt niet meer omhoog als je het opent (de opdrachtgever, 17/10/2026) */
   /* De opdrachtgever, 14/10/2026: "tussen de hoofdstukken in het scrollen meer whitespace, zonder het titelblok te vergroten": alleen de dichte rijen krijgen meer lucht. Een open rij is wat vastzit,
      en die houdt de compacte maat, dus de stapel bovenaan blijft even hoog. */
-  #dlg-body .dossier-kast .lb-rij[aria-expanded="false"]{--rp:20px}
   /* De opdrachtgever, 14/10/2026: op een klein scherm (de SE) neemt de titel veel ruimte in: de vastgezette titel wordt daar wat strakker. */
   @media (max-height:760px){
     #dlg-body .dossier-kast > .fiche-hoofdstuk[aria-expanded="true"]{font-size:calc(var(--tm) * 1.3)}
@@ -3091,7 +3095,7 @@
     type="button" class="kaartknop kaartverzet" id="kaartverzet"
     title="Het verzetten van een punt stoppen" hidden>Annuleer verzetten</button><button
     type="button" class="kaartknop kaartperceel" id="kaartperceel"
-    title="De app koos dit perceel zelf; tik als het niet klopt" hidden>Ander perceel?</button><div class="schaalkeuze" id="schaalkeuze" hidden></div><div class="schaalkeuze noordmenu" id="noordmenu" hidden></div><button
+    title="De app koos dit perceel zelf; tik als het niet klopt" hidden>Ander perceel?</button><button type="button" class="kaartknop kaarttik" id="schaaltik" aria-label="Schaal kiezen" hidden></button><button type="button" class="kaartknop kaarttik" id="noordtik" aria-label="Noord boven" hidden></button><div class="schaalkeuze" id="schaalkeuze" hidden></div><div class="schaalkeuze noordmenu" id="noordmenu" hidden></div><button
     type="button" class="kaartknop kaarttekst" id="kaarttekst" title="Tekst op het plan groter of kleiner" aria-label="Tekst groter" hidden>A</button><button
     type="button" class="kaartknop kaartmeet" id="kaartmeet" title="Meten: lijnstukken en oppervlakte" aria-label="Meten" hidden><svg
     viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"
@@ -3919,7 +3923,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v561";
+const VERSIE="v564";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -20447,14 +20451,36 @@ function meetUitZet(){
   else
     uit.textContent=d.punten.length>1?("Totaal "+meetFmt(m.lengte)+" m"):"Tik het volgende punt";
 }
+/* Een GRB van vóór de drie tekstmaten (of een ander plan met een svg-beeld waarin tekst staat) krijgt zijn drie uitvoeringen alsnog: de straatnamen zijn <text>-elementen in het beeld, en hun maat staat als getal in de tag (de opdrachtgever, 17/10/2026: "de A is verdwenen" op het oude GRB). Het beeld zoals het is blijft de eerste maat. */
+const tekstKanKaart=new WeakMap();
+function svgVanBeeld(beeld){
+  if(typeof beeld!=="string"||beeld.indexOf("data:image/svg+xml")!==0)return null;
+  try{ return decodeURIComponent(beeld.slice(beeld.indexOf(",")+1)); }catch(e){ return null; }
+}
+function maakTekstVarianten(plan,maten){
+  const svg=svgVanBeeld(plan&&plan.beeld);
+  if(!svg||!/<text\b/.test(svg))return null;
+  const m=maten||[1,1.7,2.6];
+  return m.map(f=>f===1?plan.beeld:"data:image/svg+xml;charset=utf-8,"+encodeURIComponent(
+    svg.replace(/<text\b[^>]*>/g,tag=>tag.replace(/(font-size|letter-spacing|stroke-width)="([\d.]+)"/g,(x,a,v)=>a+'="'+Math.round(parseFloat(v)*f)+'"'))));
+}
+function tekstKan(plan){
+  if(!plan)return false;
+  if(Array.isArray(plan.beeldVarianten)&&plan.beeldVarianten.length>1)return true;
+  if(!tekstKanKaart.has(plan)){ const svg=svgVanBeeld(plan.beeld); tekstKanKaart.set(plan,!!(svg&&/<text\b/.test(svg))); }
+  return tekstKanKaart.get(plan);
+}
 function tekstKnopZet(){
   const kn=document.getElementById("kaarttekst");
   if(!kn)return;
-  kn.hidden=!(kaartPlan&&Array.isArray(kaartPlan.beeldVarianten)&&kaartPlan.beeldVarianten.length>1);
+  const kan=tekstKan(kaartPlan);
+  kn.hidden=!kan;
+  const vul=document.getElementById("vulling"); if(vul&&vul.classList)vul.classList.toggle("zonder-tekst",!kan);      // zonder A schuift de liniaal omhoog: geen gat in de kolom
 }
 /* De volgende tekstmaat: normaal, groter, nog groter, en weer normaal. Het beeld wisselt ter plekke (zoom en draai blijven), en de keuze blijft bij het plan. */
 function tekstVolgende(){
   const p=kaartPlan;
+  if(p&&!(Array.isArray(p.beeldVarianten)&&p.beeldVarianten.length>1)&&tekstKan(p)){ const v=maakTekstVarianten(p,GRBSTIJL.naam.maten); if(v){ p.beeldVarianten=v; p.tekstmaat=0; } }
   if(!p||!Array.isArray(p.beeldVarianten)||p.beeldVarianten.length<2)return false;
   const i=((p.tekstmaat||0)+1)%p.beeldVarianten.length;
   p.tekstmaat=i; p.beeld=p.beeldVarianten[i];
@@ -20465,6 +20491,7 @@ function tekstVolgende(){
 }
 function meetKnopZet(){
   try{ tekstKnopZet(); }catch(e){}
+  if(!(kaartPlan&&kaartMeterPerPixel(kaartPlan,{width:1,height:1},{schaal:1})))tikVlakkenWeg();
   const kn=document.getElementById("kaartmeet"), balk=document.getElementById("kaartmeetbalk");
   if(!kn)return;
   const kan=!!(kaartPlan&&kaartMeterPerPixel(kaartPlan,{width:1,height:1},{schaal:1}));
@@ -20516,6 +20543,16 @@ function meetPrik(sx,sy){
   tekenKaartPunten(); meetUitZet();
   return true;
 }
+function tikBedrading(){
+  const sch=document.getElementById("schaaltik"), noo=document.getElementById("noordtik");
+  if(sch)sch.onclick=ev=>{ if(ev&&ev.stopPropagation)ev.stopPropagation(); schaalKeuzeSchakel(); };
+  if(noo){
+    const stop=()=>{ clearTimeout(noordTimer); noordTimer=null; };
+    noo.onpointerdown=ev=>{ if(ev&&ev.stopPropagation)ev.stopPropagation(); stop(); noordLang=false; if(ev.isPrimary!==false)noordTimer=setTimeout(()=>{ noordTimer=null; noordLang=true; noordMenuToon(); },NOORDLANG); };
+    noo.onpointerup=stop; noo.onpointercancel=stop; noo.onpointerleave=stop;
+    noo.onclick=ev=>{ if(ev&&ev.stopPropagation)ev.stopPropagation(); if(noordLang){ noordLang=false; return; } if(noordMenuOpen){ noordMenuSluit(); return; } kaartNaarNoord(); };
+  }
+}
 function meetBedrading(){
   const zet=(id,fn)=>{ const e=document.getElementById(id); if(e)e.onclick=ev=>{ if(ev&&ev.stopPropagation)ev.stopPropagation(); fn(); tekenKaartPunten(); meetKnopZet(); }; };
   const ta=document.getElementById("kaarttekst"); if(ta)ta.onclick=ev=>{ if(ev&&ev.stopPropagation)ev.stopPropagation(); tekstVolgende(); };
@@ -20526,7 +20563,7 @@ function meetBedrading(){
   zet("meetwis",()=>{ meetData().punten.length=0; });
   zet("meetklaar",()=>{ kaartMeet.aan=false; });
 }
-meetBedrading();
+meetBedrading(); tikBedrading();
 /* ---- de schaalkeuze ----
    de opdrachtgever, 17/10/2026: "je tikt de schaalbalk aan, dan wil ik vast kunnen zoomen op ronde getallen: 1:25, 50, 75, 100, 200, 250, 500 enzovoort." Een tik op de schaalbalk opent een lijstje met de ronde schalen die het plan kan tonen; een keuze zoomt daar exact naartoe, om het midden van wat je ziet. De verhouding rekent met de standaardgrootte van een pixel (zie kaartVerhouding), net als het getal onder de balk. */
 const SCHAALKEUZE=[25,50,75,100,200,250,500,1000,2000,2500,5000];
@@ -20589,6 +20626,18 @@ function kaartVerhouding(mpp){
   if(!(n>0)||!isFinite(n))return "";
   return "1:"+String(Math.max(1,Math.round(Number(n.toPrecision(2)))));
 }
+/* De tikvlakken (zie .kaarttik) op de plek van de schaalbalk en de noordpijl; de coördinaten komen binnen als kaartcoördinaten en gaan eruit als vullingcoördinaten. */
+function tikVlakken(db,vb,sb,nb){
+  const sch=document.getElementById("schaaltik"), noo=document.getElementById("noordtik");
+  const dx=vb&&vb.width?vb.left-db.left:0, dy=vb&&vb.height?vb.top-db.top:0;
+  const zet=(el,r)=>{ if(!el||!r||!el.style)return; el.hidden=false;
+    el.style.setProperty("--l",Math.round(r.l-dx)+"px"); el.style.setProperty("--t",Math.round(r.t-dy)+"px");
+    el.style.setProperty("--w",Math.round(r.w)+"px"); el.style.setProperty("--h",Math.round(r.h)+"px"); };
+  zet(sch,sb); zet(noo,nb);
+}
+function tikVlakkenWeg(){
+  ["schaaltik","noordtik"].forEach(id=>{ const e=document.getElementById(id); if(e)e.hidden=true; });
+}
 function kaartKompas(laag,doos,b,k){
   const plan=kaartPlan, g=plan&&plan.georef;
   const mpp=kaartMeterPerPixel(plan,b,k);
@@ -20621,6 +20670,7 @@ function kaartKompas(laag,doos,b,k){
   /* De opdrachtgever, 17/10/2026: "dit naar boven": de schaalbalk, de A en de liniaal staan rechts op de hoogte van de titel, in de lege ruimte naast "Plan", en niet onder de titel. De knoppen zitten in de vulling; hun top volgt de schaalbalk via --btop. */
   const balkY=Math.round(midY-4);      // de balk zelf in het midden van de titelregel; het getal erboven en de verhouding eronder staan er symmetrisch omheen
   balk.style.setProperty("--px",rechts+"px"); balk.style.setProperty("--py",balkY+"px");
+  tikVlakken(db,vb,{l:rechts-8,t:balkY-20,w:Math.round(lang)+16,h:52},{l:Math.round(rechtsRand-44),t:balkY0+36,w:44,h:44});
   if(vul&&vul.style&&vb)vul.style.setProperty("--btop",Math.round(balkY+88-(vb.top-db.top))+"px");
   balk.style.setProperty("--w",Math.round(lang)+"px");      // (de A staat onder de noordpijl: 36 + 52 onder de balk)
   const t=document.createElement("span"); t.textContent=m<1?(m*100)+" cm":m+" m"; balk.appendChild(t);
