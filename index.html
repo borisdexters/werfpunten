@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-49WJgTYJyjQvBUXs1cr0MdHMs3tCabxrJJAzbZymE7M=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-6M07a3gEMCFVBKj9mNYqqCjlA+/dGVRWMWHS2x0u7yk='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-oOXhtDuHp1/GRDbtvxs9RuK9a4pJkQyh6bFdm/Wso4M=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-Nm9Mspu50+gCb6ok0Hu0+10pGerP8qAW736qaSNwb4E='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1340,6 +1340,11 @@
   html.fiche-open #menubalk{visibility:hidden}
   html.fiche-open #fichedlg:not(.groot) .fiche-media{position:fixed;left:0;right:0;bottom:0;z-index:9;margin:0;height:calc(var(--streep-b) + 62px);padding:0 max(12px,calc(50vw - 320px + 12px)) var(--streep-b);box-sizing:border-box;display:flex;align-items:center;gap:8px;background:var(--surface,#fff);border-top:var(--haar) solid var(--line)}
   html.fiche-open #fichedlg:not(.groot) .fiche-media .fiche-doos{flex:1 1 0;min-width:0}
+  /* De streep om de kaart te schuiven (de opdrachtgever, 17/10/2026: "hierboven een streep om het scherm naar boven of naar beneden te schuiven, stel dat ik nog even op het plan wil kijken"). De hele kopregel is de greep (zie .fiche-greep); de streep zegt het. Sleep je omlaag, dan zakt de kaart naar de onderrand en komt het plan erboven vrij, ook om te verschuiven; sleep je terug omhoog, dan vult de kaart weer het scherm. */
+  html.fiche-open #fichedlg .fiche-kop{position:relative}
+  html.fiche-open #fichedlg .fiche-kop::after{content:"";position:absolute;top:7px;left:50%;width:42px;height:4px;margin-left:-21px;border-radius:2px;background:var(--ink-faint,#9a9a9a);opacity:.55;pointer-events:none}
+  html.fiche-open #fichedlg[style*="height"]{flex:0 0 auto;margin-top:auto}
+  html.fiche-open .wrap:has(#fichedlg[style*="height"])>.vulling{display:block !important}
   html.fiche-open .wrap>.hoofdkop{display:none}
   html.fiche-open #fichedlg{flex:1 1 auto;max-height:none;min-height:0;margin:max(12px,env(safe-area-inset-top)) 12px 12px;border-radius:22px}
   html.fiche-open #fichedlg>.dlg-body{flex:1 1 auto;min-height:0;max-height:none;overflow-y:auto}   /* de grens blijft die van het blad: schermvullend heft de 64vh van .dlg-body op */
@@ -3982,7 +3987,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v576";
+const VERSIE="v578";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -14535,6 +14540,7 @@ function ficheMicVerhuis(){
 }
 function openFiche(tekst,opties){
   try{ ficheMicVerhuis(); }catch(e){}
+  try{ zetBladhoogte(null); }catch(e){}      // een notitie opent altijd vol
   fiche.tekst=String(tekst||"").trim();
   /* En de bron erbij gelijkgezet. `#tekst` is waar de vaststelling stáát -- `bewaarPunt` leest
      daar, en nergens anders. Vandaag komt elke weg hierheen mét die waarde in de hand, dus het
@@ -14839,6 +14845,7 @@ async function zetTekenen(aan){ return (await zetGroot(aan?"teken":null))==="tek
    het venster. Dezelfde reden waarom de grens in dvh staat en niet in px. */
 const BLADSLEUTEL="werfpunten-bladdeel";
 const BLADMIN=96, BLADMAXDEEL=0.88;
+const CALQUEVEEG=40;      // zoveel pixel omhoog vegen vanaf een volle notitie opent het calqueblad (er is bovenaan weinig ruimte, dus een lage drempel)
 /* Waar de gevraagde maat tussen moet blijven. Apart gezet omdat dit het enige deel van het
    slepen is dat na te rekenen valt: de proefschil kent geen vinger en geen scherm. Onderaan de
    kop plus het greepje -- minder is een blad dat je niet meer terugvindt. Bovenaan 88 %, zodat
@@ -14912,6 +14919,7 @@ function zetBladhoogte(px){
   return h;
 }
 function herstelBladhoogte(){
+  if(document.documentElement.classList.contains("fiche-open"))return zetBladhoogte(null);      // schermvullend: elke notitie begint vol
   const deel=leesBladdeel();
   if(deel===null)return zetBladhoogte(null);
   return zetBladhoogte(deel*vensterHoogte());
@@ -14933,16 +14941,24 @@ function bladSleepBedrading(){
   greep.addEventListener("pointermove",e=>{
     if(!sleep)return;
     /* Naar boven slepen is een kleinere clientY en een gróter blad. */
-    zetBladhoogte(sleep.h-(e.clientY-sleep.y));
+    sleep.gevraagd=sleep.h-(e.clientY-sleep.y);
+    zetBladhoogte(sleep.gevraagd);
     e.preventDefault();
   });
   const los=e=>{
     if(!sleep)return;
+    const sleepGevraagd=(typeof sleep.gevraagd==="number")?sleep.gevraagd:null;
+    const startHoogte=sleep.h, startVol=sleep.h>=vensterHoogte()*0.8;      // begon de sleep met een volle kaart?
     sleep=null;
     dlg.classList.remove("sleept");
     try{ greep.releasePointerCapture(e.pointerId); }catch(err){}
     const v=vensterHoogte();
-    if(v>0)bewaarBladdeel(+(dlg.getBoundingClientRect().height/v).toFixed(4));
+    if(document.documentElement.classList.contains("fiche-open")){
+      /* Schermvullend: niet onthouden, en bijna vol is vol. En wie voorbij een volle kaart nog verder omhoog veegt (de opdrachtgever, 17/10/2026: "naar boven vegen, hieruit volgt automatisch het calqueblad"), krijgt het calqueblad: de notitie is vol, het vel erover is de volgende laag. */
+      const voorbij=sleepGevraagd!==null&&v>0&&startVol&&sleepGevraagd-startHoogte>CALQUEVEEG;
+      if(v>0&&dlg.getBoundingClientRect().height>=v*0.8)zetBladhoogte(null);
+      if(voorbij&&!fiche.groot)zetGroot("teken");
+    }else if(v>0)bewaarBladdeel(+(dlg.getBoundingClientRect().height/v).toFixed(4));
     /* De speld kan er nu onder of boven liggen; de kaart hoort mee te schuiven. */
     try{ houdSpeldVrij(); }catch(err){}
   };
