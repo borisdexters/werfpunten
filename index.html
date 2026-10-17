@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-oYIv5O/zIv4AIBlVcId9basykKOVQEKf5DqEvfGuL4A=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-J47WV1lGHJcUjNnszdlI2LeZdoey+8Bj9V0IlCzI7vY='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-o2UVYGJIF4UAgxqe9mFt7dPLDjnvU5FWSlN1oPDWIPk=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-oiqgglpW8k4Wmqn0BdolaMrbPr+DzuZHjC0qcimBMlY='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -442,9 +442,11 @@
      als tegel naast een horizontale fasetegel hield ze 90 px over; als losse titel naast de
      verticale fase 174 px. */
   #projectknop{background:none;padding-left:8px;font-weight:600;letter-spacing:.02em}
-  #projectknop.met-adres{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;line-height:1.2;min-width:0;overflow:hidden;text-align:left}
-  #projectknop .pk-adres{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  #projectknop .pk-kad{display:block;font-size:.78em;font-weight:400;color:var(--ink-soft);white-space:nowrap}
+  #projectknop.met-adres{display:flex;flex-direction:row;align-items:baseline;justify-content:flex-start;gap:16px;line-height:1.2;min-width:0;overflow-x:auto;overflow-y:hidden;text-align:left;white-space:nowrap;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  #projectknop.met-adres::-webkit-scrollbar{display:none}
+  #projectknop .pk-adres{display:block;flex:none;white-space:nowrap}
+  #projectknop .pk-kad{display:block;flex:none;font-size:.82em;font-weight:400;white-space:nowrap}
+  #projectknop .pk-kadlabel{color:var(--ink-soft);margin-right:.5em}
   /* Niet `leeg`: die klasse bestaat al in deze app met padding:32px en gecentreerde tekst, en
      ze won van .kcel omdat ze later in het blok staat. Gemeten op 28/09/2026 in de open stand:
      de dossiercel was 88 px hoog en rekte de hele eerste rij mee op. Zelfde les als bij de
@@ -1076,6 +1078,10 @@
   html.menu-open .menubalk:not(.menubalk-glas){visibility:hidden}      /* de rij in het glas neemt de plaats over */
   .menu-namen{display:flex;align-items:center;gap:0;height:var(--namenh);box-sizing:border-box;padding:0 var(--marge) var(--streep-b);overflow-x:auto;white-space:nowrap;scrollbar-width:none;opacity:var(--f,0)}
   .menu-namen::-webkit-scrollbar{display:none}
+  /* De knoppen van Instellingen genummerd, per groep opnieuw vanaf 1 (de opdrachtgever, 17/10/2026). Een teller in de opmaak: een verborgen knop telt niet mee, en de knoppen die hun tekst zelf wisselen (AI-modus, Aanmelden) houden hun nummer. */
+  .beheer-groep.genummerd{counter-reset:bnr}
+  .beheer-groep.genummerd>button:not([hidden])::before{counter-increment:bnr;content:counter(bnr) "\00a0\00a0";color:var(--ink-soft)}
+  .beheer-groep.genummerd>#backup.wacht:not([hidden])::before{counter-increment:bnr;content:counter(bnr) "\00a0\00a0\25CF ";color:var(--warn)}      /* Back-up met de waarschuwingsstip: het nummer blijft staan */
   .menu-naam{flex:none;display:inline-flex;flex-direction:column;align-items:center;border:0;border-radius:0;background:none;padding:6px 16px;font:inherit;font-size:var(--tm);color:var(--ink);-webkit-tap-highlight-color:transparent}
   .menu-naam+.menu-naam{border-left:var(--haar) solid var(--line)}      /* een verticaal lijntje tussen de namen, even dun als de andere lijntjes */
   .menu-naam:first-child{padding-left:0}
@@ -3406,7 +3412,7 @@
   <div class="dlg-body beheer-body">
     <h3>Deze werf</h3>
     <p class="beheer-uitleg">Hoort bij dit dossier. Een andere werf draagt haar eigen lijsten.</p>
-    <div class="beheer-groep">
+    <div class="beheer-groep genummerd">
       <button type="button" id="zonebeheer">zones of rubrieken</button>
       <button type="button" id="contactbeheer">contacten</button>
       <button type="button" id="hoofdstukbeheer">hoofdstukken</button>
@@ -3421,7 +3427,7 @@
     <h3>Dit toestel</h3>
     <p class="beheer-uitleg">Jouw vaktaal en je bib — die veranderen niet als je de straat
       oversteekt, en reizen mee naar elke werf.</p>
-    <div class="beheer-groep">
+    <div class="beheer-groep genummerd">
       <button type="button" id="woordbeheer">woorden</button>
       <button type="button" id="leerbeheer">geleerd</button>
       <button type="button" id="onderdeelbeheer">onderdelen</button>
@@ -3913,7 +3919,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v558";
+const VERSIE="v560";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -6958,7 +6964,13 @@ function merkProject(){
       k.textContent="";
       const a1=document.createElement("span"); a1.className="pk-adres"; a1.textContent=sn.adres||p.naam;
       k.appendChild(a1);
-      if(kad){ const a2=document.createElement("span"); a2.className="pk-kad"; a2.textContent=kad; k.appendChild(a2); }
+      /* Naast het adres, met het label erbij (de opdrachtgever, 17/10/2026: "de Afd/Sie/Nr naast het adres; te smal: licht laten scrollen; zet de tekst Afd/Sie/Nr erbij"). */
+      if(kad){
+        const a2=document.createElement("span"); a2.className="pk-kad";
+        const lb=document.createElement("span"); lb.className="pk-kadlabel"; lb.textContent="Afd / Sie / Nr";
+        const wd=document.createElement("span"); wd.className="pk-kadwaarde"; wd.textContent=kad;
+        a2.appendChild(lb); a2.appendChild(wd); k.appendChild(a2);
+      }
       k.classList.add("met-adres");
     }else{
       k.textContent=p.naam;
@@ -21420,7 +21432,7 @@ async function toonVergaderingen(faseCode){
   const bak=maakEl("div","loc-kast verslagen-kast");
   body.appendChild(bak);
   const nrVan=v=>String(Math.max(0,+v.nr||0)).padStart(2,"0");
-  const naamVan=(v,loopt)=>datumKort(v.datum)+(v.titel?" \u00B7 "+v.titel:"")+" \u00B7 "+(loopt?"loopt":(v.verslagstatus||(v.afgesloten?"definitief":"concept")));
+  const naamVan=(v,loopt)=>datumKort(v.datum)+(v.titel?" \u00B7 "+v.titel:"")+" \u00B7 "+(loopt?"loopt":(v.verslagstatus||(v.afgesloten?"definitief":"concept")))+" \u00B7 "+nrVan(v);
   const koppen=[];
   if(faseVan(staat)===gekozen){
     koppen.push({nr:nrVan(staat),naam:naamVan(staat,true),lade:true,doe:()=>{ dlg.close(); openVerslag(); }});
@@ -21432,6 +21444,8 @@ async function toonVergaderingen(faseCode){
   if(leeg)koppen.push({nr:"",naam:"Nog geen verslagen in deze fase",lade:false,doe:null});
   koppen.push({nr:"+",naam:"Nieuw faseverslag",lade:true,doe:async()=>{ dlg.close(); await nieuwFaseverslag(gekozen); }});
   koppen.push({nr:"\u00B7",naam:"Fasen aanpassen",lade:true,doe:()=>{ dlg.close(); beheerFasen(); }});
+  /* Doorlopend genummerd, zoals Dossier en Locatie (de opdrachtgever, 17/10/2026: "ook de lijsten bij Verslag en Instellingen nummeren"): 1, 2, 3... Het volgnummer van het verslag zelf staat achter de naam. */
+  koppen.forEach((k,i)=>{ if(k.lade)k.nr=String(i+1); });
   bouwBestekkast(bak,koppen);
   if(leeg&&bak.children[0]){ bak.children[0].disabled=true; bak.children[0].classList.add("uit"); }
 
