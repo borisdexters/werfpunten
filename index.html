@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-B6fdfov692Rw/uK6pBVRbWPQV6hurRiCb5ovDuGjzgw=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-zggdeV5mrMCJC0FTswOcUdjo7Q7h/0obeigytlDsG5E='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-cz0Blu1dEyh/Qk2z7yBLtQ4MacFMaU+1sqq5rkda6CI=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-zggdeV5mrMCJC0FTswOcUdjo7Q7h/0obeigytlDsG5E='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3842,7 +3842,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v520";
+const VERSIE="v521";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -16970,6 +16970,17 @@ function grbRaster(breedteM,hoogteM,vak){
   return uit;
 }
 
+/* De lijnen van een lijnlaag, gefilterd op de eigenschappen: een lijst van lijsten [x,y]. */
+function grbLijnen(features,houd){
+  const uit=[];
+  (features||[]).forEach(f=>{
+    if(houd&&!houd(f.properties||{}))return;
+    const g=f.geometry||{};
+    const ls=g.type==="LineString"?[g.coordinates]:(g.type==="MultiLineString"?g.coordinates:[]);
+    ls.forEach(l=>{ if(l&&l.length>=2)uit.push(l); });
+  });
+  return uit;
+}
 /* De randen van de gebouwen, zonder de stukken die op een perceelsgrens liggen. `gebouwen` en `percelen` zijn lijsten van lijsten ringen (Lambert-meters); `tol` in meter. Geeft het SVG-pad terug, of "" als er niets overblijft. */
 function grbGebouwLijnen(gebouwen,percelen,tol,naarXY){
   const grenzen=[];
@@ -17034,8 +17045,9 @@ async function maakOmtrekplan(hier,zone,gekozen,toegestaanLeeg){
   minX-=rand; maxX+=rand; minY-=rand; maxY+=rand;
   const kader=[minX,minY,maxX,maxY];
 
-  const [percelen,gebouwen,wegsegmenten]=await Promise.all([
-    grbLaag("GRB:ADP",kader,120), grbLaag("GRB:GBG",kader,200), grbLaag("GRB:Wegsegment",kader,200).catch(()=>[])]);
+  const [percelen,gebouwen,wegsegmenten,wegranden,boordstenen]=await Promise.all([
+    grbLaag("GRB:ADP",kader,120), grbLaag("GRB:GBG",kader,200), grbLaag("GRB:Wegsegment",kader,200).catch(()=>[]),
+    grbLaag("GRB:WGO",kader,300).catch(()=>[]), grbLaag("GRB:WLI",kader,300).catch(()=>[])]);
   /* De opdrachtgever, 08/10/2026: "omtrek geladen, maar ik zie niets." Op een plek waar het GRB niets kent (buiten Vlaanderen, of een
      plek zonder perceel) tekende deze functie toch een wit kader en de app meldde "geladen". Nu is dat een fout, behalve
      als iemand er uitdrukkelijk om vroeg (het lege kader uit het venster "Geen perceel gevonden"). */
@@ -17053,6 +17065,9 @@ async function maakOmtrekplan(hier,zone,gekozen,toegestaanLeeg){
   stuk.push('<rect width="'+bw+'" height="'+bh+'" fill="#fff"/>');
   const wegen=locWegen(wegsegmenten,200).filter(w=>w.l&&w.l.length>=2);
   wegen.forEach(w=>stuk.push('<path d="M'+w.l.map(q=>naarBeeldXY(q).join(",")).join("L")+'" fill="none" stroke="'+ZWART+'" stroke-width="3" stroke-linejoin="round"/>'));
+  /* Het voetpad (de opdrachtgever, 17/10/2026: "kan je ook het voetpad tekenen?"). Het GRB kent het voetpad niet als vlak: het is de strook tussen de rand van de rijbaan of de boordsteen en de perceelsgrens. Wat het wel geeft zijn die randen: de rand van de rijbaan en de grens van de zone voor zwakke weggebruikers (stippellijn), en de verhoogde boordsteen (dunne lijn). Daartussen leest het voetpad. */
+  grbLijnen(wegranden,()=>true).forEach(l=>stuk.push('<path d="M'+l.map(q=>naarBeeldXY(q).join(",")).join("L")+'" fill="none" stroke="'+ZWART+'" stroke-width="3" stroke-dasharray="26 20"/>'));
+  grbLijnen(boordstenen,p=>/boord|kant/i.test(String(p.LBLTYPE||""))).forEach(l=>stuk.push('<path d="M'+l.map(q=>naarBeeldXY(q).join(",")).join("L")+'" fill="none" stroke="'+ZWART+'" stroke-width="3"/>'));
   percelen.forEach(f=>{ if(f!==mijn)stuk.push('<path d="'+pad(f)+'" fill="none" stroke="'+ZWART+'" stroke-width="5"/>'); });
   /* Een gebouwlijn die op een perceelsgrens ligt (binnen 15 cm) wordt niet nog eens getekend: de twee GRB-lagen liggen een paar centimeter uit elkaar en dat gaf dubbele lijnen (de opdrachtgever, 17/10/2026). */
   const gebouwPad=grbGebouwLijnen(gebouwen.map(f=>grbRingen(f)),percelen.map(f=>grbRingen(f)),0.15,naarBeeldXY);
