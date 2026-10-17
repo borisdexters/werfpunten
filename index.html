@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-71SuWwd6yxOtP4t0bm4LdPtSPx/7qIkdsKonLHye2cc=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-yQvq89v4Kh3FXa1luI3rgM8KbVkgJI2U2G4KFo9aUYg='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-oRXvXRLeDU+oHsUPAQmDAXsITw4J1PEVreTZomwk1GE=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-cnfeVwoOYVxc1m4N4Z7jdrf+ENWEOBwIBh1/9RNV7ZM='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1321,7 +1321,12 @@
   #fichedlg .fiche-media:not(:has(.groot)) .fiche-doos+.fiche-doos{border-left:var(--haar) solid var(--line)}
   #fichedlg .fiche-media:not(:has(.groot)) .fiche-doos-teken{font-size:18px}
   #fichedlg .fiche-media:not(:has(.groot)) .fiche-doos-svg svg{width:18px;height:18px}
-  #fichedlg .fiche-media:not(:has(.groot)) .fiche-doos-woord{font-size:14px}
+  #fichedlg .fiche-media:not(:has(.groot)) .fiche-doos-woord{font-size:14px;white-space:nowrap}
+  /* Op een smal scherm (een Samsung S24 is 360 px) past "Tekenen" niet naast zijn teken: het woord wint, het teken wijkt. */
+  @media (max-width:380px){
+    #fichedlg .fiche-media:not(:has(.groot)) .fiche-doos{gap:0;padding-left:4px;padding-right:4px}
+    #fichedlg .fiche-media:not(:has(.groot)) .fiche-doos-teken,#fichedlg .fiche-media:not(:has(.groot)) .fiche-doos-svg{display:none}
+  }
   /* Wissen en Bewaren: woorden, in een rij onderaan, zoals Edit en Delete in het voorbeeld */
   #fichedlg .fiche-knoppen{margin:6px calc(-1 * var(--marge)) -14px;border-top:var(--haar) solid var(--line)}
   #fichedlg .fiche-weg,#fichedlg .fiche-bewaar{padding:16px var(--marge);font-size:13px;letter-spacing:.08em;text-transform:uppercase}
@@ -3973,7 +3978,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v572";
+const VERSIE="v573";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
