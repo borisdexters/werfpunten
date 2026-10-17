@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-U3Vgc+wv9NZvVwMizLF+UCu9q8+87pqaBpM5YM1TDw4=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-VH/AQHE3/q/HjrHnafxSYe4xYDek5+oIBT48e/k/mzY='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-ku4oSA+WgiyYzfRPMB2WHijJZcLlCqs3NH18zIkV0NQ=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-mMGbH1F8pKgOqrFGOExA2uJcMNzl4uHAc1ItyEJg4WE='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1338,9 +1338,12 @@
   /* Zoals het voorbeeld (de NOTES-kaart): een afgeronde kaart met lucht rondom, het schrijfvak neemt de ruimte, Wissen en Bewaren staan vast onderaan. */
   /* Foto, Scan en Tekenen staan in de balk helemaal onderaan (de opdrachtgever, 17/10/2026, met een pijl naar de onderste balk): zolang je noteert zijn de camera, het menu en de plus daar toch niet nodig. De tegels blijven dezelfde elementen, met hun vinkje of beeld; alleen hun plaats verandert. Staat een vak open (de calque, het fotovak), dan liggen ze weer in de kaart. */
   /* DE PIJL BOVENAAN HET PLAN (de opdrachtgever, 17/10/2026): "ik wil bovenaan een pijl die je naar beneden kan trekken; hierom verschijnt het calqueblad om op te tekenen, automatisch wordt er dan een punt aangemaakt". Het spiegelbeeld van de pijl onderaan: die trekt het menu omhoog, deze trekt het calqueblad omlaag. Alleen op het hoofdscherm: elk geopend venster (een pagina, de notitie) dekt haar af. */
-  .pentrek{position:fixed;top:calc(env(safe-area-inset-top,0px) + 37px);left:50%;transform:translateX(-50%) translateY(var(--trek,0px));z-index:4;width:64px;height:38px;border:0;border-radius:19px;padding:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 1px 6px rgba(0,0,0,.12);color:var(--ink);touch-action:none;cursor:pointer}
-  .pentrek svg{width:26px;height:26px}
+  .pentrek,.pentrek-op{position:fixed;top:calc(env(safe-area-inset-top,0px) + 37px);left:50%;transform:translateX(-50%) translateY(var(--trek,0px));z-index:4;width:64px;height:38px;border:0;border-radius:19px;padding:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 1px 6px rgba(0,0,0,.12);color:var(--ink);touch-action:none;cursor:pointer}
+  .pentrek svg,.pentrek-op svg{width:26px;height:26px}
+  /* Terug omhoog (de opdrachtgever, 17/10/2026: "ik wil ook terug naar boven kunnen schuiven"): het calqueblad ging omlaag, dus gaat het ook weer omhoog. Boven in het planvenster staan al knoppen, dus de pijl omhoog staat onderaan, vlak boven de onderste balk; omhoog trekken of tikken schuift het blad weg. */
+  .pentrek-op{top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 78px);transform:translateX(-50%) translateY(calc(-1 * var(--trek,0px)));z-index:7}
   .pentrek.trekt{transition:none}
+  .pentrek,.pentrek-op{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
   body:has(dialog[open]) .pentrek,html.fiche-open .pentrek,html.menu-open .pentrek{display:none}
   html.fiche-open #menubalk{visibility:hidden}
   html.fiche-open #fichedlg:not(.groot) .fiche-media{position:fixed;left:0;right:0;bottom:0;z-index:9;margin:0;height:calc(var(--streep-b) + 62px);padding:0 max(12px,calc(50vw - 320px + 12px)) var(--streep-b);box-sizing:border-box;display:flex;align-items:center;gap:8px;background:var(--surface,#fff);border-top:var(--haar) solid var(--line)}
@@ -3992,7 +3995,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v582";
+const VERSIE="v585";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -9672,20 +9675,87 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&menuGlas)menuEinde
 /* De onderste drie: één rij in de body (het hoofdscherm), en één in elk paginavenster, want een venster ligt in de bovenste laag en dekt de rest af. Overal dezelfde hoogte. */
 (()=>{
   { const b=menubalk(false); b.id="menubalk"; document.body.appendChild(b); }
-  { const p=maakEl("button","pentrek"); p.id="pentrek"; p.type="button"; p.setAttribute("aria-label","Tekenen: trek omlaag"); p.title="Trek omlaag om te tekenen op het calqueblad";
+  /* HET SCHUIVEN IS FYSIEK (de opdrachtgever, 17/10/2026: "het schuiven moet fysiek zichtbaar worden"): het calqueblad is het planvenster zelf, en dat hangt aan je vinger. Trek je de pijl bovenaan omlaag, dan komt het blad van boven in beeld precies zoveel als jij trekt; laat je los voorbij een vijfde van het scherm, dan zakt het verder open, anders veert het terug omhoog en gaat dicht. Met de pijl onderaan in het blad gaat het omgekeerd. */
+  { const dlg=document.getElementById("plandlg");
+    const hoog=()=>Math.max(1,window.innerHeight||800);
+    const zet=(y,animeer)=>{ dlg.style.transition=animeer?("transform "+SCHUIFTIJD+"ms cubic-bezier(.2,.8,.2,1)"):"none"; dlg.style.transform="translateY("+Math.round(y)+"px)"; };
+    const schoon=()=>{ dlg.style.transition=""; dlg.style.transform=""; };
+    const dicht=()=>{ penAuto=false; try{ koppelStop(); }catch(e){} if(dlg.open)dlg.close(); schoon(); };
+    /* Gelukt als je voorbij een vijfde van het scherm trok, of snel en een stuk (een vluchtige veeg). */
+    const genoeg=(dy,ms)=>dy>hoog()*SCHUIFDEEL||(dy>PENTREKDREMPEL&&dy/Math.max(1,ms)>SCHUIFSNEL);
+    const p=maakEl("button","pentrek"); p.id="pentrek"; p.type="button"; p.setAttribute("aria-label","Tekenen: trek omlaag"); p.title="Trek omlaag om te tekenen op het calqueblad";
     p.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>';
-    let y0=null, gedaan=false;
-    p.addEventListener("pointerdown",e=>{ y0=e.clientY; gedaan=false; p.classList.add("trekt"); try{ p.setPointerCapture(e.pointerId); }catch(x){} });
+    let y0=null, t0=0, dy=0, opent=null, sleepte=false;
+    /* Het venster staat boven het scherm klaar voor het opent, anders knippert het een beeld lang op zijn plaats. */
+    const begin=()=>{
+      if(opent)return opent;
+      penAuto=true;
+      try{ window.getSelection().removeAllRanges(); }catch(e){}      // het slepen mag geen tekst op het volgende scherm blauw laten staan
+      zet(-hoog(),false);
+      opent=(async()=>{
+        await penNaarPlan();
+        if(!plan||!dlg.open){ penAuto=false; schoon(); return false; }
+        zet(-hoog()+Math.min(dy,hoog()),false);
+        return true;
+      })();
+      return opent;
+    };
+    p.addEventListener("pointerdown",e=>{ e.preventDefault(); y0=e.clientY; t0=Date.now(); dy=0; sleepte=false; opent=null; p.classList.add("trekt"); try{ p.setPointerCapture(e.pointerId); }catch(x){} });
     p.addEventListener("pointermove",e=>{
       if(y0===null)return;
-      const dy=Math.max(0,e.clientY-y0);
+      dy=Math.max(0,e.clientY-y0);
       p.style.setProperty("--trek",Math.min(dy,26)+"px");
-      if(!gedaan&&dy>PENTREKDREMPEL){ gedaan=true; trekCalque(); }
+      if(dy>6){ sleepte=true; begin(); }
+      if(opent&&dlg.open)zet(-hoog()+Math.min(dy,hoog()),false);
     });
-    const los=()=>{ y0=null; p.classList.remove("trekt"); p.style.removeProperty("--trek"); };
+    const los=async()=>{
+      if(y0===null)return;
+      const ms=Date.now()-t0, afstand=dy; y0=null; p.classList.remove("trekt"); p.style.removeProperty("--trek");
+      if(!sleepte)return;              // een tik handelt het klikken hieronder af
+      const lukte=opent?await opent:false;
+      opent=null;
+      if(!lukte)return;
+      if(genoeg(afstand,ms)){ zet(0,true); setTimeout(schoon,SCHUIFTIJD+30); }
+      else { zet(-hoog(),true); setTimeout(dicht,SCHUIFTIJD+30); }
+    };
     p.addEventListener("pointerup",los); p.addEventListener("pointercancel",los);
-    p.addEventListener("click",e=>{ e.stopPropagation(); if(!gedaan)trekCalque(); gedaan=false; });      // een tik doet hetzelfde als trekken
-    document.body.appendChild(p); }
+    /* Een tik doet hetzelfde als trekken: het blad schuift zelf in beeld. */
+    p.addEventListener("click",async e=>{
+      e.stopPropagation();
+      if(sleepte){ sleepte=false; return; }
+      const lukte=await begin(); opent=null;
+      if(!lukte)return;
+      void dlg.offsetHeight;
+      zet(0,true); setTimeout(schoon,SCHUIFTIJD+30);
+    });
+    document.body.appendChild(p);
+    if(dlg){
+      const o=maakEl("button","pentrek-op"); o.id="pentrek-op"; o.type="button"; o.setAttribute("aria-label","Calqueblad omhoog wegschuiven"); o.title="Trek omhoog om het calqueblad weg te schuiven";
+      o.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 15l7-7 7 7"/></svg>';
+      let oy=null, ot=0, od=0, osleep=false;
+      o.addEventListener("pointerdown",e=>{ e.preventDefault(); oy=e.clientY; ot=Date.now(); od=0; osleep=false; o.classList.add("trekt"); try{ o.setPointerCapture(e.pointerId); }catch(x){} });
+      o.addEventListener("pointermove",e=>{
+        if(oy===null)return;
+        od=Math.max(0,oy-e.clientY);
+        o.style.setProperty("--trek",Math.min(od,26)+"px");
+        if(od>6)osleep=true;
+        if(osleep)zet(-Math.min(od,hoog()),false);
+      });
+      const olos=()=>{
+        if(oy===null)return;
+        const ms=Date.now()-ot, afstand=od; oy=null; o.classList.remove("trekt"); o.style.removeProperty("--trek");
+        if(!osleep)return;
+        if(genoeg(afstand,ms)){ zet(-hoog(),true); setTimeout(dicht,SCHUIFTIJD+30); }
+        else { zet(0,true); setTimeout(schoon,SCHUIFTIJD+30); }
+      };
+      o.addEventListener("pointerup",olos); o.addEventListener("pointercancel",olos);
+      o.addEventListener("click",e=>{
+        e.stopPropagation();
+        if(osleep){ osleep=false; return; }
+        zet(-hoog(),true); setTimeout(dicht,SCHUIFTIJD+30);      // een tik doet hetzelfde: het blad schuift zelf omhoog weg
+      });
+      dlg.appendChild(o);
+    } }
   ["dlg","beheerdlg"].forEach(id=>{ const d=document.getElementById(id); if(d){ const b=menubalk(false); b.classList.add("menubalk-pagina"); d.appendChild(b); } });
 })();
 /* De opdrachtgever, 13/10/2026: "de overgang bij klikken op Plan of klikken op de X is dezelfde: maak een korte fade". Eén functie voor allebei, voor elk venster en voor de AI-pagina:
@@ -17681,10 +17751,14 @@ document.getElementById("planknop").onclick=openPlan;
 /* De pen op het hoofdscherm, naast de camera. Die brengt je wél naar het planvenster: daar sta
    je niet in een blad, dus er is niets om in terug te keren. Tekenen vanuit het blad gaat langs
    `zetTekenen` en blijft binnen het blad. */
-const PENTREKDREMPEL=36;      // zoveel pixel omlaag trekken aan de pijl bovenaan opent het calqueblad
+const PENTREKDREMPEL=36;      // zoveel pixel trekken aan de pijl is een bedoelde veeg
+const SCHUIFDEEL=0.2;         // voorbij een vijfde van het scherm loslaten: het blad schuift verder open (of dicht)
+const SCHUIFSNEL=0.5;         // of sneller dan 0,5 px per ms (een vluchtige veeg)
+const SCHUIFTIJD=240;         // ms voor het blad om zelf de rest te schuiven
 let penAuto=false;            // na het trekken maakt de eerste streep vanzelf een punt
 async function trekCalque(){
   penAuto=true;
+  try{ window.getSelection().removeAllRanges(); }catch(e){}      // het slepen mag geen tekst op het volgende scherm blauw laten staan
   await penNaarPlan();
   if(!plan)penAuto=false;     // zonder plan valt er niets te tekenen en dus ook geen punt te maken
 }
