@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-S3HtdsqNDbIRw0OHmygg5cPWv6lLeSizPaf53c7zkDE=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-hV8t7ArPWstDungU2fI4+K21QWAQvM7/Pzso58r/7tU='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-kRfKjgc5/zdpO6Q48qjFQ4V0H62y1D2foQQ2QswDv60=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-J47WV1lGHJcUjNnszdlI2LeZdoey+8Bj9V0IlCzI7vY='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -356,6 +356,10 @@
   .wrap>.uitrol,.wrap>.zoekrij{order:3}
   .wrap>.zones{order:4}
   .wrap>header{order:5;position:relative;top:auto;padding-top:0}
+  /* Over de volle breedte van het scherm, links en rechts (de opdrachtgever, 17/10/2026): op een breder scherm dan de kolom van 640 px loopt de balk door tot de randen, en de inhoud blijft in de kolom staan. Op een telefoon is het hetzelfde als eerst. Met een haarlijn tussen de bladen en de rij met het adres. */
+  .wrap>header,.wrap>.zones{margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw)}
+  .wrap>header{padding-left:calc(50vw - 50%);padding-right:calc(50vw - 50%)}
+  .wrap>.zones{padding-left:calc(50vw - 50% + var(--marge));padding-right:calc(50vw - 50% + var(--marge));border-bottom:var(--haar) solid var(--line);background:rgba(255,255,255,.80);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
   /* De ruimte tussen de zonerij en het paneel: hier is niets, en daarom zie je het plan. */
   /* De vingers op dit gat horen bij het plan eronder, niet bij de pagina: zonder dit zoomt
      de browser het hele scherm, menu en balken inbegrepen. */
@@ -3909,7 +3913,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v556";
+const VERSIE="v557";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
