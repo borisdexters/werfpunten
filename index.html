@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-RXPolWMgGHQdZLQuGD00FVWqPqzaejw0HFAqdLXfRmM=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-KUMXhVgqvyKubfLh/8DvgU2MhSEGgz6sjY53VyyrNwQ='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-yURRW1JVuC6/8KjPEGNxNRM8hyk9sg95i5/CGwDVqmk=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-/aOOqU8Gt0Q6ngcLo6goC7kryamOrZfbYGt/3uG3f4s='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1352,7 +1352,7 @@
   #plandlg[style*="height"]{border-bottom:var(--haar) solid var(--line);box-shadow:0 3px 14px rgba(0,0,0,.16);border-radius:0 0 14px 14px}
   #plandlg::backdrop{background:transparent}
   /* Het calqueblad als film: een heel licht geel, doorzichtig vel. De balken erop worden glas, het vlak met de halen is helemaal doorzichtig, en de zoomknoppen vervallen want de kijkstand is die van het plan eronder. */
-  #plandlg.film{background:rgba(255,247,190,.16)}
+  #plandlg.film{background:rgba(255,247,190,.16);overflow:visible}      /* de iconenlagen vallen soms buiten het vel terwijl het schuift */
   #plandlg.film .plan-vlak,#plandlg.film #plancanvas{background:transparent}
   #plandlg.film .plan-zoom{display:none}
   /* Enkel het calqueblad (de opdrachtgever, 17/10/2026): de balken bovenaan het vel staan er niet, tot we de functies van het calqueblad uitwerken. Alles wat op het plan staat (de schaal, het kompas, A, de liniaal, de pen, de spelden) schemert er wél doorheen: het vel is doorzichtig en laat het plan eronder zien zoals het is. */
@@ -4021,7 +4021,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v605";
+const VERSIE="v606";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -9711,8 +9711,10 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&menuGlas)menuEinde
       return (t>120&&t<(window.innerHeight||800))?t:Math.max(1,window.innerHeight||800);
     };
     const hoog=()=>H;
-    const zet=(y,animeer)=>{ dlg.style.transition=animeer?("transform "+SCHUIFTIJD+"ms cubic-bezier(.2,.8,.2,1)"):"none"; dlg.style.transform="translateY("+Math.round(y)+"px)"; };
-    const schoon=()=>{ dlg.style.transition=""; dlg.style.transform=""; dlg.style.pointerEvents=""; };
+    /* De iconenlagen schuiven tegen het blad in, zodat de icoontjes stilstaan terwijl het vel erachter beweegt (de opdrachtgever, 17/10/2026: "de icoontjes verdwijnen tijdens de pull down"): ze hangen aan het blad en vielen er anders buiten. */
+    const gegen=(y,tr)=>{ ["filmlaag","filmkaart"].forEach(id=>{ const n=document.getElementById(id); if(n){ n.style.transition=tr; n.style.transform="translateY("+(-Math.round(y))+"px)"; } }); };
+    const zet=(y,animeer)=>{ const tr=animeer?("transform "+SCHUIFTIJD+"ms cubic-bezier(.2,.8,.2,1)"):"none"; dlg.style.transition=tr; dlg.style.transform="translateY("+Math.round(y)+"px)"; gegen(y,tr); };
+    const schoon=()=>{ dlg.style.transition=""; dlg.style.transform=""; dlg.style.pointerEvents=""; gegen(0,""); ["filmlaag","filmkaart"].forEach(id=>{ const n=document.getElementById(id); if(n){ n.style.transform=""; n.style.transition=""; } }); };
     /* DE ICONEN STAAN OP DE VOORGROND (de opdrachtgever, 17/10/2026: "de icoontjes zijn steeds op de voorgrond, nu liggen ze precies onder het calque"): het vel is een venster in de bovenste laag, en daar kan niets van het hoofdscherm bovenuit. Dus verhuizen de echte knoppen en tikvlakken van het plan (A, liniaal, pen, de tikvlakken van kompas en schaalbalk) zolang het vel open staat naar een laag erboven, op dezelfde plek en met dezelfde opmaak; het getekende kompas en de schaalbalk komen als kopie mee. Bij sluiten gaat alles terug waar het stond. */
     let verhuisd=[];
     const ICONEN=["kaarttekst","kaartmeet","kaartpen","kaartmeetbalk","schaaltik","noordtik","schaalkeuze","noordmenu"];
@@ -9729,6 +9731,7 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&menuGlas)menuEinde
       kl.style.cssText="position:fixed;left:"+kb.left+"px;top:"+kb.top+"px;width:"+kb.width+"px;height:"+kb.height+"px;pointer-events:none;z-index:9";
       doos.querySelectorAll(".kaartnoord,.kaartschaal").forEach(n=>kl.appendChild(n.cloneNode(true)));
       dlg.appendChild(kl); dlg.appendChild(laag);
+      { const m=/translateY\((-?[\d.]+)px\)/.exec(dlg.style.transform), y=m?parseFloat(m[1]):0; kl.style.transform=laag.style.transform="translateY("+(-y)+"px)"; }      // meteen op de plek waar het vel nu hangt, tegen zijn beweging in
       /* Verandert een tik op een icoon de kijkstand van het plan eronder (het kompas draait, de tekst wordt groter), dan legt het vel zich opnieuw op het plan. */
       laag.addEventListener("click",()=>{ [80,400].forEach(t=>setTimeout(()=>{ if(penFilm)planTeken(); },t)); });
     };
