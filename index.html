@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-xxGfnQzpTTb2IQyWr1rcv97PpCd2gTyHavpH0TK1pQE=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-H//hhKS7/d7CTqwYeR+WEjLuyaWb8tvPvyAUXQtphW8='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-x1GPO6s51qMxewmCyCdpNYW+1gJn7lEE6obBD3+aEdE=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-H//hhKS7/d7CTqwYeR+WEjLuyaWb8tvPvyAUXQtphW8='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3972,7 +3972,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v568";
+const VERSIE="v569";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -14148,7 +14148,8 @@ function vulFiche(opties){
   if(bak)bak.hidden=!fiche.uit.persoon;
   /* Het tekstvak onder Beschrijving: dicht tot je op de rij tikt, en open zodra er tekst staat. */
   const tv=document.getElementById("fiche-tekstvak");
-  if(tv)tv.hidden=!(fiche.uit.tekst||fiche.tekst);
+  /* Sinds 17/10/2026 altijd open: één vlak waarin je meteen typt, ook als er nog niets staat. */
+  if(tv)tv.hidden=false;
   /* En de speld vrijhouden, elke beurt. Het blad groeit met wat erin staat -- een lijst die
      uitklapt, een langere bestekregel -- en wat vrij stond, ligt er daarna weer onder.
      Gemeten op 27/09/2026: na de omweg langs het planvenster stond de verschuiving op nul en
