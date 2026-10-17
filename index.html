@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-s+szf53zkKLOyROt/NA/oYVeVr0FXXbvgI/kNGX+GPM=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-lEwlMS/v112zcpKjdFEHc+V94pOFeo0qHbhWIsSMXAg='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-rV6CIGIU+i50z2GLeX0lsIyIvSrMiEOp9O30AFpneXk=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-lEwlMS/v112zcpKjdFEHc+V94pOFeo0qHbhWIsSMXAg='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4035,7 +4035,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v619";
+const VERSIE="v620";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -16088,12 +16088,10 @@ function calqueVelKleur(){
   return calqueVelGelezen;
 }
 
-/* De pen houdt haar dikte in de maat van het blad en niet in die van het scherm: zoom je in,
-   dan wordt de haal mee groter, zoals inkt op papier. Zou ze in schermpunten staan, dan kroop
-   een streep bij het uitzoomen over het halve gebouw. Onder de anderhalve beeldpunt blijft er
-   niets zichtbaar over, dus daar ligt de bodem. */
+/* De pen heeft een vaste dikte op het scherm (de opdrachtgever, 17/10/2026: "vaste dikte op het scherm"): hoe ver je ook inzoomt of uitzoomt, de streep blijft even breed, zoals een pen. Tot v618 volgde de dikte de maat van het blad ("inkt op papier"), en dan werd een streep bij het inzoomen een balk van 20 px. De vorm van de streep ligt nog altijd op het plan (in procenten van het blad) en schaalt dus wel mee; alleen de breedte niet. */
+const CALQUEPEN=4;      // schermpunten
 function calqueDikte(){
-  return Math.max(1.5,(plan?plan.breedte:1000)*pl.schaal*0.0045);
+  return CALQUEPEN;
 }
 function tekenHaal(x,h){
   const p=(h&&h.punten)||[];
