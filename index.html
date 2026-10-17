@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-A5AgR7sbL2GxgXpwwC+/wu/gTRLxyc0eMVi9iqvHQtg=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-zDWzwliUDEszZW/WaqAxWRtZN8f6wQikk/5sBfYDqCM='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-DuV3S9ElVKck7n/TZU0f+IQ8IOPdYUuj/mo36KyWZIk=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-xGTMcEZlhnw+r8nEgceppZZE/VRAwKwfaMBcQzknzdo='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1337,6 +1337,11 @@
   html.fiche-open .wrap>.vulling,html.fiche-open .wrap>.zones,html.fiche-open .wrap>header,html.fiche-open .wrap>.invoer{display:none !important}
   /* Zoals het voorbeeld (de NOTES-kaart): een afgeronde kaart met lucht rondom, het schrijfvak neemt de ruimte, Wissen en Bewaren staan vast onderaan. */
   /* Foto, Scan en Tekenen staan in de balk helemaal onderaan (de opdrachtgever, 17/10/2026, met een pijl naar de onderste balk): zolang je noteert zijn de camera, het menu en de plus daar toch niet nodig. De tegels blijven dezelfde elementen, met hun vinkje of beeld; alleen hun plaats verandert. Staat een vak open (de calque, het fotovak), dan liggen ze weer in de kaart. */
+  /* DE PIJL BOVENAAN HET PLAN (de opdrachtgever, 17/10/2026): "ik wil bovenaan een pijl die je naar beneden kan trekken; hierom verschijnt het calqueblad om op te tekenen, automatisch wordt er dan een punt aangemaakt". Het spiegelbeeld van de pijl onderaan: die trekt het menu omhoog, deze trekt het calqueblad omlaag. Alleen op het hoofdscherm: elk geopend venster (een pagina, de notitie) dekt haar af. */
+  .pentrek{position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);left:50%;transform:translateX(-50%) translateY(var(--trek,0px));z-index:4;width:64px;height:38px;border:0;border-radius:19px;padding:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 1px 6px rgba(0,0,0,.12);color:var(--ink);touch-action:none;cursor:pointer}
+  .pentrek svg{width:26px;height:26px}
+  .pentrek.trekt{transition:none}
+  body:has(dialog[open]) .pentrek,html.fiche-open .pentrek,html.menu-open .pentrek{display:none}
   html.fiche-open #menubalk{visibility:hidden}
   html.fiche-open #fichedlg:not(.groot) .fiche-media{position:fixed;left:0;right:0;bottom:0;z-index:9;margin:0;height:calc(var(--streep-b) + 62px);padding:0 max(12px,calc(50vw - 320px + 12px)) var(--streep-b);box-sizing:border-box;display:flex;align-items:center;gap:8px;background:var(--surface,#fff);border-top:var(--haar) solid var(--line)}
   html.fiche-open #fichedlg:not(.groot) .fiche-media .fiche-doos{flex:1 1 0;min-width:0}
@@ -3987,7 +3992,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v580";
+const VERSIE="v581";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -9667,6 +9672,20 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&menuGlas)menuEinde
 /* De onderste drie: één rij in de body (het hoofdscherm), en één in elk paginavenster, want een venster ligt in de bovenste laag en dekt de rest af. Overal dezelfde hoogte. */
 (()=>{
   { const b=menubalk(false); b.id="menubalk"; document.body.appendChild(b); }
+  { const p=maakEl("button","pentrek"); p.id="pentrek"; p.type="button"; p.setAttribute("aria-label","Tekenen: trek omlaag"); p.title="Trek omlaag om te tekenen op het calqueblad";
+    p.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>';
+    let y0=null, gedaan=false;
+    p.addEventListener("pointerdown",e=>{ y0=e.clientY; gedaan=false; p.classList.add("trekt"); try{ p.setPointerCapture(e.pointerId); }catch(x){} });
+    p.addEventListener("pointermove",e=>{
+      if(y0===null)return;
+      const dy=Math.max(0,e.clientY-y0);
+      p.style.setProperty("--trek",Math.min(dy,26)+"px");
+      if(!gedaan&&dy>PENTREKDREMPEL){ gedaan=true; trekCalque(); }
+    });
+    const los=()=>{ y0=null; p.classList.remove("trekt"); p.style.removeProperty("--trek"); };
+    p.addEventListener("pointerup",los); p.addEventListener("pointercancel",los);
+    p.addEventListener("click",e=>{ e.stopPropagation(); if(!gedaan)trekCalque(); gedaan=false; });      // een tik doet hetzelfde als trekken
+    document.body.appendChild(p); }
   ["dlg","beheerdlg"].forEach(id=>{ const d=document.getElementById(id); if(d){ const b=menubalk(false); b.classList.add("menubalk-pagina"); d.appendChild(b); } });
 })();
 /* De opdrachtgever, 13/10/2026: "de overgang bij klikken op Plan of klikken op de X is dezelfde: maak een korte fade". Eén functie voor allebei, voor elk venster en voor de AI-pagina:
@@ -17662,6 +17681,33 @@ document.getElementById("planknop").onclick=openPlan;
 /* De pen op het hoofdscherm, naast de camera. Die brengt je wél naar het planvenster: daar sta
    je niet in een blad, dus er is niets om in terug te keren. Tekenen vanuit het blad gaat langs
    `zetTekenen` en blijft binnen het blad. */
+const PENTREKDREMPEL=36;      // zoveel pixel omlaag trekken aan de pijl bovenaan opent het calqueblad
+let penAuto=false;            // na het trekken maakt de eerste streep vanzelf een punt
+async function trekCalque(){
+  penAuto=true;
+  await penNaarPlan();
+  if(!plan)penAuto=false;     // zonder plan valt er niets te tekenen en dus ook geen punt te maken
+}
+/* Het punt dat bij een streep hoort, zonder dat je iets hoeft te doen (de opdrachtgever, 17/10/2026: "automatisch wordt er dan een punt aangemaakt"). Het punt draagt de streep (aantekening), de plek is het midden ervan, en de woorden komen later: het staat als onaf in de keet, zoals een foto uit de snelle sluiter. */
+async function puntUitHaal(haal,blad){
+  if(!plan||!haal||!blad)return null;
+  const m=haalMidden(haal);
+  let plek=null;
+  if(m){
+    const lok=lokaalBij(m.x,m.y);
+    plek={zone:plan.zone,x:+m.x.toFixed(2),y:+m.y.toFixed(2),lokaal:lok?lok.nr:null,naam:lok?lok.naam:"",
+          laag:planLaag(),lokaalLaag:lok?lokaalHerkomst(plan,planLaag()):null};
+  }
+  const id="p"+Date.now();
+  const rondgangId=zorgVoorRondgang();
+  const punt=raakAan({id,zone:staat.zone,tekst:"",spreker:null,tijd:new Date().toTimeString().slice(0,5),
+    beelden:[],plek,onaf:true,rondgang:rondgangId,
+    aantekening:{zone:plan.zone,blad:blad.id,bladnaam:blad.naam,merk:haal.merk,doos:haalDoos(haal)}});
+  haal.punt=id;
+  zorgVoorPuntnummer(punt); staat.punten.push(punt); bewaarStaat();
+  try{ merkBackupknop(); }catch(e){}
+  return punt;
+}
 async function penNaarPlan(){
   await openPlan(null);
   if(!plan){ merkCalque(); return; }
@@ -18090,8 +18136,12 @@ async function calqueVoegToe(haal){
   if(!blad)return;
   blad.halen.push(haal);
   calque.gewijzigd=new Date().toISOString();
+  /* Kwam je hier door aan de pijl bovenaan te trekken, dan is de eerste streep meteen een punt. Eén punt per keer trekken: de volgende strepen horen bij hetzelfde stuk tekenwerk. */
+  let nieuwPunt=null;
+  if(penAuto){ penAuto=false; try{ nieuwPunt=await puntUitHaal(haal,blad); }catch(e){ nieuwPunt=null; } }
   planTeken(); merkCalque();
   if(!await zetCalque(plan.zone,calque))melding("Opslag weigert — ruimte vol?");
+  else if(nieuwPunt)melding("Punt "+(nieuwPunt.nummer||"")+" aangemaakt uit je tekening — de woorden komen in de keet");
 }
 async function calqueBewaar(){
   if(!plan||!calque)return;
