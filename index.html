@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-4mO9ZwN5Dg1R40I885Rd2q7qmH0eO0mAI4vTHvaQCSE=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-zggdeV5mrMCJC0FTswOcUdjo7Q7h/0obeigytlDsG5E='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-aaKtlASBi8l5RA5ULHYPbwmEsMYsmxRwtqGreiLcV8o=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-jKOqx9IjlRbIVH1ptuLHt3WO987fluCgnNA1ylF0Z5w='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -238,6 +238,14 @@
      De plaats komt uit twee variabelen en niet uit een style-attribuut: de som zit in
      plekOpBeeld(), de opmaak staat hier. */
   .kaartpunten{position:absolute;inset:0;pointer-events:none}
+  /* de noordpijl en de schaalbalk (de opdrachtgever, 17/10/2026): dun, zwart, met een witte rand zodat ze op elk beeld te lezen zijn */
+  .kaartnoord{position:absolute;left:var(--px);top:var(--py);width:28px;height:44px;pointer-events:none;z-index:4}
+  .kaartnoord-draai{position:absolute;inset:0;transform:rotate(var(--a));transform-origin:14px 30px}
+  .kaartnoord-pijl{position:absolute;left:8px;top:14px;width:12px;height:30px;background:var(--ink);clip-path:polygon(50% 0,100% 100%,50% 78%,0 100%)}
+  .kaartnoord-n{position:absolute;left:0;right:0;top:-2px;text-align:center;font:600 11px ui-monospace,Menlo,monospace;color:var(--ink);-webkit-text-stroke:3px var(--surface);paint-order:stroke fill}
+  .kaartschaal{position:absolute;left:var(--px);top:var(--py);width:var(--w);height:7px;border:1.5px solid var(--ink);border-top:none;pointer-events:none;z-index:4;box-sizing:content-box}
+  .kaartschaal-v{top:11px;bottom:auto !important;font-weight:500}
+  .kaartschaal span{position:absolute;left:0;right:0;bottom:7px;text-align:center;font:600 11px ui-monospace,Menlo,monospace;color:var(--ink);paint-order:stroke;-webkit-text-stroke:3px var(--surface);white-space:nowrap}
   .kaartpunt{position:absolute;left:var(--px);top:var(--py);transform:translate(-50%,-50%);
     display:flex;align-items:center;justify-content:center;border-radius:50%;
     font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace}
@@ -3842,7 +3850,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v522";
+const VERSIE="v525";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -19714,6 +19722,25 @@ let kaartKijk={schaal:1, dx:0, dy:0};
 /* Nooit een rand naast het blad: bij elke schaal dekt het geschaalde vlak het venster. Zo kun je
    niet per ongeluk het plan van het scherm schuiven en een leeg vak overhouden -- op een werf is
    dat een halve minuut zoeken naar iets wat er nog is. */
+/* Het blad draaien onder twee vingers. Het draait om het midden van de doos, zoals het planvenster, en de kijkstand wordt zo bijgesteld dat het punt tussen je vingers blijft staan. De noordpijl volgt via draaiVan; de schaalbalk draait niet mee en wordt wel herberekend (kaartMeterPerPixel kent de draaifactor). De keuze wordt na afloop bij het plan bewaard. */
+let kaartGedraaid=false;
+function kaartDraaiBij(graden,mx,my,m){
+  const plan=kaartPlan;
+  if(!plan||!(m.breed>0&&m.hoog>0))return;
+  const was=draaiVan(plan), nu=normaalHoek(was+graden);
+  const e0=was?kaartDraaiFactor(m.breed,m.hoog,plan.breedte,plan.hoogte,was):1;
+  const e1=nu?kaartDraaiFactor(m.breed,m.hoog,plan.breedte,plan.hoogte,nu):1;
+  const s=kaartKijk.schaal||1, cx=m.breed/2, cy=m.hoog/2;
+  const qx=(mx-kaartKijk.dx)/s, qy=(my-kaartKijk.dy)/s;
+  const f=e1/e0, vx=(qx-cx)*f, vy=(qy-cy)*f, t=(nu-was)*Math.PI/180, c=Math.cos(t), sn=Math.sin(t);
+  const nx=cx+vx*c-vy*sn, ny=cy+vx*sn+vy*c;
+  plan.weergave={draai:+nu.toFixed(2), door:"vrij"};
+  kaartKijk=kaartKlem({schaal:s, dx:mx-s*nx, dy:my-s*ny},m.breed,m.hoog);
+}
+async function kaartBewaarDraai(){
+  if(!kaartPlan||!kaartZone)return;
+  try{ await zetPlan(kaartZone,kaartPlan); }catch(e){}
+}
 /* Waar de kaart opent: passend, en bij het GRB de uitsnede met het perceel (zie `zicht` in maakOmtrekplan). */
 function kaartBeginKijk(plan,doos){
   const z=plan&&plan.bron&&plan.bron.grb&&plan.bron.grb.zicht;
@@ -20179,6 +20206,48 @@ function kaartToont(p,rondgangId){
   return isOpen(p)||(!!rondgangId&&p.rondgang===rondgangId);
 }
 
+/* Een noordpijl en een schaalbalk op de kaart zelf, standaard (de opdrachtgever, 17/10/2026: "ik wil er ook standaard een noordpijl op en een schaalbalk die meeschaalt bij zoomen"). Alleen op een plan dat zijn plaats in meters kent (georef, ook het GRB); een blad zonder maat krijgt geen balk, want die zou meters beweren die de app niet kent. De pijl draait mee met het blad, de balk wordt langer of korter met elke zoomstap. Linksboven in het zichtbare vlak, onder de zonebalk. */
+function kaartMeterPerPixel(plan,b,k){
+  const g=plan&&plan.georef;
+  if(!g||g.plaatselijk||!g.eenheid_m||!(plan.breedte>0&&plan.hoogte>0)||!(b.width>0&&b.height>0))return null;
+  const d=draaiVan(plan);
+  const e=d?kaartDraaiFactor(b.width,b.height,plan.breedte,plan.hoogte,d):1;
+  const px=Math.min(b.width/plan.breedte,b.height/plan.hoogte)*e*(k.schaal||1);      // schermpixels per beeldeenheid
+  return px>0?g.eenheid_m/px:null;
+}
+const CSSPIXEL_M=0.0254/96;
+function kaartVerhouding(mpp){
+  const n=mpp/CSSPIXEL_M;
+  if(!(n>0)||!isFinite(n))return "";
+  return "1:"+String(Math.max(1,Math.round(Number(n.toPrecision(2)))));
+}
+function kaartKompas(laag,doos,b,k){
+  const plan=kaartPlan, g=plan&&plan.georef;
+  const mpp=kaartMeterPerPixel(plan,b,k);
+  if(!mpp)return;
+  const vul=document.getElementById("vulling"), vb=vul?vul.getBoundingClientRect():null;
+  const db=doos.getBoundingClientRect();
+  const x0=(vb&&vb.width?vb.left-db.left:0)+14, y0=(vb&&vb.height?vb.top-db.top:0)+14;
+  const a=(draaiVan(plan)-(g.noord||0));
+  const noord=document.createElement("div"); noord.className="kaartnoord"; noord.setAttribute("aria-label","Noord");
+  noord.style.setProperty("--px",x0+"px"); noord.style.setProperty("--py",y0+"px"); noord.style.setProperty("--a",a.toFixed(1)+"deg");
+  const draai=document.createElement("div"); draai.className="kaartnoord-draai";
+  const letter=document.createElement("span"); letter.className="kaartnoord-n"; letter.textContent="N";
+  const pijl=document.createElement("span"); pijl.className="kaartnoord-pijl";
+  draai.appendChild(letter); draai.appendChild(pijl); noord.appendChild(draai); laag.appendChild(noord);
+  // een balk van een rond aantal meter, hoogstens een derde van de breedte van het zichtbare vlak
+  const ruimte=Math.min(140,(vb&&vb.width?vb.width:b.width)*0.34);
+  const passen=SCHAALMATEN.filter(v=>v/mpp<=ruimte);
+  const m=passen.length?passen[passen.length-1]:SCHAALMATEN[0];
+  const lang=m/mpp;
+  if(lang<18)return;
+  const balk=document.createElement("div"); balk.className="kaartschaal";
+  balk.style.setProperty("--px",(x0+40)+"px"); balk.style.setProperty("--py",(y0+14)+"px"); balk.style.setProperty("--w",Math.round(lang)+"px");
+  const t=document.createElement("span"); t.textContent=m<1?(m*100)+" cm":m+" m"; balk.appendChild(t);
+  /* De verhouding eronder (de opdrachtgever, 17/10/2026: "en onder de schaalbalk 1:getal"): meter per pixel gedeeld door de grootte van een CSS-pixel (1/96 inch, 0,26 mm), op twee cijfers afgerond. Op een toestel is dat de schaal op een standaardscherm: de werkelijke pixelgrootte verschilt per toestel, dus de balk is de maat en 1:getal de aanduiding. */
+  const v=document.createElement("span"); v.className="kaartschaal-v"; v.textContent=kaartVerhouding(mpp); balk.appendChild(v);
+  laag.appendChild(balk);
+}
 function tekenKaartPunten(){
   const doos=document.getElementById("kaart");
   const knop=document.getElementById("kaartoud");
@@ -20201,6 +20270,7 @@ function tekenKaartPunten(){
   /* De stippen volgen de kijkstand, maar groeien niet mee: het beeld schaalt, de bol houdt haar
      maat. Dezelfde som als de transform op het beeld -- een punt (qx,qy) landt op q*schaal+d. */
   const k=kaartKijkNu(b.width,b.height);
+  kaartKompas(laag,doos,b,k);
   const zet=(p,klasse,label,kleur)=>{
     const q=plekOpBeeld(p.plek.x,p.plek.y,b.width,b.height,kaartPlan.breedte,kaartPlan.hoogte,draaiVan(kaartPlan));
     if(!q)return;
@@ -20683,7 +20753,7 @@ function kaartBedrading(){
     wijzers.set(e.pointerId,{x:e.clientX, y:e.clientY});
     if(wijzers.size===2){
       const [a,b]=[...wijzers.values()];
-      knijp={afstand:Math.hypot(a.x-b.x,a.y-b.y), mx:(a.x+b.x)/2, my:(a.y+b.y)/2};
+      knijp={afstand:Math.hypot(a.x-b.x,a.y-b.y), mx:(a.x+b.x)/2, my:(a.y+b.y)/2, hoek:Math.atan2(b.y-a.y,b.x-a.x), som:0, draait:false};
       bewogen=true;              // knijpen is geen tik
     }
   };
@@ -20707,7 +20777,15 @@ function kaartBedrading(){
       const [a,b]=[...wijzers.values()];
       const af=Math.hypot(a.x-b.x,a.y-b.y), mx=(a.x+b.x)/2, my=(a.y+b.y)/2;
       kaartKijk=kaartZoom(kaartKijk, af/(knijp.afstand||af), mx, my, m.breed, m.hoog);
-      knijp={afstand:af, mx, my};
+      /* De opdrachtgever, 17/10/2026: "ik wil het GRB ook kunnen draaien met twee vingers." Een kleine draai tijdens het knijpen telt niet mee: pas na 5 graden volgt het blad je vingers. */
+      const ang=Math.atan2(b.y-a.y,b.x-a.x);
+      let dh=ang-(knijp.hoek===undefined?ang:knijp.hoek);
+      while(dh>Math.PI)dh-=2*Math.PI; while(dh<-Math.PI)dh+=2*Math.PI;
+      const som=(knijp.som||0)+dh;
+      let draait=!!knijp.draait;
+      if(!draait&&Math.abs(som)>5*Math.PI/180)draait=true;
+      if(draait&&dh){ kaartDraaiBij(dh*180/Math.PI,mx,my,m); kaartGedraaid=true; }
+      knijp={afstand:af, mx, my, hoek:ang, som, draait};
       kaartKijkZet();
     }
   };
@@ -20716,6 +20794,7 @@ function kaartBedrading(){
     kaartRaakt=false;
     if(e)wijzers.delete(e.pointerId);
     if(wijzers.size<2)knijp=null;
+    if(wijzers.size===0&&kaartGedraaid){ kaartGedraaid=false; kaartBewaarDraai(); }      // de draai blijft bij het plan, zoals bij Plan draaien
   };
   v.addEventListener("pointerup",losLaten);
   v.addEventListener("pointercancel",losLaten);
@@ -20741,7 +20820,11 @@ function kaartBedrading(){
   /* Twee keer tikken zet het blad terug op passend. Uitknijpen kan ook, maar na het inzoomen
      wil je meestal in één beweging het geheel terug -- en dan is twee tikken korter dan
      driemaal uitknijpen. */
-  v.addEventListener("dblclick",e=>{ if(kaartKijkTerug())e.preventDefault(); });
+  v.addEventListener("dblclick",e=>{
+    let terug=kaartKijkTerug();
+    if(kaartPlan&&kaartPlan.weergave){ delete kaartPlan.weergave; kaartBewaarDraai(); kaartKijkZet(); terug=true; }      // en het blad weer met het noorden boven
+    if(terug)e.preventDefault();
+  });
 
   v.onclick=e=>{
     const veegde=bewogen;
