@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-oRXvXRLeDU+oHsUPAQmDAXsITw4J1PEVreTZomwk1GE=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-cnfeVwoOYVxc1m4N4Z7jdrf+ENWEOBwIBh1/9RNV7ZM='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-rpbghUhtVPZMCUlKWA6mhXwLAKHy6e9srUnHxXKm8XY=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-utEZqjYqGeSQBDUgTrAC6z7GYs5K88zmCzqiqwX2U94='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1718,8 +1718,8 @@
      de vraag of het AI-teken naast het nummer staat. Dezelfde les als `--planzoneh` in het
      planvenster: een maat die uit een meting komt, overleeft een ander toestel. 48 px is de
      terugval voor de eerste beurt. */
-  #fichedlg.tekent #fiche-pen{position:absolute;left:0;right:0;bottom:0;
-    top:var(--fichekoph,48px);z-index:6;margin:0;border:0;border-radius:0;
+  #fichedlg.tekent #fiche-pen{position:absolute;left:0;right:0;bottom:0;height:auto;
+    top:var(--fichekoph,48px);z-index:6;margin:0;border:0;border-radius:0 0 22px 22px;overflow:hidden;
     background:var(--t1);box-shadow:0 -1px 0 var(--line-soft);
     animation:calque-over .24s ease-out}
   /* Het vel komt van rechts, zoals je er een over een tekening schuift. Eén beweging, kort
@@ -3978,7 +3978,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v573";
+const VERSIE="v574";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -12856,7 +12856,7 @@ document.getElementById("keet-klaar").onclick=async()=>{
    tussen elke opname. Een eigen sluiter op de videostroom heeft die stap niet. Lukt dat niet —
    geen toestemming, geen camera — dan valt het terug op de gewone fotoknop, mét die tussenstap,
    want een trage weg is nog altijd beter dan geen. */
-let snel={stroom:null,aantal:0,bezig:false,vanPlan:false,voorFiche:false};
+let snel={stroom:null,aantal:0,bezig:false,vanPlan:false,voorFiche:false};   // voorFiche: false, "foto" of "scan"
 
 function snelPlekTekst(){
   if(!wachtendePlek)return "Plek";
@@ -12893,7 +12893,8 @@ async function openSnel(){
     const k=document.createElement("button");
     k.type="button";k.textContent="Gewone fotoknop";
     k.style.cssText="background:#ffffff22;color:#fff;border:1px solid #ffffff44";
-    k.onclick=()=>{sluitSnel();document.getElementById("foto").click();};
+    const alsScan=snel.voorFiche==="scan";
+    k.onclick=()=>{sluitSnel();document.getElementById(alsScan?"scan":"foto").click();};
     mislukt.appendChild(k);
     return;
   }
@@ -12926,11 +12927,12 @@ async function knip(){
     const blob=await new Promise(r=>c.toBlob(r,"image/jpeg",.75));
     if(!blob)throw new Error("geen beeld");
     if(snel.voorFiche){
-      /* Eén foto, voor de notitie die openstaat: ze wordt de wachtende foto, net als via de gewone fotoknop, en het venster sluit. */
+      /* Eén foto of scan, voor de notitie die openstaat: ze wordt de wachtende foto, net als via de gewone knop, en het venster sluit. */
+      const soort=snel.voorFiche;
       const f=document.getElementById("snelflits");
       f.classList.remove("aan"); void f.offsetWidth; f.classList.add("aan");
       sluitSnel();
-      await fotoGenomen(blob);
+      await (soort==="scan"?scanGenomen(blob):fotoGenomen(blob));
       snel.bezig=false;
       return;
     }
@@ -13004,7 +13006,7 @@ function fotoDrukken(){
   if(wachtendeFoto && (!wachtendeBijlage || wachtendeBijlage.beeld!==false)){
     openTekenscherm(wachtendeFoto,"nieuw");
   }else if(document.getElementById("fichedlg").open&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){
-    snel.vanPlan=false; snel.voorFiche=true; openSnel();      // op de notitie: de schermgrote sluiter
+    snel.vanPlan=false; snel.voorFiche="foto"; openSnel();      // op de notitie: de schermgrote sluiter
   }else{
     document.getElementById("foto").click();
   }
@@ -13587,6 +13589,24 @@ document.getElementById("scan").onchange=async e=>{
   if(document.getElementById("fichedlg").open)vulFiche();
   e.target.value="";
 };
+/* Een scan is genomen met de schermgrote sluiter. Dezelfde bijlage als via de toestelcamera: een scan wordt als document bij het punt bewaard. */
+async function scanGenomen(blob){
+  wachtendeFoto=blob;
+  wachtendeBijlage={naam:"scan", type:"image/jpeg", beeld:true, grootte:Math.round((blob.size||0)/1024), scan:true};
+  isScan=true;
+  const oud=scanVoorbeeld; scanVoorbeeld=null;
+  if(oud)try{ URL.revokeObjectURL(oud); }catch(err){}
+  try{ scanVoorbeeld=URL.createObjectURL(wachtendeFoto); }catch(err){}
+  merkFotoknop(); merkGo(); merkVakken();
+  if(document.getElementById("fichedlg").open)vulFiche();
+}
+function scanDrukken(){
+  if(document.getElementById("fichedlg").open&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){
+    snel.vanPlan=false; snel.voorFiche="scan"; openSnel();
+  }else{
+    document.getElementById("scan").click();
+  }
+}
 /* Een foto is genomen, langs welke weg ook: de toestelcamera of de schermgrote sluiter. Eén plaats waar ze de wachtende foto wordt. */
 async function fotoGenomen(blob){
   wachtendeFoto=blob;
@@ -13721,6 +13741,7 @@ const VAKKEN={foto:"fiche-foto", scan:"fiche-scan", teken:"fiche-pen"};
 function vakTik(welk){
   /* Foto zonder foto: meteen de schermgrote sluiter, geen tussenvak met uitleg (de opdrachtgever, 17/10/2026). Staat er al een foto, dan opent het vak om ze te bekijken en aan te duiden. */
   if(welk==="foto"&&!wachtendeFoto&&fiche.groot!=="foto")return ()=>fotoDrukken();
+  if(welk==="scan"&&!wachtendeFoto&&fiche.groot!=="scan")return ()=>scanDrukken();
   return ()=>zetGroot(fiche.groot===welk?null:welk);
 }
 Object.keys(VAKKEN).forEach(welk=>{
@@ -13752,7 +13773,7 @@ Object.keys(VAKKEN).forEach(welk=>{
 document.getElementById("fiche-fototeken").onclick=e=>{ e.stopPropagation(); fotoDrukken(); };
 document.getElementById("fiche-scango").onclick=e=>{
   e.stopPropagation();
-  document.getElementById("scan").click();
+  scanDrukken();
 };
 
 /* De rondgang van vandaag, en anders een nieuwe. Een per dag: de dag is de sleutel, en een
@@ -14772,6 +14793,8 @@ async function zetGroot(welk){
         ? requestAnimationFrame : (fn=>setTimeout(fn,16));
       straks(()=>{ if(fiche.groot==="teken"){ planPasIn(); planTeken(); } });
     });
+    /* En nog eens als het vel helemaal ligt: de schermvullende kaart heeft geen verloop op .fiche-media meer, en dan mat de eerste beurt een vel dat nog schoof (het plan stond half buiten beeld). */
+    setTimeout(()=>{ if(fiche.groot==="teken"){ planPasIn(); planTeken(); } },420);
   }else if(fiche.groot){
     /* Foto en scan: binnen het kader dat jij getrokken hebt, dus hier valt niets te zetten.
        Deze tak heette eerst `else if(fiche.groot==="foto")`, en toen scan erbij kwam viel die
