@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-oOXhtDuHp1/GRDbtvxs9RuK9a4pJkQyh6bFdm/Wso4M=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-Nm9Mspu50+gCb6ok0Hu0+10pGerP8qAW736qaSNwb4E='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-A5AgR7sbL2GxgXpwwC+/wu/gTRLxyc0eMVi9iqvHQtg=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-zDWzwliUDEszZW/WaqAxWRtZN8f6wQikk/5sBfYDqCM='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1350,7 +1350,7 @@
   html.fiche-open #fichedlg>.dlg-body{flex:1 1 auto;min-height:0;max-height:none;overflow-y:auto}   /* de grens blijft die van het blad: schermvullend heft de 64vh van .dlg-body op */
   html.fiche-open #fichedlg .dlg-body>.fiche-tekstvak{flex:1 0 auto;display:flex;flex-direction:column}
   html.fiche-open #fichedlg .fiche-tekstvak .fiche-veld{flex:1 1 auto;min-height:132px}
-  html.fiche-open #fichedlg .fiche-knoppen{margin-top:auto}
+  html.fiche-open #fichedlg .fiche-knoppen{margin-top:auto;position:sticky;bottom:-6px;z-index:2;background:var(--blad,#f6f6f6)}      /* ook als de kaart omlaag gesleept is blijven Wissen en Bewaren in beeld */
   html.fiche-open .kaarttik,html.fiche-open .kaartnoord,html.fiche-open .kaartschaal,html.fiche-open .kaartknop.kaarttekst,html.fiche-open .kaartknop.kaartmeet,html.fiche-open .kaartmeetbalk,html.fiche-open .schaalkeuze{display:none !important}
   /* DE GREEP IS DE HELE KOPRIJ.
      Tot 28/09/2026 stond hier een streepje van 38 x 4 px in een raakvlak van 26 px, de vorm
@@ -3987,7 +3987,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v578";
+const VERSIE="v580";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -14958,6 +14958,8 @@ function bladSleepBedrading(){
       const voorbij=sleepGevraagd!==null&&v>0&&startVol&&sleepGevraagd-startHoogte>CALQUEVEEG;
       if(v>0&&dlg.getBoundingClientRect().height>=v*0.8)zetBladhoogte(null);
       if(voorbij&&!fiche.groot)zetGroot("teken");
+      /* Het plan erboven heeft nu een andere maat gekregen (het kon verborgen zijn toen de notitie opende, bijvoorbeeld na een herlading): laat het zich opnieuw meten. */
+      try{ window.dispatchEvent(new Event("resize")); }catch(err){}
     }else if(v>0)bewaarBladdeel(+(dlg.getBoundingClientRect().height/v).toFixed(4));
     /* De speld kan er nu onder of boven liggen; de kaart hoort mee te schuiven. */
     try{ houdSpeldVrij(); }catch(err){}
