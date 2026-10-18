@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-AnO52lGotO0e9tqfqtSRD1h+r+zjbrdVyvFRu5jyLYE=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-qHXYMDFo14GR/1EjFTXJi7MeszTaQZGTqgRCicVe0Xc='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-c/r1pcirGne9KOiMNhO8sgUgBMx+D70lhZ0GYqXY+vA=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-Ezhpr7o5/OMcaP07CDc/V2f2hidbSEI0ri8gBCa+AJI='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1064,7 +1064,7 @@
   /* De streep (de opdrachtgever, 16/10/2026: "met een horizontale zwarte streep?"): een dunne zwarte streep onderaan, op elke pagina op dezelfde plek. Tik erop of veeg omhoog: het menu opent. Het tikvlak is groter dan de streep. */
   :root{--streep-b:calc(20px + env(safe-area-inset-bottom,0px))}      /* de streep ligt boven de home-balk van het toestel, op elke pagina even hoog */
   /* De opdrachtgever, 16/10/2026: "probeer links een fotobol, rechts een plus en centraal een pijlpunt, even groot. Links geeft rechtstreeks toegang tot het nemen van een foto, rechts tot het aanmaken van een verslagpunt." Onderaan staan drie even grote dingen: links de fotobol, midden de pijlpunt (menu), rechts de plus. */
-  .menubalk{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;margin:0;padding:6px calc(var(--marge) - 14px) var(--streep-b);box-sizing:border-box;background:var(--surface);border-top:var(--haar) solid var(--line);z-index:7}      /* een dun lijntje erboven (de opdrachtgever, 16/10/2026); de fotobol links en de plus rechts staan in de hoeken, op de rand van de tekst, de pijlpunt in het midden */
+  .menubalk{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;margin:0;padding:6px calc(var(--marge) - 14px) var(--streep-b);box-sizing:border-box;background:#ecefe8;border-top:var(--haar) solid var(--line);z-index:7}      /* een dun lijntje erboven (de opdrachtgever, 16/10/2026); de fotobol links en de plus rechts staan in de hoeken, op de rand van de tekst, de pijlpunt in het midden */
   .menubol{position:relative;width:56px;height:56px;border:0;background:none;padding:0;color:var(--ink);-webkit-tap-highlight-color:transparent}
   .menubol::before{content:"";position:absolute;left:50%;top:50%;width:28px;height:28px;margin:-14px 0 0 -14px;border:2px solid var(--ink);border-radius:50%;box-sizing:border-box}      /* de fotobol: een holle, fijne ring */
   .menubol-foto::before{width:42px;height:42px;margin:-21px 0 0 -21px;border:0;background:var(--ink)}      /* de fotobol is vol (de opdrachtgever, 16/10/2026) met een camera erin */
@@ -1141,19 +1141,33 @@
   /* Geen hoogte-overgang bij het openen: het blad kreeg zijn paginahoogte pas een tik na het openen en groeide dan 14 px. */
   #dlg[data-opent] .blad,#beheerdlg[data-opent] .blad,#dlg[data-pagina] .blad,#beheerdlg .blad{transition:none}
   #beheerdlg .beheer-body{padding-top:calc(var(--pg-ruimte) - 150px);padding-bottom:72px}
-  #beheerdlg .beheer-body h3{margin:0;padding:22px 4px 10px;border-top:0;font:400 calc(var(--tm) * 1.3)/1.2 inherit;font-family:inherit;color:var(--ink);letter-spacing:0;text-transform:none}
-  #beheerdlg .beheer-uitleg{padding:0 4px;margin:0 0 8px}
-  #beheerdlg .beheer-groep{gap:0;display:grid;grid-template-columns:1fr 1fr;border-top:var(--haar) solid var(--line-soft)}
-  #beheerdlg .beheer-groep button{border:0;border-radius:0;background:none;color:var(--ink);width:100%;text-align:left;font-size:var(--tm);
-    min-height:84px;padding:54px 12px 12px;border-bottom:var(--haar) solid var(--line-soft);
-    transition:padding-top .24s cubic-bezier(.22,.8,.3,1)}
-  #beheerdlg .beheer-groep button:nth-child(even){border-left:var(--haar) solid var(--line-soft)}
-  #beheerdlg .beheer-groep button:active{padding-top:12px}
-  #beheerdlg .beheer-groep button#bijwerkknop,#beheerdlg .beheer-groep button#aibeheer{grid-column:1/-1;border-left:0;height:auto;min-height:84px}
-  #beheerdlg .beheer-groep:has(> :last-child:nth-child(odd)) > :last-child{grid-column:1/-1;border-left:0}
+  /* DE INSTELLINGEN ALS TEGELS (de opdrachtgever, 18/10/2026: "het blad Instellingen moet ook duidelijker"): dezelfde taal als de Locatiepagina. Elke knop is een afgeronde, lichtgrijze tegel, twee naast elkaar: de naam linksonder, het nummer als kleine pil rechtsboven. De kopjes zijn duidelijker en de uitleg staat eronder. */
+  #beheerdlg .beheer-body h3{margin:0;padding:30px 4px 4px;border-top:0;font-size:calc(var(--tm) * 1.3);line-height:1.2;font-weight:600;color:var(--ink);letter-spacing:0;text-transform:none}
+  #beheerdlg .beheer-body h3:first-child{padding-top:6px}
+  #beheerdlg .beheer-uitleg{padding:0 4px;margin:0 0 12px;font-size:var(--tk);line-height:1.4;color:var(--ink-soft)}
+  #beheerdlg .beheer-groep{gap:4px;display:grid;grid-template-columns:1fr 1fr;border-top:0}      /* de kaders dicht op elkaar (de opdrachtgever, 18/10/2026, met een voorbeeld) */
+  #beheerdlg .beheer-groep button{position:relative;display:flex;flex-direction:column;justify-content:flex-end;border:0;border-radius:18px;background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 14px rgba(40,50,30,.05);color:var(--ink);width:100%;text-align:left;font-size:var(--tm);line-height:1.25;
+    min-height:92px;padding:14px;transition:background .15s}
+  #beheerdlg .beheer-groep button:active{background:rgba(255,255,255,.75)}
+  #beheerdlg .beheer-groep.genummerd>button:not([hidden])::before{content:counter(bnr);position:absolute;right:12px;top:12px;font-size:11px;line-height:1;padding:4px 8px;border-radius:8px;background:rgba(255,255,255,.9);color:var(--ink)}
+  #beheerdlg .beheer-groep.genummerd>#backup.wacht:not([hidden])::before{content:counter(bnr) " \25CF";color:var(--warn)}
+  #beheerdlg .beheer-groep button#bijwerkknop,#beheerdlg .beheer-groep button#aibeheer{grid-column:1/-1;min-height:84px}
+  #beheerdlg .beheer-groep:has(> :last-child:nth-child(odd)) > :last-child{grid-column:1/-1}
+  /* HET VERLOOP (de opdrachtgever, 18/10/2026, met een voorbeeld: "probeer eens verloop op de achtergrond zoals deze"): een zacht, warm grijsgroen vlak met een paar wazige lichtvlekken, achter de glazen tegels van Instellingen en Locatie. */
+  #beheerdlg .blad,#dlg[data-pagina] .blad,.ai-kaart{background:radial-gradient(120% 55% at 12% 0%,#e6ebe0 0%,rgba(230,235,224,0) 64%),radial-gradient(90% 48% at 100% 26%,#d5ddc6 0%,rgba(213,221,198,0) 66%),radial-gradient(110% 55% at 0% 76%,#e3ddc8 0%,rgba(227,221,200,0) 68%),radial-gradient(100% 52% at 100% 100%,#d6dfd2 0%,rgba(214,223,210,0) 68%),#eff1e9}
+  /* EEN LEESBARE KOLOM OP EEN BREED SCHERM (de opdrachtgever, 18/10/2026, op de iPad: "het is ineens minder crispy omdat de tegels uitgerokken zijn, en het funderingsadvies is moeilijker leesbaar"): de pagina's staan in een kolom van hoogstens 640 punten, in het midden, net als het hoofdscherm. Op een telefoon verandert er niets; op een iPad blijven de tegels zo groot en de regels zo kort als op de telefoon. Het verloop erachter loopt wel over het hele scherm. */
+  #dlg[data-pagina] .blad-pagina,#beheerdlg .blad-pagina{width:100%;max-width:640px;align-self:center;container-type:inline-size;container-name:pg}
+
+  /* Op alle pagina's behalve het plan (de opdrachtgever, 18/10/2026: "doe de andere pagina's ook zo, behalve het plan"): wat vastgeplakt blijft staan terwijl je scrolt (een open hoofdstuk, de zoekbalk) is een glazen strook in plaats van een wit vlak, zodat het verloop er niet onderdoor breekt. */
+  #dlg[data-pagina] .dossier-kast > .fiche-hoofdstuk[aria-expanded="true"],#dlg[data-pagina] .lb-ruim{background:rgba(242,244,237,.78);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+  /* De thema's: een lijntje erboven, ruimte, een kopje en een korte uitleg. */
+  #beheerdlg .beheer-thema{margin-top:18px;padding-top:14px;border-top:var(--haar) solid var(--line-soft)}
+  #beheerdlg .beheer-thema h4{margin:0 0 3px;padding:0 4px;font-size:var(--tm);line-height:1.2;font-weight:600;color:var(--ink)}
+  #beheerdlg .beheer-thema .beheer-uitleg{margin:0 0 12px}
+  #beheerdlg .beheer-thema .beheer-groep+.beheer-uitleg{margin:12px 0 0}
   #beheerdlg .beheer-groep button[hidden]{display:none}
   #beheerdlg .beheer-groep button[aria-pressed="true"]{font-weight:650}
-  #beheerdlg .beheer-versie{display:flex;justify-content:space-between;align-items:baseline;margin:0;padding:18px 4px;border-top:var(--haar) solid var(--line-soft);font:var(--tm) inherit;font-family:inherit;color:var(--ink);text-align:left}
+  #beheerdlg .beheer-versie{display:flex;justify-content:space-between;align-items:baseline;margin:14px 0 0;padding:18px 4px;border-top:var(--haar) solid var(--line-soft);font:var(--tm) inherit;font-family:inherit;color:var(--ink);text-align:left}
   #beheerdlg .beheer-versie span+span{font-style:italic;font-size:var(--tk);color:var(--ink-soft)}
   #dlg[data-pagina] .blad{touch-action:pan-y}      /* een zijwaartse veeg komt bij de pagina aan in plaats van bij de browser (de opdrachtgever, 13/10/2026: "de schermen met de vinger kunnen swipen") */
   .tegels{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px 0}
@@ -1170,7 +1184,7 @@
   #dlg[open][data-opent="pagina"]>.blad{animation:schuif-van-rechts .34s cubic-bezier(.22,.8,.3,1)}      /* HET MENU BLIJFT STAAN (de opdrachtgever, 18/10/2026: "bij het veranderen van pagina blijft het menu onderaan gewoon op zijn plaats, dus loskoppelen"): de schuif zit op het blad van de pagina en niet op het venster, want het menu hangt aan het venster. Een eigen merk, bij het openen gezet: data-pagina wisselt bij elke pagina en zou de animatie (en dus het menu onderaan) opnieuw laten lopen */
   #dlg[data-pagina] .blad,#dlg[data-pagina] .blad.volledig{border-radius:0;height:100%;max-height:100%}
   @media (prefers-reduced-motion:reduce){#dlg[open][data-opent="pagina"]>.blad{animation:none}}
-  #dlg[open][data-opent],#beheerdlg[open][data-opent]{animation:none}      /* het venster zelf schuift niet meer omhoog of opzij: alleen het blad erin, zodat het menu onderaan vastblijft */
+  #dlg[open][data-opent],#beheerdlg[open][data-opent]{animation:none}      /* ook data-opent="stil": Instellingen die terugkomt na een submenu schuift niet opnieuw in */      /* het venster zelf schuift niet meer omhoog of opzij: alleen het blad erin, zodat het menu onderaan vastblijft */
   @media (prefers-reduced-motion:reduce){#dlg[open],#beheerdlg[open]{animation:none}}
   #dlg .dlg-voet:has(#dlg-kopieer[style*="none"]){display:none}
   #invoerdlg{width:min(94vw,520px);max-width:94vw}
@@ -2643,20 +2657,36 @@
   .pt-uitleg{padding:0 8px 16px 12px}
   .pt-meta{margin:0 0 10px;font-size:var(--tk);color:var(--ink-soft)}
   .pt-knoppen{display:flex;flex-wrap:wrap;gap:8px}
-  /* De bevindingen als rijen tussen haarfijne zwarte lijnen (de opdrachtgever, 18/10/2026, met een voorbeeld): links een label, rechts bovenaan de eenheid, de waarde in de rechterkolom op één lijn (34% van de breedte). Het lettertype, de maat en de ruimte zijn die van de rest van de app, en geen hoofdletters (de opdrachtgever: "gebruik hiervoor hetzelfde lettertype, spacing als op andere plaatsen, doe geen caps only"); alleen de cijfers zijn groot. Voorlopig alles in zwart. */
-  .loc-snel{display:block;margin:20px 0 0;color:#000}      /* geen lijn onder de laatste rij (de opdrachtgever, 18/10/2026) */
-  .loc-vak{position:relative;display:grid;grid-template-columns:34% minmax(0,1fr);align-items:start;min-width:0;padding:10px 0 12px;border-top:var(--haar) solid var(--line-soft)}      /* de lijntjes tussen de rijen even dun en licht als overal in de app (de opdrachtgever, 18/10/2026) */
-  .loc-vak.breed{grid-column:auto}
-  .loc-vak>*{grid-column:2}
-  .loc-lab{grid-column:1;grid-row:1;font-size:var(--tk);line-height:1.3;color:#000;padding-top:1px}
-  .loc-een{position:absolute;right:0;top:10px;font-size:var(--tk);line-height:1.3;color:#000;padding-top:1px}
-  .loc-vak-klein,.loc-vak-waarde{grid-column:2;font-size:var(--tm);line-height:1.3;overflow-wrap:anywhere}      /* één lettertype, stijl en grootte voor alle info (de opdrachtgever, 16/10/2026) */
-  .loc-vak-klein{margin-top:2px}
-  .loc-vak.groot{padding:10px 0 10px}
-  .loc-vak.groot .loc-vak-waarde{font-size:clamp(46px,16vw,64px);line-height:.95;font-weight:600;letter-spacing:-.03em;padding-top:6px}
-  .loc-vak.groot .loc-vak-klein{margin-top:6px}
+  /* De bevindingen als tegels (de opdrachtgever, 18/10/2026, met een voorbeeld): een groot, licht getal met pillen eronder, daaronder afgeronde grijze tegels, twee naast elkaar of over de hele breedte: de titel met een punt linksboven, een klein label rechtsboven, de waarde linksonder. Het lettertype en de maat zijn die van de app; alleen de getallen zijn groot en licht. */
+  .loc-snel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px;margin:14px 0 0;color:#000}
+  .loc-vak{position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:18px;min-width:0;min-height:112px;padding:14px 14px 15px;border-radius:18px;background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 14px rgba(40,50,30,.05);overflow:hidden}      /* glas: doorzichtig wit met vervaging, op het verloop erachter (de opdrachtgever, 18/10/2026) */
+  .loc-vak.breed{grid-column:1 / -1;min-height:0}
+  .loc-vak>*{position:relative}
+  .loc-lab{font-size:var(--tm);line-height:1.2;color:#000;padding-right:70px}
+  .loc-chip{display:inline-block;font-size:11px;line-height:1;padding:4px 8px;border-radius:8px;background:rgba(255,255,255,.9);color:#000;white-space:nowrap}
+  .loc-vak>.loc-chip{position:absolute;right:12px;top:12px}
+  .loc-vak-klein,.loc-vak-waarde{font-size:var(--tm);line-height:1.3;overflow-wrap:anywhere}      /* één lettertype, stijl en grootte voor alle info (de opdrachtgever, 16/10/2026) */
+  .loc-vak-klein{font-size:var(--tk);margin-top:-8px}
+  .loc-vak.groot .loc-vak-waarde{font-size:clamp(40px,12.5vw,52px);line-height:1;font-weight:300;letter-spacing:-.03em}
+  .loc-zinnen{display:flex;flex-direction:column}
+  .loc-zinnen .loc-vak-klein{margin-top:3px}
+  .loc-advies{gap:8px}
+  .loc-vak>.loc-vak-klein+.loc-vak-klein{margin-top:-15px}
   .loc-vak.tikbaar{cursor:pointer}
   .loc-vak-kop{font-size:var(--tk);color:var(--ink-soft);margin-bottom:3px}
+  /* Het grote getal bovenaan, zonder tegel: licht en groot, met ruimte erboven (zoals de 96% in het voorbeeld). */
+  .loc-vak.hero{grid-column:1 / -1;min-height:0;padding:34px 2px 4px;background:none;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none;gap:6px;border-radius:0;overflow:visible}
+  .loc-vak.hero .loc-lab{padding-right:0;font-size:var(--tm)}
+  .loc-vak.hero .loc-vak-waarde{font-size:clamp(88px,29vw,132px);line-height:.9;font-weight:300;letter-spacing:-.05em}
+  .loc-eenheid{font-size:var(--tm);font-weight:400;letter-spacing:0;margin-left:8px;vertical-align:top;line-height:1.3;display:inline-block;padding-top:14px}
+  .loc-chips{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:6px;margin:0 0 6px}
+  .loc-chips .loc-chip{background:rgba(255,255,255,.5);font-size:12px;padding:5px 10px}
+  /* De laadstand als vulling: zachtgeel van links naar rechts (zoals de batterijtegel in het voorbeeld). */
+  /* De laadstand als lichtgroen glas (de opdrachtgever, 18/10/2026: "maak deze lichtgroen glassy in plaats van geel en grijs of wit"): de hele tegel is groen glas, en de vulling is wat dieper groen. */
+  /* HET GROENE PALET (de opdrachtgever, 18/10/2026: "geef deze glastegel iets meer donkerder groen, ik wil dit groene palet hebben", met een voorbeeld in salie- en mosgroen): twee tinten, over wit glas heen. De tegel van het adres (de bevestigde plek) en die van de laadstand dragen ze; de vulling van de laadstand is de diepste. */
+  .loc-vak.loc-adres,.loc-vak.loc-opgehaald{background:rgba(150,175,125,.25)}      /* iets doorzichtiger (de opdrachtgever, 18/10/2026) */
+  .loc-vak.loc-opgehaald .loc-vul{position:absolute;left:0;top:0;bottom:0;background:rgba(112,145,92,.30);z-index:0}
+  .loc-vak.loc-opgehaald>*:not(.loc-vul){z-index:1}
   .loc-laden{display:flex;flex-direction:column;gap:0;align-items:flex-start;grid-column:2}
   .loc-laden .loc-opnieuw{margin-top:6px}
   .loc-laadstand{color:#000}
@@ -2691,9 +2721,15 @@
   .loc-kop-rij{font-size:var(--tk);color:var(--ink-soft)}
   .loc-probleem{background:none;border:0;padding:8px 12px;min-height:44px;font-size:var(--tk);color:var(--ink-soft);text-decoration:underline}
   .loc-probleemtekst{max-width:34em}
-  .loc-kast{margin-top:48px;border-top:var(--haar) solid var(--line-soft)}      /* meer lucht onder de titel, en een dun lijntje boven 0 Kaart (de opdrachtgever, 13/10/2026) */
+  .loc-kast{display:grid;grid-template-columns:minmax(0,1fr);gap:4px;margin-top:20px}      /* de rubrieken als tegels over de volle breedte, dicht op elkaar */      /* meer lucht onder de titel, en een dun lijntje boven 0 Kaart (de opdrachtgever, 13/10/2026) */
   /* De tekst van de hoofdstukken in Locatie: eerst 20% groter, daarna nog eens 30% (de opdrachtgever, 13/10/2026): 1,2 x 1,3 = 1,56 keer de gewone maat. */
-  .loc-kast .fiche-hoofdstuk{font-size:calc(var(--tm) * 2.19);padding-top:20px;padding-bottom:20px}   /* 1,64 x 4/3 = 2,19 en 15% meer lucht (17 naar 20 px) tussen lijn en tekst (de opdrachtgever, 13/10/2026) */
+  /* DE RUBRIEKEN ALS GLAZEN TEGELS OP VOLLE BREEDTE (de opdrachtgever, 18/10/2026: "probeer eens volledige breedte en behoud van de oorspronkelijke grootte van het lettertype"): één tegel per rij, de naam op de oorspronkelijke grote maat (2,19 x, de opdrachtgever 13/10/2026) met het nummer ervoor en de pijl rechts. Een geopende rubriek blijft op de volle breedte, en zijn inhoud ook. */
+  .loc-kast > *:not(.fiche-hoofdstuk){grid-column:1 / -1}
+  .loc-kast > .fiche-hoofdstuk{display:flex;flex-direction:row;align-items:center;gap:10px;padding:18px 18px;min-height:0;border:0;border-radius:18px;background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 14px rgba(40,50,30,.05);color:var(--ink);font-size:calc(var(--tm) * 2.19);line-height:1.15;text-align:left}
+  .loc-kast > .fiche-hoofdstuk .fiche-anr{position:static;font-size:inherit;line-height:inherit;padding:0;background:none;border-radius:0}
+  .loc-kast > .fiche-hoofdstuk .fiche-atitel{flex:1;min-width:0;font-size:inherit;font-weight:400}
+  .loc-kast > .fiche-hoofdstuk .fiche-hoofdstuk-pijl{position:static;flex:none;margin:0 0 0 auto;font-size:inherit;color:#000}
+  .loc-kast > .fiche-hoofdstuk[aria-expanded="true"] .fiche-atitel{font-weight:600}
   .door-wat{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
   .door-wat b{font-size:var(--tm);font-weight:600}
   .door-wat span{font-size:var(--tk);color:var(--ink-soft)}
@@ -3126,6 +3162,117 @@
   .fasebalk small{font-size:var(--tk);opacity:.75;margin-left:4px}
   /* Het lijntje boven de eerste rij (PBD-UIT-01) staat er weer: de eerste rij volgt op de fasenaam, niet op de balk, en kreeg daarom nooit een lijn erboven (de opdrachtgever, 13/10/2026). */
   #dlg[data-pagina="verslagen"] .inv-uitleg + .door-rij{border-top:var(--haar) solid var(--line-soft)}
+  /* Deze regels staan als laatste in de opmaak: ze moeten later komen dan de basisregels van de tegels, want ze hebben dezelfde sterkte en de laatste wint. */
+  @keyframes paginaVloeit{from{opacity:0}to{opacity:1}}
+  .zijbalk,.zijbalk-thuis{display:none}
+  /* OP EEN BREED SCHERM EEN DASHBOARD MET EEN MENU LINKS (de opdrachtgever, 18/10/2026, met een voorbeeld van een iPad: "het ziet er nog saai uit, alsof het een ontwerp voor iPhone is, niet adaptief voor iPad; kunnen de tegels niet herschikt worden? met ook een echt menu aan de linkerkant"): vanaf 700 punten breed staat links een zijbalk met de pagina's en rechts de pagina, die zich naar haar eigen breedte schikt (zie de containerregels): bij een middelbare breedte zes kolommen, bij een brede twaalf. */
+  @media (min-width:700px){
+    #dlg[data-pagina] .blad,#beheerdlg .blad{flex-direction:row;justify-content:center}
+    #dlg[data-pagina] .blad-pagina,#beheerdlg .blad-pagina{align-self:stretch;margin-right:auto;flex:1 1 0;min-width:0;max-width:1100px}
+    #beheerdlg .blad-pagina{max-width:1000px}
+    #dlg[data-pagina] .zijbalk,#beheerdlg .zijbalk{display:flex;flex-direction:column;gap:4px;flex:none;width:236px;box-sizing:border-box;padding:calc(132px + env(safe-area-inset-top,0px)) 8px 96px 24px;overflow-y:auto;overflow-x:hidden}      /* dezelfde afstand van boven als op het plan: eerst stond hij daar 40 punten lager en zakte hij als een pagina sloot (de opdrachtgever, 18/10/2026: "bij AI zakt het naar onder") */
+    .zijbalk button,.zijbalk-thuis button{display:flex;align-items:center;gap:10px;width:100%;padding:13px 14px;border:0;border-radius:16px;background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 14px rgba(40,50,30,.05);color:var(--ink);font-size:var(--tm);line-height:1.2;text-align:left;cursor:pointer}
+    .zijbalk .zij-nr,.zijbalk-thuis .zij-nr{font-size:11px;line-height:1;padding:4px 7px;border-radius:8px;background:rgba(255,255,255,.9);min-width:1.5em;text-align:center}
+    .zijbalk .zij-nr:empty,.zijbalk-thuis .zij-nr:empty{display:none}
+    .zijbalk button:active,.zijbalk-thuis button:active{background:rgba(255,255,255,.75)}
+    #dlg[data-pagina="punten"] .zijbalk [data-naam="punten"],#dlg[data-pagina="verslagen"] .zijbalk [data-naam="verslagen"],#dlg[data-pagina="dossier"] .zijbalk [data-naam="dossier"],#dlg[data-pagina="locatie"] .zijbalk [data-naam="locatie"],#beheerdlg .zijbalk [data-naam="instel"]{background:rgba(255,255,255,.88);font-weight:650}
+    .zijbalk button[hidden]{display:none}
+    /* GROTERE TEKST OP EEN IPAD (de opdrachtgever, 18/10/2026, met voorbeelden van iPad-dashboards: "tekst anders groter op de iPad voor de leesbaarheid, nu is het te smal"): in de pagina's is alle tekst bijna de helft groter (15 naar 22 punten, 11,5 naar 17; eerst een kwart, daarna nog groter op verzoek), want een iPad houd je verder weg en de kaarten zijn groter. Alles wat met de maten rekent (lijsten, rijen, kopjes, invoer) schaalt mee. */
+    #dlg[data-pagina] .blad-pagina,#beheerdlg .blad-pagina{--tk:17px;--tm:22px;--tg:29px;--tinvoer:23px}
+    .zijbalk,.zijbalk-thuis{--tk:17px;--tm:22px}      /* de zijbalk valt buiten de pagina en krijgt dezelfde grotere letter */
+    /* Het menu onderaan (de pijl en het uitklapmenu) is hier zinloos: de zijbalk neemt het over. De camera en de plus blijven. */
+    .menubalk:not(.menubalk-glas) .menustreep,.menu-glas{display:none !important}
+    /* Op een breed scherm beweegt het venster en het blad met de zijbalk erin nooit (de opdrachtgever, 18/10/2026: "je menu gaat alle kanten op"): geen schuif, geen veeg, geen sprong. Alleen de pagina zelf schuift. */
+    #dlg[data-opent],#beheerdlg[data-opent],#dlg[data-pagina],#beheerdlg[open]{animation:none !important;transform:none !important}
+    #dlg[data-pagina] .blad,#beheerdlg .blad{animation:none !important;transform:none !important}
+    /* Op een breed scherm schuift alleen de pagina, niet het blad met de zijbalk erin. */
+    #dlg[open][data-opent="pagina"]>.blad,#dlg[open][data-opent="pagina-links"]>.blad,#beheerdlg[open][data-opent="pagina"]>.blad,#beheerdlg[open][data-opent="pagina-links"]>.blad{animation:none}
+    /* De pagina schuift hier niet meer in beeld maar vloeit over (de opdrachtgever, 18/10/2026: "bij Punten schuift het menu nog mee"): een pagina die van links of rechts schuift, veegt over het gebied van de zijbalk, en dat leest als een menu dat meebeweegt. */
+    #dlg[open][data-opent] .blad-pagina,#beheerdlg[open][data-opent] .blad-pagina,.blad-pagina.schuif-van-rechts,.blad-pagina.schuif-van-links{animation:paginaVloeit .26s ease-out}
+    /* En op het plan staat dezelfde zijbalk, vast, als glazen knoppen over de kaart; de kaart eronder blijft bedienbaar tussen de knoppen door. */
+    .zijbalk-thuis{display:flex;flex-direction:column;gap:4px;position:fixed;left:0;top:0;bottom:0;z-index:8;width:236px;box-sizing:border-box;padding:calc(132px + env(safe-area-inset-top,0px)) 8px 96px 24px;pointer-events:none;overflow:hidden}
+    .zijbalk-thuis button{pointer-events:auto}
+    body:has(dialog[open]) .zijbalk-thuis{visibility:hidden}
+    html.fiche-open .zijbalk-thuis,html.film-open .zijbalk-thuis{display:none}
+    .zijbalk-thuis [data-naam="begin"]{background:rgba(255,255,255,.88);font-weight:650}
+    body:has(#aikaart:not([hidden])) .zijbalk-thuis [data-naam="begin"]{background:rgba(255,255,255,.42);font-weight:400}
+    body:has(#aikaart:not([hidden])) .zijbalk-thuis [data-naam="ai"]{background:rgba(255,255,255,.88);font-weight:650}
+  }
+  /* De pagina schikt zich naar haar eigen breedte. Middelbaar (een staande iPad naast de zijbalk): zes kolommen. */
+  @container pg (min-width:540px){
+    .loc-snel{grid-template-columns:repeat(6,minmax(0,1fr))}
+    /* Schikking voor een staande iPad (de opdrachtgever, 18/10/2026: "Locatie is rommelig en minder crispy dan de iPhone; de tekst is te breed om te lezen"): het grote getal links met twee getallen rechts ernaast, daaronder rijen van twee tegels, elk zo smal als op de iPhone, zodat de regels kort blijven; ondergrond en advies staan naast elkaar in plaats van over de volle breedte. */
+    .loc-snel > .loc-vak.t-hero{grid-column:1 / 4;grid-row:1;align-self:end}
+    .loc-snel > .loc-chips{grid-column:1 / 4;grid-row:2;align-self:start}
+    .loc-snel > .loc-vak.t-taw{grid-column:4 / 7;grid-row:1;min-height:170px}
+    .loc-snel > .loc-vak.t-water{grid-column:4 / 7;grid-row:2;min-height:170px}
+    .loc-snel > .loc-vak.t-adres{grid-column:1 / 4;grid-row:3;min-height:170px}
+    .loc-snel > .loc-vak.t-over{grid-column:4 / 7;grid-row:3;min-height:170px}
+    .loc-snel > .loc-vak.t-grond{grid-column:1 / 4;grid-row:4;min-height:150px}
+    .loc-snel > .loc-vak.t-opgehaald{grid-column:4 / 7;grid-row:4;min-height:150px}
+    .loc-snel > .loc-vak.t-ondergrond{grid-column:1 / 7;grid-row:5}
+    .loc-snel > .loc-vak.t-hero .loc-vak-waarde{font-size:clamp(88px,14vw,120px)}
+    .loc-snel .loc-vak.groot .loc-vak-waarde{font-size:clamp(50px,6.4vw,68px)}
+    .loc-snel > .loc-vak.t-ondergrond{justify-content:flex-start;gap:14px}
+    .loc-kast{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .loc-kast > .fiche-hoofdstuk{position:relative;flex-direction:column;align-items:stretch;justify-content:flex-end;gap:0;min-height:104px;padding:14px 34px 14px 14px;font-size:var(--tm);line-height:1.25}
+    .loc-kast > .fiche-hoofdstuk .fiche-anr{position:absolute;right:12px;top:12px;font-size:11px;line-height:1;padding:4px 8px;border-radius:8px;background:rgba(255,255,255,.9)}
+    .loc-kast > .fiche-hoofdstuk .fiche-atitel{flex:none;font-size:var(--tm)}
+    .loc-kast > .fiche-hoofdstuk .fiche-hoofdstuk-pijl{position:absolute;right:14px;bottom:13px;margin:0}
+    .loc-kast > .fiche-hoofdstuk[aria-expanded="true"]{grid-column:1 / -1;min-height:0;flex-direction:row;align-items:center}
+    .loc-kast > .fiche-hoofdstuk[aria-expanded="true"] .fiche-anr{top:50%;right:42px;margin-top:-9px}
+    .loc-kast > .fiche-hoofdstuk[aria-expanded="true"] .fiche-hoofdstuk-pijl{top:50%;bottom:auto;margin-top:-.7em}
+    #beheerdlg .beheer-groep{grid-template-columns:repeat(3,minmax(0,1fr))}
+    #beheerdlg .beheer-groep button#bijwerkknop,#beheerdlg .beheer-groep button#aibeheer{grid-column:span 2}
+    #beheerdlg .beheer-groep:has(> :last-child:nth-child(odd)) > :last-child{grid-column:auto}
+  }
+  /* Breed (een iPad liggend, of een Fold open): twaalf kolommen: het grote getal links met het kadaster eronder en het adres ernaast, daaronder vier tegels naast elkaar, dan de ondergrond met de laadstand links en het funderingsadvies rechts. */
+  @container pg (min-width:820px){
+    .loc-snel{grid-template-columns:repeat(12,minmax(0,1fr))}
+    .loc-snel > .loc-vak.t-hero{grid-column:1 / 6}
+    .loc-snel > .loc-chips{grid-column:1 / 6}
+    .loc-snel > .loc-vak.t-adres{grid-column:6 / 13}
+    .loc-snel > .loc-vak.t-taw{grid-column:1 / 4;grid-row:3}
+    .loc-snel > .loc-vak.t-over{grid-column:4 / 7;grid-row:3}
+    .loc-snel > .loc-vak.t-water{grid-column:7 / 10;grid-row:3}
+    .loc-snel > .loc-vak.t-grond{grid-column:10 / 13;grid-row:3}
+    .loc-snel > .loc-vak.t-adres{grid-column:6 / 13;grid-row:1 / 3;min-height:0}
+    .loc-snel > .loc-vak.t-ondergrond{grid-column:1 / 9;grid-row:4;align-self:start}
+    .loc-snel > .loc-vak.t-opgehaald{grid-column:9 / 13;grid-row:4}
+    .loc-kast{grid-template-columns:repeat(4,minmax(0,1fr))}
+    #beheerdlg .beheer-groep{grid-template-columns:repeat(4,minmax(0,1fr))}
+  }
+  /* DE FASEBALK ALS TIJDLIJN OP DE IPAD (de opdrachtgever, 18/10/2026: "maak bij de projectfase een tijdlijn op de ipad"): alle fasen in een rij zonder schuiven, verbonden door een lijn met een stip per fase;
+     de gekozen fase heeft een gevulde stip en staat in vet, het aantal verslagen staat eronder. */
+  @media (min-width:700px){
+    .fasebalk{overflow:visible;border-bottom:0;padding:18px var(--marge) 6px;margin-bottom:14px}
+    .fasebalk .zonevul{display:none}
+    .fasebalk button{flex:1 1 0;min-width:0;position:relative;text-align:center;padding:30px 2px 6px;font-size:var(--tk);border-left:0}
+    .fasebalk button+button{border-left:0}
+    .fasebalk button::after{content:"";position:absolute;top:10px;left:-50%;width:100%;height:var(--haar);background:var(--line)}
+    .fasebalk button:first-of-type::after{display:none}
+    .fasebalk button::before{content:"";position:absolute;top:5px;left:calc(50% - 6px);width:12px;height:12px;border-radius:50%;box-sizing:border-box;background:#f4f6f1;border:var(--haar) solid var(--ink);z-index:1}
+    .fasebalk button.actief::before{background:var(--ink)}
+    .fasebalk small{display:block;margin:2px 0 0;font-size:calc(var(--tk) - 3px)}
+    .fase-gantt{position:relative;margin:8px 0 18px;padding-top:30px}
+    .fase-gantt:empty{display:none}
+    .gantt-as{position:absolute;left:0;right:0;top:0;height:100%;pointer-events:none}
+    .gantt-maand{position:absolute;top:0;bottom:0;padding:2px 0 0 8px;border-left:var(--haar) solid var(--line);font-size:var(--tk);opacity:.6;white-space:nowrap}
+    .gantt-rij{display:block;position:relative;width:100%;height:58px;border:0;background:none;padding:0;text-align:left;color:var(--ink);cursor:pointer}
+    .gantt-balk{position:absolute;top:6px;height:26px;mix-blend-mode:multiply}
+    .gantt-naam{position:absolute;top:34px;font-size:var(--tk);white-space:nowrap;padding-left:2px}
+    .gantt-rij.actief .gantt-naam{font-weight:700}
+    .gantt-rij.actief .gantt-balk{box-shadow:0 0 0 2px var(--ink)}
+  }
+  @media (max-width:699px){.fase-gantt{display:none}}
+  .gantt-factuur{position:absolute;top:10px;width:14px;height:14px;margin-left:-7px;background:var(--ink);transform:rotate(45deg);border:2px solid #f4f6f1;box-sizing:border-box;z-index:2}
+  .fase-edit{margin:0 0 14px}
+  .fase-edit-rij{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px;margin:8px 0}
+  .fase-edit-kop{margin:14px 0 2px;font-size:var(--tk);opacity:.7}
+  .fase-veld{display:flex;flex-direction:column;gap:2px;font-size:var(--tk)}
+  .fase-edit input{font:400 var(--tm)/1.2 -apple-system,system-ui,sans-serif;color:var(--ink);background:rgba(255,255,255,.42);border:var(--haar) solid var(--line);border-radius:8px;padding:8px 10px}
+  .fase-edit input[type=text]{flex:1 1 180px;min-width:0}
+  .fase-edit button{font:400 var(--tm)/1.2 -apple-system,system-ui,sans-serif;color:var(--ink);background:rgba(255,255,255,.42);border:var(--haar) solid var(--line);border-radius:8px;padding:8px 12px}
 </style>
 </head>
 <body>
@@ -3550,51 +3697,88 @@
   <div class="dlg-body beheer-body">
     <h3>Deze werf</h3>
     <p class="beheer-uitleg">Hoort bij dit dossier. Een andere werf draagt haar eigen lijsten.</p>
-    <div class="beheer-groep genummerd">
-      <button type="button" id="zonebeheer">zones of rubrieken</button>
-      <button type="button" id="contactbeheer">contacten</button>
-      <button type="button" id="hoofdstukbeheer">hoofdstukken</button>
-      <button type="button" id="bestekbeheer">bestekartikels</button>
-      <button type="button" id="synoniembeheer">jouw woorden</button>
-      <button type="button" id="fasebeheer">projectfasen</button>
-      <button type="button" id="projectcodebeheer">projectcode</button>
-      <button type="button" id="planbronbeheer">plannen</button>
-      <button type="button" id="documentenknop">documenten</button>
-      <button type="button" id="profielbeheer">profiel</button>
-    </div>
+    <!-- Per thema een eigen kopje, uitleg en lijntje (de opdrachtgever, 18/10/2026: "combineer thema's, spaties, lijntjes"). De knoppen zelf blijven dezelfde, met dezelfde id's. -->
+    <section class="beheer-thema">
+      <h4>Indeling</h4>
+      <p class="beheer-uitleg">Hoe het verslag van deze werf is opgebouwd.</p>
+      <div class="beheer-groep genummerd">
+        <button type="button" id="zonebeheer">zones of rubrieken</button>
+        <button type="button" id="hoofdstukbeheer">hoofdstukken</button>
+        <button type="button" id="bestekbeheer">bestekartikels</button>
+        <button type="button" id="fasebeheer">projectfasen</button>
+        <button type="button" id="planbronbeheer">plannen</button>
+      </div>
+    </section>
+    <section class="beheer-thema">
+      <h4>Mensen en taal</h4>
+      <p class="beheer-uitleg">Wie erbij hoort, welke woorden gelden en wat erbij hoort.</p>
+      <div class="beheer-groep genummerd">
+        <button type="button" id="contactbeheer">contacten</button>
+        <button type="button" id="synoniembeheer">jouw woorden</button>
+        <button type="button" id="projectcodebeheer">projectcode</button>
+        <button type="button" id="documentenknop">documenten</button>
+        <button type="button" id="profielbeheer">profiel</button>
+      </div>
+    </section>
     <h3>Dit toestel</h3>
     <p class="beheer-uitleg">Jouw vaktaal en je bib — die veranderen niet als je de straat
       oversteekt, en reizen mee naar elke werf.</p>
-    <div class="beheer-groep genummerd">
-      <button type="button" id="woordbeheer">woorden</button>
-      <button type="button" id="leerbeheer">geleerd</button>
-      <button type="button" id="onderdeelbeheer">onderdelen</button>
-      <button type="button" id="bibbeheer">bib</button>
-      <button type="button" id="dropboxbeheer">dropbox</button>
-      <button type="button" id="fotos">bijlagen tonen</button>
-      <button type="button" id="backup" title="Alles op dit toestel in één bestand">Back-up</button>
-      <button type="button" id="backupterug" title="Een back-upbestand inlezen, bijvoorbeeld op een nieuw toestel">Back-up terugzetten</button>
-      <button type="button" id="aanmeldbeheer" title="Aanmelden of afmelden bij de online bron">Aanmelden</button>
-      <button type="button" id="toestelwissen" title="Alles op dit toestel wissen: de app begint opnieuw, alsof je haar voor het eerst opent">Toestel wissen (nieuw begin)</button>
-      <!-- Alleen zichtbaar als er een noodkopie van vóór de verhuizing bestaat (merkNoodknop). -->
-      <button type="button" id="noodterug" hidden title="De gegevens zoals ze stonden vóór de verhuizing van de opslag">Noodkopie terugzetten</button>
-    </div>
-    <!-- Wordt gevuld als het venster opengaat: navigator.storage weet het pas als je het vraagt,
-         en die vraag hoort niet bij het opstarten thuis. Pal onder Back-up, want samen
-         beantwoorden die twee dezelfde vraag: blijft dit staan, en waar staat het nog meer. -->
-    <p class="opslagstand" id="opslagstand"></p>
-    <!-- De AI-modus: een schakelaar, standaard uit, zonder dienst erachter. Bij "Dit toestel",
-         want daar staat hij vandaag; of hij per werf of per bureau hoort is een open vraag
-         (docs/AI-schakelaar-en-credits.md §6). Zie de kop "de AI-modus" in het script. -->
-    <div class="beheer-groep">
-      <button type="button" id="aibeheer" aria-pressed="false" hidden>AI-modus: uit</button>
-    </div>
-    <p class="beheer-uitleg">Nog geen dienst gekoppeld: aan of uit, er vertrekt niets van dit
-      toestel. Een opmerking die via AI binnenkomt draagt een gekleurd teken; wat je zelf typt
-      of dicteert blijft zwart-wit.</p>
-    <div class="beheer-groep">
-      <button type="button" id="bijwerkknop">bijwerken — kijk of er een nieuwe versie is</button>
-    </div>
+    <section class="beheer-thema">
+      <h4>Vaktaal en bib</h4>
+      <p class="beheer-uitleg">De woorden die je app kent, en wat ze van je geleerd heeft.</p>
+      <div class="beheer-groep genummerd">
+        <button type="button" id="woordbeheer">woorden</button>
+        <button type="button" id="leerbeheer">geleerd</button>
+        <button type="button" id="onderdeelbeheer">onderdelen</button>
+        <button type="button" id="bibbeheer">bib</button>
+      </div>
+    </section>
+    <section class="beheer-thema">
+      <h4>Opslag en back-up</h4>
+      <p class="beheer-uitleg">Waar je gegevens staan en hoe je ze veilig bewaart.</p>
+      <div class="beheer-groep genummerd">
+        <button type="button" id="dropboxbeheer">dropbox</button>
+        <button type="button" id="fotos">bijlagen tonen</button>
+        <button type="button" id="backup" title="Alles op dit toestel in één bestand">Back-up</button>
+        <button type="button" id="backupterug" title="Een back-upbestand inlezen, bijvoorbeeld op een nieuw toestel">Back-up terugzetten</button>
+        <!-- Alleen zichtbaar als er een noodkopie van vóór de verhuizing bestaat (merkNoodknop). -->
+        <button type="button" id="noodterug" hidden title="De gegevens zoals ze stonden vóór de verhuizing van de opslag">Noodkopie terugzetten</button>
+      </div>
+      <!-- Wordt gevuld als het venster opengaat: navigator.storage weet het pas als je het vraagt,
+           en die vraag hoort niet bij het opstarten thuis. Pal onder Back-up, want samen
+           beantwoorden die twee dezelfde vraag: blijft dit staan, en waar staat het nog meer. -->
+      <p class="opslagstand" id="opslagstand"></p>
+    </section>
+    <section class="beheer-thema">
+      <h4>Account en AI</h4>
+      <p class="beheer-uitleg">Aanmelden bij de online bron, en de AI-modus.</p>
+      <div class="beheer-groep genummerd">
+        <button type="button" id="aanmeldbeheer" title="Aanmelden of afmelden bij de online bron">Aanmelden</button>
+      </div>
+      <!-- De AI-modus: een schakelaar, standaard uit, zonder dienst erachter. Bij "Dit toestel",
+           want daar staat hij vandaag; of hij per werf of per bureau hoort is een open vraag
+           (docs/AI-schakelaar-en-credits.md §6). Zie de kop "de AI-modus" in het script. -->
+      <div class="beheer-groep">
+        <button type="button" id="aibeheer" aria-pressed="false" hidden>AI-modus: uit</button>
+      </div>
+      <p class="beheer-uitleg">Nog geen dienst gekoppeld: aan of uit, er vertrekt niets van dit
+        toestel. Een opmerking die via AI binnenkomt draagt een gekleurd teken; wat je zelf typt
+        of dicteert blijft zwart-wit.</p>
+    </section>
+    <section class="beheer-thema">
+      <h4>Nieuw begin</h4>
+      <p class="beheer-uitleg">Wist alles op dit toestel; de app begint opnieuw, alsof je haar voor het eerst opent.</p>
+      <div class="beheer-groep">
+        <button type="button" id="toestelwissen" title="Alles op dit toestel wissen: de app begint opnieuw, alsof je haar voor het eerst opent">Toestel wissen (nieuw begin)</button>
+      </div>
+    </section>
+    <section class="beheer-thema">
+      <h4>App</h4>
+      <p class="beheer-uitleg">Kijk of er een nieuwe versie is.</p>
+      <div class="beheer-groep">
+        <button type="button" id="bijwerkknop">bijwerken — kijk of er een nieuwe versie is</button>
+      </div>
+    </section>
     <p class="beheer-versie"><span>App-versie</span> <span id="versie"></span></p>
   </div>
   </div>
@@ -4058,7 +4242,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v658";
+const VERSIE="v699";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -6333,6 +6517,89 @@ function bewaarFasen(){
    dezelfde zachte overgang als bij `beelden` naast `foto`. */
 function faseVan(v){ return (v&&v.fase)||STANDAARDFASE; }
 function faseRecord(code){ return fasen.find(f=>f.code===code)||{code:code,naam:code}; }
+/* DE FASEN ALS TIJDBALKEN (de opdrachtgever, 18/10/2026, met een voorbeeld van overlappende gekleurde balken onder een maandenas): elke fase met verslagen is een balk van haar eerste tot haar laatste verslag (minstens twee weken breed),
+   half doorzichtig zodat een overlap donkerder wordt; de naam staat onder de balk, een tik kiest de fase. Fasen zonder verslag hebben geen datum en dus geen balk: die kies je in de balk erboven. */
+const FASEKLEUREN=["112,176,166","184,222,246","60,96,176","226,90,72","230,180,208","112,176,166","232,122,64","150,130,200","200,184,90","120,150,120"];
+function fasenGantt(gekozen,kies){
+  const kast=maakEl("div","fase-gantt");
+  const dag=t=>{ const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(t||""); return m?Date.UTC(+m[1],+m[2]-1,+m[3])/864e5:null; };
+  const reeks=[];
+  zichtbareFasen().forEach((f,i)=>{
+    const d=archief.filter(v=>faseVan(v)===f.code).map(v=>dag(v.datum)).concat(faseVan(staat)===f.code?[dag(staat.datum)]:[]).filter(x=>x!=null);
+    /* Zelf ingevulde data gaan voor op die van de verslagen. */
+    const van=dag(f.van)!=null?dag(f.van):(d.length?Math.min(...d):null);
+    let tot=dag(f.tot)!=null?dag(f.tot):(d.length?Math.max(...d):null);
+    const fact=(f.facturen||[]).map(x=>({dag:dag(x.datum),naam:x.naam||""})).filter(x=>x.dag!=null);
+    if(van==null&&fact.length)reeks.push({f,kleur:FASEKLEUREN[i%FASEKLEUREN.length],van:Math.min(...fact.map(x=>x.dag)),tot:Math.min(...fact.map(x=>x.dag)),fact,geenbalk:true});
+    else if(van!=null){ if(tot==null||tot<van+14)tot=van+14; reeks.push({f,kleur:FASEKLEUREN[i%FASEKLEUREN.length],van,tot,fact}); }
+  });
+  if(!reeks.length)return kast;
+  const alle=reeks.flatMap(r=>[r.van,r.tot].concat(r.fact.map(x=>x.dag)));
+  const eerste=new Date(Math.min(...alle)*864e5), laatste=new Date(Math.max(...alle)*864e5);
+  const begin=Date.UTC(eerste.getUTCFullYear(),eerste.getUTCMonth(),1)/864e5;
+  const einde=Date.UTC(laatste.getUTCFullYear(),laatste.getUTCMonth()+1,1)/864e5;
+  const pct=x=>((x-begin)/(einde-begin)*100).toFixed(2)+"%";
+  const MAANDEN=["jan","feb","maart","april","mei","juni","juli","aug","sept","okt","nov","dec"];
+  const as=maakEl("div","gantt-as");
+  for(let y=eerste.getUTCFullYear(),m=eerste.getUTCMonth();Date.UTC(y,m,1)/864e5<einde;m++){
+    if(m>11){m=0;y++;}
+    const k=maakEl("span","gantt-maand",MAANDEN[m]+(m===0||as.children.length===0?" "+y:""));
+    k.style.left=pct(Date.UTC(y,m,1)/864e5);
+    as.appendChild(k);
+  }
+  kast.appendChild(as);
+  reeks.forEach(r=>{
+    const rij=maakEl("button","gantt-rij");
+    rij.type="button"; rij.dataset.fase=r.f.code; rij.title=r.f.naam;
+    if(r.f.code===gekozen)rij.classList.add("actief");
+    if(!r.geenbalk){
+      const balk=maakEl("span","gantt-balk");
+      balk.style.left=pct(r.van); balk.style.width=((r.tot-r.van)/(einde-begin)*100).toFixed(2)+"%"; balk.style.background="rgba("+r.kleur+",.78)";
+      rij.appendChild(balk);
+    }
+    /* De facturatiemomenten: een ruitje op de datum, met bedrag of naam ernaast. */
+    r.fact.forEach(x=>{ const t=maakEl("span","gantt-factuur"); t.style.left=pct(x.dag); t.title=x.naam; rij.appendChild(t); });
+    const naam=maakEl("span","gantt-naam",r.f.code+" \u00B7 "+r.f.naam);
+    if((r.van-begin)/(einde-begin)>0.5){ naam.style.right=(100-(r.tot-begin)/(einde-begin)*100).toFixed(2)+"%"; naam.style.textAlign="right"; }      // een balk in de rechterhelft: de naam loopt naar links, anders valt hij van het scherm
+    else naam.style.left=pct(r.van);
+    rij.appendChild(naam);
+    rij.onclick=()=>{ if(!rij.classList.contains("actief"))kies(r.f.code); };
+    kast.appendChild(rij);
+  });
+  return kast;
+}
+/* De gekozen fase aanpassen: begin en einde zelf invullen, en de facturatiemomenten (datum + omschrijving) toevoegen of wegdoen. Elke wijziging wordt meteen bewaard en de balken tekenen zich opnieuw. */
+function faseDatumEditor(code,opnieuw){
+  const f=fasen.find(x=>x.code===code);
+  const kast=maakEl("div","fase-edit");
+  if(!f)return kast;
+  const veld=(label,waarde,wijzig)=>{
+    const l=maakEl("label","fase-veld"); l.appendChild(maakEl("span",null,label));
+    const i=document.createElement("input"); i.type="date"; i.value=waarde||"";
+    i.onchange=()=>{ wijzig(i.value); bewaarFasen(); opnieuw(); };
+    l.appendChild(i); return l;
+  };
+  const rij=maakEl("div","fase-edit-rij");
+  rij.appendChild(veld("Begin",f.van,w=>{ f.van=w||undefined; }));
+  rij.appendChild(veld("Einde",f.tot,w=>{ f.tot=w||undefined; }));
+  kast.appendChild(rij);
+  kast.appendChild(maakEl("div","fase-edit-kop","Facturatiemomenten"));
+  (f.facturen||[]).forEach((x,i)=>{
+    const r=maakEl("div","fase-edit-rij");
+    r.appendChild(veld("Datum",x.datum,w=>{ x.datum=w; }));
+    const n=document.createElement("input"); n.type="text"; n.placeholder="Omschrijving"; n.value=x.naam||"";
+    n.onchange=()=>{ x.naam=n.value; bewaarFasen(); opnieuw(); };
+    r.appendChild(n);
+    const w=maakEl("button","fase-edit-weg","Weg"); w.type="button";
+    w.onclick=()=>{ f.facturen.splice(i,1); bewaarFasen(); opnieuw(); };
+    r.appendChild(w);
+    kast.appendChild(r);
+  });
+  const plus=maakEl("button","fase-edit-plus","+ Facturatiemoment"); plus.type="button";
+  plus.onclick=()=>{ (f.facturen=f.facturen||[]).push({datum:vandaag(),naam:""}); bewaarFasen(); opnieuw(); };
+  kast.appendChild(plus);
+  return kast;
+}
 function faseNaam(code){ return faseRecord(code).naam||code; }
 function zichtbareFasen(){ return fasen.filter(f=>!f.verborgen); }
 
@@ -9490,9 +9757,12 @@ async function beheerPlanbron(){
    onbetrouwbaar af bij programmatisch sluiten, en dat is vorige sessie een half uur zoeken
    geweest. Een knop doet zijn werk meteen. */
 document.getElementById("beheerknop").onclick=()=>openInstellingen(false);
-function openInstellingen(links){
+/* De AI-knop in de zijbalk staat er alleen als de AI-modus aan staat, zoals in het menu onderaan. */
+function zijbalkVerfris(){ document.querySelectorAll(".zijbalk .zij-ai").forEach(b=>{ b.hidden=!aiAan(); }); }
+function openInstellingen(links,stil){
   const bd=document.getElementById("beheerdlg");
-  if(!bd.open)bd.dataset.opent=links?"pagina-links":"pagina";
+  zijbalkVerfris();
+  if(!bd.open)bd.dataset.opent=stil?"stil":(links?"pagina-links":"pagina");
   merkAiknop();
   merkNoodknop();
   if(!bd.open)bd.showModal();
@@ -9509,8 +9779,31 @@ document.getElementById("beheerdlg").addEventListener("click",e=>{
   /* De schakelaar van de AI-modus opent geen venster; hij wisselt van stand, en die stand wil
      je zien staan -- zoals de vliegtuigmodus. Dus daar blijft het venster open. */
   const blijft=["beheer-sluit","aibeheer"];
-  if(b&&!blijft.includes(b.id))document.getElementById("beheerdlg").close();
+  if(b&&!blijft.includes(b.id)&&!b.closest(".zijbalk")){
+    const lijst=document.querySelector("#beheerdlg .beheer-body"), stand=lijst?lijst.scrollTop:0;
+    document.getElementById("beheerdlg").close();
+    beheerKeerTerug(stand);
+  }
 },true);
+/* IN INSTELLINGEN BLIJVEN (de opdrachtgever, 18/10/2026: "als ik in Instellingen een submenu aanklik en dan wegklik kom ik bij Plan terecht; dat is niet de bedoeling, we moeten in Instellingen blijven"). Een knop sluit het beheervenster en opent zijn eigen venster; is dat venster weer dicht, dan komt Instellingen terug, op dezelfde plek in de lijst en zonder schuifbeweging. Een knop die geen venster opent (een back-up bewaren) laat je meteen terug. Er wordt gekeken in plaats van op een sluitgebeurtenis gewacht: het browserpaneel levert die onbetrouwbaar af. */
+let beheerWacht=null;
+function beheerKeerTerug(stand){
+  clearInterval(beheerWacht);
+  const t0=Date.now(); let zagOpen=false;
+  beheerWacht=setInterval(()=>{
+    const open=!!document.querySelector("dialog[open]");
+    if(open)zagOpen=true;
+    const klaar=zagOpen?!open:(Date.now()-t0>500);      // eerst wachten tot het eigen venster er is; komt het niet, dan was het een knop zonder venster
+    if(klaar||Date.now()-t0>20*60*1000){
+      clearInterval(beheerWacht); beheerWacht=null;
+      const bd=document.getElementById("beheerdlg");
+      if(bd.open||document.querySelector("dialog[open]"))return;
+      openInstellingen(false,true);
+      const lijst=document.querySelector("#beheerdlg .beheer-body");
+      if(lijst)requestAnimationFrame(()=>{ lijst.scrollTop=stand; });
+    }
+  },120);
+}
 
 /* ---- de AI-modus: een schakelaar zonder dienst erachter ----
    de opdrachtgever, 30/09/2026: "Ik wil ook AI-modus of offline modus. Zo ziet de gebruiker of er input
@@ -9665,7 +9958,7 @@ function menuStart(){
       b.setAttribute("aria-label",tekst);
       if(reeks!==1)b.setAttribute("tabindex","-1");
       b.dataset.naam=naam; b.dataset.tekst=tekst;
-      b.onclick=e=>{ e.stopPropagation(); menuKlik(); menuGa(naam); menuDoel=naam; menuDoelTot=Date.now()+1500; menuBlijf(); };      // het menu blijft staan: alleen de pijl omlaag sluit het (de opdrachtgever, 16/10/2026)
+      b.onclick=e=>{ e.stopPropagation(); menuGa(naam); menuDoel=naam; menuDoelTot=Date.now()+1500; menuBlijf(); };      // het menu blijft staan: alleen de pijl omlaag sluit het (de opdrachtgever, 16/10/2026)
       namen.appendChild(b);
     });
   }
@@ -9683,22 +9976,7 @@ function menuStart(){
 /* De gekozen naam staat meteen als huidig, ook als de pagina pas later opent (Instellingen opent een eigen venster): de carrousel schuift dan zonder te wachten. */
 let menuDoel=null, menuDoelTot=0;
 const MENUSCHUIFTIJD=380;      // ook de bladenbalk gebruikt deze tijd (ZONESCHUIFTIJD)
-/* Een klik bij het aantikken van een nummer (de opdrachtgever, 18/10/2026: "ik wil ook een klik horen bij het klikken van een nummer"): een kort tikje uit de geluidskaart van het toestel, zonder bestand, plus een heel lichte trilling waar die bestaat. De geluidskaart start pas in een tik; dit wordt daarin aangeroepen. */
-let menuKlikCtx=null;
-function menuKlik(){
-  try{
-    const AC=window.AudioContext||window.webkitAudioContext;
-    if(AC){
-      menuKlikCtx=menuKlikCtx||new AC();
-      if(menuKlikCtx.state==="suspended")menuKlikCtx.resume();
-      const t=menuKlikCtx.currentTime, o=menuKlikCtx.createOscillator(), g=menuKlikCtx.createGain();
-      o.type="sine"; o.frequency.setValueAtTime(2400,t); o.frequency.exponentialRampToValueAtTime(800,t+.035);
-      g.gain.setValueAtTime(.2,t); g.gain.exponentialRampToValueAtTime(.0001,t+.06);
-      o.connect(g); g.connect(menuKlikCtx.destination); o.start(t); o.stop(t+.07);
-    }
-  }catch(e){}
-  if(navigator.vibrate)try{ navigator.vibrate(5); }catch(e){}
-}
+/* De klik bij een nummer is weg (de opdrachtgever, 18/10/2026: "je klik irriteert en mag weg"). */
 function menuReeks(n){
   const k=[...n.querySelectorAll(".menu-naam")], per=k.length/3;
   if(!(per>=1)||per!==Math.floor(per))return null;
@@ -9783,6 +10061,7 @@ function menuEinde(open){
 }
 function menuToon(){
   if(menuGlas)return;
+  if(window.matchMedia&&matchMedia("(min-width:700px)").matches)return;      // op een breed scherm is er de zijbalk (de opdrachtgever, 18/10/2026: "het menu onderaan is nu zinloos")
   menuStart();
   menuEinde(true);
 }
@@ -9963,6 +10242,22 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&menuGlas)menuEinde
       dlg.appendChild(o);
     } }
   ["dlg","beheerdlg"].forEach(id=>{ const d=document.getElementById(id); if(d){ const b=menubalk(false); b.classList.add("menubalk-pagina"); d.appendChild(b); } });
+  /* EEN ECHT MENU AAN DE LINKERKANT (de opdrachtgever, 18/10/2026, op de iPad: "met ook een echt menu aan de linkerkant"): op een breed scherm staan de pagina's als glazen knoppen onder elkaar naast de pagina, zoals de zijbalk van het voorbeeld. Hetzelfde menu als onderaan (Plan, 1 Punten, 2 Verslag ...), en de pagina waar je staat is vet en wit. Op een telefoon is de zijbalk er niet. */
+  const bouwZij=()=>{
+    const z=maakEl("nav","zijbalk"); z.setAttribute("aria-label","Pagina's");
+    const knop=(naam,nr,tekst,doe)=>{ const b=maakEl("button",null); b.type="button"; b.dataset.naam=naam; b.appendChild(maakEl("span","zij-nr",nr)); b.appendChild(maakEl("span","zij-naam",tekst)); b.onclick=e=>{ e.stopPropagation(); doe(); }; z.appendChild(b); return b; };
+    knop("begin","","Plan",()=>gaNaarPagina("begin"));
+    let nr=0;
+    MENUGA.forEach(([naam,tekst])=>{ nr++; const b=knop(naam,String(nr),tekst,()=>menuGa(naam)); if(naam==="ai"){ b.classList.add("zij-ai"); b.hidden=!aiAan(); } });
+    return z;
+  };
+  ["dlg","beheerdlg"].forEach(id=>{
+    const d=document.getElementById(id), blad=d&&d.querySelector(".blad");
+    if(!blad||blad.querySelector(".zijbalk"))return;
+    blad.insertBefore(bouwZij(),blad.firstChild);
+  });
+  /* DE ZIJBALK BLIJFT STAAN (de opdrachtgever, 18/10/2026, op de iPad: "het menu links mag zichtbaar zijn en blijven, niet meebewegen"): ook op het plan staat hij, als glazen knoppen over de kaart; opent een pagina, dan staat dezelfde zijbalk op precies dezelfde plek in die pagina, want daar schuift alleen de pagina zelf (zie de opmaak), niet het blad met de zijbalk erin. */
+  { const th=bouwZij(); th.classList.add("zijbalk-thuis"); document.body.appendChild(th); }
 })();
 /* De opdrachtgever, 13/10/2026: "de overgang bij klikken op Plan of klikken op de X is dezelfde: maak een korte fade". Eén functie voor allebei, voor elk venster en voor de AI-pagina:
    het element wordt in ongeveer 0,18 s doorzichtig en pas dan gesloten. */
@@ -22143,6 +22438,8 @@ async function toonVergaderingen(faseCode){
     body.appendChild(balk);
   }
   const van=opZelfde?balk.scrollLeft:undefined;
+  body.appendChild(fasenGantt(gekozen,toonVergaderingen));
+  body.appendChild(faseDatumEditor(gekozen,()=>toonVergaderingen(gekozen)));
   body.appendChild(maakEl("p","inv-uitleg",faseNaam(gekozen)));
 
   /* De opdrachtgever, 13/10/2026: "idem: tab Verslag": dezelfde genummerde rijen met pijl als Locatie en Dossier. Eén rij per verslag van deze fase (het lopende bovenaan: een tik opent het verslag, en daar staan
@@ -24993,6 +25290,11 @@ function lbWegMaat(){
   },{passive:true});
 })();
 /* Alleen voor het bekijken van overgangen in het toestel-tabblad op de eigen computer ("traag" in de balk): alle animaties lopen er tien keer trager. Op een ander adres dan localhost doet dit niets. */
+/* Alleen voor het bekijken in het toestel-tabblad op de eigen computer: ?open=locatie (of punten, verslagen, dossier, instel) opent die pagina meteen na het opstarten, want de kijker kan het menu niet met een lange druk openen. Op een ander adres dan localhost doet dit niets. */
+if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)&&/[?&]open=(punten|verslagen|dossier|locatie|instel)\b/.test(location.search)){
+  const pg=/[?&]open=(\w+)/.exec(location.search)[1];
+  setTimeout(()=>{ try{ ({punten:toonPunten,verslagen:toonVergaderingen,dossier:toonDossier,locatie:toonLocatie,instel:()=>openInstellingen(false)})[pg](); }catch(e){} },3500);
+}
 if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)&&/[?&]traag=1/.test(location.search)){
   setInterval(()=>{ document.getAnimations().forEach(a=>{ if(!a.__traag&&!/gv-|breathe/.test(a.animationName||"")){ a.__traag=1; a.playbackRate=0.1; } }); },16);
 }
@@ -26688,41 +26990,81 @@ async function locGrbZetten(d,hulp){
     return !!r;
   }catch(e){ return false; }
 }
-/* DE BEVINDINGEN IN EEN STRAKKE, GROTE LETTER (de opdrachtgever, 18/10/2026, met een voorbeeld: "ik wil de pagina Locatie zo uitwerken. Laat het plan weg, dat zit al bij Kaart. Ik wil deze stijl en layout en het grote crispy lettertype van de bevindingen. Doe voorlopig alles in zwart"): rijen tussen dunne lijnen, links een klein label in hoofdletters en rechts bovenaan de eenheid, en eronder de waarde: een cijfer groot en vet, een tekst in vette hoofdletters. Het GRB-plankje is eruit: het plan staat bij Kaart; de functie om de plek te verzetten blijft bereikbaar via "Nee, verplaats". */
+/* WAT HET WATER EN DE GROND ZEGGEN, voor de tegels en het funderingsadvies (de opdrachtgever, 18/10/2026: "geef funderingsadvies; kans op overstroming, nabijheid waterloop, grondwater: zet dat er bij"). Alles komt uit wat de pagina al opgehaald heeft; er wordt niets bijverzonnen. De dichtste waterloop met zijn afstand, het grondwaterlichaam met zijn type, de natuurlijke overstroombaarheid, de sonderingen in de buurt en of er veen te verwachten is. */
+function locWaterGegevens(d){
+  const r=(d&&d.rubrieken)||{};
+  const water=((r.water&&r.water.regels)||[]), bodem=((r.bodem&&r.bodem.regels)||[]);
+  const afst=sub=>{ const m=/op (\d+) m/.exec(String(sub||"")); return m?parseInt(m[1],10):null; };
+  let loop=null;
+  water.forEach(g=>{
+    const m=/^Waterloop\s+(.+?)\s+\u2014\s+categorie/.exec(String(g.titel||"")), a=afst(g.sub);
+    if(m&&a!=null&&(!loop||a<loop.afstand))loop={naam:m[1],afstand:a};
+  });
+  let grondwater=null;
+  water.forEach(g=>{
+    const m=/^Grondwaterlichaam:\s*(.+)$/.exec(String(g.titel||""));
+    if(m&&!grondwater){ const t=m[1], i=t.lastIndexOf(", "); grondwater=i>0?{naam:t.slice(0,i),type:t.slice(i+2)}:{naam:t,type:""}; }
+  });
+  let nog="";
+  water.forEach(g=>{ const m=/^Natuurlijke overstroombaarheid[^:]*:\s*(.+)$/.exec(String(g.titel||"")); if(m&&!nog)nog=m[1]; });
+  let sond={aantal:0,dichtst:null,diepst:0};
+  bodem.forEach(g=>{
+    if(!/^Sondering\s/.test(String(g.titel||"")))return;
+    const a=afst(g.sub), dm=/tot ([\d.,]+) m diep/.exec(String(g.sub||"")), dp=dm?parseFloat(dm[1].replace(",",".")):0;
+    if(a==null||a>150)return;
+    sond.aantal++; if(sond.dichtst==null||a<sond.dichtst)sond.dichtst=a; if(dp>sond.diepst)sond.diepst=dp;
+  });
+  const veen=(bodem.find(g=>/^Veen:/.test(String(g.titel||"")))||{}).titel||"";
+  return {loop,grondwater,nog,sond,veen};
+}
+/* Een eerste indicatie, geen ontwerp: elke regel is één afweging uit de kaarten, en de laatste zegt dat een ingenieur het moet bevestigen. */
+function locFunderingsAdvies(d){
+  const sn=(d&&d.snel)||{}, g=locWaterGegevens(d);
+  const grond=String((sn.ondergrond&&(sn.ondergrond.woorden||sn.ondergrond.omschr))||"").toLowerCase();
+  const uit=[];
+  if(/klei|veen|rivierafzetting|opgehoogd/.test(grond))uit.push("Slappe lagen mogelijk (klei, veen of ophoging): fundering op staal pas na een sondering, anders op palen of verbeterde grond.");
+  else if(/zand/.test(grond))uit.push("Zandondergrond: fundering op staal of op een funderingsplaat is meestal haalbaar, na controle van de draagkracht.");
+  else uit.push("Ondergrond onbekend: eerst een sondering laten uitvoeren.");
+  if(g.veen&&!/zeldzaam/i.test(g.veen))uit.push("Veen is mogelijk: reken op zettingen en overweeg een paalfundering.");
+  if(g.loop&&g.loop.afstand<=250)uit.push("Waterloop op "+g.loop.afstand+" m ("+g.loop.naam+"): een hoge grondwaterstand is te verwachten; neem bemaling en een waterdichte kuip mee bij een kelder.");
+  if(g.grondwater&&/freatisch/i.test(g.grondwater.type))uit.push("Freatisch grondwater: de grondwaterstand kan dicht bij het maaiveld liggen; plaats een peilbuis vóór het ontwerp.");
+  if(sn.water==="positief"||sn.water==="buurt"||/overstroombaar/i.test(g.nog))uit.push("Overstromingsrisico: leg het vloerpeil boven het overstromingspeil en reken de kelder na op opdrijven.");
+  if(g.sond.aantal>0)uit.push(g.sond.aantal+(g.sond.aantal===1?" sondering":" sonderingen")+" binnen 150 m (dichtste op "+g.sond.dichtst+" m, tot "+String(g.sond.diepst).replace(".",",")+" m diep): bruikbaar als eerste indicatie, een eigen sondering blijft nodig.");
+  else uit.push("Geen sonderingen binnen 150 m: een eigen sondering is nodig.");
+  uit.push("Indicatie uit kaarten, geen ontwerp: laat een stabiliteitsingenieur dit bevestigen.");
+  return uit;
+}
+/* DE BEVINDINGEN ALS TEGELS (de opdrachtgever, 18/10/2026, met een voorbeeld: "probeer eens deze stijl voor de gegevens"): een groot, licht getal bovenaan (de oppervlakte) met kleine pillen eronder, daaronder afgeronde grijze tegels: de titel met een punt linksboven, een klein label rechtsboven, de waarde linksonder. De laadstand krijgt de zachtgele vulling van het voorbeeld. Het GRB-plankje is eruit: het plan staat bij Kaart; de plek verzetten blijft bereikbaar via "Nee, verplaats". */
 function locSnelBlok(d){
   const blok=maakEl("div","loc-snel");
   const sn=(d&&d.snel)||{};
   const vak=(kop,waarde,klasse,doel,opt)=>{
     const o=opt||{};
-    const v=maakEl("div","loc-vak"+(klasse?" "+klasse:"")+(o.groot?" groot":""));
+    const v=maakEl("div","loc-vak"+(klasse?" "+klasse:"")+(o.groot?" groot":"")+(o.tegel?" t-"+o.tegel:""));      // de naam van de tegel, voor de indeling op een breed scherm
     v.setAttribute("aria-label",kop);
-    v.appendChild(maakEl("span","loc-lab",o.label||kop));
-    if(o.eenheid)v.appendChild(maakEl("span","loc-een",o.eenheid));
+    v.appendChild(maakEl("span","loc-lab",(o.label||kop)+"."));
+    if(o.chip)v.appendChild(maakEl("span","loc-chip",o.chip));
     if(waarde&&waarde.nodeType)v.appendChild(waarde); else v.appendChild(maakEl("div","loc-vak-waarde",waarde||"\u2014"));
     (doel||blok).appendChild(v);
     return v;
   };
   const t=new Date(d.tijd);
-  /* De versie is die van het downloaden: V1 de eerste keer, V2 na een nieuwe download (de opdrachtgever, 16/10/2026: "knop opnieuw ophalen weg en combineren met versie"). Een tik op het vakje haalt opnieuw op. */
-  const vv=vak("Versie","V"+(d.dl||1),"tikbaar",null,{label:"Versie"});      // gewone maat: de versie is geen bevinding om groot te tonen (de opdrachtgever, 18/10/2026: "die V2 hoeft niet zo groot, maak subtieler")
-  vv.appendChild(maakEl("div","loc-vak-klein","tik om opnieuw op te halen"));
-  vv.setAttribute("role","button"); vv.tabIndex=0; vv.setAttribute("aria-label","Versie V"+(d.dl||1)+": opnieuw ophalen");
-  vv.onclick=()=>locHaal(true);
-  vv.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); locHaal(true); } };
-  const dv=vak("Datum",t.toLocaleDateString("nl-BE",{day:"numeric",month:"numeric",year:"numeric"})+", "+t.toLocaleTimeString("nl-BE",{hour:"2-digit",minute:"2-digit"}),"loc-rechts");
-  /* Laden (staat onder de datum): hoe snel, of het compleet is, en wat er nog ontbreekt (wachten op een verbinding, of een verbinding die weg was); de Update haalt enkel dat opnieuw op. */
-  const L=d.laad;
-  if(L){
-    const wrap=maakEl("div","loc-laden");
-    const fouten=L.fouten||[], tot=L.totaal||Object.keys(d.rubrieken||{}).length;
-    wrap.appendChild(maakEl("div","loc-vak-klein",(Math.round(L.ms/100)/10).toString().replace(".",",")+" s \u00B7 "+Math.max(0,tot-fouten.length)+" van "+tot+" onderdelen binnen"));
-    wrap.appendChild(maakEl("div","loc-vak-klein loc-laadstand",navigator.onLine===false?"Geen verbinding"+(fouten.length?": wacht op "+fouten.map(locLaadNaam).join(", "):""):
-      (fouten.length?"Onvolledig, verbinding weg of geen antwoord: "+fouten.map(locLaadNaam).join(", "):"Compleet")));
-    if(fouten.length){ const u=maakEl("button","loc-opnieuw","Update"); u.type="button"; u.onclick=()=>locUpdate(); wrap.appendChild(u); }
-    dv.appendChild(wrap);
-  }
-  const av=vak("Adres (dichtstbij)",sn.adres,"",null,{label:"Adres"});
-  if(d.klopt)av.appendChild(maakEl("div","loc-vak-klein","locatie bevestigd"));
+  /* Boven: de oppervlakte als groot, licht getal, en de pillen met het kadaster (de opdrachtgever: "het grote getal en de kleine pillen"). */
+  const oppT=sn.opp!=null?String(sn.opp):((((d.samen||[]).find(r=>r.wat==="Perceel"))||{}).waarde||"");
+  const oppN=parseFloat(String(oppT).replace(",","."));
+  let oppW;
+  if(isFinite(oppN)){
+    oppW=maakEl("div","loc-vak-waarde",String(oppT).replace(/\s*m\u00B2.*$/,"").replace(".",","));
+    oppW.appendChild(maakEl("span","loc-eenheid","m\u00B2"));
+  } else oppW=oppT;
+  vak("Oppervlakte",oppW,"hero",null,{label:"Oppervlakte",tegel:"hero"});
+  const kd=sn.kad;
+  const chips=maakEl("div","loc-chips");
+  const kadT=kd?[kd.afd,kd.sectie,kd.nr].filter(Boolean).join(" / "):"";
+  if(kadT)chips.appendChild(maakEl("span","loc-chip","Afd / Sie / Nr: "+kadT));      // wat de drie delen zijn staat erbij (de opdrachtgever, 18/10/2026)
+  if(sn.capakey)chips.appendChild(maakEl("span","loc-chip",sn.capakey));
+  if(chips.childNodes.length)blok.appendChild(chips);
+  const av=vak("Adres (dichtstbij)",sn.adres,"breed loc-adres",null,{label:"Adres",chip:d.klopt?"locatie bevestigd":"",tegel:"adres"});
   /* De opdrachtgever, 16/10/2026: "vraag ook of de locatie klopt, en je kan dan met de vinger van plaats veranderen." */
   if(!d.klopt){
     const vraag=maakEl("div","loc-vraag");
@@ -26730,28 +27072,45 @@ function locSnelBlok(d){
     const nee=maakEl("button","loc-opnieuw","Nee, verplaats"); nee.type="button"; nee.onclick=()=>locGrootToon(d,{verplaats:true});
     vraag.appendChild(ja); vraag.appendChild(nee);
     vraag.insertBefore(maakEl("span","loc-vraag-tekst","Klopt het?"),vraag.firstChild);
-    vak("Klopt deze locatie?",vraag,"loc-vraagvak",null,{label:"Klopt het?"});
+    vak("Klopt deze locatie?",vraag,"breed loc-vraagvak",null,{label:"Klopt het"});
   }
-  const kd=sn.kad;
-  const kv=vak("Kad. (afdeling / sectie / nr)",kd?[kd.afd,kd.sectie,kd.nr].filter(Boolean).join(" / "):"","",null,{label:"Kadaster"});
-  if(sn.capakey)kv.appendChild(maakEl("div","loc-vak-klein",sn.capakey));
-  /* De oppervlakte en het TAW-peil zijn cijfers: groot en vet, met de eenheid rechts bovenaan. */
-  const oppT=sn.opp!=null?String(sn.opp):((((d.samen||[]).find(r=>r.wat==="Perceel"))||{}).waarde||"");
-  const oppN=parseFloat(String(oppT).replace(",","."));
-  if(isFinite(oppN))vak("Oppervlakte",String(oppT).replace(/\s*m\u00B2.*$/,"").replace(".",","),"",null,{label:"Oppervlakte",eenheid:"m\u00B2",groot:true});
-  else vak("Oppervlakte",oppT,"",null,{label:"Oppervlakte"});
   /* Het TAW-peil: de hoogte van het terrein hier in meter boven de Belgische nulreferentie (Tweede Algemene Waterpassing), uit het hoogtemodel (lidar). De opdrachtgever, 16/10/2026: "geef ook TAW peil". */
-  if(sn.taw!=null)vak("TAW-peil (terrein)",String(sn.taw).replace(".",","),"",null,{label:"TAW-peil",eenheid:"m TAW",groot:true});
-  else vak("TAW-peil (terrein)","","",null,{label:"TAW-peil"});
-  vak("Weg",sn.weg,"");
+  vak("TAW-peil (terrein)",sn.taw!=null?String(sn.taw).replace(".",","):"","groot",null,{label:"TAW-peil",chip:"m TAW",groot:true,tegel:"taw"});
   const w=sn.water, wt=w==="positief"?"Positief: overstromingsgevoelig op dit punt":(w==="buurt"?"Negatief op dit punt, wel in de buurt":(w==="negatief"?"Negatief":""));
-  vak("Waterproblematiek",wt,w==="positief"?"positief":"",null,{label:"Water"});
-  const o=sn.ondergrond;
-  const ov=vak("Ondergrond",o&&o.woorden?o.woorden:(o?(o.code||""):""),"");
-  if(o){
-    const klein=[o.code&&"bodemkaart: "+o.code+(o.omschr?" ("+o.omschr+")":""),o.geologie&&"geologie: "+o.geologie].filter(Boolean).join(" \u00B7 ");
-    if(klein)ov.appendChild(maakEl("div","loc-vak-klein",klein));
+  /* Een komma is een nieuwe zin, elk op een eigen regel (de opdrachtgever, 18/10/2026): "Negatief op dit punt." en "Wel in de buurt." */
+  let wv=wt;
+  if(wt&&wt.indexOf(", ")>=0){
+    wv=maakEl("div","loc-zinnen");
+    wt.split(", ").forEach(z=>{ const zin=z.charAt(0).toUpperCase()+z.slice(1); wv.appendChild(maakEl("div","loc-vak-waarde",/[.!?]$/.test(zin)?zin:zin+".")); });
   }
+  vak("Waterproblematiek",wv,w==="positief"?"positief":"",null,{label:"Kans op overstroming",tegel:"over"});
+  const wg=locWaterGegevens(d);
+  vak("Nabijheid waterloop",wg.loop?wg.loop.afstand+" m":"Geen in de buurt","groot",null,{label:"Nabijheid waterloop",chip:wg.loop?wg.loop.naam:"",groot:!!wg.loop,tegel:"water"});
+  const gwv=maakEl("div","loc-zinnen");
+  gwv.appendChild(maakEl("div","loc-vak-waarde",wg.grondwater?(wg.grondwater.type?wg.grondwater.type.charAt(0).toUpperCase()+wg.grondwater.type.slice(1):"Bekend"):"\u2014"));
+  if(wg.grondwater)gwv.appendChild(maakEl("div","loc-vak-klein",wg.grondwater.naam));
+  vak("Grondwater",gwv,"",null,{label:"Grondwater",tegel:"grond"});
+  const o=sn.ondergrond;
+  const ov=vak("Ondergrond",o&&o.woorden?o.woorden:(o?(o.code||""):""),"breed",null,{tegel:"ondergrond"});
+  if(o){
+    /* Elk deel op een nieuwe regel (de opdrachtgever, 18/10/2026: "maak telkens een nieuwe regel"). */
+    [o.code&&"bodemkaart: "+o.code+(o.omschr?" ("+o.omschr+")":""),o.geologie&&"geologie: "+o.geologie].filter(Boolean).forEach(r=>ov.appendChild(maakEl("div","loc-vak-klein",r)));
+  }
+  /* Wat met het ophalen te maken heeft, is geen bevinding: één tegel onderaan met de versie (V1 de eerste keer, V2 na een nieuwe download) en de datum, hoe snel het ging en of het compleet is. De zachtgele vulling is het aandeel onderdelen dat binnen is. Een tik op de tegel haalt alles opnieuw op; de Update haalt enkel op wat ontbreekt. */
+  const L=d.laad;
+  const fouten=(L&&L.fouten)||[], tot=(L&&(L.totaal||Object.keys(d.rubrieken||{}).length))||0;
+  const meta=vak("Versie","V"+(d.dl||1)+" \u00B7 "+t.toLocaleDateString("nl-BE",{day:"numeric",month:"numeric",year:"numeric"})+", "+t.toLocaleTimeString("nl-BE",{hour:"2-digit",minute:"2-digit"}),"breed tikbaar loc-opgehaald",null,{label:"Opgehaald",tegel:"opgehaald",chip:L?(Math.round(L.ms/100)/10).toString().replace(".",",")+" s":""});
+  const vul=maakEl("span","loc-vul"); vul.style.width=(tot?Math.round(Math.max(0,tot-fouten.length)/tot*100):100)+"%"; meta.insertBefore(vul,meta.firstChild);
+  if(L){
+    const stand=navigator.onLine===false?"Geen verbinding"+(fouten.length?": wacht op "+fouten.map(locLaadNaam).join(", "):""):
+      (fouten.length?"Onvolledig, verbinding weg of geen antwoord: "+fouten.map(locLaadNaam).join(", "):"Compleet");
+    meta.appendChild(maakEl("div","loc-vak-klein",Math.max(0,tot-fouten.length)+" van "+tot+" onderdelen binnen \u00B7 "+stand));
+    if(fouten.length){ const u=maakEl("button","loc-opnieuw","Update"); u.type="button"; u.onclick=e=>{ if(e&&e.stopPropagation)e.stopPropagation(); locUpdate(); }; meta.appendChild(u); }
+  }
+  meta.appendChild(maakEl("div","loc-vak-klein","tik om opnieuw op te halen"));
+  meta.setAttribute("role","button"); meta.tabIndex=0; meta.setAttribute("aria-label","Versie V"+(d.dl||1)+": opnieuw ophalen");
+  meta.onclick=()=>locHaal(true);
+  meta.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); locHaal(true); } };
   return blok;
 }
 /* Wat een update ophaalde, bij wat er al was: een dienst die nu wel antwoordde vervangt de mislukte, een dienst die weer niet antwoordde laat staan wat er stond. */
@@ -26925,7 +27284,15 @@ function locTeken(){
   /* "GRB en perceel" is geen eigen rubriek meer (de opdrachtgever, 13/10/2026: "dit staat bij kaart"): zijn regels, zijn kaartje met de maten en de omtrek als plan
      staan onder 0 Kaart, genummerd 0.1, 0.2, ... */
   const perceelKop=alleKoppen[LOCRUBRIEKEN.findIndex(rb=>rb.sleutel==="perceel")];
-  const koppen=[kaartKop].concat(alleKoppen.filter(k=>k!==perceelKop));
+  /* HET FUNDERINGSADVIES ALS RUBRIEK 8 (de opdrachtgever, 18/10/2026: een pijl van het advies naar de lege plek naast Geluid, "zet daarin"): het staat bij de andere rubrieken, uitklapbaar, en vult het laatste vak van het raster. Elke afweging is een eigen regel, met het voorbehoud als laatste. */
+  const fundKop={nr:"8", naam:"Funderingsadvies", open:locUI.open==="fundering", lade:true, schuif:locUI.schuif==="fundering",
+    doe:()=>{ locUI.open=(locUI.open==="fundering")?null:"fundering"; locUI.schuif=locUI.open; locTeken(); },
+    artikels:()=>{
+      if(!d)return [{nr:"",titel:"Nog niets opgehaald."}];
+      const adv=locFunderingsAdvies(d);
+      return adv.map((r,j)=>({nr:j===adv.length-1?"":"8."+(j+1), titel:r}));
+    }};
+  const koppen=[kaartKop].concat(alleKoppen.filter(k=>k!==perceelKop)).concat([fundKop]);
   // Opmeting (de lege rubriek 9 onderaan) is eruit: de opdrachtgever, 13/10/2026, "opmeting moet hieruit, onderaan".
   bouwBestekkast(bak,koppen,{leeg:""});
   locUI.schuif=null;                       // de beweging hoort bij het openen, niet bij elke volgende tekening
@@ -27106,6 +27473,7 @@ const PAGINAROIJ=["begin","punten","verslagen","dossier","locatie","instel","ein
 function paginaNu(){ const d=document.getElementById("dlg"); if(d.open)return d.dataset.pagina||"begin"; return document.getElementById("beheerdlg").open?"instel":"begin"; }      // tijdens het wisselen liggen even twee vensters op elkaar: het bovenste telt
 let opentRichting="rechts";      // waar de pagina vandaan schuift als hij opent: "rechts" (gewoon) of "links" (terug in de rij)
 function paginaMenu(naam){
+  zijbalkVerfris();
   const d=document.getElementById("dlg");
   delete d.dataset.sub;
   if(naam)d.dataset.pagina=naam; else delete d.dataset.pagina;
@@ -27303,9 +27671,11 @@ function sluitMetUitschuif(dlg,zonder){
   if(zonder==="stil"){ dlg.close(); return; }
   if(zonder){ sluitMetFade(dlg,()=>dlg.close()); return; }      // Plan en het kruis: dezelfde korte fade
   if(window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches){ dlg.close(); return; }
-  const beweeg=dlg.querySelector(".blad")||dlg;      // het blad schuift weg, het menu aan het venster blijft staan
-  beweeg.style.transition="transform .26s cubic-bezier(.22,.8,.3,1)"; beweeg.style.transform="translateX(-100%)";      // De opdrachtgever, 13/10/2026: "alle schermen schuiven naar links": ook een pagina die sluit schuift naar links weg
-  setTimeout(()=>{ try{ dlg.close(); }catch(e){} beweeg.style.transition=""; beweeg.style.transform=""; dlg.style.transition=""; dlg.style.transform=""; },260);
+  const breed=window.matchMedia&&matchMedia("(min-width:700px)").matches;
+  const beweeg=(breed?dlg.querySelector(".blad-pagina"):dlg.querySelector(".blad"))||dlg;      // het blad schuift weg, het menu aan het venster blijft staan; op een breed scherm alleen de pagina, want de zijbalk blijft staan
+  if(breed){ beweeg.style.transition="opacity .22s ease-out"; beweeg.style.opacity="0"; }      // op een breed scherm vervaagt de pagina in plaats van weg te schuiven
+  else{ beweeg.style.transition="transform .26s cubic-bezier(.22,.8,.3,1)"; beweeg.style.transform="translateX(-100%)"; }      // De opdrachtgever, 13/10/2026: "alle schermen schuiven naar links": ook een pagina die sluit schuift naar links weg
+  setTimeout(()=>{ try{ dlg.close(); }catch(e){} beweeg.style.transition=""; beweeg.style.transform=""; beweeg.style.opacity=""; dlg.style.transition=""; dlg.style.transform=""; },260);
 }
 function gaNaarPagina(naam,zonderUitschuif){
   const d=document.getElementById("dlg"), bd=document.getElementById("beheerdlg");
