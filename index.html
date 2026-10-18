@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-x0qDBmPG/HV+D4ihAcCItWN9UQ4H6mmIS/7xK60/91s=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-6uuI7tWH4v3j568W9BuDnWSHmnbaJimGDfxJhEzmyYw='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-NTpfyZFijmvlhntykDobSzFxEg1eNvOLGvJeoBpcFTA=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-ql4bBWr2eMbe5ceZpu2S3OiKQgDfxLEJWB7wBkhSvzE='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1379,6 +1379,13 @@
   #filmlaag #calque-balk button{width:44px;height:44px;min-width:0;min-height:0;padding:0;border-radius:50%;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;font-size:13px;border:1px solid rgba(255,255,255,.75);background:rgba(255,255,255,.62);color:var(--ink);-webkit-backdrop-filter:blur(10px) saturate(1.15);backdrop-filter:blur(10px) saturate(1.15);box-shadow:0 1px 8px rgba(0,0,0,.14)}
   /* Ruitjespapier is wit en doorzichtig, niet blauw: het plan eronder blijft te zien, en alleen de lijntjes blijven blauw (de opdrachtgever, 18/10/2026). */
   html.ruit-aan #plandlg.film{background:rgba(255,255,255,.5)}
+  /* DE ACTIEVE PEN (de opdrachtgever, 18/10/2026: "zet de actieve pen als eerste aan"): de pen in je hand draagt haar eigen kleur als dikke ring en een grotere stip, de andere is gedempt. In het vel waren de pennen ronde knoppen met een witte rand, en de gewone regel voor .actief (kleinere sterkte) kwam daar niet doorheen: je zag niet welke pen je vasthad. */
+  #filmlaag #calque-balk .cq-pen{opacity:.62}
+  #filmlaag #calque-balk .cq-pen i{width:14px;height:14px;transition:transform .2s}
+  #filmlaag #calque-balk .cq-pen.actief{opacity:1;border-width:3px;background:rgba(255,255,255,.9)}
+  #filmlaag #calque-balk .cq-pen.actief i{transform:scale(1.35)}
+  #filmlaag #calque-balk #cq-aanpassen.actief{border-color:#a8412a}
+  #filmlaag #calque-balk #cq-bespreken.actief{border-color:#2f5aa8}
   #filmlaag #calque-balk #cq-ruit.aan{background:var(--ink);color:#fff;border-color:var(--ink)}
   #filmlaag #calque-balk .cq-lang,#filmlaag #calque-balk .cq-kort,#filmlaag #calque-balk .cq-telling{display:none}
   /* De balk onderaan (camera, menu, plus) schuift weg zolang je tekent (de opdrachtgever, 17/10/2026: "tijdens tekenen mag dit deel wegschuiven") en komt terug als het vel sluit. */
@@ -4240,7 +4247,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v700";
+const VERSIE="v701";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
