@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-3n3N+5zuSxagw05Pre1lTSvHjgsNOkufVUHfhI1/5cE=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-D5KMhiKPQonl8XlUpUe3LYALgocviwHFS/Pj3Ug1S7U='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-AnO52lGotO0e9tqfqtSRD1h+r+zjbrdVyvFRu5jyLYE=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-qHXYMDFo14GR/1EjFTXJi7MeszTaQZGTqgRCicVe0Xc='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -355,9 +355,8 @@
     position:relative;z-index:1}
   /* Op een iPad is de kolom 640 px en lag het plan over het hele scherm eronder: links en rechts zag je plan waar niets op reageerde
      (geen stip, geen tik, knijpen zoomde de pagina). Het blad ligt nu precies onder de kolom, zodat wat je ziet ook werkt. */
-  @media (min-width:700px){
-    .kaart{left:calc((100vw - 640px) / 2);right:calc((100vw - 640px) / 2)}
-  }
+  /* De opdrachtgever, 18/10/2026: "in de verschillende iPad-versies zijn de zijkanten niet volledig gevuld. Ik wil een volledig responsive app." Het plan ligt dus over de hele breedte, en het vlak waarop je knijpt, tikt en de knoppen staan loopt mee tot de randen; alleen de tekstkolom (lijst, titel) blijft 640 px. */
+  .wrap>.vulling{margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw)}
   /* DE BALK ONDERAAN (de opdrachtgever, 17/10/2026: "heel de balk proberen onderaan te plaatsen"): de werf (adres en kadaster), het verslagnummer en de datum, en daaronder de bladen, staan vlak boven het menu in plaats van bovenaan. De titel Plan blijft bovenaan; het plan krijgt de ruimte ertussen. Alleen de volgorde en de ruimte onder de wrap veranderen, niet wat de balk doet. */
   .wrap{padding-bottom:calc(var(--streep-b) + 63px)}      /* de menubalk is 62 px hoog en ligt vast onderaan, plus de streep en een haarlijn */
   .wrap>*{order:2}
@@ -1080,23 +1079,23 @@
   body #dlg[data-pagina] .dlg-body,body #beheerdlg .dlg-body{padding-bottom:calc(var(--streep-b) + 68px)}      /* de tekst scrolt ver genoeg door om boven de streep uit te komen */
   /* Het uitklapmenu (de opdrachtgever, 16/10/2026): je drukt op de pijlpunt, die draait om; het scherm schuift omhoog als een glazen blad over het plan heen (het plan blijft liggen), de fotobol en de plus doven weg, en onderaan staan de namen van de pagina's naast elkaar.
      Het blad volgt je vinger: --f loopt van 0 (dicht) tot 1 (open). Bij 0 ligt de rij met de drie knoppen precies waar de onderste rij zelf ligt. */
-  .menu-glas{position:absolute;z-index:30;left:0;right:0;bottom:0;--namenh:calc(var(--streep-b) + 56px);transform:translateY(calc((1 - var(--f,0)) * var(--namenh)));
+  .menu-glas{position:absolute;z-index:30;left:0;right:0;bottom:0;--namenh:calc(var(--streep-b) + 46px);transform:translateY(calc((1 - var(--f,0)) * var(--namenh)));
     background:rgba(255,255,255,calc(1 - .42 * var(--f,0)));-webkit-backdrop-filter:blur(calc(22px * var(--f,0))) saturate(1.5);backdrop-filter:blur(calc(22px * var(--f,0))) saturate(1.5);border-top:var(--haar) solid var(--line)}
   .menu-glas.in-body{position:fixed;z-index:9}      /* op het plan hangt het aan de pagina zelf; in een pagina hangt het aan dat venster, zodat de pagina bedienbaar blijft */
   .menu-glas .menubalk{position:static;transform:none;background:none;border-top:0}
   .menu-glas .menubol{opacity:calc(1 - var(--f,0));pointer-events:none}
   .menu-glas .menustreep::after{transform:rotate(calc(180deg * var(--f,0)))}      /* de driehoek draait om: omlaag = sluiten */
   html.menu-open .menubalk:not(.menubalk-glas){visibility:hidden}      /* de rij in het glas neemt de plaats over */
-  .menu-namen{display:flex;align-items:center;gap:0;height:var(--namenh);box-sizing:border-box;padding:0 var(--marge) var(--streep-b);overflow-x:auto;white-space:nowrap;scrollbar-width:none;opacity:var(--f,0)}
+  .menu-namen{display:flex;align-items:flex-start;gap:0;height:var(--namenh);box-sizing:border-box;padding:0 var(--marge) var(--streep-b);overflow-x:auto;white-space:nowrap;scrollbar-width:none;opacity:var(--f,0)}
   .menu-namen::-webkit-scrollbar{display:none}
   /* De knoppen van Instellingen genummerd, per groep opnieuw vanaf 1 (de opdrachtgever, 17/10/2026). Een teller in de opmaak: een verborgen knop telt niet mee, en de knoppen die hun tekst zelf wisselen (AI-modus, Aanmelden) houden hun nummer. */
   .beheer-groep.genummerd{counter-reset:bnr}
   .beheer-groep.genummerd>button:not([hidden])::before{counter-increment:bnr;content:counter(bnr) "\00a0\00a0";color:var(--ink-soft)}
   .beheer-groep.genummerd>#backup.wacht:not([hidden])::before{counter-increment:bnr;content:counter(bnr) "\00a0\00a0\25CF ";color:var(--warn)}      /* Back-up met de waarschuwingsstip: het nummer blijft staan */
-  .menu-naam{flex:none;display:inline-flex;flex-direction:column;align-items:center;border:0;border-radius:0;background:none;padding:6px 16px;font:inherit;font-size:var(--tm);color:var(--ink);-webkit-tap-highlight-color:transparent}
+  .menu-naam{flex:none;display:inline-flex;flex-direction:column;align-items:center;border:0;border-radius:0;background:none;padding:0 16px;font:inherit;font-size:var(--tm);color:var(--ink);-webkit-tap-highlight-color:transparent}
   .menu-naam+.menu-naam{border-left:var(--haar) solid var(--line)}      /* een verticaal lijntje tussen de namen, even dun als de andere lijntjes */
-  .menu-naam:first-child{padding-left:0}
   .menu-naam.huidig{font-weight:700}
+  .menu-nr,.menu-woord{display:block;line-height:1.2}      /* het nummer boven de naam, allebei gecentreerd */
   .menu-naam::after{content:attr(data-tekst);font-weight:700;height:0;overflow:hidden;visibility:hidden}      /* de vette breedte staat al gereserveerd: kiezen verschuift de naam en de lijntjes niet */
   .ai-kaart{position:fixed;left:0;right:0;top:0;bottom:0;z-index:5;
     display:flex;flex-direction:column;background:var(--surface);overflow:hidden;animation:schuif-van-rechts .34s cubic-bezier(.22,.8,.3,1)}
@@ -1132,9 +1131,9 @@
   .schuif-rij{animation:schuif-rij .32s ease-out backwards}
   @media (prefers-reduced-motion:reduce){.blad-pagina.schuif-van-rechts,.blad-pagina.schuif-van-links,.schuif-rij{animation:none}.blad-pagina.veert{transition:none}}
   /* De instellingen: een pagina zoals de andere (zijwaarts, schermvullend, zonder afronding), als lijst met fijne lijnen zoals het voorbeeld. */
-  #beheerdlg[open][data-opent="pagina"]{animation:schuif-van-rechts .34s cubic-bezier(.22,.8,.3,1)}
-  #beheerdlg[open][data-opent="pagina-links"]{animation:schuif-van-links .34s cubic-bezier(.22,.8,.3,1)}
-  #dlg[open][data-opent="pagina-links"]{animation:schuif-van-links .34s cubic-bezier(.22,.8,.3,1)}
+  #beheerdlg[open][data-opent="pagina"]>.blad{animation:schuif-van-rechts .34s cubic-bezier(.22,.8,.3,1)}
+  #beheerdlg[open][data-opent="pagina-links"]>.blad{animation:schuif-van-links .34s cubic-bezier(.22,.8,.3,1)}
+  #dlg[open][data-opent="pagina-links"]>.blad{animation:schuif-van-links .34s cubic-bezier(.22,.8,.3,1)}
   #beheerdlg .blad{touch-action:pan-y}
   #beheerdlg .blad{border-radius:0;height:100%;max-height:100%}
   /* De pagina's beginnen bovenaan het scherm (margin 0, hoogte van het scherm), niet 14 px lager: anders springt de zijstrook omhoog of omlaag als er een pagina opent (de opdrachtgever, 13/10/2026: "het lijkt naar boven te schuiven"). */
@@ -1168,9 +1167,10 @@
   /* De opdrachtgever, 13/10/2026: "de schermen schuiven naar links of naar rechts, niet meer van onder naar boven; bovenaan de ronding helemaal weg":
      de pagina's van de rij (Locatie, Dossier, Verslagen, Menu) openen zijwaarts, zonder afgeronde hoeken en zonder rand erboven.
      De X en het trekken naar onder of boven blijven. Andere bladen houden hun vorm. */
-  #dlg[open][data-opent="pagina"]{animation:schuif-van-rechts .34s cubic-bezier(.22,.8,.3,1)}      /* een eigen merk, bij het openen gezet: data-pagina wisselt bij elke pagina en zou de animatie (en dus het menu onderaan) opnieuw laten lopen */
+  #dlg[open][data-opent="pagina"]>.blad{animation:schuif-van-rechts .34s cubic-bezier(.22,.8,.3,1)}      /* HET MENU BLIJFT STAAN (de opdrachtgever, 18/10/2026: "bij het veranderen van pagina blijft het menu onderaan gewoon op zijn plaats, dus loskoppelen"): de schuif zit op het blad van de pagina en niet op het venster, want het menu hangt aan het venster. Een eigen merk, bij het openen gezet: data-pagina wisselt bij elke pagina en zou de animatie (en dus het menu onderaan) opnieuw laten lopen */
   #dlg[data-pagina] .blad,#dlg[data-pagina] .blad.volledig{border-radius:0;height:100%;max-height:100%}
-  @media (prefers-reduced-motion:reduce){#dlg[open][data-opent="pagina"]{animation:none}}
+  @media (prefers-reduced-motion:reduce){#dlg[open][data-opent="pagina"]>.blad{animation:none}}
+  #dlg[open][data-opent],#beheerdlg[open][data-opent]{animation:none}      /* het venster zelf schuift niet meer omhoog of opzij: alleen het blad erin, zodat het menu onderaan vastblijft */
   @media (prefers-reduced-motion:reduce){#dlg[open],#beheerdlg[open]{animation:none}}
   #dlg .dlg-voet:has(#dlg-kopieer[style*="none"]){display:none}
   #invoerdlg{width:min(94vw,520px);max-width:94vw}
@@ -1352,7 +1352,7 @@
   #plandlg[style*="height"]{border-bottom:var(--haar) solid var(--line);box-shadow:0 3px 14px rgba(0,0,0,.16);border-radius:0 0 14px 14px}
   #plandlg::backdrop{background:transparent}
   /* Het calqueblad als film: een heel licht geel, doorzichtig vel. De balken erop worden glas, het vlak met de halen is helemaal doorzichtig, en de zoomknoppen vervallen want de kijkstand is die van het plan eronder. */
-  #plandlg.film{background:rgba(195,220,250,.13);overflow:visible}      /* de iconenlagen vallen soms buiten het vel terwijl het schuift */
+  #plandlg.film{background:rgba(255,255,255,.10);overflow:visible}      /* het lege vel is wit met 90% doorzichtigheid (de opdrachtgever, 18/10/2026) */      /* de iconenlagen vallen soms buiten het vel terwijl het schuift */
   #plandlg.film .plan-vlak,#plandlg.film #plancanvas{background:transparent}
   #plandlg.film .plan-zoom{display:none}
   /* Enkel het calqueblad (de opdrachtgever, 17/10/2026): de balken bovenaan het vel staan er niet, tot we de functies van het calqueblad uitwerken. Alles wat op het plan staat (de schaal, het kompas, A, de liniaal, de pen, de spelden) schemert er wél doorheen: het vel is doorzichtig en laat het plan eronder zien zoals het is. */
@@ -1363,6 +1363,9 @@
   #filmlaag #calque-balk[hidden]{display:none}
   #filmlaag.uit #calque-balk{opacity:0;transform:translateY(-14px) scale(.9);pointer-events:none}
   #filmlaag #calque-balk button{width:44px;height:44px;min-width:0;min-height:0;padding:0;border-radius:50%;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;font-size:13px;border:1px solid rgba(255,255,255,.75);background:rgba(255,255,255,.62);color:var(--ink);-webkit-backdrop-filter:blur(10px) saturate(1.15);backdrop-filter:blur(10px) saturate(1.15);box-shadow:0 1px 8px rgba(0,0,0,.14)}
+  /* Ruitjespapier is wit en doorzichtig, niet blauw: het plan eronder blijft te zien, en alleen de lijntjes blijven blauw (de opdrachtgever, 18/10/2026). */
+  html.ruit-aan #plandlg.film{background:rgba(255,255,255,.5)}
+  #filmlaag #calque-balk #cq-ruit.aan{background:var(--ink);color:#fff;border-color:var(--ink)}
   #filmlaag #calque-balk .cq-lang,#filmlaag #calque-balk .cq-kort,#filmlaag #calque-balk .cq-telling{display:none}
   /* De balk onderaan (camera, menu, plus) schuift weg zolang je tekent (de opdrachtgever, 17/10/2026: "tijdens tekenen mag dit deel wegschuiven") en komt terug als het vel sluit. */
   #menubalk,.wrap>.zones,.wrap>header{transition:transform .56s cubic-bezier(.4,.1,.2,1)}      /* even traag als het vel zelf (de opdrachtgever, 17/10/2026: "beweging calque trager laten zakken") */
@@ -1370,11 +1373,14 @@
   html.film-open #menubalk{transform:translateY(110%)}
   /* De witruimte onder het adres is effen wit: geen plan dat erdoorheen schemert. */
   html.film-open .wrap::after{content:"";position:fixed;left:0;right:0;bottom:0;height:var(--filmwit,0px);background:var(--surface,#fff);z-index:1;pointer-events:none}
+  html.film-open #hoofdtitel{visibility:hidden}      /* de kopie op het vel staat er in de plaats */
   html.film-open #kaart .kaartnoord,html.film-open #kaart .kaartschaal{visibility:hidden}      /* de kopieën boven het vel staan er in de plaats: anders staat alles dubbel */
   html.film-open #kaartperceel{visibility:hidden !important}      /* wie annoteert, weet dat het perceel klopt: "Ander perceel?" hoort er dan niet te staan (de opdrachtgever, 17/10/2026) */
   #plandlg.film #planzones{display:none}      /* GRB en GRB oud staan niet op het vel (de opdrachtgever, 17/10/2026: "dit gaan we allemaal anders organiseren: doe de GRB en GRB oud weg"); de bladenbalk onderaan het hoofdscherm zegt al op welk blad je zit */
   #plandlg.film #pl-voet,#plandlg.film .plan-voet{display:none}      /* de balk onderaan het vel (de tekstregel, het aantal punten, Benoem) hoort er niet bij (de opdrachtgever, 17/10/2026: "dit deel gewoon weglaten") */
-  #plandlg.film .pentrek-op{bottom:14px}
+  #plandlg.film .pentrek-op{bottom:14px;transition:translate .56s cubic-bezier(.4,.1,.2,1)}
+  /* Tijdens het trekken hangt de pijl onder de onderrand van het vel, op de plek waar de pijl bovenaan onder je vinger was (de opdrachtgever, 18/10/2026: "bij het naar beneden trekken glitcht er eerst iets"): hij verdween op het moment dat het vel opende, en de pijl onderaan zat dan nog boven het scherm. Bij loslaten glijdt hij mee naar zijn plaats onderaan het vel. */
+  #plandlg.film.trekken .pentrek-op{translate:0 105px;transition:none}
   #plandlg.film>div:not(.plan-vlak):not(#filmlaag):not(#filmkaart),#plandlg.film>nav,#plandlg.film>header{background:rgba(255,255,255,.55) !important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
   .pentrek.trekt{transition:none}
   /* Dezelfde pijl als onderaan (de opdrachtgever, 17/10/2026: "deze moeten even groot zijn, zelfde vorm, dikte"): een fijne pijlpunt van 2 punten dik in een knop van 56 x 56, zonder achtergrond. Boven wijst hij omlaag, onderaan het vel omhoog. */
@@ -2637,20 +2643,23 @@
   .pt-uitleg{padding:0 8px 16px 12px}
   .pt-meta{margin:0 0 10px;font-size:var(--tk);color:var(--ink-soft)}
   .pt-knoppen{display:flex;flex-wrap:wrap;gap:8px}
-  .loc-snel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);margin:6px 0 0;border-top:var(--haar) solid var(--line-soft)}      /* alleen liggende lijntjes, even dun en even licht als het menu eronder (de opdrachtgever, 16/10/2026) */
-  .loc-vak{min-width:0;padding:10px 12px 11px 0;border-bottom:var(--haar) solid var(--line-soft)}
-  .loc-vak.breed{grid-column:1 / -1}
-  .loc-duo{grid-column:1 / -1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
-  .loc-kolom{display:flex;flex-direction:column;min-width:0}
-  .loc-kolom .loc-vak{flex:1}
-  .loc-vak-kop{font-size:var(--tk);color:var(--ink-soft);margin-bottom:3px}
+  /* De bevindingen als rijen tussen haarfijne zwarte lijnen (de opdrachtgever, 18/10/2026, met een voorbeeld): links een label, rechts bovenaan de eenheid, de waarde in de rechterkolom op één lijn (34% van de breedte). Het lettertype, de maat en de ruimte zijn die van de rest van de app, en geen hoofdletters (de opdrachtgever: "gebruik hiervoor hetzelfde lettertype, spacing als op andere plaatsen, doe geen caps only"); alleen de cijfers zijn groot. Voorlopig alles in zwart. */
+  .loc-snel{display:block;margin:20px 0 0;color:#000}      /* geen lijn onder de laatste rij (de opdrachtgever, 18/10/2026) */
+  .loc-vak{position:relative;display:grid;grid-template-columns:34% minmax(0,1fr);align-items:start;min-width:0;padding:10px 0 12px;border-top:var(--haar) solid var(--line-soft)}      /* de lijntjes tussen de rijen even dun en licht als overal in de app (de opdrachtgever, 18/10/2026) */
+  .loc-vak.breed{grid-column:auto}
+  .loc-vak>*{grid-column:2}
+  .loc-lab{grid-column:1;grid-row:1;font-size:var(--tk);line-height:1.3;color:#000;padding-top:1px}
+  .loc-een{position:absolute;right:0;top:10px;font-size:var(--tk);line-height:1.3;color:#000;padding-top:1px}
+  .loc-vak-klein,.loc-vak-waarde{grid-column:2;font-size:var(--tm);line-height:1.3;overflow-wrap:anywhere}      /* één lettertype, stijl en grootte voor alle info (de opdrachtgever, 16/10/2026) */
+  .loc-vak-klein{margin-top:2px}
+  .loc-vak.groot{padding:10px 0 10px}
+  .loc-vak.groot .loc-vak-waarde{font-size:clamp(46px,16vw,64px);line-height:.95;font-weight:600;letter-spacing:-.03em;padding-top:6px}
+  .loc-vak.groot .loc-vak-klein{margin-top:6px}
   .loc-vak.tikbaar{cursor:pointer}
-  .loc-vak-klein{font-size:var(--tm);line-height:1.3;margin-top:2px;overflow-wrap:anywhere}      /* één lettertype, stijl en grootte voor alle info (de opdrachtgever, 16/10/2026) */
-  .loc-vak-waarde{font-size:var(--tm);line-height:1.3;overflow-wrap:anywhere}
-  .loc-vak.contour{display:flex;flex-direction:column}
-  .loc-laden{display:flex;flex-direction:column;gap:3px;align-items:flex-start}
+  .loc-vak-kop{font-size:var(--tk);color:var(--ink-soft);margin-bottom:3px}
+  .loc-laden{display:flex;flex-direction:column;gap:0;align-items:flex-start;grid-column:2}
   .loc-laden .loc-opnieuw{margin-top:6px}
-  .loc-laadstand{color:var(--ink-soft);font-size:var(--tk)}
+  .loc-laadstand{color:#000}
   .loc-groot{position:absolute;inset:0;z-index:28;background:var(--surface);display:flex;flex-direction:column}
   .loc-groot-kaart{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 var(--marge)}
   .loc-groot-kaart .loc-contour{max-width:none;width:100%;height:auto;flex:1;min-height:0;margin:0}
@@ -3816,6 +3825,7 @@
     <button type="button" id="cq-nieuw" title="Een schoon vel over het vorige" aria-label="Blad erbij">+</button>
     <button type="button" id="cq-terug" title="Laatste haal terugnemen" aria-label="Terug">↶</button>
     <button type="button" id="cq-zicht" title="Dit vel afleggen of terugleggen" aria-label="Afleggen">◍</button>
+    <button type="button" id="cq-ruit" title="Ruitjespapier: elke ruit is 1 cm op papier, op de schaal van het plan" aria-label="Ruitjes" aria-pressed="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M9.5 4v16M14.5 4v16M4 9.5h16M4 14.5h16"/></svg></button>
     <button type="button" id="cq-wis">Wis</button>
   </div>
   <!-- De stapel krijgt een eigen regel en niet een plek in de rij hierboven: daar stond het al
@@ -4048,7 +4058,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v629";
+const VERSIE="v658";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -9631,29 +9641,35 @@ function menuVerhuis(){
   const host=menuHost();
   menuGlas.classList.toggle("in-body",host===document.body);
   if(menuGlas.parentNode===host)return;
-  const n=menuGlas.querySelector(".menu-namen"), schuif=n?n.scrollLeft:0;      // een element dat verhuist verliest zijn schuifstand: die onthouden we
+  const n=menuGlas.querySelector(".menu-namen"), schuif=n?((n.clientWidth>0)?n.scrollLeft:(n._stand||0)):0;      // een element dat verhuist verliest zijn schuifstand: die onthouden we, ook als het oude venster al dicht is (dan is hij 0)
   host.appendChild(menuGlas);
-  const n2=menuGlas.querySelector(".menu-namen"); if(n2)n2.scrollLeft=schuif;
+  const n2=menuGlas.querySelector(".menu-namen"); if(n2){ n2.scrollLeft=schuif; n2._stand=schuif; }
 }
 function menuStart(){
   if(menuGlas)return;
   const nu=menuNu(), glas=maakEl("div","menu-glas");
   glas.appendChild(menubalk(true));
   const namen=maakEl("div","menu-namen");
-  let nr=0;
-  MENUGA.forEach(([naam,tekst])=>{
-    if(naam==="ai"&&!aiAan())return;
-    const huidig=naam===nu;
-    nr++;
-    /* Genummerd, zoals de rijen op de pagina's (1 Bestekteksten, 2 Opmerkingen...): 1 Punten, 2 Verslag, 3 Dossier, 4 Locatie, 5 Instellingen (de opdrachtgever, 17/10/2026). */
-    const label=nr+" "+tekst;
-    const b=maakEl("button","menu-naam"+(huidig?" huidig":""),label); b.type="button";
-    if(huidig)b.setAttribute("aria-current","page");
-    b.setAttribute("aria-label",tekst);
-    b.dataset.naam=naam; b.dataset.tekst=label;
-    b.onclick=e=>{ e.stopPropagation(); menuGa(naam); menuBlijf(); };      // het menu blijft staan: alleen de pijl omlaag sluit het (de opdrachtgever, 16/10/2026)
-    namen.appendChild(b);
-  });
+  /* EEN CARROUSEL (de opdrachtgever, 18/10/2026: "het menu onderaan is een carrousel, dus links van 1 Punten staat 6 AI, en rechts van 6 AI staat 1 Punten"): de namen staan drie keer achter elkaar, en de schuifstand blijft in de middelste reeks (zie menuNormaal), zodat je naar links of rechts kunt blijven schuiven zonder einde. De gekozen naam gaat naar het midden, langs de kortste weg. De drie reeksen zijn identiek; de middelste is de echte. */
+  for(let reeks=0;reeks<3;reeks++){
+    let nr=0;
+    MENUGA.forEach(([naam,tekst])=>{
+      if(naam==="ai"&&!aiAan())return;
+      const huidig=naam===nu;
+      nr++;
+      /* Genummerd, zoals de rijen op de pagina's (1 Bestekteksten, 2 Opmerkingen...): 1 Punten, 2 Verslag, 3 Dossier, 4 Locatie, 5 Instellingen (de opdrachtgever, 17/10/2026). */
+      /* Het nummer staat boven de naam (de opdrachtgever, 18/10/2026: "zet de getallen boven de tekst"). */
+      const b=maakEl("button","menu-naam"+(huidig?" huidig":"")); b.type="button";
+      b.appendChild(maakEl("span","menu-nr",String(nr))); b.appendChild(maakEl("span","menu-woord",tekst));
+      if(huidig)b.setAttribute("aria-current","page");
+      b.setAttribute("aria-label",tekst);
+      if(reeks!==1)b.setAttribute("tabindex","-1");
+      b.dataset.naam=naam; b.dataset.tekst=tekst;
+      b.onclick=e=>{ e.stopPropagation(); menuKlik(); menuGa(naam); menuDoel=naam; menuDoelTot=Date.now()+1500; menuBlijf(); };      // het menu blijft staan: alleen de pijl omlaag sluit het (de opdrachtgever, 16/10/2026)
+      namen.appendChild(b);
+    });
+  }
+  namen.addEventListener("scroll",()=>{ if(namen.clientWidth>0)namen._stand=namen.scrollLeft; menuNormaal(namen); },{passive:true});      // de stand onthouden zolang de balk zichtbaar is: een venster dat sluit zet hem op 0
   glas.appendChild(namen);
   menuGlas=glas;
   menuVanaf=Date.now()+450;
@@ -9661,18 +9677,89 @@ function menuStart(){
   document.documentElement.classList.add("menu-open");
   menuVerhuis();
   if(!glas.parentNode)document.body.appendChild(glas);
+  if(typeof requestAnimationFrame==="function")requestAnimationFrame(()=>menuMidden(false));
+}
+/* De carrousel: de breedte van één reeks, en de schuifstand terug in de middelste reeks als je erbuiten schuift (de reeksen zijn identiek, dus je ziet niets verspringen). */
+/* De gekozen naam staat meteen als huidig, ook als de pagina pas later opent (Instellingen opent een eigen venster): de carrousel schuift dan zonder te wachten. */
+let menuDoel=null, menuDoelTot=0;
+const MENUSCHUIFTIJD=380;      // ook de bladenbalk gebruikt deze tijd (ZONESCHUIFTIJD)
+/* Een klik bij het aantikken van een nummer (de opdrachtgever, 18/10/2026: "ik wil ook een klik horen bij het klikken van een nummer"): een kort tikje uit de geluidskaart van het toestel, zonder bestand, plus een heel lichte trilling waar die bestaat. De geluidskaart start pas in een tik; dit wordt daarin aangeroepen. */
+let menuKlikCtx=null;
+function menuKlik(){
+  try{
+    const AC=window.AudioContext||window.webkitAudioContext;
+    if(AC){
+      menuKlikCtx=menuKlikCtx||new AC();
+      if(menuKlikCtx.state==="suspended")menuKlikCtx.resume();
+      const t=menuKlikCtx.currentTime, o=menuKlikCtx.createOscillator(), g=menuKlikCtx.createGain();
+      o.type="sine"; o.frequency.setValueAtTime(2400,t); o.frequency.exponentialRampToValueAtTime(800,t+.035);
+      g.gain.setValueAtTime(.2,t); g.gain.exponentialRampToValueAtTime(.0001,t+.06);
+      o.connect(g); g.connect(menuKlikCtx.destination); o.start(t); o.stop(t+.07);
+    }
+  }catch(e){}
+  if(navigator.vibrate)try{ navigator.vibrate(5); }catch(e){}
+}
+function menuReeks(n){
+  const k=[...n.querySelectorAll(".menu-naam")], per=k.length/3;
+  if(!(per>=1)||per!==Math.floor(per))return null;
+  const links=b=>b.getBoundingClientRect().left-n.getBoundingClientRect().left+n.scrollLeft;
+  return {k, per, breed:links(k[per])-links(k[0]), links};
+}
+function menuNormaal(n){
+  if(n._animeert)return;
+  const r=menuReeks(n);
+  if(!r||!(r.breed>0))return;
+  const A=r.links(r.k[0]), rand=n.scrollLeft+n.clientWidth/2;      // het midden van wat je ziet
+  if(rand<A+r.breed*1.0)n.scrollLeft+=r.breed; else if(rand>A+r.breed*2.0)n.scrollLeft-=r.breed;
+}
+/* De naam waar je staat naar het midden van de balk, rustig bij een keuze en meteen bij het openen; steeds het dichtstbijzijnde exemplaar, ook als dat over het eind heen is. */
+function menuMidden(rustig){
+  if(!menuGlas)return;
+  const n=menuGlas.querySelector(".menu-namen");
+  if(!n)return;
+  const r=menuReeks(n);
+  if(!r||!(r.breed>0)||!n.clientWidth)return;
+  const kopie=r.k.filter(b=>b.classList.contains("huidig"));
+  const midden=b=>r.links(b)+b.getBoundingClientRect().width/2-n.clientWidth/2;
+  if(!n._begonnen){
+    n._begonnen=true;
+    n.scrollLeft=kopie.length?midden(kopie[Math.min(1,kopie.length-1)]):r.links(r.k[r.per])-(parseFloat(getComputedStyle(n).paddingLeft)||0);
+    return;
+  }
+  if(!kopie.length)return;
+  const nu=n.scrollLeft;
+  let doel=null;
+  kopie.forEach(b=>{ const d=midden(b); if(doel===null||Math.abs(d-nu)<Math.abs(doel-nu))doel=d; });
+  if(n._animeert&&Math.abs((n._doel||0)-doel)<2)return;      // loopt al naar dit exemplaar
+  if(Math.abs(doel-nu)<2||!rustig||typeof requestAnimationFrame!=="function"){ n.scrollLeft=doel; menuNormaal(n); return; }
+  const t0=performance.now(), token=(n._schuifToken=(n._schuifToken||0)+1);
+  n._animeert=true; n._doel=doel;
+  const klaar=()=>{ n._animeert=false; n.scrollLeft=doel; menuNormaal(n); };
+  const stap=tijd=>{
+    if(n._schuifToken!==token)return;
+    const f=Math.min(1,(tijd-t0)/MENUSCHUIFTIJD), e=1-Math.pow(1-f,3);      // vlot van start, zacht aan het eind (de opdrachtgever, 18/10/2026: "de carrousel mag iets vlotter bewegen")
+    n.scrollLeft=nu+(doel-nu)*e;
+    if(f<1)requestAnimationFrame(stap); else klaar();
+  };
+  requestAnimationFrame(stap);
+  setTimeout(()=>{ if(n._schuifToken===token&&n._animeert)klaar(); },MENUSCHUIFTIJD+80);
 }
 /* De naam waar je nu bent wordt vet; en het blad verhuist mee naar de pagina die opent (een paar keer, want de pagina opent met een korte schuifbeweging). */
 function menuVerfris(){
-  const nu=menuNu();
+  const nu=(menuDoel&&Date.now()<menuDoelTot)?menuDoel:menuNu();
   if(!menuGlas)return;
   menuGlas.querySelectorAll(".menu-naam").forEach(b=>{
     const n=b.dataset.naam, huidig=n===nu;
     b.classList.toggle("huidig",huidig);
     if(huidig)b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current");
   });
+  menuMidden(true);
 }
-function menuBlijf(){ [0,150,450,900].forEach(t=>setTimeout(()=>{ menuVerhuis(); menuVerfris(); },t)); menuVerfris(); }
+/* Na een keuze volgt het menu de pagina die opent: elke 60 ms kijken of het venster al is verhuisd en de naam al is gewisseld, zodat de carrousel meteen meeschuift en niet pas bij de volgende vaste tik (de opdrachtgever, 18/10/2026: "bij Instellingen blijft de carrousel achter"). */
+function menuBlijf(){
+  const t0=Date.now(), iv=setInterval(()=>{ menuVerhuis(); menuVerfris(); if(Date.now()-t0>1500)clearInterval(iv); },60);
+  menuVerfris();
+}
 function menuDicht(){
   menuAnimToken++;
   document.documentElement.classList.remove("menu-open");
@@ -9702,7 +9789,14 @@ function menuToon(){
 /* Sluit een pagina (het kruis), dan dooft het menu met haar uit en ben je terug op het plan; schuift er een andere pagina in de plaats (Instellingen), dan verhuist het menu. Escape sluit het ook. */
 ["dlg","beheerdlg"].forEach(id=>{
   const d=document.getElementById(id);
-  if(d)d.addEventListener("close",()=>{ if(!menuGlas)return; if(menuHost()===document.body)menuDicht(); else menuVerhuis(); });
+  if(d)d.addEventListener("close",()=>{
+    if(!menuGlas)return;
+    if(menuHost()===document.body){
+      const ai=document.getElementById("aikaart");
+      if(ai&&!ai.hidden)menuVerhuis();      // de AI-pagina is geen venster: het menu verhuist naar het hoofdscherm en blijft open, zoals bij elke andere pagina (de opdrachtgever, 18/10/2026)
+      else menuDicht();
+    } else menuVerhuis();
+  });
 });
 document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&menuGlas)menuEinde(false); });
 (()=>{
@@ -9759,6 +9853,11 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&menuGlas)menuEinde
       const kl=document.createElement("div"); kl.id="filmkaart";
       kl.style.cssText="position:fixed;left:"+kb.left+"px;top:"+kb.top+"px;width:"+kb.width+"px;height:"+kb.height+"px;pointer-events:none;z-index:9";
       doos.querySelectorAll(".kaartnoord,.kaartschaal").forEach(n=>kl.appendChild(n.cloneNode(true)));
+      /* De titel Plan ligt erbovenop (de opdrachtgever, 18/10/2026: "de titel Plan moet er echt bovenop liggen"): het vel dekt het hoofdscherm af, dus staat er een kopie van de titel op dezelfde plek, met dezelfde letter. */
+      { const t=document.getElementById("hoofdtitel");
+        if(t){ const r=t.getBoundingClientRect(), c=t.cloneNode(true), cs=getComputedStyle(t); c.removeAttribute("id"); c.className="filmtitel";
+          c.style.cssText="position:absolute;margin:0;left:"+(r.left-kb.left)+"px;top:"+(r.top-kb.top)+"px;font:"+cs.font+";letter-spacing:"+cs.letterSpacing+";color:"+cs.color+";white-space:nowrap;pointer-events:none";
+          kl.appendChild(c); } }
       laag.classList.add("uit");      // dicht bij het openen; ze klappen uit zodra het vel er ligt
       dlg.appendChild(kl); dlg.appendChild(laag);
       if(typeof requestAnimationFrame==="function")requestAnimationFrame(()=>requestAnimationFrame(()=>laag.classList.remove("uit")));
@@ -9772,7 +9871,7 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&menuGlas)menuEinde
       verhuisd=[];
       dlg.querySelectorAll("#filmlaag,#filmkaart").forEach(n=>n.remove());
     };
-    const dicht=()=>{ iconenTerug(); penAuto=false; penGrace=false; penFilm=false; dlg.classList.remove("film"); document.documentElement.classList.remove("film-open"); try{ koppelStop(); }catch(e){} if(dlg.open)dlg.close(); schoon(); dlg.style.height=""; delete dlg.dataset.blad; };
+    const dicht=()=>{ dlg.classList.remove("trekken"); iconenTerug(); penAuto=false; penGrace=false; penFilm=false; dlg.classList.remove("film"); document.documentElement.classList.remove("film-open"); try{ koppelStop(); }catch(e){} if(dlg.open)dlg.close(); schoon(); dlg.style.height=""; delete dlg.dataset.blad; };
     dlg.addEventListener("close",()=>{ iconenTerug(); dlg.style.height=""; delete dlg.dataset.blad; penFilm=false; dlg.classList.remove("film"); document.documentElement.classList.remove("film-open"); try{ tekenKaartPunten(); }catch(e){} });      // het punt uit je tekening hoort meteen op de kaart eronder      // elke andere weg naar buiten (Escape, het kruis): terug naar het hele scherm
     /* Gelukt als je voorbij een vijfde van het scherm trok, of snel en een stuk (een vluchtige veeg). */
     const genoeg=(dy,ms)=>dy>hoog()*SCHUIFDEEL||(dy>PENTREKDREMPEL&&dy/Math.max(1,ms)>SCHUIFSNEL);
@@ -9788,7 +9887,7 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&menuGlas)menuEinde
       penGrace=true;
       dlg.style.pointerEvents="none";                                // tijdens het trekken en schuiven neemt het vel geen aanraking aan: de sleep die het opent mag geen streep worden
       penFilm=!!kaartPlan;                                           // zonder plan op het hoofdscherm valt er niets onder het vel te zien: dan blijft het het gewone planvenster
-      dlg.classList.toggle("film",penFilm); document.documentElement.classList.toggle("film-open",penFilm);
+      dlg.classList.toggle("film",penFilm);      // `film-open` volgt pas als de kopieën van kompas en schaalbalk op het vel staan (zie iconenOp): anders zijn de originelen een beeld lang weg en hun kopie er nog niet, en knipperen ze
       /* De hele onderkant zakt tot de bodem van het scherm (de opdrachtgever, 17/10/2026: "en dit geheel schuift dan helemaal tot de bodem van het scherm"): de bladen en het adres schuiven zoveel omlaag als het menu hoog was, en het vel wordt even veel hoger. Gemeten nu het hoofdscherm er nog staat. */
       const mb=document.getElementById("menubalk");
       const wit=mb?Math.max(0,Math.round(parseFloat(getComputedStyle(mb).paddingBottom)||0)):0;      // de marge die het menu onderaan had: die blijft als witruimte onder het adres (de opdrachtgever, 17/10/2026: "beneden mag iets meer whitespace, maar niet transparant")
@@ -9802,7 +9901,7 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&menuGlas)menuEinde
         await penNaarPlan();
         if(!plan||!dlg.open){ penAuto=false; penGrace=false; schoon(); return false; }
         zet(-hoog()+Math.min(dy,hoog()),false);
-        if(penFilm)iconenOp();
+        if(penFilm){ iconenOp(); document.documentElement.classList.add("film-open"); }
         return true;
       })();
       return opent;
@@ -9812,12 +9911,12 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&menuGlas)menuEinde
       if(y0===null)return;
       dy=Math.max(0,e.clientY-y0);
       p.style.setProperty("--trek",Math.min(dy,26)+"px");
-      if(dy>6){ sleepte=true; begin(); }
+      if(dy>6){ sleepte=true; begin(); dlg.classList.add("trekken"); }
       if(opent&&dlg.open)zet(-hoog()+Math.min(dy,hoog()),false);
     });
     const los=async()=>{
       if(y0===null)return;
-      const ms=Date.now()-t0, afstand=dy; y0=null; p.classList.remove("trekt"); p.style.removeProperty("--trek");
+      const ms=Date.now()-t0, afstand=dy; y0=null; p.classList.remove("trekt"); p.style.removeProperty("--trek"); dlg.classList.remove("trekken");
       if(!sleepte)return;              // een tik handelt het klikken hieronder af
       const lukte=opent?await opent:false;
       opent=null;
@@ -10224,7 +10323,7 @@ function zoneMidden(nu,balkBreed,bandBreed,celLinks,celBreed){
   return Math.max(0,Math.min(uiterst,doel));
 }
 /* Hoe lang de band erover doet om het gekozen blad naar het midden te schuiven (de opdrachtgever, 16/10/2026: "maak het schuiven na selectie iets trager"). */
-const ZONESCHUIFTIJD=700;
+const ZONESCHUIFTIJD=MENUSCHUIFTIJD;      // de bladenbalk schuift even vlot als de carrousel van het menu (de opdrachtgever, 18/10/2026)
 function toonActieveZone(nav,van,keuze){
   if(!nav||typeof nav.scrollLeft!=="number"||!nav.querySelector)return;
   const k=keuze||{actief:'.zone-btn[aria-pressed="true"]',cel:".zone-btn"};      // de fasebalk geeft zijn eigen cellen op: het is dezelfde balk
@@ -10251,7 +10350,7 @@ function toonActieveZone(nav,van,keuze){
   const t0=performance.now(), token=(nav._schuifToken=(nav._schuifToken||0)+1);
   const stap=nu=>{
     if(nav._schuifToken!==token)return;      // een nieuwe keuze overneemt
-    const f=Math.min(1,(nu-t0)/ZONESCHUIFTIJD), e=f<.5?2*f*f:1-Math.pow(-2*f+2,2)/2;      // zacht aan, zacht uit
+    const f=Math.min(1,(nu-t0)/ZONESCHUIFTIJD), e=1-Math.pow(1-f,3);      // dezelfde beweging als de carrousel: vlot van start, zacht aan het eind
     nav.scrollLeft=hier+(doel-hier)*e;
     if(f<1)requestAnimationFrame(stap);
   };
@@ -15689,10 +15788,18 @@ async function ruimVerouderdeGrb(nieuwePlek,behalveZone){
   if(weg)planLijst=await planZones();
   return weg;
 }
+/* Een GRB-plan dat vóór 18/10/2026 is opgehaald, heeft de bebouwing nog in stippen. Bij het lezen wordt dat patroon vervangen door het lichtgrijze vlak, zodat je het plan niet opnieuw hoeft op te halen. */
+function grbVlakVers(p){
+  if(!p)return p;
+  const wis=b=>(typeof b==="string"&&b.indexOf("url(%23dot)")>=0)?b.split("url(%23dot)").join(encodeURIComponent(GRBSTIJL.vlak)):b;
+  if(p.beeld)p.beeld=wis(p.beeld);
+  if(Array.isArray(p.beeldVarianten))p.beeldVarianten=p.beeldVarianten.map(wis);
+  return p;
+}
 function haalPlan(zone){return new Promise(res=>{
   if(!db)return res(null);
   const q=db.transaction("plannen","readonly").objectStore("plannen").get(dk(zone));
-  q.onsuccess=()=>res(q.result||null);q.onerror=()=>res(null);
+  q.onsuccess=()=>res(grbVlakVers(q.result||null));q.onerror=()=>res(null);
 });}
 
 /* ---- het calqueblad ----
@@ -16150,6 +16257,77 @@ function filmUitlijnen(c){
   pl.dy=m.y-oy-plan.hoogte*schaal/2;
   return true;
 }
+/* DRIE VELLEN (de opdrachtgever, 18/10/2026): "het raster moet meeschalen bij in- en uitzoomen, maar de verticalen en horizontalen blijven op hun plaats; bij inzoomen komen er sublijnen bij. De tweede optie is een leeg blad, de derde optie zijn puntjes op een 1 cm grid." Eén knop in de penfuncties kiest tussen
+   - raster: lijnen op ronde maten (1, 2, 5, 10, 20 ... meter) die aan het plan hangen en dus met het plan schuiven en zoomen; zoom je in, dan komt er een fijner net bij tussen de lijnen die al lagen, en de bestaande lijnen blijven waar ze lagen;
+   - leeg: het gewone lichtblauwe vel;
+   - puntjes: een raster van puntjes om de 1 cm op papier (37,8 schermpunten), dus precies 1 cm x de schaal in werkelijkheid; dat papier ligt vast op het scherm.
+   Raster en puntjes maken het vel wit en doorzichtig; de lijnen en puntjes blijven blauw. Alleen op een plan dat zijn maat kent. */
+const RUITSTANDEN=["leeg","raster","puntjes"];      // een tik gaat van het lege vel naar het raster, dan naar de puntjes, en terug naar leeg
+let calqueRuit="leeg";
+try{ const o=localStorage.getItem("werfpunten-ruit"); calqueRuit=RUITSTANDEN.includes(o)?o:(o==="1"?"raster":"leeg"); }catch(e){}
+const RUITCM_PX=0.01/CSSPIXEL_M_RUIT();
+function CSSPIXEL_M_RUIT(){ return 0.0254/96; }
+function calqueRuitMeter(){
+  const doos=document.getElementById("kaart");
+  if(!doos||!kaartPlan)return null;
+  const b=doos.getBoundingClientRect();
+  const mpp=kaartMeterPerPixel(kaartPlan,b,kaartKijkNu(b.width,b.height));
+  return mpp?{mpp, ruit:mpp*RUITCM_PX, verhouding:mpp/CSSPIXEL_M_RUIT()}:null;
+}
+const RUITMATEN=[0.1,0.2,0.5,1,2,5,10,20,50,100,200,500,1000,2000,5000];
+/* De ronde maat waarbij een ruit minstens 1 cm op papier is, en in hoeveel stukken hij zich deelt (1 -> 5, 2 -> 4, 5 -> 5). */
+function ruitMaat(pxPerM){
+  let i=RUITMATEN.findIndex(m=>m*pxPerM>=RUITCM_PX);
+  if(i<0)i=RUITMATEN.length-1;
+  const M=RUITMATEN[i], mant=Math.round(M/Math.pow(10,Math.floor(Math.log10(M))));
+  return {groot:M, deel:mant===2?4:5};
+}
+function calqueRuitjes(x,b){
+  const g=plan&&plan.georef;
+  if(!g||g.plaatselijk||!g.eenheid_m||!(plan.breedte>0&&plan.hoogte>0))return;
+  const m=calqueRuitMeter();
+  if(!m)return;
+  x.save();
+  let tekst="";
+  if(calqueRuit==="puntjes"){
+    const d=RUITCM_PX;
+    for(let i=0,px=d;px<=b.width;i++,px+=d){
+      for(let j=0,py=d;py<=b.height;j++,py+=d){
+        const groot=((i+1)%5===0&&(j+1)%5===0);
+        x.fillStyle=groot?"rgba(48,98,160,.65)":"rgba(48,98,160,.42)";
+        x.beginPath(); x.arc(Math.round(px),Math.round(py),groot?1.9:1.3,0,7); x.fill();
+      }
+    }
+    tekst="1 punt = 1 cm = "+meetFmt(m.ruit)+" m";
+  }else{
+    const pxPerM=pl.schaal/g.eenheid_m, bm=plan.breedte*g.eenheid_m, hm=plan.hoogte*g.eenheid_m;
+    const mt=ruitMaat(pxPerM), klein=mt.groot/mt.deel, kleinPx=klein*pxPerM;
+    const hoeken=[[0,0],[b.width,0],[0,b.height],[b.width,b.height]].map(([sx,sy])=>schermNaarBlad(plan,pl,sx,sy));
+    const px0=Math.min(...hoeken.map(h=>h.x)), px1=Math.max(...hoeken.map(h=>h.x)), py0=Math.min(...hoeken.map(h=>h.y)), py1=Math.max(...hoeken.map(h=>h.y));
+    const stap=kleinPx>=9?klein:mt.groot;      // het fijne net verschijnt zodra de ruimte er is
+    const teken=(vanM,totM,loodrecht)=>{
+      const n0=Math.floor(vanM/stap)-1, n1=Math.ceil(totM/stap)+1;
+      if(n1-n0>400)return;
+      for(let n=n0;n<=n1;n++){
+        const w=n*stap, isGroot=Math.abs(w/mt.groot-Math.round(w/mt.groot))<1e-6;
+        x.strokeStyle=isGroot?"rgba(48,98,160,.55)":"rgba(48,98,160,.26)";
+        const a=loodrecht?bladNaarScherm(plan,pl,w/bm*100,py0-5):bladNaarScherm(plan,pl,px0-5,w/hm*100);
+        const c=loodrecht?bladNaarScherm(plan,pl,w/bm*100,py1+5):bladNaarScherm(plan,pl,px1+5,w/hm*100);
+        const f=Math.min(devicePixelRatio||1,2), r=v=>(Math.round(v*f)+.5)/f;
+        x.beginPath(); x.moveTo(r(a.x),r(a.y)); x.lineTo(r(c.x),r(c.y)); x.stroke();
+      }
+    };
+    x.lineWidth=0.5;      // dunner (de opdrachtgever, 18/10/2026: "de ruit mag nog dunner"): een halve schermpunt, op een heel beeldpunt van het scherm gelegd
+    teken(px0/100*bm,px1/100*bm,true);
+    teken(py0/100*hm,py1/100*hm,false);
+    tekst="ruit = "+meetFmt(mt.groot)+" m"+(kleinPx>=9?" · fijn = "+meetFmt(klein)+" m":"");
+  }
+  x.font="600 12px -apple-system,system-ui,sans-serif"; x.textAlign="right"; x.textBaseline="bottom";
+  const w=x.measureText(tekst).width+16, hx=b.width-12-w, hy=b.height-12-22;
+  x.fillStyle="rgba(255,255,255,.82)"; x.fillRect(hx,hy,w,22);
+  x.fillStyle="#1c3552"; x.fillText(tekst,b.width-12-8,hy+16);
+  x.restore();
+}
 function planTeken(){
   const c=document.getElementById("plancanvas");
   const dpr=Math.min(devicePixelRatio||1,2);
@@ -16164,6 +16342,7 @@ function planTeken(){
     x.clearRect(0,0,b.width,b.height);
     filmUitlijnen(c);
     filmKopieen();
+    if(calqueRuit!=="leeg")calqueRuitjes(x,b);
     calqueBladen(calque).forEach(bl=>{
       if(bl.zicht===false)return;
       (bl.halen||[]).forEach(h=>tekenHaal(x,h));
@@ -17481,7 +17660,7 @@ function grbLijnen(features,houd){
    De volgorde is de afspraak, en een proef bewaakt haar: wegen en randen <= percelen van de buren < bebouwing < het GRB van je eigen perceel.
    - percelen van de buren: een dunne lijn
    - wegen, rijbaanrand (stippellijn), boordsteen: niet dikker dan de buren
-   - bebouwing: iets dikker, met een hele fijne dotarcering
+   - bebouwing: iets dikker, op een heel licht grijs vlak (geen patroon)
    - je eigen perceel: de dikste lijn
    - geen vulling in kleur of grijs; de wegenis heeft geen achtergrond
    - de straatnamen: horizontaal langs de weg, met een witte rand */
@@ -17489,7 +17668,7 @@ const GRBSTIJL={
   inkt:"#161a1e",
   buren:2, weg:2, wegrand:2, boordsteen:2, gebouw:5, eigen:20,
   wegrandStreep:"26 20",
-  dot:{raster:36, straal:2.3},
+  vlak:"#efefef",      // de bebouwing is een heel licht grijs vlak, zonder patroon (de opdrachtgever, 18/10/2026: "doe in het GRB het patroon weg, dit is nu verwarrend; doe gewoon heel licht grijs")
   naam:{grootte:120, letterafstand:6, rand:36, maten:[1,1.7,2.6]}      // de straatnamen in drie maten: normaal, groter, nog groter
 };
 /* De randen van de gebouwen, zonder de stukken die op een perceelsgrens liggen. `gebouwen` en `percelen` zijn lijsten van lijsten ringen (Lambert-meters); `tol` in meter. Geeft het SVG-pad terug, of "" als er niets overblijft. */
@@ -17586,10 +17765,9 @@ async function maakOmtrekplan(hier,zone,gekozen,toegestaanLeeg){
   const stuk=[];
   stuk.push('<rect width="'+bw+'" height="'+bh+'" fill="#fff"/>');
   /* De bebouwing in een hele fijne dotarcering (de opdrachtgever, 17/10/2026): een raster van kleine stippen, om de 36 cm, zonder vulkleur, zodat bebouwd en onbebouwd te onderscheiden zijn en de lijnen leesbaar blijven. */
-  stuk.push('<defs><pattern id="dot" width="'+ST.dot.raster+'" height="'+ST.dot.raster+'" patternUnits="userSpaceOnUse"><circle cx="'+(ST.dot.raster/2)+'" cy="'+(ST.dot.raster/2)+'" r="'+ST.dot.straal+'" fill="'+ZWART+'"/></pattern></defs>');
   /* De wegenis heeft geen achtergrond meer (de opdrachtgever, 17/10/2026): alleen de lijnen van de wegen, de rijbaanrand en de boordsteen, zonder vlak. */
   const dotVlak=gebouwen.map(f=>pad(f)).join("");
-  if(dotVlak)stuk.push('<path d="'+dotVlak+'" fill="url(#dot)" stroke="none" fill-rule="evenodd"/>');
+  if(dotVlak)stuk.push('<path d="'+dotVlak+'" fill="'+ST.vlak+'" stroke="none" fill-rule="evenodd"/>');
   const wegen=locWegen(wegsegmenten,300).filter(w=>w.l&&w.l.length>=2);
   wegen.forEach(w=>stuk.push('<path d="M'+w.l.map(q=>naarBeeldXY(q).join(",")).join("L")+'" fill="none" stroke="'+ZWART+'" stroke-width="'+ST.weg+'" stroke-linejoin="round"/>'));
   /* Het voetpad (de opdrachtgever, 17/10/2026: "kan je ook het voetpad tekenen?"). Het GRB kent het voetpad niet als vlak: het is de strook tussen de rand van de rijbaan of de boordsteen en de perceelsgrens. Wat het wel geeft zijn die randen: de rand van de rijbaan en de grens van de zone voor zwakke weggebruikers (stippellijn), en de verhoogde boordsteen (dunne lijn). Daartussen leest het voetpad. */
@@ -17759,7 +17937,7 @@ function filmKaart(type,id,x,y){
 function filmKopieen(){
   const kl=document.getElementById("filmkaart"), doos=document.getElementById("kaart");
   if(!kl||!doos)return;
-  kl.textContent="";
+  [...kl.children].forEach(n=>{ if(!n.classList.contains("filmtitel"))n.remove(); });      // de kopie van de titel blijft staan: die verandert niet met de kijkstand
   doos.querySelectorAll(".kaartnoord,.kaartschaal").forEach(n=>kl.appendChild(n.cloneNode(true)));
 }
 function filmKnijpStart(c){
@@ -18443,6 +18621,21 @@ document.getElementById("cq-nieuw").onclick=()=>{
   calqueBewaar();
   melding(b.naam+" — schoon vel over het vorige");
 };
+document.getElementById("cq-ruit").onclick=ev=>{
+  if(ev&&ev.stopPropagation)ev.stopPropagation();
+  if(!calqueRuitMeter()){ melding("Dit plan kent zijn maat niet — geen raster op schaal"); return; }
+  calqueRuit=RUITSTANDEN[(RUITSTANDEN.indexOf(calqueRuit)+1)%RUITSTANDEN.length];      // raster, leeg blad, puntjes, en weer van voren af
+  try{ localStorage.setItem("werfpunten-ruit",calqueRuit); }catch(e){}
+  merkRuit(); planTeken();
+  melding(calqueRuit==="raster"?"Raster — lijnen op ronde maten, fijner bij inzoomen":calqueRuit==="puntjes"?"Puntjes — om de 1 cm op papier":"Leeg blad");
+};
+function merkRuit(){
+  const aan=calqueRuit!=="leeg";
+  document.documentElement.classList.toggle("ruit-aan",aan);
+  const k=document.getElementById("cq-ruit");
+  if(k){ k.classList.toggle("aan",aan); k.setAttribute("aria-pressed",aan?"true":"false"); k.dataset.stand=calqueRuit; k.title="Vel kiezen: raster, leeg blad of puntjes (nu: "+calqueRuit+")"; }
+}
+merkRuit();
 document.getElementById("cq-terug").onclick=()=>{
   const b=calqueActief(calque);
   if(!b||!b.halen.length){melding("Er staat niets op dit vel");return;}
@@ -20298,6 +20491,7 @@ function oudeStipkleur(dagen){
    acht keer; verder uitzoomen dan passend heeft geen zin, want dan zie je het blad al helemaal. */
 const KAARTZOOMMAX=64;      // 8 tot 17/10/2026: het GRB heeft een wijde omgeving en je wilt tot op de perceelsgrens kunnen
 let kaartKijk={schaal:1, dx:0, dy:0};
+let kaartBoxVorig=null;      // het vak waarin de kijkstand voor het laatst gold; zie kaartKijkMeeverhuizen
 
 /* Nooit een rand naast het blad: bij elke schaal dekt het geschaalde vlak het venster. Zo kun je
    niet per ongeluk het plan van het scherm schuiven en een leeg vak overhouden -- op een werf is
@@ -20409,6 +20603,16 @@ function kaartKlem(k,breed,hoog,afgedekt){
      dan beschrijf je een vaststelling terwijl je niet ziet waar ze ligt -- precies wat dit
      scherm moest oplossen. Het planvenster doet hetzelfde met `houdPinVrij`. */
   const ruimte=Math.max(0,afgedekt||0);
+  /* EEN KAART DIE HET HELE VAK VULT (de opdrachtgever, 18/10/2026: op een iPhone SE liep het plan niet door tot tegen GRB / GRB oud, op een iPad bleven de zijkanten leeg: "ik wil een volledig responsive app"). Het GRB-beeld is een vierkant dat met `object-fit:contain` in een vak van elke verhouding ligt, en bovenstaande grenzen namen aan dat het beeld het vak vult. Dat deed het alleen in een vierkant vak: in een staand vak schoof de onderrand van het beeld omhoog, in een liggend vak de zijrand, en dan zag je wit. Voor een kaart (GRB, geen gebouwplan) volgen de grenzen het echte beeld, en de laagste schaal is die waarop het beeld het vak dekt. Gedraaid blijft zoals het was: de draaifactor past het beeld in het vak. */
+  const kp=(typeof kaartPlan!=="undefined")?kaartPlan:null;
+  if(kp&&kp.bron&&kp.bron.grb&&kp.breedte>0&&kp.hoogte>0&&breed>0&&hoog>0&&!draaiVan(kp)){
+    const f=Math.min(breed/kp.breedte,hoog/kp.hoogte), bw=kp.breedte*f, bh=kp.hoogte*f, ox=(breed-bw)/2, oy=(hoog-bh)/2;
+    const sv=Math.max(s,(breed)/bw,(hoog-ruimte)/bh);
+    const vx=Math.min(KAARTZOOMMAX,sv);
+    return {schaal:vx,
+            dx:Math.max(breed-(ox+bw)*vx,Math.min(-ox*vx,(k.dx)||0)),
+            dy:Math.max(hoog-ruimte-(oy+bh)*vx,Math.min(-oy*vx,(k.dy)||0))};
+  }
   if(s===1&&!ruimte)return {schaal:1, dx:0, dy:0};
   const min_x=-(s-1)*(breed||0), min_y=-(s-1)*(hoog||0)-ruimte;
   return {schaal:s,
@@ -20436,6 +20640,7 @@ function kaartKijkZet(){
   const doos=document.getElementById("kaart");
   if(!doos)return;
   const b=doos.getBoundingClientRect();
+  if(!kaartBoxVorig)kaartBoxVorig={w:b.width,h:b.height};
   kaartKijk=kaartKijkNu(b.width,b.height);
   const img=doos.querySelector("img");
   if(img){
@@ -21076,7 +21281,7 @@ function schaalKeuzeSchakel(){
     const b=document.createElement("button"); b.type="button"; b.className="kaartknop";
     b.textContent="1:"+n;
     if(nu&&Math.abs(nu-n)/n<0.06)b.classList.add("actief");
-    b.onclick=ev=>{ if(ev&&ev.stopPropagation)ev.stopPropagation(); schaalNaar(n); schaalKeuzeSluit(); };
+    b.onclick=ev=>{ if(ev&&ev.stopPropagation)ev.stopPropagation(); schaalNaar(n); schaalKeuzeSluit(); schaalKeuzeSchakel(); };      // het keuzemenu blijft open, met de nieuwe schaal gemarkeerd, zodat je kunt blijven kiezen (de opdrachtgever, 18/10/2026); een tik op de schaalbalk of ernaast sluit het
     el.appendChild(b);
   });
   el.hidden=false; schaalKeuzeOpen=true;
@@ -26483,20 +26688,23 @@ async function locGrbZetten(d,hulp){
     return !!r;
   }catch(e){ return false; }
 }
+/* DE BEVINDINGEN IN EEN STRAKKE, GROTE LETTER (de opdrachtgever, 18/10/2026, met een voorbeeld: "ik wil de pagina Locatie zo uitwerken. Laat het plan weg, dat zit al bij Kaart. Ik wil deze stijl en layout en het grote crispy lettertype van de bevindingen. Doe voorlopig alles in zwart"): rijen tussen dunne lijnen, links een klein label in hoofdletters en rechts bovenaan de eenheid, en eronder de waarde: een cijfer groot en vet, een tekst in vette hoofdletters. Het GRB-plankje is eruit: het plan staat bij Kaart; de functie om de plek te verzetten blijft bereikbaar via "Nee, verplaats". */
 function locSnelBlok(d){
   const blok=maakEl("div","loc-snel");
   const sn=(d&&d.snel)||{};
-  const vak=(kop,waarde,klasse,doel)=>{
-    const v=maakEl("div","loc-vak"+(klasse?" "+klasse:""));
-    /* De opdrachtgever, 16/10/2026: "haal de titelteksten weg: versie, datum, locatie... enkel de info is genoeg." De titel blijft er voor voorleessoftware, maar staat niet meer in beeld. */
+  const vak=(kop,waarde,klasse,doel,opt)=>{
+    const o=opt||{};
+    const v=maakEl("div","loc-vak"+(klasse?" "+klasse:"")+(o.groot?" groot":""));
     v.setAttribute("aria-label",kop);
+    v.appendChild(maakEl("span","loc-lab",o.label||kop));
+    if(o.eenheid)v.appendChild(maakEl("span","loc-een",o.eenheid));
     if(waarde&&waarde.nodeType)v.appendChild(waarde); else v.appendChild(maakEl("div","loc-vak-waarde",waarde||"\u2014"));
     (doel||blok).appendChild(v);
     return v;
   };
   const t=new Date(d.tijd);
   /* De versie is die van het downloaden: V1 de eerste keer, V2 na een nieuwe download (de opdrachtgever, 16/10/2026: "knop opnieuw ophalen weg en combineren met versie"). Een tik op het vakje haalt opnieuw op. */
-  const vv=vak("Versie","V"+(d.dl||1),"tikbaar");
+  const vv=vak("Versie","V"+(d.dl||1),"tikbaar",null,{label:"Versie"});      // gewone maat: de versie is geen bevinding om groot te tonen (de opdrachtgever, 18/10/2026: "die V2 hoeft niet zo groot, maak subtieler")
   vv.appendChild(maakEl("div","loc-vak-klein","tik om opnieuw op te halen"));
   vv.setAttribute("role","button"); vv.tabIndex=0; vv.setAttribute("aria-label","Versie V"+(d.dl||1)+": opnieuw ophalen");
   vv.onclick=()=>locHaal(true);
@@ -26507,13 +26715,13 @@ function locSnelBlok(d){
   if(L){
     const wrap=maakEl("div","loc-laden");
     const fouten=L.fouten||[], tot=L.totaal||Object.keys(d.rubrieken||{}).length;
-    wrap.appendChild(maakEl("div","loc-vak-waarde",(Math.round(L.ms/100)/10).toString().replace(".",",")+" s \u00B7 "+Math.max(0,tot-fouten.length)+" van "+tot+" onderdelen binnen"));
-    wrap.appendChild(maakEl("div","loc-vak-waarde loc-laadstand",navigator.onLine===false?"Geen verbinding"+(fouten.length?": wacht op "+fouten.map(locLaadNaam).join(", "):""):
+    wrap.appendChild(maakEl("div","loc-vak-klein",(Math.round(L.ms/100)/10).toString().replace(".",",")+" s \u00B7 "+Math.max(0,tot-fouten.length)+" van "+tot+" onderdelen binnen"));
+    wrap.appendChild(maakEl("div","loc-vak-klein loc-laadstand",navigator.onLine===false?"Geen verbinding"+(fouten.length?": wacht op "+fouten.map(locLaadNaam).join(", "):""):
       (fouten.length?"Onvolledig, verbinding weg of geen antwoord: "+fouten.map(locLaadNaam).join(", "):"Compleet")));
     if(fouten.length){ const u=maakEl("button","loc-opnieuw","Update"); u.type="button"; u.onclick=()=>locUpdate(); wrap.appendChild(u); }
-    dv.appendChild(wrap);      // rechts bovenaan, onder de datum (de opdrachtgever, 16/10/2026: "verschuiven")
+    dv.appendChild(wrap);
   }
-  const av=vak("Adres (dichtstbij)",sn.adres,d.klopt?"breed":"");      // de vraag staat er rechts naast (de opdrachtgever, 16/10/2026: "verschuiven")
+  const av=vak("Adres (dichtstbij)",sn.adres,"",null,{label:"Adres"});
   if(d.klopt)av.appendChild(maakEl("div","loc-vak-klein","locatie bevestigd"));
   /* De opdrachtgever, 16/10/2026: "vraag ook of de locatie klopt, en je kan dan met de vinger van plaats veranderen." */
   if(!d.klopt){
@@ -26521,27 +26729,25 @@ function locSnelBlok(d){
     const ja=maakEl("button","loc-opnieuw","Ja"); ja.type="button"; ja.onclick=()=>{ d.klopt=true; bewaarLocatie(d); locTeken(); locGrbZetten(d); };
     const nee=maakEl("button","loc-opnieuw","Nee, verplaats"); nee.type="button"; nee.onclick=()=>locGrootToon(d,{verplaats:true});
     vraag.appendChild(ja); vraag.appendChild(nee);
-    vraag.insertBefore(maakEl("span","loc-vraag-tekst","Klopt het?"),vraag.firstChild);      // naast het adres is "Klopt het?" genoeg, en dan passen de twee knoppen op dezelfde regel
-    vak("Klopt deze locatie?",vraag,"loc-vraagvak");
+    vraag.insertBefore(maakEl("span","loc-vraag-tekst","Klopt het?"),vraag.firstChild);
+    vak("Klopt deze locatie?",vraag,"loc-vraagvak",null,{label:"Klopt het?"});
   }
-  /* De opdrachtgever, 16/10/2026: "GRB opschuiven en daarnaast tekst": de kaart staat links en de gegevens staan er rechts naast, in plaats van eronder. */
-  const duo=maakEl("div","loc-duo"); blok.appendChild(duo);
-  const ct=d.kaart?locOmgeving(d.kaart,sn.weg):null;
-  const cv=vak("GRB: perceel, buren en wegen",ct||"","contour",duo);
-  if(ct){ cv.classList.add("tikbaar"); cv.setAttribute("role","button"); cv.tabIndex=0; cv.setAttribute("aria-label","GRB maximaliseren"); cv.onclick=()=>locGrootToon(d); cv.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); locGrootToon(d); } }; }
-  const kol=maakEl("div","loc-kolom"); duo.appendChild(kol);
   const kd=sn.kad;
-  const kv=vak("Kad. (afdeling / sectie / nr)",kd?[kd.afd,kd.sectie,kd.nr].filter(Boolean).join(" / "):"","",kol);
+  const kv=vak("Kad. (afdeling / sectie / nr)",kd?[kd.afd,kd.sectie,kd.nr].filter(Boolean).join(" / "):"","",null,{label:"Kadaster"});
   if(sn.capakey)kv.appendChild(maakEl("div","loc-vak-klein",sn.capakey));
-  const opp=sn.opp!=null?sn.opp+" m\u00B2":((((d.samen||[]).find(r=>r.wat==="Perceel"))||{}).waarde||"");
-  vak("Oppervlakte",opp,"",kol);
+  /* De oppervlakte en het TAW-peil zijn cijfers: groot en vet, met de eenheid rechts bovenaan. */
+  const oppT=sn.opp!=null?String(sn.opp):((((d.samen||[]).find(r=>r.wat==="Perceel"))||{}).waarde||"");
+  const oppN=parseFloat(String(oppT).replace(",","."));
+  if(isFinite(oppN))vak("Oppervlakte",String(oppT).replace(/\s*m\u00B2.*$/,"").replace(".",","),"",null,{label:"Oppervlakte",eenheid:"m\u00B2",groot:true});
+  else vak("Oppervlakte",oppT,"",null,{label:"Oppervlakte"});
   /* Het TAW-peil: de hoogte van het terrein hier in meter boven de Belgische nulreferentie (Tweede Algemene Waterpassing), uit het hoogtemodel (lidar). De opdrachtgever, 16/10/2026: "geef ook TAW peil". */
-  vak("TAW-peil (terrein)",sn.taw!=null?String(sn.taw).replace(".",",")+" m TAW":"","",kol);
-  vak("Weg",sn.weg,"",kol);
+  if(sn.taw!=null)vak("TAW-peil (terrein)",String(sn.taw).replace(".",","),"",null,{label:"TAW-peil",eenheid:"m TAW",groot:true});
+  else vak("TAW-peil (terrein)","","",null,{label:"TAW-peil"});
+  vak("Weg",sn.weg,"");
   const w=sn.water, wt=w==="positief"?"Positief: overstromingsgevoelig op dit punt":(w==="buurt"?"Negatief op dit punt, wel in de buurt":(w==="negatief"?"Negatief":""));
-  vak("Waterproblematiek",wt,w==="positief"?"positief":"",kol);      // onder de weg, in de lege ruimte naast de kaart (de opdrachtgever, 16/10/2026)
+  vak("Waterproblematiek",wt,w==="positief"?"positief":"",null,{label:"Water"});
   const o=sn.ondergrond;
-  const ov=vak("Ondergrond",o&&o.woorden?o.woorden:(o?(o.code||""):""),"",kol);
+  const ov=vak("Ondergrond",o&&o.woorden?o.woorden:(o?(o.code||""):""),"");
   if(o){
     const klein=[o.code&&"bodemkaart: "+o.code+(o.omschr?" ("+o.omschr+")":""),o.geologie&&"geologie: "+o.geologie].filter(Boolean).join(" \u00B7 ");
     if(klein)ov.appendChild(maakEl("div","loc-vak-klein",klein));
@@ -27097,7 +27303,7 @@ function sluitMetUitschuif(dlg,zonder){
   if(zonder==="stil"){ dlg.close(); return; }
   if(zonder){ sluitMetFade(dlg,()=>dlg.close()); return; }      // Plan en het kruis: dezelfde korte fade
   if(window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches){ dlg.close(); return; }
-  const beweeg=dlg;
+  const beweeg=dlg.querySelector(".blad")||dlg;      // het blad schuift weg, het menu aan het venster blijft staan
   beweeg.style.transition="transform .26s cubic-bezier(.22,.8,.3,1)"; beweeg.style.transform="translateX(-100%)";      // De opdrachtgever, 13/10/2026: "alle schermen schuiven naar links": ook een pagina die sluit schuift naar links weg
   setTimeout(()=>{ try{ dlg.close(); }catch(e){} beweeg.style.transition=""; beweeg.style.transform=""; dlg.style.transition=""; dlg.style.transform=""; },260);
 }
@@ -27321,7 +27527,21 @@ addEventListener("resize",meetBalken);
    opnieuw te plaatsen, om dezelfde reden als in `pasVenstersAan`. Het planvenster en de keet
    hebben deze regel al (`planTeken`, `keetPlanToon`); de kaart op het hoofdscherm had ze niet --
    en dat is juist het blad waar je de hele rondgang naar kijkt. */
-addEventListener("resize",()=>{ if(kaartPlan)kaartKijkZet(); });
+/* Het middelpunt en de maat blijven bij een ander formaat (de opdrachtgever, 18/10/2026: "ik wil een volledig responsive app"): de kijkstand is in pixels van het vorige vak, dus bij het draaien van een iPad of een ander toestel in de kijker zat het perceel aan de rand. Het plan onder het midden van het vorige vak komt onder het midden van het nieuwe, en over de breedte van het scherm zie je evenveel plan als eerst. */
+function kaartKijkMeeverhuizen(){
+  const doos=document.getElementById("kaart"), p=kaartPlan;
+  if(!doos||!p)return;
+  const b=doos.getBoundingClientRect(), v=kaartBoxVorig;
+  kaartBoxVorig={w:b.width,h:b.height};
+  if(!v||!(v.w>0&&v.h>0&&b.width>0&&b.height>0)||(Math.abs(v.w-b.width)<1&&Math.abs(v.h-b.height)<1)||!(p.breedte>0&&p.hoogte>0))return;
+  const f0=Math.min(v.w/p.breedte,v.h/p.hoogte), f1=Math.min(b.width/p.breedte,b.height/p.hoogte);
+  const k=kaartKijk, s0=k.schaal||1, s1=s0*(f0/f1)*(b.width/v.w);      // zelfde breedte van het plan over de breedte van het scherm: het perceel blijft even groot in beeld, en de balk onderaan hoeft niet te wijken
+  const qx=(v.w/2-(k.dx||0))/s0, qy=(v.h/2-(k.dy||0))/s0;
+  const ux=(qx-(v.w-p.breedte*f0)/2)/f0, uy=(qy-(v.h-p.hoogte*f0)/2)/f0;
+  const nx=(b.width-p.breedte*f1)/2+ux*f1, ny=(b.height-p.hoogte*f1)/2+uy*f1;
+  kaartKijk={schaal:s1, dx:b.width/2-nx*s1, dy:b.height/2-ny*s1};
+}
+addEventListener("resize",()=>{ if(kaartPlan){ try{ kaartKijkMeeverhuizen(); }catch(e){} kaartKijkZet(); } });
 if(window.ResizeObserver){
   const ro=new ResizeObserver(meetBalken);
   [document.querySelector("header"),document.querySelector(".invoer")]
