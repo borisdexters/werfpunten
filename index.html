@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-NTpfyZFijmvlhntykDobSzFxEg1eNvOLGvJeoBpcFTA=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-ql4bBWr2eMbe5ceZpu2S3OiKQgDfxLEJWB7wBkhSvzE='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-r3z5i+QHzjqm9wSMxWpzWKwirC/FeZRHU1EylsbS6/A=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-CT1xqp46Ei6ovAm0ipITgjasVWs4DiWk8XNMRb9lxuo='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1159,7 +1159,8 @@
   #dlg[data-pagina] .blad-pagina,#beheerdlg .blad-pagina{width:100%;max-width:640px;align-self:center;container-type:inline-size;container-name:pg}
 
   /* Op alle pagina's behalve het plan (de opdrachtgever, 18/10/2026: "doe de andere pagina's ook zo, behalve het plan"): wat vastgeplakt blijft staan terwijl je scrolt (een open hoofdstuk, de zoekbalk) is een glazen strook in plaats van een wit vlak, zodat het verloop er niet onderdoor breekt. */
-  #dlg[data-pagina] .dossier-kast > .fiche-hoofdstuk[aria-expanded="true"],#dlg[data-pagina] .lb-ruim{background:rgba(242,244,237,.78);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+  #dlg[data-pagina] .dossier-kast > .fiche-hoofdstuk[aria-expanded="true"]{background:transparent;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+  #dlg[data-pagina] .lb-ruim{background:rgba(242,244,237,.78);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
   /* De thema's: een lijntje erboven, ruimte, een kopje en een korte uitleg. */
   #beheerdlg .beheer-thema{margin-top:18px;padding-top:14px;border-top:var(--haar) solid var(--line-soft)}
   #beheerdlg .beheer-thema h4{margin:0 0 3px;padding:0 4px;font-size:var(--tm);line-height:1.2;font-weight:600;color:var(--ink)}
@@ -2426,7 +2427,7 @@
   .loc-kast .fiche-hoofdstuk.uit{opacity:.45}
   /* De opdrachtgever, 13/10/2026: de hoofdtitel "1 Bestekteksten" blijft vaststaan: je scrolt tot hij tegen de titel Dossier zit, dan staat hij vast en de tekst loopt eronder door. De zoekbalk zet zich eronder vast. */
   /* De pagina heeft bovenaan opvulling (de ruimte onder de titel); een vastgezet element telt vanaf de rand van de inhoud, dus de opvulling gaat er hier af. */
-  .dossier-kast > .fiche-hoofdstuk[aria-expanded="true"]{position:sticky;top:calc(14px - var(--pg-ruimte));z-index:5;background:var(--surface)}
+  .dossier-kast > .fiche-hoofdstuk[aria-expanded="true"]{position:sticky;top:calc(14px - var(--pg-ruimte));z-index:5;background:transparent}
   /* De opdrachtgever, 14/10/2026: "verschuif het zoekmenu helemaal onderaan en schermbreed": het zoekveld staat vast onderaan het scherm, van rand tot rand; de tekst scrolt erboven door. --toets tilt het op als het toetsenbord opkomt. */
   .dossier-kast .lb-ruim{position:static}      /* het zoekveld verhuist naar de zwarte balk onderaan */
   .dossier-kast .lb-zoek{border:0;border-radius:0;padding:16px 18px calc(16px + env(safe-area-inset-bottom,0px));width:100%;box-sizing:border-box}
@@ -3261,16 +3262,19 @@
     .fasebalk button::before{content:"";position:absolute;top:5px;left:calc(50% - 6px);width:12px;height:12px;border-radius:50%;box-sizing:border-box;background:#f4f6f1;border:var(--haar) solid var(--ink);z-index:1}
     .fasebalk button.actief::before{background:var(--ink)}
     .fasebalk small{display:block;margin:2px 0 0;font-size:calc(var(--tk) - 3px)}
-    .fase-gantt{position:relative;margin:8px 0 18px;padding-top:30px}
+    .fase-gantt{position:relative;margin:8px 0 18px;padding-top:56px;padding-bottom:10px;border-top:var(--haar) solid var(--line)}
     .fase-gantt:empty{display:none}
     .gantt-as{position:absolute;left:0;right:0;top:0;height:100%;pointer-events:none}
-    .gantt-maand{position:absolute;top:0;bottom:0;padding:2px 0 0 8px;border-left:var(--haar) solid var(--line);font-size:var(--tk);opacity:.6;white-space:nowrap}
-    .gantt-rij{display:block;position:relative;width:100%;height:44px;border:0;background:none;padding:0;text-align:left;color:var(--ink);cursor:pointer}
-    .gantt-balk{position:absolute;top:0;height:34px;mix-blend-mode:multiply}
-    .gantt-naam{position:absolute;top:37px;font-size:var(--tk);white-space:nowrap;padding:0 2px;z-index:3}
+    .gantt-maand{position:absolute;top:0;bottom:0;padding:2px 0 0 8px;border-left:var(--haar) solid var(--line);font-size:var(--tk);white-space:nowrap}
+    .gantt-mnaam{display:block;opacity:.6}
+    .gantt-jaar{display:block;font-size:calc(var(--tk) - 2px);opacity:.45;margin-top:1px}
+    .gantt-week{position:absolute;top:0;bottom:0;width:0;border-left:var(--haar) solid var(--line-soft);opacity:.7}
+    .gantt-rij{display:block;position:relative;width:100%;height:52px;border:0;background:none;padding:0;text-align:left;color:var(--ink);cursor:pointer}
+    .gantt-balk{position:absolute;top:0;height:30px;mix-blend-mode:multiply}
+    .gantt-naam{position:absolute;top:34px;font-size:var(--tk);color:#000;white-space:nowrap;padding:0 2px;z-index:3}
   }
   @media (max-width:699px){.fase-gantt{display:none}}
-  .gantt-factuur{position:absolute;top:10px;width:14px;height:14px;margin-left:-7px;background:var(--ink);transform:rotate(45deg);border:2px solid #f4f6f1;box-sizing:border-box;z-index:2}
+  .gantt-factuur{position:absolute;top:8px;width:14px;height:14px;margin-left:-7px;background:var(--ink);transform:rotate(45deg);border:2px solid #f4f6f1;box-sizing:border-box;z-index:2}
   .fase-edit{margin:0 0 14px}
   .fase-edit-rij{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px;margin:8px 0}
   .fase-edit-kop{margin:14px 0 2px;font-size:var(--tk);opacity:.7}
@@ -3278,6 +3282,72 @@
   .fase-edit input{font:400 var(--tm)/1.2 -apple-system,system-ui,sans-serif;color:var(--ink);background:rgba(255,255,255,.42);border:var(--haar) solid var(--line);border-radius:8px;padding:8px 10px}
   .fase-edit input[type=text]{flex:1 1 180px;min-width:0}
   .fase-edit button{font:400 var(--tm)/1.2 -apple-system,system-ui,sans-serif;color:var(--ink);background:rgba(255,255,255,.42);border:var(--haar) solid var(--line);border-radius:8px;padding:8px 12px}
+  /* DE TEKSTVLAKKEN IN HET BESTEK ZONDER ACHTERGROND (de opdrachtgever, 18/10/2026: "tekstvlakken zonder achtergrond, aangeklikt mag wel vet"): de vastgezette titels (hoofdstuk, artikel) hebben geen wit vlak meer; wat eronder schuift wordt zacht vervaagd zodat de titel leesbaar blijft. Wat openstaat is vet. */
+  #dlg-body .dossier-kast [style*="sticky"]{-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
+  #dlg-body .dossier-kast .fiche-hoofdstuk[aria-expanded="true"],#dlg-body .dossier-kast .lb-rij[aria-expanded="true"]{font-weight:700}
+  /* DE ZIJBALK KLEIN: een kolom ronde knoppen met pictogrammen; wit is niet gekozen, de gekozen pagina is een zwarte cirkel (de opdrachtgever, 18/10/2026: "ronde pagina menu", "wit = niet aangeklikt, zwart wel"). Groot staan de pictogrammen niet in beeld; klein staan de namen en nummers niet in beeld. */
+  .zij-ico{display:none}
+  .zij-wissel{display:none}
+  @media (min-width:700px){
+    .zijbalk .zij-wissel,.zijbalk-thuis .zij-wissel{display:flex;flex:none;width:44px;height:44px;padding:0;justify-content:center;margin:0 0 8px;border-radius:50%}
+    html.zij-klein .zij-wissel svg{transform:rotate(180deg)}
+    html.zij-klein #dlg[data-pagina] .zijbalk,html.zij-klein #beheerdlg .zijbalk,html.zij-klein .zijbalk-thuis{width:92px;padding-left:20px;padding-right:12px;align-items:flex-start}
+    html.zij-klein .zijbalk .zij-naam,html.zij-klein .zijbalk-thuis .zij-naam,html.zij-klein .zijbalk .zij-nr,html.zij-klein .zijbalk-thuis .zij-nr{display:none}
+    html.zij-klein .zijbalk .zij-ico,html.zij-klein .zijbalk-thuis .zij-ico{display:flex}
+    html.zij-klein .zijbalk button:not(.zij-wissel),html.zij-klein .zijbalk-thuis button:not(.zij-wissel){width:52px;height:52px;padding:0;justify-content:center;border-radius:50%;background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);color:var(--ink);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 14px rgba(40,50,30,.05)}      /* glas, zoals alle tegels */
+    html.zij-klein #dlg[data-pagina="punten"] .zijbalk [data-naam="punten"],html.zij-klein #dlg[data-pagina="verslagen"] .zijbalk [data-naam="verslagen"],html.zij-klein #dlg[data-pagina="dossier"] .zijbalk [data-naam="dossier"],html.zij-klein #dlg[data-pagina="locatie"] .zijbalk [data-naam="locatie"],html.zij-klein #beheerdlg .zijbalk [data-naam="instel"],html.zij-klein .zijbalk-thuis [data-naam="begin"]{background:#111;color:#fff}
+    html.zij-klein .zijbalk-thuis button[data-naam="begin"]:not(.zij-wissel){background:#111;color:#fff}      /* op het plan is Plan de gekozen knop */
+    html.zij-klein body:has(#aikaart:not([hidden])) .zijbalk-thuis button[data-naam="begin"]:not(.zij-wissel){background:rgba(255,255,255,.42);color:var(--ink)}
+    html.zij-klein body:has(#aikaart:not([hidden])) .zijbalk-thuis button[data-naam="ai"]:not(.zij-wissel){background:#111;color:#fff}
+  }
+  /* DE BESTEKTEKST NIET TE BREED (de opdrachtgever, 18/10/2026: "dit is veel te breed"): met de kleine rail of liggend liep een regel over 1000 punten, te lang om te lezen. De leestekst blijft op ongeveer 65 tekens per regel; de titels en rijen erboven blijven de volle breedte. */
+  @media (min-width:700px){
+    #dlg-body .dossier-kast .lb-tekst,#dlg-body .dossier-kast .lb-meting,#dlg-body .dossier-kast .lb-herkomst,#dlg-body .dossier-kast .lb-lees-titel{max-width:40em}
+  }
+  /* DE HEATMAP (de opdrachtgever, 18/10/2026): zachte gekleurde cirkels in een glazen vlak, hoe groter hoe meer bezoeken; de kleur komt als --k (r,g,b) mee. */
+  .heat-vlak{position:relative;height:min(56vh,520px);margin:6px 0 18px;border-radius:24px;overflow:hidden;background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 14px rgba(40,50,30,.05);background-image:linear-gradient(rgba(60,70,50,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(60,70,50,.06) 1px,transparent 1px);background-size:48px 48px}
+  .heat-vlak.belgie{max-width:640px;margin-left:auto;margin-right:auto;height:auto;overflow:visible;background-image:none;background:none;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+  .heat-kaart{position:absolute;inset:0;width:100%;height:100%}
+  .heat-kaart polygon{fill:rgba(255,255,255,.75);stroke:rgba(60,70,50,.55);stroke-width:1.2;vector-effect:non-scaling-stroke;stroke-linejoin:round}
+  .heat-blob{position:absolute;transform:translate(-50%,-50%);border:0;padding:0;border-radius:50%;cursor:pointer;background:radial-gradient(circle,rgba(var(--k),.9) 0,rgba(var(--k),.55) 42%,rgba(var(--k),.16) 68%,rgba(var(--k),0) 72%);mix-blend-mode:multiply}
+  .heat-blob::before,.heat-blob::after{content:"";position:absolute;border-radius:50%;pointer-events:none}
+  .heat-blob::before{inset:-9%;border:1px solid rgba(var(--k),.4)}
+  .heat-blob::after{inset:-20%;border:1px solid rgba(var(--k),.2)}
+  .heat-naam{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:var(--tk);color:var(--ink);white-space:nowrap;pointer-events:none;mix-blend-mode:normal}
+  .heat-lijst{display:flex;flex-direction:column;gap:8px}
+  .heat-rij{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:16px;background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 14px rgba(40,50,30,.05);font-size:var(--tm)}
+  .heat-stip{width:14px;height:14px;border-radius:50%;flex:none}
+  .heat-rijnaam{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .heat-rijtel{font-weight:700}
+  .heat-rijdag{font-size:var(--tk);opacity:.7}
+  #dlg[data-pagina="heatmap"] .zijbalk [data-naam="heatmap"],#dlg[data-pagina="projecten"] .zijbalk [data-naam="projecten"],#dlg[data-pagina="contacten-alle"] .zijbalk [data-naam="contacten-alle"]{background:rgba(255,255,255,.88);font-weight:650}
+  html.zij-klein #dlg[data-pagina="heatmap"] .zijbalk button[data-naam="heatmap"]:not(.zij-wissel),html.zij-klein #dlg[data-pagina="projecten"] .zijbalk button[data-naam="projecten"]:not(.zij-wissel),html.zij-klein #dlg[data-pagina="contacten-alle"] .zijbalk button[data-naam="contacten-alle"]:not(.zij-wissel){background:#111;color:#fff}
+  #dlg[data-pagina="dashboard"] .zijbalk [data-naam="dashboard"]{background:rgba(255,255,255,.88);font-weight:650}
+  html.zij-klein #dlg[data-pagina="dashboard"] .zijbalk button[data-naam="dashboard"]:not(.zij-wissel){background:#111;color:#fff}
+  .dash{position:relative;--dashnaam:240px;margin:6px 0 10px}
+  .dash-rij{display:flex;align-items:stretch;width:100%;border:0;background:none;padding:0;text-align:left;color:var(--ink);cursor:pointer;border-top:var(--haar) solid var(--line-soft)}
+  .dash-kop{cursor:default;border-top:0}
+  .dash-naam{flex:none;width:var(--dashnaam);box-sizing:border-box;padding:14px 12px 14px 0;display:flex;flex-direction:column;gap:3px;justify-content:center}
+  .dash-werf{font-size:var(--tm);line-height:1.2}
+  .dash-rij.actief .dash-werf{font-weight:700}
+  .dash-fase{font-size:var(--tk);opacity:.7}
+  .dash-vlak{position:relative;flex:1;min-width:0;height:64px}
+  .dash-as{height:46px}
+  .dash-vlak .gantt-maand{padding-left:6px}
+  .dash-maandlijn{position:absolute;top:0;bottom:0;width:0;border-left:var(--haar) solid var(--line-soft)}
+  .dash-balk{position:absolute;top:18px;height:26px;mix-blend-mode:multiply}
+  .dash-balk.nu{box-shadow:0 0 0 2px rgba(0,0,0,.55)}
+  .dash-balktekst{position:absolute;top:46px;font-size:calc(var(--tk) - 2px);color:#000}
+  .dash-factuur{top:11px}
+  .dash-leeg{position:absolute;left:6px;top:22px;font-size:var(--tk);opacity:.55}
+  .dash-vandaag{position:absolute;top:0;bottom:0;width:0;border-left:2px solid #111;pointer-events:none;z-index:4}
+  .dash-vandaag-t{position:absolute;top:-2px;left:4px;font-size:calc(var(--tk) - 2px);color:#111}
+  .dash-fdatum{flex:none;font-weight:700;min-width:5.5em}
+  .heat-rij.voorbij{opacity:.5}
+  .proj-rij{width:100%;border:0;text-align:left;color:var(--ink);cursor:pointer}
+  .proj-rij.actief .heat-rijnaam{font-weight:700}
+  .contact-zoek{width:100%;box-sizing:border-box;margin:4px 0 14px;padding:14px 16px;border:0;border-radius:16px;background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7);font:400 var(--tm)/1.2 -apple-system,system-ui,sans-serif;color:var(--ink)}
+  .contact-werf{margin:18px 0 8px;font:700 var(--tm)/1.2 -apple-system,system-ui,sans-serif}
 </style>
 </head>
 <body>
@@ -4247,7 +4317,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v701";
+const VERSIE="v715";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -6524,7 +6594,7 @@ function faseVan(v){ return (v&&v.fase)||STANDAARDFASE; }
 function faseRecord(code){ return fasen.find(f=>f.code===code)||{code:code,naam:code}; }
 /* DE FASEN ALS TIJDBALKEN (de opdrachtgever, 18/10/2026, met een voorbeeld van overlappende gekleurde balken onder een maandenas): elke fase met verslagen is een balk van haar eerste tot haar laatste verslag (minstens twee weken breed),
    half doorzichtig zodat een overlap donkerder wordt; de naam staat onder de balk, een tik kiest de fase. Fasen zonder verslag hebben geen datum en dus geen balk: die kies je in de balk erboven. */
-const FASEKLEUREN=["111,176,166","184,224,246","59,94,175","226,88,74","230,184,212","111,176,166","232,123,69","150,130,200","200,184,90","120,150,120"];      // de kleuren van het voorbeeld: groenblauw, lichtblauw, blauw, rood, roze, oranje
+const FASEKLEUREN=["111,179,167","185,224,246","61,98,173","221,91,74","229,183,208","112,178,167","227,119,68","150,130,200","200,184,90","120,150,120"];      // de kleuren van het voorbeeld: groenblauw, lichtblauw, blauw, rood, roze, oranje
 function fasenGantt(gekozen,kies){
   const kast=maakEl("div","fase-gantt");
   const dag=t=>{ const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(t||""); return m?Date.UTC(+m[1],+m[2]-1,+m[3])/864e5:null; };
@@ -6548,9 +6618,13 @@ function fasenGantt(gekozen,kies){
   const as=maakEl("div","gantt-as");
   for(let y=eerste.getUTCFullYear(),m=eerste.getUTCMonth();Date.UTC(y,m,1)/864e5<einde;m++){
     if(m>11){m=0;y++;}
-    const k=maakEl("span","gantt-maand",MAANDEN[m]+(m===0||as.children.length===0?" "+y:""));
-    k.style.left=pct(Date.UTC(y,m,1)/864e5);
+    const k=maakEl("span","gantt-maand"+(m===0||as.children.length===0?" jaarstart":""));
+    k.appendChild(maakEl("span","gantt-mnaam",MAANDEN[m]));
+    if(m===0||as.children.length===0)k.appendChild(maakEl("span","gantt-jaar",String(y)));      // het jaar onder de maand, bij de eerste maand en elke januari
+    const m1=Date.UTC(y,m,1)/864e5;
+    k.style.left=pct(m1);
     as.appendChild(k);
+    [8,15,22].forEach(dg=>{ const w=m1+dg-1, vol=Date.UTC(y,m+1,1)/864e5; if(w>=vol||w>=einde)return; const wl=maakEl("span","gantt-week"); wl.style.left=pct(w); as.appendChild(wl); });
   }
   kast.appendChild(as);
   reeks.forEach(r=>{
@@ -6564,7 +6638,8 @@ function fasenGantt(gekozen,kies){
     }
     /* De facturatiemomenten: een ruitje op de datum, met bedrag of naam ernaast. */
     r.fact.forEach(x=>{ const t=maakEl("span","gantt-factuur"); t.style.left=pct(x.dag); t.title=x.naam; rij.appendChild(t); });
-    const naam=maakEl("span","gantt-naam",r.f.code+" \u00B7 "+r.f.naam);
+    const dm=x=>{ const d=new Date(x*864e5); return d.getUTCDate()+"/"+(d.getUTCMonth()+1); };
+    const naam=maakEl("span","gantt-naam",r.f.code+(r.geenbalk?"":"  "+dm(r.van)+" \u2013 "+dm(r.tot)));      // zwart, onder de balk: de code en de dagen (de volle naam staat in de titel)
     if((r.van-begin)/(einde-begin)>0.5){ naam.style.right=(100-(r.tot-begin)/(einde-begin)*100).toFixed(2)+"%"; naam.style.textAlign="right"; }      // een balk in de rechterhelft: de naam loopt naar links, anders valt hij van het scherm
     else naam.style.left=pct(r.van);
     rij.appendChild(naam);
@@ -6950,6 +7025,24 @@ function afstandTot(project,hier){
   },null);
 }
 
+/* HET BEZOEK (de opdrachtgever, 18/10/2026: "een heatmap van waar de meeste bezoeken zijn, voor welk project"; een bezoek is elke dag dat je de app op de werf opent): één regel per werf en per dag, met de dag en de plek. Er komt geen nieuwe opslag bij: het staat in de projectlijst, op dit toestel, zoals de plekken. De heatmap leest dit. */
+const MAXBEZOEKEN=366;
+function noteerBezoek(project,hier){
+  if(!project||!hier)return false;
+  const dag=vandaag();
+  project.bezoeken=project.bezoeken||[];
+  if(project.bezoeken.some(b=>b.dag===dag))return false;
+  project.bezoeken.push({dag:dag,lat:+(+hier.lat).toFixed(5),lon:+(+hier.lon).toFixed(5)});
+  while(project.bezoeken.length>MAXBEZOEKEN)project.bezoeken.shift();
+  bewaarProjecten();
+  return true;
+}
+async function volgBezoek(){
+  const hier=await haalPlek(true);
+  if(!hier||hier.nauw>WERFSTRAAL/2)return false;
+  const bij=wervenBij(hier);
+  return bij.length?noteerBezoek(bij[0].p,hier):false;
+}
 function wervenBij(hier){
   return projecten
     .map(p=>({p, d:afstandTot(p,hier)}))
@@ -10248,12 +10341,28 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&menuGlas)menuEinde
     } }
   ["dlg","beheerdlg"].forEach(id=>{ const d=document.getElementById(id); if(d){ const b=menubalk(false); b.classList.add("menubalk-pagina"); d.appendChild(b); } });
   /* EEN ECHT MENU AAN DE LINKERKANT (de opdrachtgever, 18/10/2026, op de iPad: "met ook een echt menu aan de linkerkant"): op een breed scherm staan de pagina's als glazen knoppen onder elkaar naast de pagina, zoals de zijbalk van het voorbeeld. Hetzelfde menu als onderaan (Plan, 1 Punten, 2 Verslag ...), en de pagina waar je staat is vet en wit. Op een telefoon is de zijbalk er niet. */
+  /* MINIMALISEERBAAR (de opdrachtgever, 18/10/2026, met een voorbeeld van een smalle donkere balk met pictogrammen: "maak een minimaliseerbaar menu"): een knop bovenaan de zijbalk maakt hem een smalle donkere rail met alleen pictogrammen, en weer terug. De keuze blijft bewaard op dit toestel en geldt voor elke zijbalk tegelijk. */
+  const ZIJKLEIN="werfpunten-zij-klein";
+  try{ document.documentElement.classList.toggle("zij-klein",localStorage.getItem(ZIJKLEIN)==="1"); }catch(e){}
+  const ZIJICO={begin:'<path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/>',punten:'<path d="M12 21s-6-5.4-6-10a6 6 0 0112 0c0 4.6-6 10-6 10z"/><circle cx="12" cy="11" r="2"/>',verslagen:'<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M9 12h6M9 16h6"/>',dossier:'<path d="M3 7h6l2 2h10v10H3z"/>',locatie:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>',instel:'<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>',ai:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/>',dashboard:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="4" rx="1.5"/><rect x="13" y="10" width="7" height="10" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/>',projecten:'<path d="M4 8l8-4 8 4-8 4z"/><path d="M4 12l8 4 8-4M4 16l8 4 8-4"/>','contacten-alle':'<circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6"/>',heatmap:'<circle cx="9" cy="10" r="4"/><circle cx="16.5" cy="14.5" r="3"/><circle cx="7" cy="18" r="1.4"/>'};
+  const zijIcoon=(naam,klas)=>{ const sp=maakEl("span",klas); sp.setAttribute("aria-hidden","true"); sp.innerHTML='<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+ZIJICO[naam]+'</svg>'; return sp; };
   const bouwZij=()=>{
     const z=maakEl("nav","zijbalk"); z.setAttribute("aria-label","Pagina's");
-    const knop=(naam,nr,tekst,doe)=>{ const b=maakEl("button",null); b.type="button"; b.dataset.naam=naam; b.appendChild(maakEl("span","zij-nr",nr)); b.appendChild(maakEl("span","zij-naam",tekst)); b.onclick=e=>{ e.stopPropagation(); doe(); }; z.appendChild(b); return b; };
+    const wissel=maakEl("button","zij-wissel"); wissel.type="button"; wissel.dataset.naam="wissel"; wissel.setAttribute("aria-label","Menu kleiner of groter"); wissel.title="Menu kleiner of groter";
+    wissel.innerHTML='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l-6 6 6 6"/></svg>';
+    wissel.onclick=e=>{ e.stopPropagation(); const klein=document.documentElement.classList.toggle("zij-klein"); try{ localStorage.setItem(ZIJKLEIN,klein?"1":"0"); }catch(x){} };
+    z.appendChild(wissel);
+    const knop=(naam,nr,tekst,doe)=>{ const b=maakEl("button",null); b.type="button"; b.dataset.naam=naam; b.title=tekst; b.appendChild(zijIcoon(naam,"zij-ico")); b.appendChild(maakEl("span","zij-nr",nr)); b.appendChild(maakEl("span","zij-naam",tekst)); b.onclick=e=>{ e.stopPropagation(); doe(); }; z.appendChild(b); return b; };
     knop("begin","","Plan",()=>gaNaarPagina("begin"));
     let nr=0;
-    MENUGA.forEach(([naam,tekst])=>{ nr++; const b=knop(naam,String(nr),tekst,()=>menuGa(naam)); if(naam==="ai"){ b.classList.add("zij-ai"); b.hidden=!aiAan(); } });
+    MENUGA.forEach(([naam,tekst])=>{
+      if(naam==="ai"){      // deze pagina's staan alleen in de zijbalk, voor de iPad
+        knop("dashboard","","Dashboard",()=>gaNaarEigen("dashboard",toonDashboard));
+        knop("projecten","","Projecten",()=>gaNaarEigen("projecten",toonProjecten));
+        knop("contacten-alle","","Contacten",()=>gaNaarEigen("contacten-alle",toonContactenOverzicht));
+      }
+      nr++; const b=knop(naam,String(nr),tekst,()=>menuGa(naam)); if(naam==="ai"){ b.classList.add("zij-ai"); b.hidden=!aiAan(); }
+    });
     return z;
   };
   ["dlg","beheerdlg"].forEach(id=>{
@@ -25300,6 +25409,58 @@ if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)&&/[?&]open=(punten|versl
   const pg=/[?&]open=(\w+)/.exec(location.search)[1];
   setTimeout(()=>{ try{ ({punten:toonPunten,verslagen:toonVergaderingen,dossier:toonDossier,locatie:toonLocatie,instel:()=>openInstellingen(false)})[pg](); }catch(e){} },3500);
 }
+/* Alleen voor het bekijken in het toestel-tabblad op de eigen computer (de opdrachtgever, 18/10/2026: "kan je er de voorbeeld bestekken inzetten? ik wil alles kunnen bekijken"): ?laad=bestekken zet de bestanden uit de map lokaal/ (buiten versiebeheer, het zijn documenten van anderen) in de bib van dit toestel:
+   het standaard bijzonder bestek van de VMSW, standaardbestek 250 en het voorbeeldbestek van de werf. Wat er al staat blijft staan. Op een ander adres dan localhost doet dit niets. */
+if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)&&/[?&]laad=bestekken\b/.test(location.search)){
+  setTimeout(async()=>{
+    try{
+      const BESTANDEN=[["vmsw","vmsw-lastenboek.json"],["sb250","sb250-knopen.json"],["werf","werf-knopen.json"]];
+      for(const [sleutel,naam] of BESTANDEN){
+        if(lbBronnen()[sleutel])continue;
+        const r=await fetch("/lokaal/"+naam); if(!r.ok)continue;
+        const o=await r.json();
+        if(o&&o.formaat==="lastenboek-knopen"&&Array.isArray(o.knopen))await importeerLastenboek(lbNaarFormaat(o.knopen,o.naam,sleutel));
+        else await importeerLastenboek(o,sleutel==="vmsw"?undefined:sleutel);
+      }
+      ds.open="bestek"; toonDossier();
+    }catch(e){}
+  },2500);
+}
+const TIJDLIJNDUMMY={PO:["2026-01-05","2026-02-27",[]],VO:["2026-02-02","2026-04-03",[["2026-04-03","Afrekening voorontwerp"]]],VERG:["2026-03-23","2026-05-22",[["2026-05-22","Dossier ingediend"]]],BA:["2026-05-11","2026-06-26",[]],AANB:["2026-06-15","2026-08-14",[["2026-08-14","Aanbesteding afgerond"]]],GUN:["2026-08-03","2026-09-11",[]],UIT:["2026-09-01","2027-01-29",[["2026-10-30","Voorschot 1"],["2026-12-18","Voorschot 2"],["2027-01-29","Saldo"]]],VOPL:["2027-01-18","2027-02-12",[["2027-02-12","Voorlopige oplevering"]]],NZ:["2027-02-08","2027-05-28",[]],DOPL:["2027-05-24","2027-06-11",[["2027-06-11","Eindafrekening"]]]};
+/* Alleen om te bekijken op de eigen computer: ?laad=tijdlijn vult de fasen van de werf die openstaat met een verzonnen tijdlijn (data en facturatiemomenten), zodat de tijdbalken te zien zijn. Staat er al een datum, dan blijft die. */
+if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)&&/[?&]laad=tijdlijn\b/.test(location.search)){
+  setTimeout(()=>{
+    try{
+      const DUMMY=TIJDLIJNDUMMY;
+      fasen.forEach(f=>{ const d=DUMMY[f.code]; if(!d||f.van||f.tot)return; f.van=d[0]; f.tot=d[1]; f.facturen=d[2].map(x=>({datum:x[0],naam:x[1]})); });
+      bewaarFasen(); toonVergaderingen("UIT");
+    }catch(e){}
+  },2500);
+}
+/* Alleen om te bekijken op de eigen computer: ?laad=dashboard zet twee verzonnen werven naast de werf die openstaat, elk met een eigen tijdlijn, fase en facturatiemomenten, en opent het dashboard. */
+if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)&&/[?&]laad=dashboard\b/.test(location.search)){
+  setTimeout(()=>{
+    try{
+      const verschuif=(t,n)=>{ const d=new Date(dagGetal(t)*864e5+n*864e5); return d.toISOString().slice(0,10); };
+      const maak=(id,naam,n,fase)=>{
+        if(!projecten.some(p=>p.id===id))projecten.push({id:id,naam:naam,plekken:[]});
+        const fl=STANDAARDFASEN.map(f=>{ const d=TIJDLIJNDUMMY[f.code]; return d?{code:f.code,naam:f.naam,van:verschuif(d[0],n),tot:verschuif(d[1],n),facturen:d[2].map(x=>({datum:verschuif(x[0],n),naam:x[1]}))}:{code:f.code,naam:f.naam}; });
+        localStorage.setItem(FASESLEUTEL+":"+id,JSON.stringify(fl));
+        localStorage.setItem(SLEUTEL+":"+id,JSON.stringify({datum:vandaag(),weer:"",bezetting:"",zone:"N3",punten:[],rondgangen:[],fase:fase,nr:1,titel:"",verslagstatus:"concept"}));
+      };
+      const WERVEN=[["proefA","Proefwerf Antwerpen",-150,"UIT",51.22,4.40,14],["proefB","Proefwerf Namen",120,"VERG",50.47,4.87,6],["proefC","Proefwerf Brugge",-60,"BA",51.21,3.22,9],["proefD","Proefwerf Gent",30,"VO",51.05,3.72,11],["proefE","Proefwerf Hasselt",200,"PO",50.93,5.34,4],["proefF","Proefwerf Luik",-200,"VOPL",50.63,5.57,7]];
+      WERVEN.forEach(([id,naam,n,fase,la,lo,aantal])=>{
+        maak(id,naam,n,fase);
+        const p=projecten.find(x=>x.id===id);
+        p.bezoeken=Array.from({length:aantal},(_,i)=>({dag:verschuif("2026-03-02",i*9+(n%7)),lat:+(la+((i%3)-1)*0.012).toFixed(5),lon:+(lo+((i%2)-0.5)*0.016).toFixed(5)}));
+      });
+      projecten.forEach(p=>{ if(!WERVEN.some(w=>w[0]===p.id))p.bezoeken=[]; });      // alleen de zes werven op de kaart: de demo staat in Barcelona, en dat is geen Belgie
+      bewaarProjecten();
+      fasen.forEach(f=>{ const d=TIJDLIJNDUMMY[f.code]; if(!d||f.van||f.tot)return; f.van=d[0]; f.tot=d[1]; f.facturen=d[2].map(x=>({datum:x[0],naam:x[1]})); });
+      bewaarFasen(); toonDashboard();
+    }catch(e){}
+  },2500);
+}
 if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)&&/[?&]traag=1/.test(location.search)){
   setInterval(()=>{ document.getAnimations().forEach(a=>{ if(!a.__traag&&!/gv-|breathe/.test(a.animationName||"")){ a.__traag=1; a.playbackRate=0.1; } }); },16);
 }
@@ -25453,11 +25614,11 @@ function lbVast(){
   if(!bak)return;
   const basis="calc(14px - var(--pg-ruimte))";
   let tot=0, z=20, eerste=true;
-  const zet=el=>{ if(!el)return; el.style.position="sticky"; el.style.top="calc("+basis+" + "+tot+"px)"; el.style.zIndex=String(z--); el.style.background="var(--surface)"; el.style.boxShadow=eerste?"0 -14px 0 var(--surface)":"none"; eerste=false; el.dataset.vt=String(tot); tot+=Math.round(el.getBoundingClientRect().height)-1; };      // 1 px overlap: geen kier waar tekst doorheen schemert; de schaduw dekt de 14 px boven de eerste titel
+  const zet=el=>{ if(!el)return; el.style.position="sticky"; el.style.top="calc("+basis+" + "+tot+"px)"; el.style.zIndex=String(z--); el.style.background="transparent"; el.style.boxShadow="none"; eerste=false; el.dataset.vt=String(tot); tot+=Math.round(el.getBoundingClientRect().height)-1; };      // 1 px overlap: geen kier waar tekst doorheen schemert; de schaduw dekt de 14 px boven de eerste titel
   zet(bak.querySelector(':scope > .fiche-hoofdstuk[aria-expanded="true"]'));
   zet(bak.querySelector(".lb-deel[aria-expanded=\"true\"]"));
   zet(bak.querySelector(".lb-hfst[aria-expanded=\"true\"]"));
-  bak.querySelectorAll(".lb-art > .lb-rij").forEach(el=>{ el.dataset.vt=String(tot); el.style.position="sticky"; el.style.top="calc("+basis+" + "+tot+"px)"; el.style.zIndex="10"; el.style.background="var(--surface)"; });
+  bak.querySelectorAll(".lb-art > .lb-rij").forEach(el=>{ el.dataset.vt=String(tot); el.style.position="sticky"; el.style.top="calc("+basis+" + "+tot+"px)"; el.style.zIndex="10"; el.style.background="transparent"; });
   lbWegMaat();
   lbZwever();
   if(!(lb.uit&&lb.uit.size))titelsToon(true);
@@ -27648,6 +27809,235 @@ function pgRuimte(){
   const rest=doel-(rij.getBoundingClientRect().top-t.getBoundingClientRect().bottom);      // marges van buren vallen samen met de onze: het verschil bijtellen
   if(Math.abs(rest)>0.5)rij.style.marginTop=Math.round(doel-nu+rest)+"px";
 }
+/* DE HEATMAP (de opdrachtgever, 18/10/2026, op de iPad, met een voorbeeld van zachte gekleurde cirkels op een kaart): elke werf met bezoeken is een zachte cirkel op de plek waar je er geweest bent, hoe meer bezoeken hoe groter; eronder de werven op volgorde van bezoeken. */
+const HEATKLEUREN=["236,92,120","74,184,170","170,140,230","240,150,80","90,140,235","200,220,90","240,130,200","120,200,130"];
+function heatGegevens(){
+  return projecten.map((p,i)=>{
+    const b=(p.bezoeken||[]).filter(x=>x&&isFinite(x.lat)&&isFinite(x.lon));
+    const n=b.length;
+    const lat=n?b.reduce((a,x)=>a+x.lat,0)/n:null, lon=n?b.reduce((a,x)=>a+x.lon,0)/n:null;
+    const laatste=n?b.map(x=>x.dag).sort().pop():"";
+    return {p,n,lat,lon,laatste,kleur:HEATKLEUREN[i%HEATKLEUREN.length]};
+  }).filter(g=>g.n>0).sort((a,b)=>b.n-a.n);
+}
+/* De omtrek van Belgie, grof: genoeg om te zien waar de werven liggen, geen kaart om op te meten. Lengte en breedte in graden; de kaart is een gelijkhoekige projectie op 50,5 graden noorderbreedte. */
+const BELGIE=[[2.55,51.09],[3.20,51.35],[3.37,51.37],[3.58,51.30],[3.89,51.21],[4.24,51.37],[4.40,51.47],[4.78,51.49],[5.03,51.47],[5.25,51.37],[5.48,51.30],[5.79,51.10],[5.65,50.88],[5.69,50.76],[5.97,50.76],[6.03,50.65],[6.13,50.47],[6.40,50.32],[6.28,50.06],[5.98,49.99],[5.85,49.75],[5.82,49.50],[5.54,49.55],[5.14,49.70],[4.85,49.97],[4.82,50.14],[4.22,49.96],[4.13,50.28],[3.74,50.35],[3.60,50.50],[3.28,50.60],[3.10,50.78],[2.85,50.78],[2.63,50.81]];
+const BELGIEKADER={lon0:2.4,lon1:6.55,lat0:49.4,lat1:51.65};
+function inBelgie(lat,lon){ return lon>=BELGIEKADER.lon0&&lon<=BELGIEKADER.lon1&&lat>=BELGIEKADER.lat0&&lat<=BELGIEKADER.lat1; }
+function heatBlok(body){
+  const g=heatGegevens();
+  body.appendChild(maakEl("p","inv-uitleg",g.length?"Waar je de meeste bezoeken hebt: hoe groter de cirkel, hoe vaker je er was.":"Nog geen bezoeken. Vanaf nu telt de app elke dag dat je op een werf de app opent."));
+  if(!g.length)return;
+  const kaart=g.every(x=>inBelgie(x.lat,x.lon));      // liggen alle werven in Belgie, dan staan ze op de kaart van Belgie; anders schikken ze zich naar elkaar
+  const K=BELGIEKADER, breedte=(K.lon1-K.lon0)*Math.cos(50.5*Math.PI/180), hoogte=K.lat1-K.lat0, H=100*hoogte/breedte;
+  const vlak=maakEl("div","heat-vlak"+(kaart?" belgie":""));
+  if(kaart){
+    vlak.style.aspectRatio="100 / "+H.toFixed(1);
+    const punten=BELGIE.map(([lo,la])=>((lo-K.lon0)/(K.lon1-K.lon0)*100).toFixed(2)+","+((K.lat1-la)/hoogte*H).toFixed(2)).join(" ");
+    const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+    svg.setAttribute("viewBox","0 0 100 "+H.toFixed(1)); svg.setAttribute("preserveAspectRatio","none"); svg.setAttribute("class","heat-kaart"); svg.setAttribute("aria-hidden","true");
+    const pg=document.createElementNS("http://www.w3.org/2000/svg","polygon"); pg.setAttribute("points",punten); svg.appendChild(pg);
+    vlak.appendChild(svg);
+  }
+  const kos=Math.cos(g.reduce((a,x)=>a+x.lat,0)/g.length*Math.PI/180);
+  const px=g.map(x=>x.lon*kos), py=g.map(x=>-x.lat);
+  const lo=a=>Math.min(...a), hi=a=>Math.max(...a);
+  const sp=(a)=>{ const r=hi(a)-lo(a); return r>1e-9?r:0; };
+  const pos=(w,a)=>{ const r=sp(a); return r?(24+52*((w-lo(a))/r)):50; };
+  const maxN=Math.max(...g.map(x=>x.n));
+  g.forEach((x,i)=>{
+    const d=Math.round(46+Math.sqrt(x.n/maxN)*(kaart?110:170));
+    const b=maakEl("button","heat-blob"); b.type="button";
+    b.style.left=(kaart?((x.lon-K.lon0)/(K.lon1-K.lon0)*100):pos(px[i],px))+"%";
+    b.style.top=(kaart?((K.lat1-x.lat)/hoogte*100):pos(py[i],py))+"%";
+    b.style.width=d+"px"; b.style.height=d+"px"; b.style.setProperty("--k",x.kleur);
+    b.title=x.p.naam+" \u00B7 "+x.n+(x.n===1?" bezoek":" bezoeken");
+    b.appendChild(maakEl("span","heat-naam",kaart?String(x.n):x.p.naam+" \u00B7 "+x.n));
+    vlak.appendChild(b);
+  });
+  body.appendChild(vlak);
+  const lijst=maakEl("div","heat-lijst");
+  g.forEach(x=>{
+    const r=maakEl("div","heat-rij");
+    const stip=maakEl("span","heat-stip"); stip.style.background="rgb("+x.kleur+")"; r.appendChild(stip);
+    r.appendChild(maakEl("span","heat-rijnaam",x.p.naam));
+    r.appendChild(maakEl("span","heat-rijtel",x.n+(x.n===1?" bezoek":" bezoeken")));
+    r.appendChild(maakEl("span","heat-rijdag","laatst "+datumKort(x.laatste)));
+    lijst.appendChild(r);
+  });
+  body.appendChild(lijst);
+}
+function toonHeatmap(){
+  const body=overzichtPagina("heatmap","Heatmap","");
+  heatBlok(body);
+}
+/* ALLE PROJECTEN EN ALLE CONTACTEN (de opdrachtgever, 18/10/2026, op de iPad: "ik wil alle projecten zien, alle contacten"): twee pagina's in de zijbalk. De app toont altijd één werf tegelijk; hier staan ze allemaal naast elkaar. Een tik op een werf opent haar op het plan. De contacten staan per werf op dit toestel, hier alle werven samen, met een zoekveld. */
+function overzichtPagina(naam,titel,uitleg){
+  const dlg=document.getElementById("dlg");
+  opentPagina();
+  document.getElementById("dlg-titel").textContent=titel;
+  document.getElementById("dlg-kopieer").style.display="none";
+  const body=document.getElementById("dlg-body");
+  body.innerHTML="";
+  dlg.showModal(); paginaMenu(naam);
+  if(uitleg)body.appendChild(maakEl("p","inv-uitleg",uitleg));
+  return body;
+}
+function toonProjecten(){
+  const body=overzichtPagina("projecten","Projecten",projecten.length+(projecten.length===1?" werf":" werven")+" op dit toestel. Tik op een werf om ze te openen.");
+  const lijst=maakEl("div","heat-lijst");
+  projecten.forEach((p,i)=>{
+    const b=maakEl("button","heat-rij proj-rij"+(p.id===actief?" actief":"")); b.type="button";
+    const stip=maakEl("span","heat-stip"); stip.style.background="rgb("+HEATKLEUREN[i%HEATKLEUREN.length]+")"; b.appendChild(stip);
+    b.appendChild(maakEl("span","heat-rijnaam",(p.nummer?p.nummer+" \u00B7 ":"")+p.naam));
+    const n=(p.bezoeken||[]).length;
+    b.appendChild(maakEl("span","heat-rijtel",n?n+(n===1?" bezoek":" bezoeken"):"nog geen bezoek"));
+    b.appendChild(maakEl("span","heat-rijdag",p.id===actief?"nu open":(n?"laatst "+datumKort((p.bezoeken[n-1]||{}).dag):"")));
+    b.onclick=async()=>{ await wisselProject(p.id); gaNaarPagina("begin"); };
+    lijst.appendChild(b);
+  });
+  body.appendChild(lijst);
+}
+function alleContacten(){
+  return projecten.map(p=>{
+    let l=[]; try{ const r=localStorage.getItem(CONTACTSLEUTEL+":"+p.id); if(r)l=JSON.parse(r)||[]; }catch(e){}
+    return {p,lijst:(Array.isArray(l)?l:[]).filter(c=>c&&c.naam)};
+  });
+}
+function toonContactenOverzicht(){
+  const rolnaam=sl=>{ const r=ROLLEN.find(o=>o.sleutel===sl); return r?r.naam:sl; };
+  const groepen=alleContacten();
+  const totaal=groepen.reduce((a,g)=>a+g.lijst.length,0);
+  const body=overzichtPagina("contacten-alle","Contacten",totaal?totaal+(totaal===1?" contact":" contacten")+" in "+groepen.filter(g=>g.lijst.length).length+" "+(groepen.filter(g=>g.lijst.length).length===1?"werf":"werven")+".":"Nog geen contacten. Je voegt ze toe in Instellingen, per werf.");
+  if(!totaal)return;
+  const zoek=document.createElement("input"); zoek.type="search"; zoek.placeholder="Zoek op naam, code, rol of vak"; zoek.className="contact-zoek"; zoek.setAttribute("aria-label","Zoek een contact");
+  body.appendChild(zoek);
+  const blok=maakEl("div","contact-blok"); body.appendChild(blok);
+  const teken=()=>{
+    const q=zoek.value.trim().toLowerCase();
+    blok.innerHTML="";
+    groepen.forEach(g=>{
+      const l=g.lijst.filter(c=>!q||[c.naam,c.code,c.vak||"",c.rol?rolnaam(c.rol):""].join(" ").toLowerCase().indexOf(q)>=0);
+      if(!l.length)return;
+      blok.appendChild(maakEl("h3","contact-werf",g.p.naam+(g.p.id===actief?" \u00B7 nu open":"")));
+      const lijst=maakEl("div","heat-lijst");
+      l.forEach(c=>{
+        const r=maakEl("div","heat-rij");
+        r.appendChild(maakEl("span","heat-rijnaam",c.naam));
+        r.appendChild(maakEl("span","heat-rijtel",c.code||""));
+        r.appendChild(maakEl("span","heat-rijdag",[c.rol?rolnaam(c.rol):"",c.vak||""].filter(Boolean).join(" \u00B7 ")));
+        lijst.appendChild(r);
+      });
+      blok.appendChild(lijst);
+    });
+    if(!blok.children.length)blok.appendChild(maakEl("p","inv-uitleg","Niemand gevonden."));
+  };
+  zoek.oninput=teken; teken();
+}
+/* HET DASHBOARD (de opdrachtgever, 18/10/2026: "een overkoepelend dashboard met een tijdlijn van alle projecten, in welke fase ze zitten, wanneer de factuurmomenten zijn"): alle werven onder één tijdas. Per werf een rij met haar fasen als balken (van de data die je bij de fase invulde), een ruitje per facturatiemoment, en de fase waar ze nu in zit. Een lijn voor vandaag. Onderaan alle facturatiemomenten op datum. */
+function dagGetal(t){ const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(t||""); return m?Date.UTC(+m[1],+m[2]-1,+m[3])/864e5:null; }
+function werfOverzicht(p){
+  let fl=null; try{ const r=localStorage.getItem(FASESLEUTEL+":"+p.id); if(r)fl=JSON.parse(r); }catch(e){}
+  if(!Array.isArray(fl)||!fl.length)fl=STANDAARDFASEN;
+  fl=fl.map(f=>typeof f==="string"?{code:f,naam:f}:f).filter(f=>f&&f.code&&!f.verborgen);
+  let st=null; try{ const r=localStorage.getItem(SLEUTEL+":"+p.id); if(r)st=JSON.parse(r); }catch(e){}
+  const nu=faseVan(st);
+  const balken=[], facturen=[];
+  fl.forEach((f,i)=>{
+    const van=dagGetal(f.van), tot=dagGetal(f.tot);
+    if(van!=null)balken.push({f,kleur:FASEKLEUREN[i%FASEKLEUREN.length],van,tot:Math.max(tot==null?van+14:tot,van+14)});
+    (f.facturen||[]).forEach(x=>{ const d=dagGetal(x.datum); if(d!=null)facturen.push({dag:d,naam:x.naam||"",fase:f.code}); });
+  });
+  const nuNaam=(fl.find(f=>f.code===nu)||{}).naam||nu;
+  return {p,balken,facturen,nu,nuNaam};
+}
+function toonDashboard(){
+  const rijen=projecten.map(werfOverzicht);
+  const body=overzichtPagina("dashboard","Dashboard",rijen.length+(rijen.length===1?" werf":" werven")+" onder één tijdlijn: de fasen, waar elke werf nu zit en de facturatiemomenten.");
+  const vandaagD=dagGetal(vandaag());
+  const alle=[vandaagD];
+  rijen.forEach(r=>{ r.balken.forEach(b=>alle.push(b.van,b.tot)); r.facturen.forEach(x=>alle.push(x.dag)); });
+  const eerste=new Date(Math.min(...alle)*864e5), laatste=new Date(Math.max(...alle)*864e5);
+  const begin=Date.UTC(eerste.getUTCFullYear(),eerste.getUTCMonth(),1)/864e5;
+  const einde=Date.UTC(laatste.getUTCFullYear(),laatste.getUTCMonth()+1,1)/864e5;
+  const pct=x=>((x-begin)/(einde-begin)*100).toFixed(2)+"%";
+  const MAANDEN=["jan","feb","maart","april","mei","juni","juli","aug","sept","okt","nov","dec"];
+  const dm=x=>{ const d=new Date(x*864e5); return d.getUTCDate()+"/"+(d.getUTCMonth()+1); };
+  const kast=maakEl("div","dash");
+  /* de as: dezelfde indeling als de tijdbalken van een werf (maand, jaar eronder, een lijn per maand) */
+  const kop=maakEl("div","dash-rij dash-kop"); kop.appendChild(maakEl("div","dash-naam"));
+  const as=maakEl("div","dash-vlak dash-as");
+  for(let y=eerste.getUTCFullYear(),m=eerste.getUTCMonth();Date.UTC(y,m,1)/864e5<einde;m++){
+    if(m>11){m=0;y++;}
+    const k=maakEl("span","gantt-maand"+(m===0||as.children.length===0?" jaarstart":""));
+    const dun=(einde-begin)>420&&m%3!==0&&as.children.length>0;      // bij meer dan veertien maanden een naam per kwartaal, anders staan ze over elkaar; de lijnen blijven per maand
+    if(!dun)k.appendChild(maakEl("span","gantt-mnaam",MAANDEN[m]));
+    if(m===0||as.children.length===0)k.appendChild(maakEl("span","gantt-jaar",String(y)));
+    k.style.left=pct(Date.UTC(y,m,1)/864e5);
+    as.appendChild(k);
+  }
+  kop.appendChild(as); kast.appendChild(kop);
+  rijen.forEach(r=>{
+    const rij=maakEl("button","dash-rij"+(r.p.id===actief?" actief":"")); rij.type="button";
+    const naam=maakEl("div","dash-naam");
+    naam.appendChild(maakEl("span","dash-werf",r.p.naam));
+    naam.appendChild(maakEl("span","dash-fase",r.nu+" \u00B7 "+r.nuNaam));
+    rij.appendChild(naam);
+    const vlak=maakEl("div","dash-vlak");
+    for(let y=eerste.getUTCFullYear(),m=eerste.getUTCMonth();Date.UTC(y,m,1)/864e5<einde;m++){
+      if(m>11){m=0;y++;}
+      const l=maakEl("span","dash-maandlijn"); l.style.left=pct(Date.UTC(y,m,1)/864e5); vlak.appendChild(l);
+    }
+    if(!r.balken.length&&!r.facturen.length)vlak.appendChild(maakEl("span","dash-leeg","nog geen planning: vul de data in bij Verslag, per fase"));
+    r.balken.forEach(b=>{
+      const e=maakEl("span","dash-balk"+(b.f.code===r.nu?" nu":"")); e.title=b.f.code+" \u00B7 "+b.f.naam+" \u00B7 "+dm(b.van)+" \u2013 "+dm(b.tot);
+      e.style.left=pct(b.van); e.style.width=((b.tot-b.van)/(einde-begin)*100).toFixed(2)+"%"; e.style.background="rgb("+b.kleur+")";
+      vlak.appendChild(e);
+      if(b.f.code===r.nu){ const t=maakEl("span","dash-balktekst",b.f.code); t.style.left=pct(b.van); vlak.appendChild(t); }
+    });
+    r.facturen.forEach(x=>{ const t=maakEl("span","gantt-factuur dash-factuur"); t.style.left=pct(x.dag); t.title=dm(x.dag)+" \u00B7 "+x.fase+(x.naam?" \u00B7 "+x.naam:""); vlak.appendChild(t); });
+    rij.appendChild(vlak);
+    rij.onclick=async()=>{ if(r.p.id!==actief)await wisselProject(r.p.id); toonVergaderingen(r.nu); };
+    kast.appendChild(rij);
+  });
+  /* vandaag: één lijn over alle rijen */
+  const lijn=maakEl("span","dash-vandaag"); lijn.style.left="calc(var(--dashnaam,240px) + (100% - var(--dashnaam,240px)) * "+((vandaagD-begin)/(einde-begin)).toFixed(4)+")";
+  lijn.appendChild(maakEl("span","dash-vandaag-t","vandaag"));
+  kast.appendChild(lijn);
+  body.appendChild(kast);
+  /* de heatmap: waar je de meeste bezoeken hebt */
+  body.appendChild(maakEl("h3","contact-werf","Heatmap"));
+  heatBlok(body);
+  /* alle facturatiemomenten op datum */
+  const alleF=[]; rijen.forEach(r=>r.facturen.forEach(x=>alleF.push({r,x})));
+  alleF.sort((a,b)=>a.x.dag-b.x.dag);
+  body.appendChild(maakEl("h3","contact-werf","Facturatiemomenten"));
+  if(!alleF.length){ body.appendChild(maakEl("p","inv-uitleg","Nog geen facturatiemomenten ingevuld. Je voegt ze toe bij Verslag, per fase.")); return; }
+  const lijst=maakEl("div","heat-lijst");
+  alleF.forEach(({r,x})=>{
+    const rg=maakEl("div","heat-rij"+(x.dag<vandaagD?" voorbij":""));
+    rg.appendChild(maakEl("span","dash-fdatum",dm(x.dag)+"/"+String(new Date(x.dag*864e5).getUTCFullYear()).slice(2)));
+    rg.appendChild(maakEl("span","heat-rijnaam",r.p.naam+(x.naam?" \u00B7 "+x.naam:"")));
+    rg.appendChild(maakEl("span","heat-rijtel",x.fase));
+    rg.appendChild(maakEl("span","heat-rijdag",x.dag<vandaagD?"voorbij":(x.dag-vandaagD)+" dagen"));
+    lijst.appendChild(rg);
+  });
+  body.appendChild(lijst);
+}
+function gaNaarEigen(naam,doe){
+  if(menuNu()===naam)return;
+  if(menuNu()==="ai")sluitAikaart(true);
+  const bd=document.getElementById("beheerdlg");
+  doe();
+  if(bd.open)setTimeout(()=>{ try{ bd.close(); }catch(e){} },360);
+}
+function gaNaarHeatmap(){
+  if(menuNu()==="heatmap")return;
+  if(menuNu()==="ai")sluitAikaart(true);
+  const bd=document.getElementById("beheerdlg");
+  toonHeatmap();
+  if(bd.open)setTimeout(()=>{ try{ bd.close(); }catch(e){} },360);
+}
 function toonEindblad(){
   const d=document.getElementById("dlg");
   document.getElementById("dlg-titel").textContent="Menu";
@@ -27716,7 +28106,7 @@ document.getElementById("dlg").addEventListener("close",()=>{ if(!document.getEl
   const d=document.getElementById(dlgId), pg=document.getElementById(pgId);
   const vlak=(pg.closest&&pg.closest(".blad"))||pg;        // ook een veeg over het menu onderaan telt
   let sw=null;
-  const buur=r=>PAGINAROIJ[PAGINAROIJ.indexOf(paginaNu())+r];            // de volgende (+1) of vorige (-1) pagina, of niets
+  const buur=r=>{ const i=PAGINAROIJ.indexOf(paginaNu()); return i<0?undefined:PAGINAROIJ[i+r]; };            // de volgende (+1) of vorige (-1) pagina, of niets
   vlak.addEventListener("touchstart",e=>{
     sw=(dlgId==="beheerdlg"||d.dataset.pagina)?{x:e.touches[0].clientX,y:e.touches[0].clientY,h:null,dx:0,t0:Date.now()}:null;
     if(sw){ pg.classList.remove("veert"); pg.classList.add("volgt"); }
@@ -27985,6 +28375,7 @@ opendb().then(async d=>{
        te gebeuren — het bepaalt wélk verslag je straks openslaat. */
     try{ await kijkVergaderingstand(); }catch(e){}
     try{ await herkenWerf(); }catch(e){}
+    try{ await volgBezoek(); }catch(e){}
     try{ await herstelConcept(); }catch(e){}
     conceptActief=true;
     planLijst=await planZones();          // een andere werf draagt andere plannen
