@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-o/ftHeWhPuqsjR7WrzhWgDmY92d+E0mCMsopYiKg/xc=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-fpuFdFlrBMHmtXoEB/M7q2aUfOHRm8g9uZU5KHR2bBg='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-/23wBCzG6n5UbB0HtsKmwIvdI6gCeRCytYQWcsOQ/RQ=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-9g5apj5Os+IboliG9y2YUSas12S22MfQdWnHyFLMy+Y='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3984,6 +3984,11 @@
   @media (prefers-color-scheme:light){ :root:not([data-theme="dark"]){--ink:#1b2a5e;--lijn-hard:#1b2a5e;--gekozen-ink:#1b2a5e} }
   :root[data-theme="light"]{--ink:#1b2a5e;--lijn-hard:#1b2a5e;--gekozen-ink:#1b2a5e}
   /* === einde zwart-naar-navy-css === */
+  /* === begin pictogrammen-dun-css === */
+  /* Dunnere lijnen in de pictogrammen van de zijbalk en de fotobollen (de opdrachtgever, 19/10/2026: "maak de lijndiktes van de icons dunner"). */
+  .zij-ico svg{stroke-width:1.1}
+  .menubol svg,#keetdlg .keet-camknop svg{stroke-width:1.1}
+  /* === einde pictogrammen-dun-css === */
 </style>
 </head>
 <body>
@@ -5009,7 +5014,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v751";
+const VERSIE="v752";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -28028,7 +28033,7 @@ if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)&&/[?&]laad=alles\b/.test
 }
 /* Alleen om te bekijken op de eigen computer: ?laad=keet vult dezelfde testgegevens in als ?laad=alles en opent daarna meteen een punt in de keet (het eerste punt met een plek midden op het plan), om het punt in elk toestelformaat naast elkaar te zien. */
 if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)&&/[?&]laad=keet\b/.test(location.search)){
-  setTimeout(async()=>{ try{ await vulTestgegevens(); const i=staat.punten.findIndex(p=>p.tekst&&p.plek&&p.plek.x>30&&p.plek.x<70&&p.plek.y>30&&p.plek.y<70); openKeet(i<0?0:i); }catch(e){ try{ melding("Keet openen mislukt: "+(e&&e.message)); }catch(x){} } },3000);
+  setTimeout(async()=>{ try{ await vulTestgegevens(); await wisselProject(DEMOID); const i=staat.punten.findIndex(p=>p.tekst&&p.plek&&p.plek.x>30&&p.plek.x<70&&p.plek.y>30&&p.plek.y<70); openKeet(i<0?0:i); }catch(e){ try{ melding("Keet openen mislukt: "+(e&&e.message)); }catch(x){} } },3000);
 }
 /* Alleen om te bekijken op de eigen computer: ?laad=dashboard zet twee verzonnen werven naast de werf die openstaat, elk met een eigen tijdlijn, fase en facturatiemomenten, en opent het dashboard. */
 if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)&&/[?&]laad=dashboard\b/.test(location.search)){
