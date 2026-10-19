@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-r3z5i+QHzjqm9wSMxWpzWKwirC/FeZRHU1EylsbS6/A=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-CT1xqp46Ei6ovAm0ipITgjasVWs4DiWk8XNMRb9lxuo='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-1DxewJBMqWaURAgmg//Fwog/mWPbODBJeGddoJxohRE=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-LQsmWsaTRFvUXQraqPZ6i/8vRj4foBAr/0fWAoYzqb8='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3269,12 +3269,12 @@
     .gantt-mnaam{display:block;opacity:.6}
     .gantt-jaar{display:block;font-size:calc(var(--tk) - 2px);opacity:.45;margin-top:1px}
     .gantt-week{position:absolute;top:0;bottom:0;width:0;border-left:var(--haar) solid var(--line-soft);opacity:.7}
-    .gantt-rij{display:block;position:relative;width:100%;height:52px;border:0;background:none;padding:0;text-align:left;color:var(--ink);cursor:pointer}
+    .gantt-rij{display:block;position:relative;width:100%;height:40px;border:0;background:none;padding:0;text-align:left;color:var(--ink);cursor:pointer}
     .gantt-balk{position:absolute;top:0;height:30px;mix-blend-mode:multiply}
-    .gantt-naam{position:absolute;top:34px;font-size:var(--tk);color:#000;white-space:nowrap;padding:0 2px;z-index:3}
+    .gantt-naam{position:absolute;top:6px;font-size:var(--tk);color:#000;white-space:nowrap;padding:0 12px;z-index:3}
   }
   @media (max-width:699px){.fase-gantt{display:none}}
-  .gantt-factuur{position:absolute;top:8px;width:14px;height:14px;margin-left:-7px;background:var(--ink);transform:rotate(45deg);border:2px solid #f4f6f1;box-sizing:border-box;z-index:2}
+  .gantt-factuur{position:absolute;top:8px;width:12px;height:12px;margin-left:-6px;background:var(--ink);transform:rotate(45deg);border:0;z-index:2}      /* de mijlpaal zonder wit randje (de opdrachtgever, 18/10/2026) */
   .fase-edit{margin:0 0 14px}
   .fase-edit-rij{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px;margin:8px 0}
   .fase-edit-kop{margin:14px 0 2px;font-size:var(--tk);opacity:.7}
@@ -3324,22 +3324,41 @@
   html.zij-klein #dlg[data-pagina="heatmap"] .zijbalk button[data-naam="heatmap"]:not(.zij-wissel),html.zij-klein #dlg[data-pagina="projecten"] .zijbalk button[data-naam="projecten"]:not(.zij-wissel),html.zij-klein #dlg[data-pagina="contacten-alle"] .zijbalk button[data-naam="contacten-alle"]:not(.zij-wissel){background:#111;color:#fff}
   #dlg[data-pagina="dashboard"] .zijbalk [data-naam="dashboard"]{background:rgba(255,255,255,.88);font-weight:650}
   html.zij-klein #dlg[data-pagina="dashboard"] .zijbalk button[data-naam="dashboard"]:not(.zij-wissel){background:#111;color:#fff}
-  .dash{position:relative;--dashnaam:240px;margin:6px 0 10px}
+  .slim-tegels{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:10px;margin:6px 0 18px}
+  .slim-tegel{display:flex;flex-direction:column;gap:3px;padding:16px 18px;border-radius:18px;background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 14px rgba(40,50,30,.05)}
+  .slim-getal{font-size:calc(var(--tg) * 1.5);line-height:1;font-weight:300}
+  .slim-label{font-size:var(--tk);opacity:.75}
+  .slim-sub{font-size:calc(var(--tk) - 1px);opacity:.6;margin-top:2px}
+  .slim-tegel.alarm .slim-getal{color:#c0392b}
+  .slim-twee{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:6px 22px;margin-bottom:6px}
+  .slim-kolom{min-width:0}
+  .slim-dot{width:11px;height:11px;border-radius:50%;flex:none}
+  .slim-dot.rood{background:#d9453b}
+  .slim-dot.oranje{background:#e8933a}
+  .slim-dot.grijs{background:#9aa090}
+  .slim-tekst{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+  .slim-regel1{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .dash{position:relative;--dashnaam:240px;--dashrij:64px;margin:6px 0 10px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .dash-binnen{position:relative;min-width:100%}
+  .dash-opties{display:flex;flex-wrap:wrap;gap:8px 22px;margin:6px 0 10px}
+  .dash-groep{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .dash-groeplabel{font-size:var(--tk);opacity:.65;margin-right:2px}
+  .dash-groep button{font:400 var(--tk)/1.2 -apple-system,system-ui,sans-serif;color:var(--ink);background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);border:0;border-radius:12px;padding:8px 13px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.7)}
+  .dash-groep button.actief{background:#111;color:#fff}
   .dash-rij{display:flex;align-items:stretch;width:100%;border:0;background:none;padding:0;text-align:left;color:var(--ink);cursor:pointer;border-top:var(--haar) solid var(--line-soft)}
   .dash-kop{cursor:default;border-top:0}
-  .dash-naam{flex:none;width:var(--dashnaam);box-sizing:border-box;padding:14px 12px 14px 0;display:flex;flex-direction:column;gap:3px;justify-content:center}
-  .dash-werf{font-size:var(--tm);line-height:1.2}
+  .dash-naam{flex:none;width:var(--dashnaam);box-sizing:border-box;padding:calc(var(--dashrij) * .18) 12px calc(var(--dashrij) * .18) 0;display:flex;flex-direction:column;gap:3px;justify-content:center;position:sticky;left:0;z-index:6;background:rgba(236,239,232,.9);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+  .dash-werf{font-size:var(--tm);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .dash-rij.actief .dash-werf{font-weight:700}
-  .dash-fase{font-size:var(--tk);opacity:.7}
-  .dash-vlak{position:relative;flex:1;min-width:0;height:64px}
+  .dash-fase{font-size:var(--tk);opacity:.7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .dash-vlak{position:relative;flex:1;min-width:0;height:var(--dashrij)}
   .dash-as{height:46px}
   .dash-vlak .gantt-maand{padding-left:6px}
   .dash-maandlijn{position:absolute;top:0;bottom:0;width:0;border-left:var(--haar) solid var(--line-soft)}
-  .dash-balk{position:absolute;top:18px;height:26px;mix-blend-mode:multiply}
-  .dash-balk.nu{box-shadow:0 0 0 2px rgba(0,0,0,.55)}
-  .dash-balktekst{position:absolute;top:46px;font-size:calc(var(--tk) - 2px);color:#000}
-  .dash-factuur{top:11px}
-  .dash-leeg{position:absolute;left:6px;top:22px;font-size:var(--tk);opacity:.55}
+  .dash-balk{position:absolute;top:calc(var(--dashrij) * .26);height:calc(var(--dashrij) * .42);mix-blend-mode:multiply}
+  .dash-balktekst{position:absolute;top:calc(var(--dashrij) * .72);font-size:calc(var(--tk) - 2px);color:#000}
+  .dash-factuur{top:calc(var(--dashrij) * .26 + var(--dashrij) * .21 - 6px)}
+  .dash-leeg{position:absolute;left:6px;top:calc(var(--dashrij) * .34);font-size:var(--tk);opacity:.55}
   .dash-vandaag{position:absolute;top:0;bottom:0;width:0;border-left:2px solid #111;pointer-events:none;z-index:4}
   .dash-vandaag-t{position:absolute;top:-2px;left:4px;font-size:calc(var(--tk) - 2px);color:#111}
   .dash-fdatum{flex:none;font-weight:700;min-width:5.5em}
@@ -3347,7 +3366,66 @@
   .proj-rij{width:100%;border:0;text-align:left;color:var(--ink);cursor:pointer}
   .proj-rij.actief .heat-rijnaam{font-weight:700}
   .contact-zoek{width:100%;box-sizing:border-box;margin:4px 0 14px;padding:14px 16px;border:0;border-radius:16px;background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7);font:400 var(--tm)/1.2 -apple-system,system-ui,sans-serif;color:var(--ink)}
+  .ct-bar{display:flex;gap:10px;align-items:center;margin:4px 0 12px}
+  .ct-bar .contact-zoek{flex:1;margin:0}
+  .ct-nieuw{font:400 var(--tm)/1.2 -apple-system,system-ui,sans-serif;color:var(--ink);background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);border:0;border-radius:16px;padding:14px 18px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.7);white-space:nowrap}
+  .ct-import{margin:0 0 14px;padding:14px 16px;border-radius:16px;background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7)}
+  .ct-import[hidden]{display:none}
+  .ct-importrij{display:flex;gap:10px;align-items:center;margin:8px 0;font-size:var(--tm)}
+  .ct-importrij select{font:400 var(--tm)/1.2 -apple-system,system-ui,sans-serif;padding:8px 10px;border-radius:10px;border:0;background:rgba(255,255,255,.7);color:var(--ink)}
+  .ct-hulp{font-size:var(--tk);opacity:.65;margin:8px 0 0}
+  .ct-tabel{display:flex;flex-direction:column;gap:6px;overflow-x:auto}
+  .ct-rij{display:grid;grid-template-columns:minmax(150px,1.2fr) minmax(130px,1fr) minmax(130px,1fr) minmax(190px,1.5fr) minmax(120px,.9fr) minmax(150px,1.4fr);gap:4px 8px;align-items:center;min-width:900px;padding:6px 10px;border-radius:14px;background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 14px rgba(40,50,30,.05)}
+  .ct-kop{background:none;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;font-size:var(--tk);opacity:.65;padding-top:0;padding-bottom:0}
+  .ct-cel{min-width:0}
+  .ct-cel input{width:100%;box-sizing:border-box;border:0;background:transparent;font:400 var(--tm)/1.2 -apple-system,system-ui,sans-serif;color:var(--ink);padding:10px 4px;border-radius:8px}
+  .ct-cel input:focus{background:rgba(255,255,255,.8);outline:none}
+  .ct-werven{display:flex;flex-wrap:wrap;gap:4px}
+  .ct-werf{font:400 var(--tk)/1.2 -apple-system,system-ui,sans-serif;color:var(--ink);background:rgba(255,255,255,.7);border:0;border-radius:10px;padding:6px 10px}
   .contact-werf{margin:18px 0 8px;font:700 var(--tm)/1.2 -apple-system,system-ui,sans-serif}
+  .afdruk-knoppen{display:flex;gap:10px;margin:8px 0}
+  .afdruk-knoppen button{font:400 var(--tm)/1.2 -apple-system,system-ui,sans-serif;color:var(--ink);background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);border:0;border-radius:14px;padding:10px 16px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 14px rgba(40,50,30,.05)}
+  @media print{
+    .afdruk svg{display:block;width:100%;height:auto}
+    .tl-lijst{margin-top:4mm;font-size:9pt;break-inside:auto}
+    .tl-kop{font-size:11pt;margin:0 0 2mm}
+    .tl-regel{display:flex;gap:6mm;padding:.8mm 0;border-top:.3pt solid #bbb;break-inside:avoid}
+    .tl-dag{flex:0 0 24mm;font-weight:700}
+    .tl-fase{margin-left:auto}
+  }
+  .kaartpunt.nu.oordeel-nok{background:rgba(217,69,59,.92)}
+  .kaartpunt.nu.oordeel-ok{background:rgba(58,157,110,.92)}
+  /* DE STIP IN HET PUNT (de opdrachtgever, 19/10/2026) */
+  .oordeel-stip{display:inline-block;position:relative;width:20px;height:20px;box-sizing:border-box;border-radius:50%;border:2px solid #b8bcb2;background:transparent;padding:0;margin:0 8px 0 0;vertical-align:middle;flex:none;cursor:pointer}
+  .oordeel-stip::after{content:"";position:absolute;inset:-10px}
+  span.oordeel-stip{cursor:default}
+  .oordeel-stip.oordeel-nok{background:#d9453b;border-color:#d9453b}
+  .oordeel-stip.oordeel-ok{background:#3a9d6e;border-color:#3a9d6e}
+  .nakijk{display:inline-block;font-size:11px;padding:2px 8px;border-radius:9px;margin-left:6px;vertical-align:middle;background:#fdebd3;color:#8a5413}
+  .nakijk-rood{background:#fbe3df;color:#8f2a22}
+  .steno-chip.aan{background:rgba(255,255,255,.7)}
+  .steno-chip.mist{opacity:.65;box-shadow:inset 0 0 0 1px rgba(217,69,59,.55)}
+  .steno-chip.plek,.steno-chip.artikel,.steno-chip.deadline{background:rgba(255,255,255,.7)}
+  /* DE KLEUR VAN EEN PUNT en het oordeel (de opdrachtgever, 19/10/2026) */
+  .zek{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle;flex:none}
+  .zek-groen{background:#3a9d6e}
+  .zek-oranje{background:#e8933a}
+  .zek-rood{background:#d9453b}
+  .steno-chip.oordeel{border:0;cursor:pointer;color:var(--ink);font:inherit;font-size:13px;padding:5px 11px}
+  .steno-chip.oordeel.nok{background:#fbe3df}
+  .steno-chip.oordeel.ok{background:#dcf1e5}
+  .steno-chip.oordeel.neutraal{background:rgba(255,255,255,.7)}
+  .steno-chip.oordeel.gok{box-shadow:inset 0 0 0 1.5px #e8933a}
+  #keetdlg .keet-knoppen #keet-oordeel.gok{box-shadow:inset 0 0 0 1.5px #e8933a}
+  /* DE STENO-CHIPS onder het schrijfvak (de opdrachtgever, 19/10/2026) */
+  #fichedlg .dlg-body>.fiche-steno{order:1}
+  .fiche-steno{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:4px 4px 8px}
+  .fiche-steno[hidden]{display:none}
+  .steno-wenk{font-size:12px;opacity:.55}
+  .steno-chip{display:inline-flex;align-items:center;gap:4px;padding:5px 6px 5px 11px;border-radius:12px;font-size:13px;background:rgba(255,255,255,.7);box-shadow:inset 0 0 0 1px rgba(255,255,255,.8),0 1px 6px rgba(40,50,30,.08)}
+  .steno-chip.urgent,.steno-chip.verbod{background:#d9453b;color:#fff;box-shadow:none}
+  .steno-chip.onbekend{opacity:.6}
+  .steno-x{border:0;background:none;color:inherit;font-size:16px;line-height:1;padding:0 6px;cursor:pointer;opacity:.7}
 </style>
 </head>
 <body>
@@ -3624,6 +3702,7 @@
         <textarea class="fiche-veld" id="fiche-tekst" rows="4" placeholder="Schrijf één gedachte…"
                   autocomplete="off" enterkeyhint="done" aria-label="Beschrijving"></textarea>
       </div>
+      <div class="fiche-steno" id="fiche-steno" hidden></div>
       <!-- De volgorde was die van de opdrachtgever op 28/09/2026: vaststelling, toewijzen aan, categorie,
            punt of lokaal -- van wat je zelf zegt naar wat de app erbij weet. Op 30/09 draaide hij
            ze om: "3 moet boven 2 komen" en "4 in feite op plaats 2", en even later "nog
@@ -3789,6 +3868,7 @@
       <p class="beheer-uitleg">Wie erbij hoort, welke woorden gelden en wat erbij hoort.</p>
       <div class="beheer-groep genummerd">
         <button type="button" id="contactbeheer">contacten</button>
+        <button type="button" id="uitvoerderbeheer">uitvoerders</button>
         <button type="button" id="synoniembeheer">jouw woorden</button>
         <button type="button" id="projectcodebeheer">projectcode</button>
         <button type="button" id="documentenknop">documenten</button>
@@ -3954,6 +4034,7 @@
       <span class="keet-label">Aard</span>
       <div class="keet-knoppen">
         <button type="button" id="keet-urgent">Urgent</button>
+        <button type="button" id="keet-oordeel">Oordeel</button>
         <button type="button" id="keet-verbod">Verbod</button>
         <button type="button" id="keet-bezig">In behandeling</button>
         <button type="button" id="keet-klaarpunt">✓ Verholpen</button>
@@ -4317,7 +4398,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v715";
+const VERSIE="v735";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -5507,7 +5588,9 @@ const VERTAALDEVELDEN=new Set(["id","zone","tekst","spreker","tijd","datum","num
      elders wél weert, en ze staat hier met opzet zichtbaar in plaats van stil.
      Opgeheven zodra de kolom `post` in de bron staat; dan verhuist dit veld naar de rij hierboven
      en komt het in puntNaarRij en rijNaarPunt. Zie docs/BESTEK-post-en-wijziging.md §5. */
-  "post"]);
+  "post",
+  /* Het oordeel van het punt ("ok", "nok" of "neutraal") en wat de app erbij gokte, voor de kleur en het nakijken (de opdrachtgever, 19/10/2026). Sinds 19/10/2026 ook in de bron (kolommen oordeel, oordeel_geraden, aan_geraden), met een go van de opdrachtgever. */
+  "oordeel","oordeelGeraden","aanGeraden"]);
 
 /* Welke velden van dit punt kent het vertaalstuk niet? Leeg is goed. */
 function nietVertaald(p){
@@ -5539,6 +5622,8 @@ function puntNaarRij(p,verslagId,werfId,datum){
     doc:p.doc||null, aantekening:p.aantekening||null,
     uit:p.uit||null, naar:p.naar||null,
     onaf:!!p.onaf, geannoteerd:!!p.geannoteerd, verbod:!!p.verbod,
+    // het oordeel en wat de app gokte (kolommen sinds 19/10/2026, migratie 20261019_punt_oordeel)
+    oordeel:p.oordeel||null, oordeel_geraden:!!p.oordeelGeraden, aan_geraden:!!p.aanGeraden,
     afgehandeld_in:p.afgehandeldIn||null,
     // de rondgang waarop dit punt vastgesteld werd -- null voor een punt zonder rondgang
     rondgang_id:p.rondgang||null,
@@ -5566,6 +5651,9 @@ function rijNaarPunt(r){
   if(r.onaf)p.onaf=true;
   if(r.geannoteerd)p.geannoteerd=true;
   if(r.verbod)p.verbod=true;
+  zet("oordeel",r.oordeel);
+  if(r.oordeel_geraden)p.oordeelGeraden=true;
+  if(r.aan_geraden)p.aanGeraden=true;
   // De plek bestaat als er een coordinaat is. Een punt zonder plek hoort er geen te krijgen:
   // `plek los` in de keet zegt dat een punt geen plaats op een plan heeft, en dat is een feit.
   if(typeof r.plek_x==="number"&&typeof r.plek_y==="number"){
@@ -5759,7 +5847,7 @@ function heeftBeeld(p){ return beeldenVan(p).length>0; }
 function isKlaar(p){ return !!p && p.status==="klaar"; }
 function isVervallen(p){ return !!p && p.status==="nvt"; }
 function isOpen(p){
-  return !!p && p.status!=="klaar" && p.status!=="nvt" && p.status!=="door";
+  return !!p && p.status!=="klaar" && p.status!=="nvt" && p.status!=="door" && p.oordeel!=="ok";      // wat je als in orde vaststelde, loopt niet door naar het volgende verslag; het staat wel in dit verslag
 }
 function isDoorgeschoven(p){ return !!p && p.status==="door"; }
 
@@ -6640,11 +6728,38 @@ function fasenGantt(gekozen,kies){
     r.fact.forEach(x=>{ const t=maakEl("span","gantt-factuur"); t.style.left=pct(x.dag); t.title=x.naam; rij.appendChild(t); });
     const dm=x=>{ const d=new Date(x*864e5); return d.getUTCDate()+"/"+(d.getUTCMonth()+1); };
     const naam=maakEl("span","gantt-naam",r.f.code+(r.geenbalk?"":"  "+dm(r.van)+" \u2013 "+dm(r.tot)));      // zwart, onder de balk: de code en de dagen (de volle naam staat in de titel)
-    if((r.van-begin)/(einde-begin)>0.5){ naam.style.right=(100-(r.tot-begin)/(einde-begin)*100).toFixed(2)+"%"; naam.style.textAlign="right"; }      // een balk in de rechterhelft: de naam loopt naar links, anders valt hij van het scherm
-    else naam.style.left=pct(r.van);
+    if(r.geenbalk)naam.style.left=pct(r.van);
+    else if((r.van-begin)/(einde-begin)>0.5){ naam.style.right=(100-(r.van-begin)/(einde-begin)*100).toFixed(2)+"%"; naam.style.textAlign="right"; }      // de tekst staat achter de balk (de opdrachtgever, 18/10/2026); een balk in de rechterhelft heeft hem ervoor, anders valt hij van het scherm
+    else naam.style.left=pct(r.tot);
     rij.appendChild(naam);
-    rij.onclick=()=>{ if(!rij.classList.contains("actief"))kies(r.f.code); };
+    rij.onclick=()=>{ if(rij._sleep)return; if(!rij.classList.contains("actief"))kies(r.f.code); };
     kast.appendChild(rij);
+  });
+  /* SLEPEN (de opdrachtgever, 18/10/2026: "ik wil kunnen slepen aan de tijdlijn, de opvolgende fasen schuiven dan mee"): een balk zijwaarts slepen verschuift zijn fase in hele dagen, en elke fase erna schuift met hetzelfde aantal dagen mee, facturatiemomenten inbegrepen. Tijdens het slepen schuift alles mee in beeld; bij loslaten wordt het bewaard. Een tik zonder slepen kiest de fase, zoals eerst. */
+  const rijenEl=[...kast.querySelectorAll(":scope > .gantt-rij")];
+  const iso=d=>new Date(d*864e5).toISOString().slice(0,10);
+  reeks.forEach((r,i)=>{
+    const balk=rijenEl[i]&&rijenEl[i].querySelector(".gantt-balk"); if(!balk)return;
+    balk.style.touchAction="none"; balk.style.cursor="grab";
+    balk.addEventListener("pointerdown",e=>{
+      e.preventDefault(); try{ balk.setPointerCapture(e.pointerId); }catch(x){}
+      const x0=e.clientX, perDag=kast.getBoundingClientRect().width/(einde-begin);
+      let dagen=0, bewogen=false;
+      const volgers=rijenEl.slice(i).flatMap(rj=>[...rj.querySelectorAll(".gantt-balk,.gantt-naam,.gantt-factuur")]);
+      const beweeg=ev=>{ const dx=ev.clientX-x0; if(Math.abs(dx)>3)bewogen=true; dagen=Math.round(dx/perDag); volgers.forEach(el=>{ el.style.translate=(dagen*perDag)+"px 0"; }); };
+      const klaar=()=>{
+        balk.removeEventListener("pointermove",beweeg); balk.removeEventListener("pointerup",klaar); balk.removeEventListener("pointercancel",klaar);
+        if(!bewogen)return;
+        rijenEl[i]._sleep=true; setTimeout(()=>{ rijenEl[i]._sleep=false; },60);      // de tik na het loslaten kiest de fase niet
+        if(!dagen){ volgers.forEach(el=>{ el.style.translate=""; }); return; }
+        reeks.slice(i).forEach(q=>{
+          if(!q.geenbalk){ q.f.van=iso(q.van+dagen); q.f.tot=iso(q.tot+dagen); }
+          (q.f.facturen||[]).forEach(x=>{ const dd=dagGetal(x.datum); if(dd!=null)x.datum=iso(dd+dagen); });
+        });
+        bewaarFasen(); toonVergaderingen(gekozen);
+      };
+      balk.addEventListener("pointermove",beweeg); balk.addEventListener("pointerup",klaar); balk.addEventListener("pointercancel",klaar);
+    });
   });
   return kast;
 }
@@ -6675,10 +6790,102 @@ function faseDatumEditor(code,opnieuw){
     r.appendChild(w);
     kast.appendChild(r);
   });
+  kast.appendChild(afdrukKnoppen("werf",()=>opnieuw()));
   const plus=maakEl("button","fase-edit-plus","+ Facturatiemoment"); plus.type="button";
   plus.onclick=()=>{ (f.facturen=f.facturen||[]).push({datum:vandaag(),naam:""}); bewaarFasen(); opnieuw(); };
   kast.appendChild(plus);
   return kast;
+}
+/* AFDRUKKEN OP A4 OF A3 (de opdrachtgever, 18/10/2026: "ik wil dit ook afdrukbaar maken op A4/A3"): de tijdlijn van een werf en het dashboard van alle werven als vectortekening op een liggend blad. A4 en A3 hebben dezelfde verhouding: de tekening is dezelfde, alleen het blad (@page) is groter; op een iPad kies je het papier in het afdrukvenster. Kleuren zoals op het scherm, tekst zwart. De tekening gebruikt attributen en geen stijlblok: dat staat het beleid van de pagina niet toe. */
+function afdrukEsc(t){ return String(t==null?"":t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function tijdlijnSvg(o){
+  const W=297,H=210,m=10, x0=m+(o.kolom||0), x1=W-m;
+  const alle=[o.vandaag];
+  o.rijen.forEach(r=>{ r.balken.forEach(b=>alle.push(b.van,b.tot)); (r.facturen||[]).forEach(f=>alle.push(f.dag)); });
+  const e=new Date(Math.min(...alle)*864e5), l=new Date(Math.max(...alle)*864e5);
+  const begin=Date.UTC(e.getUTCFullYear(),e.getUTCMonth(),1)/864e5, einde=Date.UTC(l.getUTCFullYear(),l.getUTCMonth()+1,1)/864e5;
+  const X=d=>(x0+(d-begin)/(einde-begin)*(x1-x0)).toFixed(2);
+  const MND=["jan","feb","maart","april","mei","juni","juli","aug","sept","okt","nov","dec"];
+  const dm=d=>{ const t=new Date(d*864e5); return t.getUTCDate()+"/"+(t.getUTCMonth()+1); };
+  const ay=m+24, y0=ay+8, rh=Math.min(o.fasen?11:17,(H-m-y0)/Math.max(1,o.rijen.length));
+  let v='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+W+' '+H+'" width="100%" font-family="Helvetica, Arial, sans-serif">';
+  v+='<text x="'+m+'" y="'+(m+7)+'" font-size="7" font-weight="700" fill="#000">'+afdrukEsc(o.titel)+'</text>';
+  v+='<text x="'+m+'" y="'+(m+13)+'" font-size="3.4" fill="#444">'+afdrukEsc(o.ondertitel)+'</text>';
+  const maanden=(einde-begin)/30.4;
+  for(let y=e.getUTCFullYear(),mm=e.getUTCMonth();Date.UTC(y,mm,1)/864e5<einde;mm++){
+    if(mm>11){mm=0;y++;}
+    const d=Date.UTC(y,mm,1)/864e5;
+    v+='<line x1="'+X(d)+'" y1="'+ay+'" x2="'+X(d)+'" y2="'+(H-m)+'" stroke="#b9bdb2" stroke-width="0.2"/>';
+    if(maanden<=15||mm%3===0){ v+='<text x="'+(+X(d)+1)+'" y="'+(ay+3.4)+'" font-size="3" fill="#555">'+MND[mm]+'</text>'; }
+    if(mm===0||d===begin)v+='<text x="'+(+X(d)+1)+'" y="'+(ay+6.8)+'" font-size="2.6" fill="#888">'+y+'</text>';
+  }
+  v+='<line x1="'+x0+'" y1="'+ay+'" x2="'+x1+'" y2="'+ay+'" stroke="#000" stroke-width="0.3"/>';
+  o.rijen.forEach((r,i)=>{
+    const ry=y0+i*rh, bh=o.fasen?rh*0.7:rh*0.5;
+    if(!o.fasen){
+      v+='<text x="'+m+'" y="'+(ry+bh*0.55)+'" font-size="3.6" fill="#000"'+(r.actief?' font-weight="700"':'')+'>'+afdrukEsc(r.naam)+'</text>';
+      if(r.sub)v+='<text x="'+m+'" y="'+(ry+bh*0.55+3.6)+'" font-size="2.8" fill="#444">'+afdrukEsc(r.sub)+'</text>';
+      v+='<line x1="'+m+'" y1="'+(ry-1.2)+'" x2="'+x1+'" y2="'+(ry-1.2)+'" stroke="#d8dad2" stroke-width="0.2"/>';
+    }
+    r.balken.forEach(b=>{
+      v+='<rect x="'+X(b.van)+'" y="'+ry.toFixed(2)+'" width="'+(X(b.tot)-X(b.van)).toFixed(2)+'" height="'+bh.toFixed(2)+'" fill="rgb('+b.kleur+')" fill-opacity="'+(o.fasen?1:0.85)+'"/>';
+      if(o.fasen){
+        const rechts=(b.van-begin)/(einde-begin)>0.5;
+        v+='<text x="'+(rechts?(+X(b.van)-1.6).toFixed(2):(+X(b.tot)+1.6).toFixed(2))+'" y="'+(ry+bh*0.68).toFixed(2)+'" font-size="3" fill="#000" text-anchor="'+(rechts?"end":"start")+'">'+afdrukEsc(b.code+"  "+dm(b.van)+" \u2013 "+dm(b.tot))+'</text>';
+      }
+    });
+    (r.facturen||[]).forEach(f=>{
+      const cx=+X(f.dag), cy=ry+bh/2, z=1.9;
+      v+='<polygon points="'+cx+','+(cy-z)+' '+(cx+z)+','+cy+' '+cx+','+(cy+z)+' '+(cx-z)+','+cy+'" fill="#000"/>';
+    });
+  });
+  v+='<line x1="'+X(o.vandaag)+'" y1="'+(ay-1)+'" x2="'+X(o.vandaag)+'" y2="'+(H-m)+'" stroke="#000" stroke-width="0.5"/>';
+  v+='<text x="'+(+X(o.vandaag)+1)+'" y="'+(ay-1.6)+'" font-size="2.8" fill="#000">vandaag</text>';
+  return v+'</svg>';
+}
+function bouwTijdlijnAfdruk(bron){
+  const vandaagD=dagGetal(vandaag());
+  if(bron==="dashboard"){
+    const rijen=projecten.map(werfOverzicht);
+    const svg=tijdlijnSvg({titel:"Dashboard",ondertitel:rijen.length+" werven \u00B7 de fasen, de fase waar elke werf nu zit en de facturatiemomenten \u00B7 "+datumLang(vandaag()),vandaag:vandaagD,kolom:60,fasen:false,
+      rijen:rijen.map(r=>({naam:r.p.naam,sub:r.nu+" \u00B7 "+r.nuNaam,actief:r.p.id===actief,balken:r.balken.map(b=>({van:b.van,tot:b.tot,kleur:b.kleur})),facturen:r.facturen}))});
+    const alleF=[]; rijen.forEach(r=>r.facturen.forEach(x=>alleF.push({r,x}))); alleF.sort((a,b)=>a.x.dag-b.x.dag);
+    const dm=d=>{ const t=new Date(d*864e5); return t.getUTCDate()+"/"+(t.getUTCMonth()+1)+"/"+t.getUTCFullYear(); };
+    const lijst=alleF.length?'<div class="tl-lijst"><h2 class="tl-kop">Facturatiemomenten</h2>'+alleF.map(({r,x})=>'<div class="tl-regel"><span class="tl-dag">'+afdrukEsc(dm(x.dag))+'</span><span>'+afdrukEsc(r.p.naam+(x.naam?" \u00B7 "+x.naam:""))+'</span><span class="tl-fase">'+afdrukEsc(x.fase)+(x.dag<vandaagD?" \u00B7 voorbij":"")+'</span></div>').join("")+'</div>':"";
+    return svg+lijst;
+  }
+  const p=projectNu();
+  const rijen=[];
+  zichtbareFasen().forEach((f,i)=>{
+    const d=archief.filter(v=>faseVan(v)===f.code).map(v=>dagGetal(v.datum)).concat(faseVan(staat)===f.code?[dagGetal(staat.datum)]:[]).filter(x=>x!=null);
+    const van=dagGetal(f.van)!=null?dagGetal(f.van):(d.length?Math.min(...d):null);
+    let tot=dagGetal(f.tot)!=null?dagGetal(f.tot):(d.length?Math.max(...d):null);
+    const fact=(f.facturen||[]).map(x=>({dag:dagGetal(x.datum),naam:x.naam})).filter(x=>x.dag!=null);
+    if(van!=null){ if(tot==null||tot<van+14)tot=van+14; rijen.push({balken:[{van,tot,kleur:FASEKLEUREN[i%FASEKLEUREN.length],code:f.code}],facturen:fact}); }
+  });
+  if(!rijen.length)return "";
+  return tijdlijnSvg({titel:p.naam+(p.nummer?" \u00B7 "+p.nummer:""),ondertitel:"Tijdlijn van de fasen \u00B7 "+datumLang(vandaag()),vandaag:vandaagD,kolom:0,fasen:true,rijen});
+}
+async function drukTijdlijn(formaat,bron,terug){
+  const html=bouwTijdlijnAfdruk(bron);
+  if(!html){ melding("Nog geen datums ingevuld: er is niets om af te drukken"); return; }
+  const el=document.getElementById("afdruk"); ruimAfdrukOp(); el.innerHTML=html;
+  let blad=null;
+  try{ blad=new CSSStyleSheet(); blad.replaceSync("@page{size:"+formaat+" landscape;margin:10mm}"); document.adoptedStyleSheets=[...document.adoptedStyleSheets,blad]; }catch(e){ blad=null; }
+  document.querySelectorAll("dialog[open]").forEach(d=>d.close());
+  const na=()=>{
+    removeEventListener("afterprint",na);
+    try{ if(blad)document.adoptedStyleSheets=document.adoptedStyleSheets.filter(x=>x!==blad); }catch(e){}
+    setTimeout(ruimAfdrukOp,1500);
+    try{ if(terug)terug(); }catch(e){}
+  };
+  addEventListener("afterprint",na);
+  setTimeout(()=>{ try{ print(); }catch(e){ melding("Afdrukken lukt niet in deze browser"); na(); } },350);
+}
+function afdrukKnoppen(bron,terug){
+  const rij=maakEl("div","afdruk-knoppen");
+  ["A4","A3"].forEach(f=>{ const b=maakEl("button",null,"Afdrukken "+f); b.type="button"; b.onclick=()=>drukTijdlijn(f,bron,terug); rij.appendChild(b); });
+  return rij;
 }
 function faseNaam(code){ return faseRecord(code).naam||code; }
 function zichtbareFasen(){ return fasen.filter(f=>!f.verborgen); }
@@ -8336,6 +8543,33 @@ function bewaarHoofdstukken(){
   bewaarVeilig(pk(HOOFDSTUKSLEUTEL),JSON.stringify(hoofdstukken),"de bestekhoofdstukken");
 }
 function hoofdstukVan(nr){return hoofdstukken.find(h=>h.nr===nr)||null;}
+/* DE UITVOERDER PER HOOFDSTUK (de opdrachtgever, 19/10/2026: "de onderaannemer per hoofdstuk"): per werf zeg je één keer welk contact welk bestekhoofdstuk uitvoert (dak is deze firma, schilderwerk die). Bij een punt over dat hoofdstuk stelt de app die uitvoerder voor. De vaste toewijzing wint van wat de app leerde, en een code in de regel (>AB) wint van alles. */
+const HSAANSLEUTEL="werfpunten-hoofdstukaan";
+function leesHoofdstukUitvoerders(){ try{ const o=JSON.parse(localStorage.getItem(pk(HSAANSLEUTEL))||"{}"); return (o&&typeof o==="object")?o:{}; }catch(e){ return {}; } }
+function hoofdstukUitvoerders(nr){
+  if(!nr)return [];
+  const l=leesHoofdstukUitvoerders()[nr];
+  return (Array.isArray(l)?l:(l?[l]:[])).filter(c=>contacten.some(x=>x.code===c));      // alleen contacten die nog bestaan
+}
+async function beheerUitvoerders(){
+  const o=leesHoofdstukUitvoerders();
+  const huidig=hoofdstukken.map(h=>h.nr+" "+(h.naam||"")+" = "+((Array.isArray(o[h.nr])?o[h.nr]:(o[h.nr]?[o[h.nr]]:[])).join("+"))).join("\n");
+  const lijst=contacten.length?contacten.map(c=>c.code+" = "+c.naam+(c.vak?" ("+c.vak+")":"")).join("\n"):"Nog geen contacten: voeg ze eerst toe.";
+  const nieuw=await vraagTekst("Uitvoerders per hoofdstuk",
+    "Per hoofdstuk de code van het contact dat het uitvoert, na het =-teken. Meer dan één: ze met + verbinden (AB+DW). Laat leeg als er niemand vaststaat.\n\nDe app stelt die uitvoerder voor bij elk punt over dat hoofdstuk. Een code in de regel zelf (>AB) wint altijd.\n\nContacten:\n"+lijst, huidig);
+  if(nieuw===null)return;
+  const uit={}, onbekend=[];
+  nieuw.split("\n").forEach(r=>{
+    const i=r.indexOf("="); if(i<0)return;
+    const nr=r.slice(0,i).trim().split(/\s+/)[0]; if(!nr)return;
+    const codes=r.slice(i+1).split(/[+,;\s]+/).map(x=>x.trim().toUpperCase()).filter(Boolean);
+    const goed=codes.filter(c=>contacten.some(x=>String(x.code).toUpperCase()===c)).map(c=>contacten.find(x=>String(x.code).toUpperCase()===c).code);
+    codes.forEach(c=>{ if(!contacten.some(x=>String(x.code).toUpperCase()===c))onbekend.push(c); });
+    if(goed.length)uit[nr]=goed;
+  });
+  bewaarVeilig(pk(HSAANSLEUTEL),JSON.stringify(uit),"de uitvoerders per hoofdstuk");
+  melding(onbekend.length?("Onbekende code overgeslagen: "+onbekend.join(", ")):"Uitvoerders per hoofdstuk bewaard");
+}
 
 /* Een eigen categorie, in de keet. De opdrachtgever, 30/09/2026 (avond): "indien geen bestek toegevoegd,
    kan de gebruiker zelf een categorie opgeven thuis of ev. in de keet. Niet meer on the spot."
@@ -9760,6 +9994,7 @@ async function beheerContacten(){
     "Voorbeeld:\nAannemer BV = AB = "+ROLLEN[0].naam+"\nDakwerken NV = DW = "+ROLLEN[0].naam+" = dak\nGemeente = GEM = "+ROLLEN[1].naam;
   const nieuw=await vraagTekst("Contacten", uitleg, huidig);
   if(nieuw===null)return;
+  const contactenOud=contacten.slice();
   contacten = nieuw.split("\n").map(r=>r.trim()).filter(Boolean).map(r=>{
     const d=r.split("=");
     const naam=(d[0]||"").trim();
@@ -9768,6 +10003,7 @@ async function beheerContacten(){
     const vak=(d[3]||"").trim().toLowerCase();
     return vak?{naam,code,rol:leesRol(d[2]),vak}:{naam,code,rol:leesRol(d[2])};
   }).filter(c=>c.naam);
+  contactenOud.forEach(o=>{ const n=contacten.find(c=>c.code===o.code); if(n)["functie","bedrijf","email","gsm"].forEach(k=>{ if(o[k])n[k]=o[k]; }); });      // de nieuwe velden staan niet in de tekstregel: ze blijven staan
   bewaarContacten();
   staat.aanwezig=(staat.aanwezig||[]).filter(code=>contacten.some(c=>c.code===code));
   raakVerslagAan();
@@ -9778,6 +10014,7 @@ document.getElementById("hoofdstukbeheer").onclick=beheerHoofdstukken;
 document.getElementById("bestekbeheer").onclick=toonBestek;
 document.getElementById("bibbeheer").onclick=toonBib;
 document.getElementById("synoniembeheer").onclick=beheerSynoniemen;
+document.getElementById("uitvoerderbeheer").onclick=beheerUitvoerders;
 document.getElementById("woordbeheer").onclick=beheerGebrekwoorden;
 document.getElementById("leerbeheer").onclick=toonGeleerd;
 /* Terugzetten had geen eigen knop: alleen de melding na het maken van een back-up (twee seconden) bood het aan. Op een nieuw of gewist toestel was
@@ -11195,6 +11432,9 @@ async function tekenLijst(){
     const kop=document.createElement("div");kop.className="kop";
     const chip=document.createElement("span");chip.className="chip";chip.textContent=p.zone;kop.appendChild(chip);
     /* Punten van vóór deze versie dragen geen nummer; die krijgen er ook geen bij het tonen. */
+    kop.appendChild(oordeelStip(p,()=>tekenLijst()));
+    { const z=puntZekerheid(p); if(z.kleur!=="groen"){ const d=document.createElement("span"); d.className="nakijk nakijk-"+z.kleur; d.textContent="nakijken";
+      d.title="Nog na te kijken: "+z.redenen.join("; "); kop.appendChild(d); } }
     if(p.nummer){
       const n=document.createElement("span");
       n.className="puntnr"+(isNieuwPunt(p)?" nieuw":"");
@@ -12774,7 +13014,7 @@ function gevolgZin(p, naam, soort, rol){
    geadresseerde over wie de zin gaat, en zonder `voor` is dat de eerste. */
 function gevolgVan(p,voor){
   const wie=voor||(p&&p.aan);
-  if(!p||!wie) return "";
+  if(!p||!wie||p.oordeel==="ok") return "";
   // De kale naam: "Aannemer BV (AB) herstelt" leest als een formulier. De code hoort thuis waar
   // ze iets doet — in het spoor eronder en in de steno-export — niet midden in een zin.
   const c=contacten.find(x=>x.code===wie);
@@ -12912,7 +13152,7 @@ function keetPlanStippen(){
     if(!q)return;
     const el=document.createElement("button");
     el.type="button";
-    el.className="kaartpunt nu kp-stip"+(nu&&nu.id===p.id?" aan":"");
+    el.className="kaartpunt nu kp-stip oordeel-"+oordeelVan(p)+(nu&&nu.id===p.id?" aan":"");
     el.style.setProperty("--px",Math.round(q.x)+"px");
     el.style.setProperty("--py",Math.round(q.y)+"px");
     el.dataset.punt=p.id;
@@ -13232,6 +13472,10 @@ async function keetToon(){
   const vb=document.getElementById("keet-verbod");
   vb.className=p.verbod?"actief":"";
   document.getElementById("keet-urgent").className=p.urgent?"actief":"";
+  { const ob=document.getElementById("keet-oordeel"), eff=oordeelVan(p);
+    ob.textContent=(eff==="ok"?"In orde":eff==="neutraal"?"Neutraal":"Niet in orde")+(p.oordeelGeraden?" ?":"");
+    ob.className=(eff==="nok"?"actief":"")+(p.oordeelGeraden?" gok":"");
+    ob.title=p.oordeelGeraden?"De app las dit uit je tekst. Tik om te wisselen en te bevestigen.":"Tik om te wisselen: niet in orde, in orde, neutraal."; }
   document.getElementById("keet-klaarpunt").className=isKlaar(p)?"actief":"";
   document.getElementById("keet-bezig").className=p.status==="bezig"?"actief":"";
   document.getElementById("keet-nvt").className=isVervallen(p)?"actief":"";
@@ -13321,7 +13565,9 @@ async function keetToon(){
 document.getElementById("keet-tekst").oninput=()=>{
   const p=keetPunt();
   if(!p)return;
+  const hadVoor=!!(p.tekst||"").trim();
   p.tekst=document.getElementById("keet-tekst").value;
+  if(!hadVoor&&p.tekst.trim())keet.eerste=p.id;      // de eerste woorden bij dit punt: bij het verlaten leest de app het oordeel
   keet.vuil=p.id;                        // getypt: het punt is veranderd, ook al staat het er al
   tekenSprekers();                       // het merk volgt wat er nu vooraan staat
   if(p.tekst.trim())delete p.onaf; else p.onaf=true;
@@ -13341,8 +13587,16 @@ function keetBewaarTekst(){
   const veranderd=keet.vuil===p.id || t!==(p.tekst||"") || onaf!==!!p.onaf;
   keet.vuil=null;
   if(!veranderd)return;
+  const hadWoorden=!!(p.tekst||"").trim()&&keet.eerste!==p.id;
+  if(keet.eerste===p.id)keet.eerste=null;
   p.tekst=t;
   if(t)delete p.onaf; else p.onaf=true;
+  /* De eerste woorden bij een punt dat zonder woorden begon (foto, scan, aantekening): nu leest de app het oordeel, zoals bij een getypte zin, en zegt dat ze het las. */
+  if(t&&!hadWoorden&&(!p.oordeel||p.oordeel==="neutraal")){
+    const r=stenoLees(t);
+    if(r.oordeel){ p.oordeel=r.oordeel; p.oordeelGeraden=true; }
+    if(r.ergernis&&!p.urgent)p.urgent=true;
+  }
   raakAan(p);bewaarStaat();
 }
 
@@ -13403,8 +13657,46 @@ function kopWoord(){
 
 /* Wat er in de keet nog te doen is: geen woorden, of niemand die er iets mee moet. Dat is de
    werklijst — de teller bovenaan telt hetzelfde. */
+/* DE STIP IN HET PUNT (de opdrachtgever, 19/10/2026: "rood niet ok, 2x drukken groen: ok. Standaard neutraal"): één tik rood, twee tikken groen, drie tikken weer neutraal. Een punt van een eerder verslag toont zijn stip maar is vergrendeld. Wat al opgelost is, toont groen. */
+/* Wat een punt heeft als oordeel. Een punt zonder oordeel (van vóór 19/10/2026, of de demo) dat nog openstaat, was een vaststelling die opvolging vraagt: dat telt als niet in orde. Eén plaats, zodat de stip, de keet en de kleur hetzelfde zeggen. */
+function oordeelVan(p){
+  if(!p)return "neutraal";
+  if(p.oordeel)return p.oordeel;
+  return isOpen(p)?"nok":"neutraal";
+}
+function oordeelStip(p,na,vast){
+  const opgelost=isKlaar(p);
+  const eff=opgelost?"ok":oordeelVan(p);
+  const b=document.createElement(vast||opgelost?"span":"button");
+  b.className="oordeel-stip oordeel-"+eff;
+  b.title=opgelost?"Opgelost":(eff==="nok"?"Niet in orde":eff==="ok"?"In orde":"Neutraal")+(vast?"":". Tik: rood (niet in orde), nog eens: groen (in orde), nog eens: neutraal.");
+  if(!vast&&!opgelost){
+    b.type="button"; b.setAttribute("aria-label",b.title);
+    b.onclick=ev=>{ if(ev&&ev.stopPropagation)ev.stopPropagation(); p.oordeel=({neutraal:"nok",nok:"ok",ok:"neutraal"})[eff]; delete p.oordeelGeraden; raakAan(p); bewaarStaat(); if(na)na(); };
+  }
+  return b;
+}
 function keetOnaf(p){
-  return !!p.onaf || !(p.tekst||"").trim() || (!p.aan && isOpen(p));
+  return !!p.onaf || !(p.tekst||"").trim() || (!p.aan && isOpen(p)) || puntZekerheid(p).kleur!=="groen";
+}
+/* DE KLEUR VAN EEN PUNT (de opdrachtgever, 19/10/2026): hoe zeker de app is. Groen: alles heb je zelf gezet. Oranje: de app gokte iets (het oordeel, de aannemer, het bestekhoofdstuk). Rood: er ontbreekt iets (de plek op het plan, of wie het moet doen bij een punt dat niet in orde is). Thuis of in de keet loop je eerst de rode en oranje af. Afgehandelde punten zijn groen. */
+function puntZekerheid(p){
+  const uit={kleur:"groen",redenen:[]};
+  if(!p)return uit;
+  if(isKlaar(p)||isVervallen(p)||isDoorgeschoven(p))return uit;
+  const nodigAan=isOpen(p)&&oordeelVan(p)==="nok";
+  const mist=[];
+  if(!p.plek&&!p.aantekening)mist.push("geen plek op het plan");
+  if(nodigAan&&!p.aan)mist.push("nog niet toegewezen aan wie het moet doen");
+  if(p.onaf||!(p.tekst||"").trim())mist.push("nog zonder woorden");
+  const gok=[];
+  if(p.oordeelGeraden)gok.push("het oordeel is uit je tekst gelezen");
+  if(p.aanGeraden&&p.oordeel!=="ok")gok.push("de toewijzing is een voorstel van de app");
+  if(p.hoofdstukOnzeker)gok.push("het bestekhoofdstuk is onzeker");
+  if(viaAi(p))gok.push("via een AI-dienst binnengekomen");
+  if(mist.length)return {kleur:"rood",redenen:mist.concat(gok)};
+  if(gok.length)return {kleur:"oranje",redenen:gok};
+  return uit;
 }
 
 function openKeet(begin){
@@ -13447,6 +13739,12 @@ document.getElementById("keet-woordbeheer").onclick=async()=>{
 };
 document.getElementById("keet-hoofdstukbeheer").onclick=async()=>{
   await beheerHoofdstukken();keetToon();
+};
+document.getElementById("keet-oordeel").onclick=()=>{
+  const p=keetPunt(); if(!p)return;
+  const nu=oordeelVan(p);
+  p.oordeel=({nok:"ok",ok:"neutraal",neutraal:"nok"})[nu]; delete p.oordeelGeraden;      // wie wisselt, heeft gekeken
+  raakAan(p); bewaarStaat(); keetToon();
 };
 document.getElementById("keet-urgent").onclick=()=>{
   const p=keetPunt();if(!p)return;
@@ -13653,7 +13951,7 @@ async function knip(){
     const rondgangId=zorgVoorRondgang();
     const punt=raakAan({id,zone:staat.zone,tekst:"",spreker:null,
       tijd:new Date().toTimeString().slice(0,5),beelden:[{id,beeld:true,naam:""}],
-      plek:wachtendePlek, onaf:true, rondgang:rondgangId});
+      plek:wachtendePlek, onaf:true, rondgang:rondgangId, oordeel:"neutraal"});
     if(await zetFoto(id,blob))wachtMerk("beeld",id);
     zorgVoorPuntnummer(punt); staat.punten.push(punt); bewaarStaat();
     snel.aantal++;
@@ -14146,7 +14444,10 @@ function goBesluit(tekst,foto,haal,plek){
    Dat merk is geen sier: het is wat het punt op bureau terugvindbaar maakt. Zonder merk is een
    gegokt hoofdstuk niet te onderscheiden van een nagekeken hoofdstuk, en dán pas wordt de oude
    waarschuwing waar. Wie zelf een artikel aantikt, haalt het merk weg — dat is de bevestiging. */
+const _vulFicheBasis=vulFiche;
+vulFiche=function(...a){ const r=_vulFicheBasis(...a); try{ ficheStenoTeken(); }catch(e){} return r; };      // de chips lopen mee met wat het blad besloot
 function ficheArtikel(tekst){
+  tekst=stenoLees(tekst).tekst;      // de tekens (!, >AB, DL) zijn geen zoekwoorden
   const t=bestekTreffers(tekst,BESTEKTREFFERS);
   if(!t.length)return null;
   let eerste=t[0];
@@ -14349,6 +14650,176 @@ document.getElementById("foto").onchange=async e=>{
 const tekstEl=document.getElementById("tekst");
 /* Welk veld je op dit ogenblik voor je hebt. Staat het blad open, dan is de regel eronder
    weggevallen en is het veld op het blad het enige dat er is. */
+/* DE STENO-REGEL (de opdrachtgever, 19/10/2026: "begin met de steno-regel"): één regel noteren, en de app haalt eruit wat je er zelf in zet. Vier tekens, dezelfde als in STENO.md:
+     !            urgent                    (alleen als los teken of als laatste teken van de regel)
+     >AB          aan wie: de code van een contact, of een rol (>aannemer); onbekend blijft staan en wordt gemeld
+     DL 28/08     tegen wanneer: een datum, of DL +1w, +2w, +1m, +3d
+     VERBOD:      aan het begin: de architect verbiedt de uitvoering
+   Het gaat alleen om wat jij zelf typt. Wat de app uit de woorden afleidt (hoofdstuk, plek, soort) staat al op het blad en blijft een voorstel; dit zijn je eigen beslissingen, dus ze gelden meteen en staan als kleine chips onder het vak, met een kruisje om ze weg te halen. Wat de app niet begrijpt, laat ze staan zoals het is. */
+/* Een maand verder, zonder door te rollen: 31/01 plus een maand is 28/02 (of 29), niet 03/03. */
+function plusMaanden(d,n){
+  const j=new Date(d.getFullYear(),d.getMonth()+n,1);
+  const laatste=new Date(j.getFullYear(),j.getMonth()+1,0).getDate();
+  j.setDate(Math.min(d.getDate(),laatste));
+  return j;
+}
+function stenoLees(tekst,lijst,nu,negeer){
+  const kont=Array.isArray(lijst)?lijst:(typeof contacten!=="undefined"?contacten:[]);
+  const rollen=(typeof ROLLEN!=="undefined"&&Array.isArray(ROLLEN))?ROLLEN:[];
+  const uit={tekst:"",urgent:false,verbod:false,aan:[],deadline:null,tokens:[]};
+  let t=String(tekst==null?"":tekst);
+  t=t.replace(/^\s*verbod\s*:\s*/i,m=>{ uit.verbod=true; uit.tokens.push({soort:"verbod",label:"verbod",bron:m.trim()}); return ""; });
+  t=t.replace(/(^|\s)>([A-Za-z][A-Za-z0-9]{0,11})(?=[\s.,;!?]|$)/g,(m,v,w)=>{
+    const kl=w.toLowerCase();
+    const c=kont.find(x=>String(x.code||"").toLowerCase()===kl);
+    let codes=null, naam="";
+    if(c){ codes=[c.code]; naam=c.naam; }
+    else{
+      const r=rollen.find(x=>String(x.sleutel||"").toLowerCase()===kl||String(x.naam||"").toLowerCase()===kl);
+      const lid=r?kont.filter(x=>x.rol===r.sleutel):[];
+      if(lid.length){ codes=lid.map(x=>x.code); naam=lid.length===1?lid[0].naam:r.naam; }
+    }
+    if(!codes){ uit.tokens.push({soort:"onbekend",label:">"+w,bron:m.trim()}); return m; }
+    codes.forEach(k=>{ if(!uit.aan.includes(k))uit.aan.push(k); });
+    uit.tokens.push({soort:"aan",label:"aan "+naam,bron:m.trim()});
+    return v;
+  });
+  /* De plek: @3.16 zet het punt op dat lokaal van het plan (de opdrachtgever, 19/10/2026). Het teken blijft in de tekst staan tot het lokaal gevonden is; de app weet hier niet welk plan open ligt. */
+  t.replace(/(^|\s)@([A-Za-z0-9][A-Za-z0-9.\-]{0,11})(?=[\s.,;!?]|$)/,(m,v,w0)=>{ const w=w0.replace(/[.\-]+$/,""); if(w&&!uit.plek){ uit.plek=w; uit.tokens.push({soort:"plek",label:"plek "+w,bron:m.trim(),code:w}); } return m; });
+  const basis=nu||new Date();
+  const dm=d=>String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0");
+  t=t.replace(/(^|\s)DL\s*(\+\d{1,3}[dwm]|\d{1,2}[\/.\-]\d{1,2}(?:[\/.\-]\d{2,4})?)(?=[\s.,;!?]|$)/gi,(m,v,w)=>{
+    let d=null;
+    const rel=/^\+(\d{1,3})([dwm])$/i.exec(w);
+    if(rel){ d=new Date(basis.getTime()); const n=+rel[1]; if(rel[2].toLowerCase()==="m")d=plusMaanden(basis,n); else d.setDate(d.getDate()+n*(rel[2].toLowerCase()==="w"?7:1)); }
+    else{
+      const p=/^(\d{1,2})[\/.\-](\d{1,2})/.exec(w);
+      const dd=+p[1], mm=+p[2];
+      if(dd>=1&&dd<=31&&mm>=1&&mm<=12){ const k=new Date(basis.getFullYear(),mm-1,dd); if(k.getMonth()===mm-1)d=k; }      // 31/02 bestaat niet: geen datum
+    }
+    if(!d){ uit.tokens.push({soort:"onbekend",label:"DL "+w+" (geen datum)",bron:m.trim()}); return m; }
+    uit.deadline=dm(d); uit.tokens.push({soort:"deadline",label:"tegen "+uit.deadline,bron:m.trim()});
+    return v;
+  });
+  /* De datum in gewone woorden, alleen na een voorwoord dat een termijn aankondigt: tegen vrijdag, voor morgen, uiterlijk 3/11, tot eind van de week, binnen 2 weken. De woorden blijven in de tekst staan: ze zeggen ook iets. */
+  if(!uit.deadline&&!(negeer&&negeer.deadline)){
+    const DAG={zondag:0,maandag:1,dinsdag:2,woensdag:3,donderdag:4,vrijdag:5,zaterdag:6};
+    const plus=n=>{ const d=new Date(basis.getFullYear(),basis.getMonth(),basis.getDate()); d.setDate(d.getDate()+n); return d; };
+    let d=null;
+    const m2=/(?:^|\s)(?:tegen|v[o\u00F3]{1,2}r|uiterlijk|tot)\s+(maandag|dinsdag|woensdag|donderdag|vrijdag|zaterdag|zondag|morgen|overmorgen|volgende week|volgende maand|einde? (?:van )?(?:de )?week|\d{1,2}[\/.\-]\d{1,2})(?=[\s.,;!?]|$)/i.exec(t);
+    if(m2){
+      const w=m2[1].toLowerCase();
+      if(w in DAG){ let diff=(DAG[w]-basis.getDay()+7)%7; if(diff===0)diff=7; d=plus(diff); }
+      else if(w==="morgen")d=plus(1);
+      else if(w==="overmorgen")d=plus(2);
+      else if(w==="volgende week")d=plus(7);
+      else if(w==="volgende maand")d=plusMaanden(basis,1);
+      else if(/^eind/.test(w))d=plus((5-basis.getDay()+7)%7);
+      else{ const p=/^(\d{1,2})[\/.\-](\d{1,2})/.exec(w); const dd=+p[1], mm=+p[2]; if(dd>=1&&dd<=31&&mm>=1&&mm<=12){ const k=new Date(basis.getFullYear(),mm-1,dd); if(k.getMonth()===mm-1)d=k; } }
+    }else{
+      const m3=/(?:^|\s)binnen\s+(\d{1,3})\s+(dagen|dag|weken|week|maanden|maand)(?=[\s.,;!?]|$)/i.exec(t);
+      if(m3){ const n=+m3[1], e=m3[2].toLowerCase(); d=e.indexOf("maand")===0?plusMaanden(basis,n):plus(e.charAt(0)==="w"?n*7:n); }
+    }
+    if(d){ uit.deadline=dm(d); uit.tokens.push({soort:"deadline",label:"tegen "+uit.deadline+(d.getFullYear()!==basis.getFullYear()?"/"+d.getFullYear():"")+" \u00B7 gelezen",bron:"",negeer:"deadline"}); }
+  }
+  t=t.replace(/(^|\s)!+(?=\s|$)/g,(m,v)=>{ uit.urgent=true; if(!uit.tokens.some(x=>x.soort==="urgent"))uit.tokens.push({soort:"urgent",label:"urgent",bron:m.trim()}); return v; });
+  t=t.replace(/!+\s*$/,m=>{ uit.urgent=true; if(!uit.tokens.some(x=>x.soort==="urgent"))uit.tokens.push({soort:"urgent",label:"urgent",bron:m.trim()}); return ""; });
+  uit.tekst=t.replace(/[ \t]{2,}/g," ").replace(/\s+$/,"").replace(/^\s+/,"");
+  /* HET OORDEEL UIT DE TEKST (de opdrachtgever, 19/10/2026): "luister naar de tekst. Plint los, plint te verven: niet in orde. Geen waardeoordeel: neutraal, later aan te passen. Plint afgewerkt: in orde. Drukletters, uitroeptekens of vraagtekens: ergernis, dus dringend en niet in orde." De app kiest, zegt dat ze het las, en laat je het met één tik wisselen. */
+  const w=uit.tekst;
+  const AFK=new Set(["epb","grb","pvc","xps","eps","osb","mdf","hpl","ral","vmsw","bbw","pur","pir","epdm","nbn","sts","wtw","hvac","pdf","gsm","vco","vgm","vca","hr","led","dak","rvs","wtcb","btw","bim","tcb","hdpe","vgp","dpc","kvk","tpo","pvb","cnc","gps","kws","uit","stb","tv"]);
+  const codes=new Set(kont.map(c=>String(c.code||"").toLowerCase()));
+  const hoofd=(w.match(/\b[A-Z\u00C0-\u00DD]{3,}\b(?![-\d])/g)||[]).filter(x=>!AFK.has(x.toLowerCase())&&!codes.has(x.toLowerCase()));
+  const ergernis=hoofd.length>1||hoofd.some(x=>x.length>=4)||      /* één kort woord in hoofdletters (RVS) is een afkorting; twee, of één lang woord, is een schreeuw *//!{2,}|\?{2,}|\?!|!\?/.test(w)||uit.tokens.some(x=>x.soort==="urgent"&&x.bron.length>1);
+  uit.ergernis=ergernis;
+  if(ergernis&&!uit.urgent){ uit.urgent=true; uit.tokens.push({soort:"urgent",label:"urgent (hoofdletters of uitroeptekens)",bron:""}); }
+  const GEBREK="los|losgekomen|loszittend|kapot|stuk|defect|gebarsten|barst\\w*|scheur\\w*|lek|lekt|lekkage|vocht\\w*|vuil\\w*|scheef|beschadig\\w*|schade|gebrek\\w*|breuk|corrosie|schimmel\\w*|kras\\w*|verkleur\\w*|oneffen\\w*";
+  const NEG=/\b(niet|geen|zonder|ontbreekt|ontbreken|mist|onvoldoende|nog te|slecht|fout|verkeerd|onafgewerkt|onvolledig)\b/i;
+  const NOK=/\b(los|losgekomen|loszittend|kapot|stuk|defect|gebarsten|barst\w*|scheur\w*|lek|lekt|lekkage|vocht(?!vrij)\w*|vuil\w*|scheef|beschadig\w*|breuk|herstel\w*|vervang\w*|corrosie|schimmel\w*|kras\w*|verkleur\w*|oneffen\w*|moet|dient|dienen|te [a-z\u00E0-\u00FF]+en)\b/i;
+  const OKW=/\b(in orde|afgewerkt|conform|correct|goed|geplaatst|voltooid|klaar|netjes|prima|ok|ok\u00E9|akkoord|aanvaard|goedgekeurd|uitgevoerd|opgeleverd|ongeschonden|vochtvrij)\b/i;
+  const HERSTELD=/\b(gedicht|hersteld|opgelost|gerepareerd|verholpen)\b/i;
+  /* een gebrek dat ontkend wordt (geen scheur, niet los, zonder schade) is geen gebrek; een gebrek dat hersteld werd evenmin */
+  const ontkend=new RegExp("\\b(?:geen|zonder|niet)\\s+(?:[a-z\\u00e0-\\u00ff]+\\s+)?(?:"+GEBREK+")\\b","gi");
+  const schoon=w.replace(ontkend," ");
+  const hadOntkenning=schoon!==w;
+  const tl=schoon.toLowerCase().replace(/vochtvrij/g," ");
+  let soortHit=false;
+  try{ soortHit=(typeof SOORTEN!=="undefined"?SOORTEN:[]).some(s=>["gebrek","nietconform","beschadiging","onafgewerkt"].includes(s.sleutel)&&(s.woorden||[]).some(x=>tl.includes(String(x).toLowerCase()))); }catch(e){}
+  let oordeel=null;
+  const SCH=schoon;
+  if(ergernis)oordeel="nok";
+  else if(HERSTELD.test(SCH)&&!NEG.test(SCH))oordeel="ok";
+  else if(NEG.test(SCH)||NOK.test(SCH)||(soortHit&&!hadOntkenning))oordeel="nok";
+  else if(OKW.test(SCH)||hadOntkenning)oordeel="ok";
+  if(uit.aan.length||uit.deadline||uit.verbod)oordeel="nok";      // wie een opdracht, een termijn of een verbod meegeeft, stelt iets vast dat nog moet gebeuren
+  uit.oordeel=oordeel;
+  return uit;
+}
+/* Het lokaal van het open plan bij een lokaalnummer (@3.16): de plek van het punt is dan het midden van dat lokaal. Zonder open plan, of zonder dat nummer op dit plan, is er geen plek en verzint de app er geen. */
+function plekUitLokaal(code){
+  try{
+    if(!plan||!code)return null;
+    const k=String(code).toLowerCase();
+    const l=lokalenVan(plan,planLaag()).find(x=>String(x.nr||"").toLowerCase()===k);
+    if(!l)return null;
+    return {zone:plan.zone,x:+(+l.x).toFixed(2),y:+(+l.y).toFixed(2),lokaal:l.nr,naam:l.naam||"",laag:planLaag(),lokaalLaag:lokaalHerkomst(plan,planLaag())};
+  }catch(e){ return null; }
+}
+/* De chips onder het schrijfvak. Een chip is een besluit dat jij met één teken nam; het kruisje haalt het teken uit de tekst. Zonder tekens staat er een korte wenk zolang het vak leeg is. */
+function ficheStenoTeken(){
+  const bak=document.getElementById("fiche-steno"), veld=document.getElementById("fiche-tekst");
+  if(!bak||!veld)return;
+  const r=stenoLees(veld.value,undefined,undefined,fiche.negeer);
+  bak.innerHTML="";
+  const heeftTekst=!!veld.value.trim();
+  if(!heeftTekst){
+    bak.hidden=false;
+    bak.appendChild(maakEl("span","steno-wenk","! urgent \u00B7 >AB aan wie \u00B7 DL 28/08 tegen wanneer \u00B7 VERBOD:"));
+    return;
+  }
+  bak.hidden=false;
+  /* Het oordeel: wat de app uit de tekst las, tenzij je het zelf koos. Eén tik wisselt: niet in orde, in orde, neutraal. */
+  const eff=fiche.oordeel||r.oordeel||"neutraal";
+  const gok=!fiche.oordeel&&!!r.oordeel;
+  const ob=maakEl("button","steno-chip oordeel "+eff+(gok?" gok":""),(eff==="nok"?"niet in orde \u00B7 actie":eff==="ok"?"in orde \u00B7 geen actie":"neutraal \u00B7 geen actie")+(gok?" \u00B7 gelezen":""));
+  ob.type="button"; ob.title="Dit las de app uit je tekst. Tik om te wisselen: niet in orde, in orde, neutraal.";
+  ob.onclick=()=>{ fiche.oordeel=({neutraal:"nok",nok:"ok",ok:"neutraal"})[eff]; vulFiche(); };      // één tik rood (niet in orde), twee tikken groen (in orde), drie tikken weer neutraal
+  bak.appendChild(ob);
+  /* De uitvoerder die de app voorstelt (vast per hoofdstuk, of geleerd); wat je zelf met >AB zette, staat al als chip. Het kruisje is een nee: de app stelt hem dan niet meer voor bij dit punt. */
+  /* De plek en het artikel die de app kent, zodat je alles wat ze herkende in één oogopslag ziet. */
+  if(!r.tokens.some(k=>k.soort==="plek")){
+    const pk=wachtendePlek;
+    bak.appendChild(maakEl("span","steno-chip plek"+(pk?"":" mist"),pk?("plek "+(pk.lokaal||"op het plan")):"plek: nog niet op het plan"));
+  }
+  if(fiche.keuze){
+    const g=(typeof bestek!=="undefined"&&Array.isArray(bestek))?bestek.find(x=>x.nr===fiche.keuze):null;
+    const kc=maakEl("span","steno-chip artikel");
+    kc.appendChild(maakEl("span",null,"artikel "+fiche.keuze+(g&&g.titel?" "+g.titel:"")+(fiche.onzeker?" \u00B7 suggestie":"")));
+    const kx=maakEl("button","steno-x","\u00D7"); kx.type="button"; kx.setAttribute("aria-label","Niet dit artikel");
+    kx.onclick=()=>{ fiche.keuze=null; fiche.onzeker=null; vulFiche(); };
+    kc.appendChild(kx); bak.appendChild(kc);
+  }
+  if(fiche.aan&&!r.aan.length){
+    const c=contacten.find(x=>x.code===fiche.aan);
+    const ac=maakEl("span","steno-chip aan");
+    ac.appendChild(maakEl("span",null,"aan "+(c?c.naam:fiche.aan)+((fiche.aanOok||[]).length?" +"+fiche.aanOok.length:"")+(fiche.aanBron==="hoofdstuk"?" \u00B7 vast voor dit hoofdstuk":" \u00B7 voorstel")));
+    const ax=maakEl("button","steno-x","\u00D7"); ax.type="button"; ax.setAttribute("aria-label","Niet aan deze uitvoerder");
+    ax.onclick=()=>{ fiche.aan=null; fiche.aanOok=[]; fiche.aanHand=true; fiche.aanGeraden=false; fiche.aanBron=null; vulFiche(); };
+    ac.appendChild(ax); bak.appendChild(ac);
+  }
+  r.tokens.forEach(k=>{
+    const gevonden=k.soort==="plek"?!!plekUitLokaal(k.code):true;
+    const c=maakEl("span","steno-chip "+k.soort+(gevonden?"":" onbekend"));
+    c.appendChild(maakEl("span",null,k.soort==="onbekend"?k.label+" (onbekend)":(k.soort==="plek"&&!gevonden?k.label+" (niet op dit plan)":k.label)));
+    const x=maakEl("button","steno-x","\u00D7"); x.type="button"; x.setAttribute("aria-label","Haal dit teken weg");
+    x.onclick=()=>{
+      if(k.negeer){ fiche.negeer=Object.assign({},fiche.negeer||{},{[k.negeer]:true}); ficheStenoTeken(); return; }      // een gelezen datum: de app laat hem los, de woorden blijven staan
+      const nieuw=veld.value.replace(k.bron,"").replace(/[ \t]{2,}/g," ").trim(); zetVaststelling(nieuw); veld.focus();
+    };
+    if(k.bron||k.negeer)c.appendChild(x);      // een chip zonder teken in de tekst (de hoofdletters) heeft geen kruisje
+    bak.appendChild(c);
+  });
+}
 function ficheVeldOfRegel(){
   const d=document.getElementById("fichedlg");
   const b=document.getElementById("fiche-tekst");
@@ -14365,6 +14836,7 @@ function zetVaststelling(t,van){
   const blad=document.getElementById("fiche-tekst");
   if(van!=="regel")tekstEl.value=t;
   if(blad&&van!=="blad")blad.value=t;
+  try{ ficheStenoTeken(); }catch(e){}
   const d=document.getElementById("fichedlg");
   if(d&&d.open){
     fiche.tekst=String(t||"").trim();
@@ -14579,6 +15051,12 @@ async function bewaarPunt(veld){
   const el=veld||tekstEl;
   let tekst=el.value.trim();
   if(!tekst&&!wachtendeFoto)return false;
+  const steno=stenoLees(tekst,undefined,undefined,wachtendeNegeer||undefined);      // de tekens die je zelf typte: urgent, aan wie, tegen wanneer, verbod, plek
+  tekst=steno.tekst;
+  if(!tekst&&!wachtendeFoto)return false;      // alleen tekens (een uitroepteken, een deadline) is geen vaststelling
+  /* @3.16: staat dat lokaal op het open plan, dan is dat de plek van dit punt, en het teken verdwijnt uit de tekst. Anders blijft het staan zoals je het typte. */
+  const plekUitTekst=steno.plek?plekUitLokaal(steno.plek):null;
+  if(plekUitTekst)tekst=tekst.replace(new RegExp("(^|\\s)@"+steno.plek.replace(/[.*+?^${}()|[\]\\\-]/g,"\\$&")+"[.\\-]*(?=[\\s.,;!?]|$)"),"$1").replace(/[ \t]{2,}/g," ").replace(/\s+([.,;!?])/g,"$1").trim();
   let spreker=null;
   const m=tekst.match(/^([A-Za-z0-9]{1,4})\s*:\s*(.*)$/);
   if(m){spreker=m[1].toUpperCase();tekst=m[2].trim();}
@@ -14591,7 +15069,7 @@ async function bewaarPunt(veld){
   const rondgangId=zorgVoorRondgang();
   const punt=raakAan({id,zone:staat.zone,tekst:tekst,spreker,
     tijd:new Date().toTimeString().slice(0,5),beelden,
-    plek:wachtendePlek, rondgang:rondgangId});
+    plek:plekUitTekst||wachtendePlek, rondgang:rondgangId});
   /* Het hoofdstuk hangt er nu al aan, in plaats van pas in de keet. Dat is het verschil tussen
      een punt dat naar het contract wijst en een punt dat naar een mening wijst — en op de werf
      weet je het, aan een tafel drie dagen later niet meer. */
@@ -14607,6 +15085,16 @@ async function bewaarPunt(veld){
      uit de keet. */
   if(wachtendeAan)punt.aan=wachtendeAan;
   if(wachtendeAanOok&&wachtendeAanOok.length)punt.aanOok=wachtendeAanOok.slice();
+  /* Wat je zelf in de regel zette, wint van wat het blad voorstelde: het is een beslissing, geen gok. */
+  if(steno.aan.length){ punt.aan=steno.aan[0]; const ook=steno.aan.slice(1).filter(c=>c!==punt.aan); if(ook.length)punt.aanOok=ook; else delete punt.aanOok; try{ leerAan(tekst,steno.aan[0],1); }catch(e){} }
+  if(steno.urgent)punt.urgent=true;
+  if(steno.verbod)punt.verbod=true;
+  if(steno.deadline)punt.deadline=steno.deadline;
+  /* Het oordeel, en of de app het las of jij het koos: wat de app las, staat voor het nakijken thuis of in de keet. */
+  { const gekozen=wachtendeOordeel, gelezen=steno.oordeel;
+    punt.oordeel=gekozen||gelezen||"neutraal";
+    if(!gekozen&&gelezen)punt.oordeelGeraden=true;
+    if(wachtendeAanGeraden&&!steno.aan.length&&punt.aan)punt.aanGeraden=true; }
   // Via een dienst binnengekomen: het teken hangt aan het punt. Zie de kop "de AI-modus".
   if(wachtendeVia==="ai")punt.via="ai";
   /* De aantekening reist mee in het punt zelf: het vel, het merk en de doos waar ze ligt. Dat
@@ -14637,7 +15125,7 @@ async function bewaarPunt(veld){
      vanzelf aan dezelfde streep te hangen — dan zouden twee punten naar één haal wijzen en zegt
      het verslag niet meer welke waar ligt. */
   wachtendeHaal=null;
-  wachtendeAan=null; wachtendeAanOok=[]; wachtendeVia=null;
+  wachtendeAan=null; wachtendeAanOok=[]; wachtendeVia=null; wachtendeOordeel=null; wachtendeAanGeraden=false; wachtendeNegeer=null;
   // De plek blijft staan. Je zegt één keer waar je bent en elk volgend punt landt daar, tot je
   // iets anders zegt — op een werf komen vaststellingen in trossen per ruimte. Zolang de plek
   // geldt staat ze op de knop, zodat je ziet dat ze meegaat.
@@ -14913,9 +15401,13 @@ function vulFiche(opties){
   /* PERSOON. De rij zegt wie het is; de lijst eronder staat dicht tot je hem opent. */
   /* TOEWIJZEN: de app schat zelf (de opdrachtgever, 17/10/2026: "de app moet zelf inschatten: categorie en toewijzen"). Zolang jij niet zelf koos, komt de beste gok uit de vaststelling erin te staan, en ze loopt mee met wat je typt. Ze is gemerkt als geraden; een tik op de rij laat je veranderen, en wat je zelf kiest blijft staan. */
   if(FICHEWIJSTTOE&&!fiche.aanHand){
-    const v=aanVoorstellen(fiche.tekst);
-    if(v.length){ fiche.aan=v[0]; fiche.aanOok=[]; fiche.aanGeraden=true; }
-    else if(fiche.aanGeraden){ fiche.aan=null; fiche.aanOok=[]; fiche.aanGeraden=false; }
+    /* Alleen bij een punt dat niet in orde is: wie iets in orde vaststelt of neutraal noteert, geeft niemand een opdracht. De vaste uitvoerder van het hoofdstuk wint van wat de app leerde. */
+    const oordeel=fiche.oordeel||stenoLees(fiche.tekst).oordeel;
+    const hsNr=fiche.keuze?hoofdstukNr(fiche.keuze):null;
+    const vast=(oordeel==="nok"&&hsNr)?hoofdstukUitvoerders(hsNr):[];
+    const v=oordeel==="nok"?(vast.length?vast:aanVoorstellen(fiche.tekst)):[];
+    if(v.length){ fiche.aan=v[0]; fiche.aanOok=vast.length?v.slice(1):[]; fiche.aanGeraden=!vast.length; fiche.aanBron=vast.length?"hoofdstuk":"geleerd"; }
+    else if(fiche.aanGeraden||fiche.aanBron){ fiche.aan=null; fiche.aanOok=[]; fiche.aanGeraden=false; fiche.aanBron=null; }
   }
   const wieAllen=aanSet(fiche).map(code=>{const c=contacten.find(x=>x.code===code);return c?c.naam:code;});
   zetWaarde("fiche-persoon-waarde", wieAllen.length?wieAllen.join(", ")+(fiche.aanGeraden&&!fiche.aanHand?" \u00B7 suggestie":""):"niemand", !wieAllen.length, !!(fiche.aanGeraden&&!fiche.aanHand));
@@ -14964,7 +15456,7 @@ function zetWaarde(id,tekst,leeg,onzeker){
    Sinds de opdrachtgever zijn antwoord van die dag ("onder elke kop, dus twee keer") staat het punt onder de
    kop van élke geadresseerde: de doorstuurblokken, de steno-export en het zoeken lezen de hele
    set (aanSet), en alleen de zin op één regel gaat over één partij (gevolgVan, zieOokVan). */
-function aanSet(o){ return [o&&o.aan, ...((o&&o.aanOok)||[])].filter(Boolean); }
+function aanSet(o){ if(o&&o.oordeel==="ok")return []; return [o&&o.aan, ...((o&&o.aanOok)||[])].filter(Boolean); }      // wat in orde is, geeft niemand een opdracht (de toewijzing blijft bewaard, voor als je het weer op niet in orde zet)
 function zetAanSet(o,lijst){
   const l=[...new Set((lijst||[]).filter(Boolean))];
   o.aan=l[0]||null;
@@ -15236,7 +15728,7 @@ function aanKnoppen(bak,huidig,kies,tekst){
 
 /* De microfoon staat in het tekstvak, rechtsonder (de opdrachtgever, 17/10/2026: "één mooi vlak"): dicteren is dezelfde handeling als schrijven, en hoort niet op een eigen rij. De rij Beschrijving valt weg; het vak is altijd open. */
 /* De opdrachtgever, 17/10/2026: "laat het toewijzen voor in de keet of thuis". Op de werf schrijf je alleen de gedachte op; wie er iets mee moet, wijs je later aan op het punt zelf. De rij en de gok blijven in de code, uit; de proef zet ze aan. */
-let FICHEWIJSTTOE=false;
+let FICHEWIJSTTOE=true;      // sinds 19/10/2026: de app stelt de uitvoerder voor, als chip onder het vak (de opdrachtgever: "de app moet de aannemer herkennen"); de rij zelf blijft verborgen
 function zetFicheWijstToe(v){ FICHEWIJSTTOE=!!v; }
 function ficheMicVerhuis(){
   const mic=document.getElementById("fiche-mic"), vak=document.getElementById("fiche-tekstvak");
@@ -15259,7 +15751,7 @@ function openFiche(tekst,opties){
   const o=opties||{};
   /* Wie terugkomt van het plan, komt terug bij zijn eigen punt: dan blijft de toewijzing staan,
      om dezelfde reden als de keuze hierboven. Elke andere ingang is een nieuw punt. */
-  if(!o.behoudKeuze){ fiche.aan=null; fiche.aanOok=[]; fiche.aanHand=false; fiche.aanGeraden=false; fiche.uit={cat:false, persoon:false, tekst:false}; }
+  if(!o.behoudKeuze){ fiche.aan=null; fiche.aanOok=[]; fiche.aanHand=false; fiche.aanGeraden=false; fiche.aanBron=null; fiche.oordeel=null; fiche.negeer=null; fiche.uit={cat:false, persoon:false, tekst:false}; }
   /* Waar de zin vandaan kwam. Alleen een dienst zegt {via:"ai"}; elke andere ingang is een zin
      van jezelf, en die draagt geen teken. Zie de kop "de AI-modus". */
   if(!o.behoudKeuze)fiche.via=(o.via==="ai")?"ai":null;
@@ -15279,6 +15771,7 @@ function openFiche(tekst,opties){
     fiche.onzeker=(a&&a.onzeker)||null;
   }
   vulFiche();
+  try{ ficheStenoTeken(); }catch(e){}
   const dlg=document.getElementById("fichedlg");
   /* `show()` en niet `showModal()`. Een modaal venster vangt élke tik, ook die op de kaart
      eronder -- en dan is het plan dood zolang het blad staat. Precies dat brak de handeling die
@@ -15877,6 +16370,7 @@ function ficheKlaar(){
      `bewaarPunt` wordt ook aangeroepen waar geen fiche aan te pas komt -- het snelvastleggen --
      en zou daar een keuze van een vorig punt meenemen. */
   wachtendeAan=fiche.aan||null; wachtendeAanOok=(fiche.aanOok||[]).slice();
+  wachtendeOordeel=fiche.oordeel||null; wachtendeAanGeraden=!!(fiche.aanGeraden&&!fiche.aanHand); wachtendeNegeer=fiche.negeer||null;
   wachtendeVia=fiche.via||null;
   merkHoofdstukknop();
 }
@@ -15899,7 +16393,7 @@ function ficheWeggooien(){
   isScan=false;
   if(scanVoorbeeld){ try{ URL.revokeObjectURL(scanVoorbeeld); }catch(e){} scanVoorbeeld=null; }
   wachtendeHaal=null; wachtendeAan=null; wachtendeAanOok=[]; wachtendeVia=null;
-  fiche.keuze=null; fiche.onzeker=null; fiche.aan=null; fiche.aanOok=[]; fiche.aanHand=false; fiche.aanGeraden=false; fiche.via=null; fiche.kop=null;
+  fiche.keuze=null; fiche.onzeker=null; fiche.aan=null; fiche.aanOok=[]; fiche.aanHand=false; fiche.aanGeraden=false; fiche.aanBron=null; fiche.oordeel=null; fiche.negeer=null; fiche.via=null; fiche.kop=null;
   try{ toonWachtendeFoto(); }catch(e){}
   sluitFiche();
   return true;
@@ -16136,6 +16630,7 @@ let wachtendOnzeker=null;
    kop: een toewijzing die stil blijft plakken, hangt de volgende vaststelling aan een partij
    die er niets mee te maken heeft, en dat is erger dan ze twee keer te moeten aantikken. */
 let wachtendeAan=null;
+let wachtendeOordeel=null, wachtendeAanGeraden=false, wachtendeNegeer=null;      // wat je op het blad koos, en of de app de toewijzing gokte
 let wachtendeAanOok=[];   // de anderen, na de eerste; zie aanSet
 let wachtendeVia=null;    // "ai" als de zin via een dienst kwam; zie de kop "de AI-modus"
 let archief=[];          // vorige vergaderdagen, om te tonen wat er nog openstaat
@@ -16836,7 +17331,7 @@ function planTeken(){
     const gq=bladNaarScherm(plan,pl,p.plek.x,p.plek.y), gx=gq.x, gy=gq.y;
     const gekozen=pl.gekozen===p.id;
     x.beginPath();x.arc(gx,gy,gekozen?12:9,0,7);
-    x.fillStyle=gekozen?"#1b4f8a":"rgba(27,79,138,.86)";
+    x.fillStyle=oordeelVan(p)==="nok"?(gekozen?"#b3322a":"rgba(217,69,59,.92)"):oordeelVan(p)==="ok"?(gekozen?"#2b7d56":"rgba(58,157,110,.92)"):(gekozen?"#1b4f8a":"rgba(27,79,138,.86)");      // rood niet in orde, groen in orde, blauw neutraal
     x.fill();
     x.lineWidth=2;x.strokeStyle="#fff";x.stroke();
     x.fillStyle="#fff";
@@ -18536,7 +19031,7 @@ async function puntUitHaal(haal,blad){
   const id="p"+Date.now();
   const rondgangId=zorgVoorRondgang();
   const punt=raakAan({id,zone:staat.zone,tekst:"",spreker:null,tijd:new Date().toTimeString().slice(0,5),
-    beelden:[],plek,onaf:true,rondgang:rondgangId,
+    beelden:[],plek,onaf:true,rondgang:rondgangId,oordeel:"neutraal",
     aantekening:{zone:plan.zone,blad:blad.id,bladnaam:blad.naam,merk:haal.merk,doos:haalDoos(haal)}});
   haal.punt=id;
   zorgVoorPuntnummer(punt); staat.punten.push(punt); bewaarStaat();
@@ -24164,7 +24659,7 @@ function nazichtStippen(){
     if(!q)return;
     const el=document.createElement("button");
     el.type="button";
-    el.className="kaartpunt nu nz-stip"+(nazicht.aan===p.id?" aan":"");
+    el.className="kaartpunt nu nz-stip oordeel-"+oordeelVan(p)+(nazicht.aan===p.id?" aan":"");
     el.style.setProperty("--px",Math.round(q.x)+"px");
     el.style.setProperty("--py",Math.round(q.y)+"px");
     el.dataset.punt=p.id;
@@ -24476,7 +24971,7 @@ async function lbNaarVerslag(id,n,opties){
   const rondgangId=zorgVoorRondgang();
   const punt=raakAan({id:"p"+Date.now(),zone:staat.zone,tekst,spreker:null,tijd:nuUur,beelden:[],plek:null,rondgang:rondgangId,
                       bestekRef:{bron:sl,artikel:id,label:art?lbL(art):"",titel:art?art.titel:""},
-                      besluit:{datum:dag,uur,kanaal}});
+                      besluit:{datum:dag,uur,kanaal},oordeel:"neutraal"});
   zorgVoorPuntnummer(punt); staat.punten.push(punt); bewaarStaat();
   const rg=(staat.rondgangen||[]).find(r=>r.id===rondgangId)||{};
   n.verslag=punt.id;
@@ -25409,19 +25904,22 @@ if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)&&/[?&]open=(punten|versl
   const pg=/[?&]open=(\w+)/.exec(location.search)[1];
   setTimeout(()=>{ try{ ({punten:toonPunten,verslagen:toonVergaderingen,dossier:toonDossier,locatie:toonLocatie,instel:()=>openInstellingen(false)})[pg](); }catch(e){} },3500);
 }
+async function laadVoorbeeldBestekken(){
+  const BESTANDEN=[["vmsw","vmsw-lastenboek.json"],["sb250","sb250-knopen.json"],["werf","werf-knopen.json"]];
+  for(const [sleutel,naam] of BESTANDEN){
+    if(lbBronnen()[sleutel])continue;
+    const r=await fetch("/lokaal/"+naam); if(!r.ok)continue;
+    const o=await r.json();
+    if(o&&o.formaat==="lastenboek-knopen"&&Array.isArray(o.knopen))await importeerLastenboek(lbNaarFormaat(o.knopen,o.naam,sleutel));
+    else await importeerLastenboek(o,sleutel==="vmsw"?undefined:sleutel);
+  }
+}
 /* Alleen voor het bekijken in het toestel-tabblad op de eigen computer (de opdrachtgever, 18/10/2026: "kan je er de voorbeeld bestekken inzetten? ik wil alles kunnen bekijken"): ?laad=bestekken zet de bestanden uit de map lokaal/ (buiten versiebeheer, het zijn documenten van anderen) in de bib van dit toestel:
    het standaard bijzonder bestek van de VMSW, standaardbestek 250 en het voorbeeldbestek van de werf. Wat er al staat blijft staan. Op een ander adres dan localhost doet dit niets. */
 if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)&&/[?&]laad=bestekken\b/.test(location.search)){
   setTimeout(async()=>{
     try{
-      const BESTANDEN=[["vmsw","vmsw-lastenboek.json"],["sb250","sb250-knopen.json"],["werf","werf-knopen.json"]];
-      for(const [sleutel,naam] of BESTANDEN){
-        if(lbBronnen()[sleutel])continue;
-        const r=await fetch("/lokaal/"+naam); if(!r.ok)continue;
-        const o=await r.json();
-        if(o&&o.formaat==="lastenboek-knopen"&&Array.isArray(o.knopen))await importeerLastenboek(lbNaarFormaat(o.knopen,o.naam,sleutel));
-        else await importeerLastenboek(o,sleutel==="vmsw"?undefined:sleutel);
-      }
+      await laadVoorbeeldBestekken();
       ds.open="bestek"; toonDossier();
     }catch(e){}
   },2500);
@@ -25436,6 +25934,86 @@ if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)&&/[?&]laad=tijdlijn\b/.t
       bewaarFasen(); toonVergaderingen("UIT");
     }catch(e){}
   },2500);
+}
+/* ALLES INVULLEN OM TE TESTEN (de opdrachtgever, 18/10/2026: "vul alles in: fictieve werven, bezoeken, fictieve verslagen, lastenboek zodat we kunnen testen"): ?laad=alles, alleen op localhost, vult dit toestel met de demo, de drie voorbeeldbestekken, zes verzonnen werven (met een eigen tijdlijn, fase, facturatiemomenten, contacten, bezoeken, afgesloten verslagen met punten en een lopend verslag) en opent het dashboard. Er staat niets van een echt dossier in: de werven en teksten zijn verzonnen. Wat er al staat blijft staan. */
+const TESTPUNTEN=[["voeg in de vloer loopt niet door aan de noordzijde","nietconform","12"],["waterdichting aan de opstand nazien voor de volgende ronde","gebrek","07"],["bijkomende sparing gevraagd voor de technieken aan de westzijde","onafgewerkt","05"],["stalen ligger wijkt af van het uitvoeringsplan","nietconform","03"],["bouwplaatsafsluiting beschadigd, te herstellen","beschadiging","00"],["kleurstalen van de gevelsteen nog niet ter goedkeuring voorgelegd","onafgewerkt","09"],["scheur in de pleisterlaag boven het raam","gebrek","14"],["afwerking van de trapneus is onregelmatig","esthetiek","16"],["vocht zichtbaar aan de binnenzijde van de kelderwand","gebrek","02"],["dakrandprofiel loszittend aan de oostzijde","gebrek","07"],["leidingen zonder brandwerende doorvoer","nietconform","11"],["steigers niet verankerd volgens het veiligheidsplan","nietconform","00"]];
+const TESTMENSEN=[
+  {naam:"An Verhoeven",code:"AV",rol:"architect",functie:"Architect",bedrijf:"Studio Aarde",email:"an.verhoeven@studio-aarde.example.test",gsm:"0470 00 00 01"},
+  {naam:"Koen Peeters",code:"KP",rol:"aannemer",functie:"Projectleider",bedrijf:"Bouwbedrijf Delta",email:"koen.peeters@delta.example.test",gsm:"0470 00 00 02"},
+  {naam:"Sofie Claes",code:"SC",rol:"architect",functie:"Ingenieur stabiliteit",bedrijf:"Ingenieursbureau Nova",email:"sofie.claes@nova.example.test",gsm:"0470 00 00 03"},
+  {naam:"Jan De Smet",code:"JD",rol:"opdrachtgever",functie:"Bouwheer",bedrijf:"Stad Proefstad",email:"jan.desmet@proefstad.example.test",gsm:"0470 00 00 04"},
+  {naam:"Lien Maes",code:"LM",rol:"aannemer",functie:"Werfleider",bedrijf:"Bouwbedrijf Delta",email:"lien.maes@delta.example.test",gsm:"0470 00 00 05"},
+  {naam:"Tom Willems",code:"TW",rol:"architect",functie:"Veiligheidscoordinator",bedrijf:"Prevent Plus",email:"tom.willems@preventplus.example.test",gsm:"0470 00 00 06"},
+  {naam:"Eva Jacobs",code:"EJ",rol:"opdrachtgever",functie:"Dossierbeheerder",bedrijf:"Woonmaatschappij Proef",email:"eva.jacobs@woonmaatschappij-proef.example.test",gsm:"0470 00 00 07"}
+];
+async function vulTestgegevens(){
+  const verschuif=(t,n)=>new Date(dagGetal(t)*864e5+n*864e5).toISOString().slice(0,10);
+  const nuDag=dagGetal(vandaag());
+  if(!demoWerf())await laadDemo();
+  await laadVoorbeeldBestekken();
+  const oorspronkelijk=actief;
+  const codes=STANDAARDFASEN.map(f=>f.code);
+  const WERVEN=[
+    ["proefA","Proefwerf Antwerpen","P-2601",-27,"UIT",51.22,4.40,14,true],
+    ["proefB","Proefwerf Namen","P-2602",180,"VERG",50.47,4.87,6,true],
+    ["proefC","Proefwerf Brugge","P-2603",138,"BA",51.21,3.22,9,true],
+    ["proefD","Proefwerf Gent","P-2604",229,"VO",51.05,3.72,11,true],
+    ["proefE","Proefwerf Hasselt","P-2605",260,"PO",50.93,5.34,4,true],
+    ["proefF","Proefwerf Luik","P-2606",-104,"VOPL",50.63,5.57,7,true],
+    [DEMOID,null,null,0,"UIT",null,null,0,false]
+  ];
+  let teller=0;
+  for(const [id,naam,nummer,n,fase,la,lo,aantal,eigen] of WERVEN){
+    let p=projecten.find(x=>x.id===id);
+    if(!p&&eigen){ p={id:id,naam:naam,nummer:nummer,plekken:[],gemaakt:new Date().toISOString()}; projecten.push(p); }
+    if(!p)continue;
+    if(eigen){
+      p.bezoeken=Array.from({length:aantal},(_,i)=>({dag:verschuif("2026-03-02",i*9+(Math.abs(n)%7)),lat:+(la+((i%3)-1)*0.012).toFixed(5),lon:+(lo+((i%2)-0.5)*0.016).toFixed(5)}));
+      const kz=[[0,1,3],[2,4,6],[0,4,3],[2,1,6],[0,5,3],[5,1,6]][WERVEN.findIndex(x=>x[0]===id)]||[0,1,3];
+      localStorage.setItem(CONTACTSLEUTEL+":"+id,JSON.stringify(kz.map(ix=>TESTMENSEN[ix])));
+    }
+    const fl=STANDAARDFASEN.map(f=>{ const d=TIJDLIJNDUMMY[f.code]; return d?{code:f.code,naam:f.naam,van:verschuif(d[0],n),tot:verschuif(d[1],n),facturen:d[2].map(x=>({datum:verschuif(x[0],n),naam:x[1]}))}:{code:f.code,naam:f.naam}; });
+    localStorage.setItem(FASESLEUTEL+":"+id,JSON.stringify(fl));
+    /* de afgesloten verslagen: één per afgeronde fase, twee in de fase waar de werf nu zit */
+    actief=id;
+    const huidig=codes.indexOf(fase);
+    const lopendNr=(codes.indexOf(fase)>=0?2:1)+(eigen?1:0);
+    for(let fi=0;fi<=huidig;fi++){
+      const d=TIJDLIJNDUMMY[codes[fi]]; if(!d)continue;
+      const aantalV=(fi===huidig)?(eigen?2:0):1;
+      for(let k=0;k<aantalV;k++){
+        const datum=verschuif(d[0],n+7+k*28); if(dagGetal(datum)>=nuDag)continue;
+        const nrV=k+1, ref=codes[fi]+"-"+String(nrV).padStart(2,"0");
+        const punten=[0,1,2].map(i=>{
+          const t=TESTPUNTEN[(teller+i)%TESTPUNTEN.length];
+          const pt={id:"t"+(++teller)+"-"+i,zone:"N0",tekst:t[0],spreker:null,tijd:"0"+(9+i)+":"+(10+i*13),beelden:[],soort:t[1],aan:"AB",hoofdstuk:t[2],nummer:ref+"."+(i+1),gewijzigd:datum+"T0"+(9+i)+":00:00.000Z"};
+          if(i===0){ pt.status="klaar"; pt.afgehandeld=verschuif(datum,14); }
+          if(i===2&&k===0&&fi===Math.max(0,huidig-1))pt.urgent=true;      // één urgent punt per werf
+          return pt;
+        });
+        await zetDag(datum,{datum:datum,sleutel:datum,weer:"droog, 17 graden",bezetting:(4+nrV*2)+" man",zone:"N0",aanwezig:[],punten:punten,rondgangen:[],fase:codes[fi],nr:nrV,titel:"",verslagstatus:"definitief",afgesloten:true});
+      }
+    }
+    /* het lopende verslag van een verzonnen werf; dat van de demo blijft zoals het was */
+    if(eigen){
+      const nr=(fase==="UIT"||huidig>=0)?3:1;
+      const ref=fase+"-"+String(nr).padStart(2,"0");
+      const lp=[3,4,5].map((x,i)=>{ const t=TESTPUNTEN[(teller+x)%TESTPUNTEN.length]; return {id:"l"+id+i,zone:"N0",tekst:t[0],spreker:null,tijd:"1"+i+":"+(20+i*10),beelden:[],soort:t[1],aan:"AB",hoofdstuk:t[2],nummer:ref+"."+(i+1),gewijzigd:new Date().toISOString()}; });
+      localStorage.setItem(SLEUTEL+":"+id,JSON.stringify({datum:id==="proefB"?verschuif(vandaag(),-12):vandaag(),weer:"bewolkt, 14 graden",bezetting:"6 man",zone:"N0",aanwezig:["AB","ST"],punten:lp,rondgangen:[],fase:fase,nr:nr,titel:"",verslagstatus:"concept"}));
+    }
+  }
+  actief=oorspronkelijk;
+  const demoP=projecten.find(x=>x.id===DEMOID);
+  bewaarProjecten();
+  archief=await haalDagen();
+  laadFasen();
+  /* de demo zelf: de tijdlijn van de fasen, in het lopende geheugen en bewaard */
+  fasen.forEach(f=>{ const d=TIJDLIJNDUMMY[f.code]; if(!d||f.van||f.tot)return; f.van=d[0]; f.tot=d[1]; f.facturen=d[2].map(x=>({datum:x[0],naam:x[1]})); });
+  bewaarFasen();
+  return true;
+}
+if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)&&/[?&]laad=alles\b/.test(location.search)){
+  setTimeout(async()=>{ try{ await vulTestgegevens(); toonDashboard(); melding("Testgegevens ingevuld: demo, bestekken, zes werven met verslagen en bezoeken"); }catch(e){ try{ melding("Testgegevens invullen mislukt: "+(e&&e.message)); }catch(x){} } },3000);
 }
 /* Alleen om te bekijken op de eigen computer: ?laad=dashboard zet twee verzonnen werven naast de werf die openstaat, elk met een eigen tijdlijn, fase en facturatiemomenten, en opent het dashboard. */
 if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)&&/[?&]laad=dashboard\b/.test(location.search)){
@@ -27672,7 +28250,9 @@ function puntenRegels(){
   return {
     open:sorteer(nu.filter(e=>isOpen(e.p)).concat(openPunten().map(p=>({p,vanEerder:true})))),
     klaar:sorteer(nu.filter(e=>isKlaar(e.p)).concat(inDitVerslagAfgevinkt().map(p=>({p,vanEerder:true})))),
-    nvt:sorteer(nu.filter(e=>isVervallen(e.p)))
+    nvt:sorteer(nu.filter(e=>isVervallen(e.p))),
+    // wat je als in orde vaststelde (groene stip): het staat niet meer bij wat openstaat, maar het verdwijnt ook niet
+    ok:sorteer(nu.filter(e=>e.p.oordeel==="ok"&&!isKlaar(e.p)&&!isVervallen(e.p)&&!isDoorgeschoven(e.p)))
   };
 }
 function puntenVerslag(e){
@@ -27684,6 +28264,7 @@ function puntenPeriode(e,soort){
   const p=e.p, sinds=sindsVan(p), tot=p.afgehandeld;
   const dgn=n=>n+(n===1?" dag":" dagen");
   if(soort==="open")return "open sinds "+datumKort(sinds)+" \u00B7 "+dgn(puntenDagen(sinds));
+  if(soort==="ok")return "in orde \u00B7 vastgesteld "+datumKort(sinds);
   return (soort==="klaar"?"opgelost ":"niet meer relevant ")+datumKort(tot)+" \u00B7 stond open "+datumKort(sinds)+" tot "+datumKort(tot)+" ("+dgn(puntenDagen(sinds,tot))+")";
 }
 async function puntenVink(e,soort){
@@ -27702,6 +28283,7 @@ function puntenRij(e,soort){
   const vink=maakVinkvak(p,e.vanEerder);
   if(vink.tagName==="BUTTON")vink.onclick=ev=>{ if(ev&&ev.stopPropagation)ev.stopPropagation(); puntenVink(e,soort); };
   rij.appendChild(vink);
+  rij.appendChild(oordeelStip(p,()=>puntenTeken(),!!e.vanEerder));
   const open=puntenUit.has(p.id);
   const kolom=maakEl("div","pt-kolom");
   const kop=maakEl("button","fiche-hoofdstuk pt-hoofd"+(open?" open":"")); kop.type="button";
@@ -27762,7 +28344,7 @@ async function puntenTeken(){
   body.innerHTML="";
   const r=puntenRegels();
   const kop=maakEl("div","loc-kop pt-samen");
-  kop.appendChild(maakEl("div","loc-kop-rij",r.open.length+" open \u00B7 "+r.klaar.length+" opgelost"+(r.nvt.length?" \u00B7 "+r.nvt.length+" niet meer relevant":"")));
+  kop.appendChild(maakEl("div","loc-kop-rij",r.open.length+" open \u00B7 "+r.klaar.length+" opgelost"+(r.ok.length?" \u00B7 "+r.ok.length+" in orde":"")+(r.nvt.length?" \u00B7 "+r.nvt.length+" niet meer relevant":"")));
   kop.appendChild(maakEl("div","loc-kop-rij pt-hint","Het laatst toegevoegde punt staat bovenaan."));
   body.appendChild(kop);
   const blok=(titel,lijst,soort,leeg)=>{
@@ -27772,6 +28354,7 @@ async function puntenTeken(){
     lijst.forEach(e=>body.appendChild(puntenRij(e,soort)));
   };
   blok("Open",r.open,"open","Niets open.");
+  blok("In orde",r.ok,"ok","");
   blok("Opgelost",r.klaar,"klaar","");
   blok("Niet meer relevant",r.nvt,"nvt","");
   puntenVerhuisd=null;
@@ -27848,6 +28431,7 @@ function heatBlok(body){
   g.forEach((x,i)=>{
     const d=Math.round(46+Math.sqrt(x.n/maxN)*(kaart?110:170));
     const b=maakEl("button","heat-blob"); b.type="button";
+    b.onclick=async()=>{ if(x.p.id!==actief)await wisselProject(x.p.id); gaNaarPagina("begin"); };      // een tik op de cirkel opent de werf op het plan
     b.style.left=(kaart?((x.lon-K.lon0)/(K.lon1-K.lon0)*100):pos(px[i],px))+"%";
     b.style.top=(kaart?((K.lat1-x.lat)/hoogte*100):pos(py[i],py))+"%";
     b.style.width=d+"px"; b.style.height=d+"px"; b.style.setProperty("--k",x.kleur);
@@ -27858,7 +28442,8 @@ function heatBlok(body){
   body.appendChild(vlak);
   const lijst=maakEl("div","heat-lijst");
   g.forEach(x=>{
-    const r=maakEl("div","heat-rij");
+    const r=maakEl("button","heat-rij proj-rij"); r.type="button";
+    r.onclick=async()=>{ if(x.p.id!==actief)await wisselProject(x.p.id); gaNaarPagina("begin"); };
     const stip=maakEl("span","heat-stip"); stip.style.background="rgb("+x.kleur+")"; r.appendChild(stip);
     r.appendChild(maakEl("span","heat-rijnaam",x.p.naam));
     r.appendChild(maakEl("span","heat-rijtel",x.n+(x.n===1?" bezoek":" bezoeken")));
@@ -27904,35 +28489,181 @@ function alleContacten(){
     return {p,lijst:(Array.isArray(l)?l:[]).filter(c=>c&&c.naam)};
   });
 }
-function toonContactenOverzicht(){
-  const rolnaam=sl=>{ const r=ROLLEN.find(o=>o.sleutel===sl); return r?r.naam:sl; };
-  const groepen=alleContacten();
-  const totaal=groepen.reduce((a,g)=>a+g.lijst.length,0);
-  const body=overzichtPagina("contacten-alle","Contacten",totaal?totaal+(totaal===1?" contact":" contacten")+" in "+groepen.filter(g=>g.lijst.length).length+" "+(groepen.filter(g=>g.lijst.length).length===1?"werf":"werven")+".":"Nog geen contacten. Je voegt ze toe in Instellingen, per werf.");
-  if(!totaal)return;
-  const zoek=document.createElement("input"); zoek.type="search"; zoek.placeholder="Zoek op naam, code, rol of vak"; zoek.className="contact-zoek"; zoek.setAttribute("aria-label","Zoek een contact");
-  body.appendChild(zoek);
-  const blok=maakEl("div","contact-blok"); body.appendChild(blok);
-  const teken=()=>{
-    const q=zoek.value.trim().toLowerCase();
-    blok.innerHTML="";
-    groepen.forEach(g=>{
-      const l=g.lijst.filter(c=>!q||[c.naam,c.code,c.vak||"",c.rol?rolnaam(c.rol):""].join(" ").toLowerCase().indexOf(q)>=0);
-      if(!l.length)return;
-      blok.appendChild(maakEl("h3","contact-werf",g.p.naam+(g.p.id===actief?" \u00B7 nu open":"")));
-      const lijst=maakEl("div","heat-lijst");
-      l.forEach(c=>{
-        const r=maakEl("div","heat-rij");
-        r.appendChild(maakEl("span","heat-rijnaam",c.naam));
-        r.appendChild(maakEl("span","heat-rijtel",c.code||""));
-        r.appendChild(maakEl("span","heat-rijdag",[c.rol?rolnaam(c.rol):"",c.vak||""].filter(Boolean).join(" \u00B7 ")));
-        lijst.appendChild(r);
-      });
-      blok.appendChild(lijst);
+/* CONTACTEN IMPORTEREN (de opdrachtgever, 18/10/2026: "importeren uit csv, apple adres, google adres, android adres"): Apple Contacten, Google Contacten en Android geven allemaal een vCard-bestand (.vcf) of een csv-bestand. Hier staan de twee lezers; de rest van de app weet niet waar een contact vandaan komt. Het bestand wordt op dit toestel gelezen en gaat nergens heen. */
+function leesVcard(tekst){
+  const uit=[];
+  const ont=t=>String(t||"").replace(/\\n/gi," ").replace(/\\([,;\\])/g,"$1").trim();
+  const blokken=String(tekst||"").replace(/^\uFEFF/,"").replace(/\r?\n[ \t]/g,"").split(/BEGIN:VCARD/i).slice(1);
+  blokken.forEach(blok=>{
+    const c={}; let n=null, tel=null, telVoorkeur=0, mail=null, mailVoorkeur=0;
+    blok.split(/\r?\n/).forEach(regel=>{
+      const i=regel.indexOf(":"); if(i<1)return;
+      const sl=regel.slice(0,i), w=regel.slice(i+1);
+      const [veld,...par]=sl.split(";"); const V=veld.toUpperCase().replace(/^ITEM\d+\./,""); const P=par.join(";").toUpperCase();
+      if(V==="FN")c.naam=ont(w);
+      else if(V==="N"){ const d=w.split(";"); n=((d[1]||"")+" "+(d[0]||"")).trim(); }
+      else if(V==="ORG")c.bedrijf=ont(w.split(";")[0]);
+      else if(V==="TITLE")c.functie=ont(w);
+      else if(V==="EMAIL"){ const v=/WORK/.test(P)?2:1; if(w.trim()&&v>mailVoorkeur){ mail=ont(w); mailVoorkeur=v; } }
+      else if(V==="TEL"){ const v=/CELL|MOBILE/.test(P)?3:(/WORK/.test(P)?2:1); if(w.trim()&&v>telVoorkeur){ tel=ont(w.replace(/^tel:/i,"")); telVoorkeur=v; } }
     });
-    if(!blok.children.length)blok.appendChild(maakEl("p","inv-uitleg","Niemand gevonden."));
+    if(!c.naam&&n)c.naam=ont(n);
+    if(mail)c.email=mail; if(tel)c.gsm=tel;
+    if(c.naam)uit.push({naam:c.naam,functie:c.functie||"",bedrijf:c.bedrijf||"",email:c.email||"",gsm:c.gsm||""});
+  });
+  return uit;
+}
+function leesContactCsv(tekst){
+  const t=String(tekst||"").replace(/^\uFEFF/,"");
+  const eerste=t.split(/\r?\n/)[0]||"";
+  const scheid=(eerste.split(";").length>eerste.split(",").length)?";":((eerste.split("\t").length>eerste.split(",").length)?"\t":",");
+  const rijen=[]; let rij=[], cel="", citaat=false;
+  for(let i=0;i<t.length;i++){
+    const ch=t[i];
+    if(citaat){ if(ch==='"'){ if(t[i+1]==='"'){ cel+='"'; i++; } else citaat=false; } else cel+=ch; }
+    else if(ch==='"')citaat=true;
+    else if(ch===scheid){ rij.push(cel); cel=""; }
+    else if(ch==="\n"||ch==="\r"){ if(ch==="\r"&&t[i+1]==="\n")i++; rij.push(cel); cel=""; if(rij.some(x=>x!==""))rijen.push(rij); rij=[]; }
+    else cel+=ch;
+  }
+  rij.push(cel); if(rij.some(x=>x!==""))rijen.push(rij);
+  if(rijen.length<2)return [];
+  const kop=rijen[0].map(h=>h.trim().toLowerCase());
+  const vind=(namen,los)=>{ let i=kop.findIndex(h=>namen.includes(h)); if(i<0&&los)i=kop.findIndex(h=>los.test(h)); return i; };
+  const ix={
+    naam:vind(["name","naam","full name","display name","volledige naam","weergavenaam"]),
+    voor:vind(["first name","given name","voornaam"]),
+    achter:vind(["last name","family name","achternaam","surname"]),
+    functie:vind(["job title","organization title","organization 1 - title","title","functie","jobtitel","positie"],/title|functie/),
+    bedrijf:vind(["company","organization","organization name","organization 1 - name","bedrijf","firma","organisatie"],/company|organi[sz]ation(?! .*title)|bedrijf/),
+    email:vind(["e-mail address","email address","e-mail","email","e-mail 1 - value","email 1 - value","e-mailadres","primary email","e-mail address 1"],/e-?mail/),
+    gsm:vind(["mobile phone","mobile","gsm","cell","phone 1 - value","phone","telephone","telefoon","primary phone","business phone"],/mobile|gsm|phone|tel/)
   };
-  zoek.oninput=teken; teken();
+  const g=(r,i)=>i<0?"":String(r[i]||"").split(" ::: ")[0].trim();
+  return rijen.slice(1).map(r=>{
+    let naam=g(r,ix.naam); if(!naam)naam=(g(r,ix.voor)+" "+g(r,ix.achter)).trim();
+    return {naam:naam,functie:g(r,ix.functie),bedrijf:g(r,ix.bedrijf),email:g(r,ix.email),gsm:g(r,ix.gsm)};
+  }).filter(c=>c.naam);
+}
+/* De gelezen contacten bij een werf zetten. Wie er al staat (zelfde e-mail, anders dezelfde naam) wordt aangevuld waar een veld leeg was en nooit overschreven; de anderen komen erbij met een eigen code. */
+function importeerContacten(pid,nieuw){
+  let lijst=[]; try{ lijst=JSON.parse(localStorage.getItem(CONTACTSLEUTEL+":"+pid)||"[]")||[]; }catch(e){ lijst=[]; }
+  if(!Array.isArray(lijst))lijst=[];
+  const sl=c=>((c.email||"").trim().toLowerCase())||((c.naam||"").trim().toLowerCase());
+  let erbij=0, aangevuld=0;
+  nieuw.forEach(n=>{
+    const bestaand=lijst.find(x=>x&&sl(x)===sl(n));
+    if(bestaand){ let w=false; ["functie","bedrijf","email","gsm"].forEach(k=>{ if(!bestaand[k]&&n[k]){ bestaand[k]=n[k]; w=true; } }); if(w)aangevuld++; return; }
+    const letters=n.naam.split(/\s+/).map(x=>x[0]||"").join("").slice(0,3).toUpperCase()||"C";
+    let code=letters, k=2; while(lijst.some(x=>x&&x.code===code))code=letters+k++;
+    const c={naam:n.naam,code:code}; ["functie","bedrijf","email","gsm"].forEach(f=>{ if(n[f])c[f]=n[f]; });
+    lijst.push(c); erbij++;
+  });
+  bewaarContactenVan(pid,lijst);
+  return {erbij:erbij,aangevuld:aangevuld};
+}
+/* ALLE CONTACTEN ALS TABEL (de opdrachtgever, 18/10/2026: "contacten, alfabetisch, sommige contacten hebben meerdere werven. Begin bij naam, dan functie, bedrijf, email, gsm, project"): één rij per persoon, op naam; staat dezelfde persoon (zelfde e-mail, anders dezelfde naam) bij meer werven, dan is het één rij met alle werven in de laatste kolom. De cellen zijn te bewerken; een wijziging gaat naar die persoon bij elke werf. */
+const CONTACTVELDEN=[["naam","Naam"],["functie","Functie"],["bedrijf","Bedrijf"],["email","E-mail"],["gsm","GSM"]];
+function bewaarContactenVan(pid,lijst){
+  try{ localStorage.setItem(CONTACTSLEUTEL+":"+pid,JSON.stringify(lijst)); }catch(e){ melding("Opslag weigert — ruimte vol?"); }
+  if(pid===actief)laadContacten();
+}
+function toonContactenOverzicht(zoekTekst,nieuweCode){
+  const body=overzichtPagina("contacten-alle","Contacten","");
+  const intro=maakEl("p","inv-uitleg",""); body.appendChild(intro);
+  const bar=maakEl("div","ct-bar");
+  const zoek=document.createElement("input"); zoek.type="search"; zoek.placeholder="Zoek op naam, functie, bedrijf, e-mail, gsm of werf"; zoek.className="contact-zoek"; zoek.setAttribute("aria-label","Zoek een contact"); zoek.value=zoekTekst||"";
+  const nieuw=maakEl("button","ct-nieuw","+ Contact"); nieuw.type="button";
+  const impKnop=maakEl("button","ct-nieuw","Importeren"); impKnop.type="button";
+  bar.appendChild(zoek); bar.appendChild(nieuw); bar.appendChild(impKnop); body.appendChild(bar);
+  const paneel=maakEl("div","ct-import"); paneel.hidden=true; body.appendChild(paneel);
+  paneel.appendChild(maakEl("p","inv-uitleg","Kies een bestand uit Apple Contacten, Google Contacten of je Android-telefoon (vCard, .vcf), of een csv-bestand. Het wordt hier op het toestel gelezen. Wie al bij de werf staat wordt aangevuld, nooit overschreven."));
+  const kies=maakEl("label","ct-importrij"); kies.appendChild(maakEl("span",null,"Naar werf"));
+  const sel=document.createElement("select"); projecten.forEach(p=>{ const o=document.createElement("option"); o.value=p.id; o.textContent=p.naam; if(p.id===actief)o.selected=true; sel.appendChild(o); }); kies.appendChild(sel);
+  paneel.appendChild(kies);
+  const uitslag=maakEl("p","inv-uitleg","");
+  const klaar=(lijst)=>{
+    if(!lijst.length){ uitslag.textContent="Geen contacten gevonden in dit bestand."; return; }
+    const r=importeerContacten(sel.value,lijst);
+    uitslag.textContent=r.erbij+" erbij, "+r.aangevuld+" aangevuld, "+(lijst.length-r.erbij-r.aangevuld)+" stonden er al.";
+    melding("Contacten ingelezen: "+r.erbij+" erbij");
+    teken();
+  };
+  const rijKnoppen=maakEl("div","ct-importrij");
+  const bestandKnop=maakEl("button","ct-nieuw","Bestand kiezen (csv of vCard)"); bestandKnop.type="button";
+  bestandKnop.onclick=()=>{
+    const inp=document.createElement("input"); inp.type="file"; inp.accept=".csv,.vcf,.txt,text/csv,text/vcard,text/x-vcard"; inp.multiple=true; inp.style.display="none"; document.body.appendChild(inp);
+    inp.onchange=async()=>{
+      const alle=[];
+      for(const f of [...(inp.files||[])]){
+        try{ const t=await f.text(); (/BEGIN:VCARD/i.test(t)?leesVcard(t):leesContactCsv(t)).forEach(c=>alle.push(c)); }catch(e){}
+      }
+      inp.remove(); klaar(alle);
+    };
+    inp.click();
+  };
+  rijKnoppen.appendChild(bestandKnop);
+  if(typeof navigator!=="undefined"&&navigator.contacts&&navigator.contacts.select){
+    const tf=maakEl("button","ct-nieuw","Kies uit je telefoon"); tf.type="button";
+    tf.onclick=async()=>{ try{ const r=await navigator.contacts.select(["name","email","tel"],{multiple:true}); klaar(r.map(x=>({naam:(x.name&&x.name[0])||"",functie:"",bedrijf:"",email:(x.email&&x.email[0])||"",gsm:(x.tel&&x.tel[0])||""})).filter(c=>c.naam)); }catch(e){} };
+    rijKnoppen.appendChild(tf);
+  }
+  paneel.appendChild(rijKnoppen); paneel.appendChild(uitslag);
+  paneel.appendChild(maakEl("p","ct-hulp","Apple: Contacten, Archief, Exporteer vCard. Google: contacts.google.com, Exporteren, Google CSV of vCard. Android: Contacten, Instellingen, Exporteren (.vcf)."));
+  impKnop.onclick=()=>{ paneel.hidden=!paneel.hidden; };
+  const tabel=maakEl("div","ct-tabel"); body.appendChild(tabel);
+  const teken=()=>{
+    const groepen=alleContacten();
+    const mensen=new Map();
+    groepen.forEach(g=>g.lijst.forEach(c=>{
+      const sl=((c.email||"").trim().toLowerCase())||((c.naam||"").trim().toLowerCase());
+      if(!mensen.has(sl))mensen.set(sl,{items:[],werven:[]});
+      const m=mensen.get(sl); m.items.push({pid:g.p.id,c:c,lijst:g.lijst}); if(!m.werven.some(w=>w.id===g.p.id))m.werven.push(g.p);
+    }));
+    const q=zoek.value.trim().toLowerCase();
+    const rijen=[...mensen.values()].map(m=>({m,c:m.items[0].c}))
+      .filter(({m,c})=>!q||[c.naam,c.functie,c.bedrijf,c.email,c.gsm].concat(m.werven.map(w=>w.naam)).join(" ").toLowerCase().indexOf(q)>=0)
+      .sort((a,b)=>String(a.c.naam||"").localeCompare(String(b.c.naam||""),"nl",{sensitivity:"base"}));
+    const totaal=mensen.size;
+    intro.textContent=totaal?totaal+(totaal===1?" contact":" contacten")+", op naam. De cellen zijn te bewerken; staat iemand bij meer werven, dan staan ze allemaal in de laatste kolom.":"Nog geen contacten. Tik op + Contact om er een toe te voegen aan de werf die openstaat.";
+    tabel.innerHTML="";
+    if(!rijen.length)return;
+    const kop=maakEl("div","ct-rij ct-kop");
+    CONTACTVELDEN.forEach(([k,t])=>kop.appendChild(maakEl("span","ct-cel",t))); kop.appendChild(maakEl("span","ct-cel","Project"));
+    tabel.appendChild(kop);
+    rijen.forEach(({m,c})=>{
+      const rij=maakEl("div","ct-rij");
+      CONTACTVELDEN.forEach(([k])=>{
+        const cel=maakEl("span","ct-cel");
+        const inp=document.createElement("input"); inp.type=k==="email"?"email":(k==="gsm"?"tel":"text"); inp.value=c[k]||""; inp.setAttribute("aria-label",k);
+        if(nieuweCode&&k==="naam"&&c.code===nieuweCode)inp.dataset.nieuw="1";
+        inp.onchange=()=>{
+          const w=inp.value.trim();
+          const lijsten=new Set();
+          m.items.forEach(it=>{ if(w)it.c[k]=w; else if(k!=="naam")delete it.c[k]; lijsten.add(it); });
+          if(k==="naam"&&!w)return;
+          const per=new Map(); m.items.forEach(it=>per.set(it.pid,it.lijst));
+          per.forEach((l,pid)=>bewaarContactenVan(pid,l));
+          teken();
+        };
+        cel.appendChild(inp); rij.appendChild(cel);
+      });
+      const pc=maakEl("span","ct-cel ct-werven");
+      m.werven.forEach(wf=>{ const b=maakEl("button","ct-werf",wf.naam); b.type="button"; b.onclick=async()=>{ if(wf.id!==actief)await wisselProject(wf.id); gaNaarPagina("begin"); }; pc.appendChild(b); });
+      rij.appendChild(pc);
+      tabel.appendChild(rij);
+    });
+    const nw=tabel.querySelector("input[data-nieuw]"); if(nw){ nw.focus(); nw.select(); }
+  };
+  zoek.oninput=teken;
+  nieuw.onclick=()=>{
+    const lijst=(()=>{ try{ return JSON.parse(localStorage.getItem(CONTACTSLEUTEL+":"+actief)||"[]")||[]; }catch(e){ return []; } })();
+    let n=1, code; do{ code="NC"+n++; }while(lijst.some(x=>x&&x.code===code));
+    lijst.push({naam:"Nieuw contact",code:code});
+    bewaarContactenVan(actief,lijst);
+    zoek.value=""; toonContactenOverzicht("",code);
+  };
+  teken();
 }
 /* HET DASHBOARD (de opdrachtgever, 18/10/2026: "een overkoepelend dashboard met een tijdlijn van alle projecten, in welke fase ze zitten, wanneer de factuurmomenten zijn"): alle werven onder één tijdas. Per werf een rij met haar fasen als balken (van de data die je bij de fase invulde), een ruitje per facturatiemoment, en de fase waar ze nu in zit. Een lijn voor vandaag. Onderaan alle facturatiemomenten op datum. */
 function dagGetal(t){ const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(t||""); return m?Date.UTC(+m[1],+m[2]-1,+m[3])/864e5:null; }
@@ -27951,9 +28682,106 @@ function werfOverzicht(p){
   const nuNaam=(fl.find(f=>f.code===nu)||{}).naam||nu;
   return {p,balken,facturen,nu,nuNaam};
 }
-function toonDashboard(){
+/* HET SLIMME DASHBOARD (de opdrachtgever, 18/10/2026: "maak een slim dashboard waarbij we alle belangrijke zaken en overzichten op één blad zien"): bovenaan de cijfers die tellen, daaronder wat aandacht vraagt (urgente punten, fasen die over hun einddatum zijn, verslagen die te lang openstaan, punten die al lang open zijn, werven zonder planning of zonder bezoek) naast wat eraan komt (facturatiemomenten), dan de tijdlijn van alle werven en de heatmap. De app rekent het uit de gegevens die er al zijn; ze verzint niets. */
+function haalDagenVan(pid){ return new Promise(res=>{
+  if(!db)return res([]);
+  try{ const q=db.transaction("dagen","readonly").objectStore("dagen").getAll(IDBKeyRange.bound(pid+"|",pid+"|\uffff")); q.onsuccess=()=>res(q.result||[]); q.onerror=()=>res([]); }catch(e){ res([]); }
+});}
+async function werfStand(p){
+  let st=null; try{ const r=localStorage.getItem(SLEUTEL+":"+p.id); if(r)st=JSON.parse(r); }catch(e){}
+  const lopend=p.id===actief?staat:st;
+  const dagen=await haalDagenVan(p.id);
+  const open=[];
+  dagen.concat(lopend?[lopend]:[]).forEach(v=>(v.punten||[]).forEach(pt=>{
+    if(isOpen(pt))open.push({tekst:pt.tekst||"(zonder tekst)",urgent:!!pt.urgent,nummer:pt.nummer||"",datum:(pt.uit&&pt.uit.eerste)||v.datum});
+  }));
+  const conceptDatum=(lopend&&lopend.verslagstatus!=="definitief"&&!lopend.afgesloten&&(lopend.punten||[]).length)?lopend.datum:null;
+  return {p:p,open:open,conceptDatum:conceptDatum};
+}
+async function openWerf(id,pagina,fase){
+  if(id!==actief)await wisselProject(id);
+  if(pagina==="punten")toonPunten(); else if(pagina==="verslagen")toonVergaderingen(fase); else gaNaarPagina("begin");
+}
+function slimDashboard(body,rijen,standen){
+  const nu=dagGetal(vandaag());
+  const dm=d=>{ const t=new Date(d*864e5); return t.getUTCDate()+"/"+(t.getUTCMonth()+1); };
+  const aandacht=[], komend=[];
+  let openTotaal=0, urgentTotaal=0, conceptTotaal=0, oudsteConcept=0, vertraagd=0, bezoeken30=0, laatsteBezoek=null;
+  rijen.forEach((r,i)=>{
+    const st=standen[i], w=r.p;
+    openTotaal+=st.open.length;
+    st.open.forEach(o=>{
+      if(o.urgent){ urgentTotaal++; aandacht.push({ernst:4,dot:"rood",tekst:o.tekst,sub:w.naam+" \u00B7 urgent punt "+o.nummer,doe:()=>openWerf(w.id,"punten")}); }
+      else{ const l=nu-(dagGetal(o.datum)||nu); if(l>=30)aandacht.push({ernst:1,dot:"grijs",tekst:o.tekst,sub:w.naam+" \u00B7 al "+l+" dagen open",doe:()=>openWerf(w.id,"punten")}); }
+    });
+    const b=r.balken.find(x=>x.f.code===r.nu);
+    if(b&&b.tot<nu){ vertraagd++; aandacht.push({ernst:3,dot:"oranje",tekst:r.nu+" \u00B7 "+r.nuNaam+" liep af op "+dm(b.tot),sub:w.naam+" \u00B7 "+(nu-b.tot)+" dagen over de einddatum",doe:()=>openWerf(w.id,"verslagen",r.nu)}); }
+    if(!r.balken.length&&!r.facturen.length)aandacht.push({ernst:0,dot:"grijs",tekst:"Nog geen planning ingevuld",sub:w.naam,doe:()=>openWerf(w.id,"verslagen",r.nu)});
+    if(st.conceptDatum){
+      conceptTotaal++; const d=nu-dagGetal(st.conceptDatum); if(d>oudsteConcept)oudsteConcept=d;
+      if(d>=7)aandacht.push({ernst:3,dot:"oranje",tekst:"Lopend verslag van "+dm(dagGetal(st.conceptDatum))+" nog niet afgesloten",sub:w.naam+" \u00B7 "+d+" dagen",doe:()=>openWerf(w.id,"verslagen",r.nu)});
+    }
+    const bz=(w.bezoeken||[]).map(x=>dagGetal(x.dag)).filter(d=>d!=null);
+    bz.forEach(d=>{ if(nu-d<=30)bezoeken30++; if(!laatsteBezoek||d>laatsteBezoek.d)laatsteBezoek={d:d,w:w}; });
+    if(bz.length&&!bz.some(d=>nu-d<=30))aandacht.push({ernst:1,dot:"grijs",tekst:"Al meer dan 30 dagen geen bezoek",sub:w.naam,doe:()=>openWerf(w.id,"begin")});
+    r.facturen.forEach(x=>{ if(x.dag>=nu){ komend.push({x:x,r:r}); if(x.dag-nu<=14)aandacht.push({ernst:2,dot:"oranje",tekst:"Facturatiemoment over "+(x.dag-nu)+" dagen"+(x.naam?": "+x.naam:""),sub:w.naam+" \u00B7 "+x.fase+" \u00B7 "+dm(x.dag),doe:()=>openWerf(w.id,"verslagen",x.fase)}); } });
+  });
+  komend.sort((a,b)=>a.x.dag-b.x.dag);
+  const in30=komend.filter(k=>k.x.dag-nu<=30);
+  const tegel=(getal,label,sub,alarm)=>{ const t=maakEl("div","slim-tegel"+(alarm?" alarm":"")); t.appendChild(maakEl("span","slim-getal",String(getal))); t.appendChild(maakEl("span","slim-label",label)); t.appendChild(maakEl("span","slim-sub",sub||"")); return t; };
+  const tegels=maakEl("div","slim-tegels");
+  tegels.appendChild(tegel(rijen.length,rijen.length===1?"werf":"werven",standen.filter(x=>x.open.length).length+" met open punten"));
+  tegels.appendChild(tegel(openTotaal,"open punten",urgentTotaal+" urgent",urgentTotaal>0));
+  tegels.appendChild(tegel(in30.length,"facturatie, 30 dagen",komend.length?"eerstvolgende "+dm(komend[0].x.dag)+" \u00B7 "+komend[0].r.p.naam:"niets gepland"));
+  tegels.appendChild(tegel(conceptTotaal,"lopende verslagen",conceptTotaal?"oudste "+oudsteConcept+" dagen":"geen",oudsteConcept>=7));
+  tegels.appendChild(tegel(bezoeken30,"bezoeken, 30 dagen",laatsteBezoek?"laatst "+dm(laatsteBezoek.d)+" \u00B7 "+laatsteBezoek.w.naam:"nog geen bezoek"));
+  tegels.appendChild(tegel(vertraagd,"fasen over de einddatum",vertraagd?"zie aandacht":"alles op schema",vertraagd>0));
+  body.appendChild(tegels);
+  const twee=maakEl("div","slim-twee");
+  const links=maakEl("div","slim-kolom"); links.appendChild(maakEl("h3","contact-werf","Aandacht"));
+  aandacht.sort((a,b)=>b.ernst-a.ernst);
+  const lijstA=maakEl("div","heat-lijst");
+  if(!aandacht.length)lijstA.appendChild(maakEl("p","inv-uitleg","Niets dat aandacht vraagt."));
+  aandacht.slice(0,10).forEach(a=>{
+    const b=maakEl("button","heat-rij proj-rij"); b.type="button";
+    b.appendChild(maakEl("span","slim-dot "+a.dot));
+    const t=maakEl("span","slim-tekst"); t.appendChild(maakEl("span","slim-regel1",a.tekst)); t.appendChild(maakEl("span","heat-rijdag",a.sub)); b.appendChild(t);
+    b.onclick=a.doe; lijstA.appendChild(b);
+  });
+  if(aandacht.length>10)lijstA.appendChild(maakEl("p","inv-uitleg","+ "+(aandacht.length-10)+" meer"));
+  links.appendChild(lijstA);
+  const rechts=maakEl("div","slim-kolom"); rechts.appendChild(maakEl("h3","contact-werf","Komende facturatiemomenten"));
+  const lijstF=maakEl("div","heat-lijst");
+  if(!komend.length)lijstF.appendChild(maakEl("p","inv-uitleg","Nog niets gepland. Je vult de momenten in bij Verslag, per fase."));
+  komend.slice(0,8).forEach(k=>{
+    const b=maakEl("button","heat-rij proj-rij"); b.type="button";
+    b.appendChild(maakEl("span","dash-fdatum",dm(k.x.dag)));
+    const t=maakEl("span","slim-tekst"); t.appendChild(maakEl("span","slim-regel1",k.r.p.naam+(k.x.naam?" \u00B7 "+k.x.naam:""))); t.appendChild(maakEl("span","heat-rijdag",k.x.fase+" \u00B7 over "+(k.x.dag-nu)+" dagen")); b.appendChild(t);
+    b.onclick=()=>openWerf(k.r.p.id,"verslagen",k.x.fase); lijstF.appendChild(b);
+  });
+  rechts.appendChild(lijstF);
+  twee.appendChild(links); twee.appendChild(rechts); body.appendChild(twee);
+  body.appendChild(maakEl("h3","contact-werf","Tijdlijn"));
+}
+async function toonDashboard(){
   const rijen=projecten.map(werfOverzicht);
-  const body=overzichtPagina("dashboard","Dashboard",rijen.length+(rijen.length===1?" werf":" werven")+" onder één tijdlijn: de fasen, waar elke werf nu zit en de facturatiemomenten.");
+  const body=overzichtPagina("dashboard","Dashboard","Alles op één blad: wat aandacht vraagt, wat eraan komt en waar elke werf staat.");
+  const standen=await Promise.all(projecten.map(werfStand));
+  if(document.getElementById("dlg-titel").textContent!=="Dashboard")return;
+  slimDashboard(body,rijen,standen);
+  body.appendChild(afdrukKnoppen("dashboard",()=>toonDashboard()));
+  /* DE TIJDLIJN INSTELBAAR (de opdrachtgever, 18/10/2026: "maak de tijdlijn instelbaar, ik wil ze ruimer" en "ik wil die densiteit van de rij kunnen instellen"): de breedte per maand (passend op het scherm, of ruimer met zijwaarts schuiven binnen de tijdlijn, de namen blijven staan) en de hoogte van een rij. De keuze blijft op dit toestel. */
+  const ZB=[["Passend",0],["Ruim",70],["Ruimer",120],["Ruimst",200]], ZR=[["Compact",44],["Normaal",64],["Ruim",90]];
+  const lees=(sl,std)=>{ try{ const v=parseInt(localStorage.getItem(sl),10); return isFinite(v)?v:std; }catch(e){ return std; } };
+  const breedteZoom=lees("werfpunten-dash-breedte",0), rijHoogte=lees("werfpunten-dash-rij",64);
+  const opties=maakEl("div","dash-opties");
+  const groep=(label,lijst,huidig,sl)=>{
+    const g=maakEl("div","dash-groep"); g.appendChild(maakEl("span","dash-groeplabel",label));
+    lijst.forEach(([t,w])=>{ const b=maakEl("button",w===huidig?"actief":null,t); b.type="button"; b.onclick=()=>{ try{ localStorage.setItem(sl,String(w)); }catch(e){} toonDashboard(); }; g.appendChild(b); });
+    opties.appendChild(g);
+  };
+  groep("Breedte",ZB,breedteZoom,"werfpunten-dash-breedte"); groep("Rijen",ZR,rijHoogte,"werfpunten-dash-rij");
+  body.appendChild(opties);
   const vandaagD=dagGetal(vandaag());
   const alle=[vandaagD];
   rijen.forEach(r=>{ r.balken.forEach(b=>alle.push(b.van,b.tot)); r.facturen.forEach(x=>alle.push(x.dag)); });
@@ -27963,20 +28791,24 @@ function toonDashboard(){
   const pct=x=>((x-begin)/(einde-begin)*100).toFixed(2)+"%";
   const MAANDEN=["jan","feb","maart","april","mei","juni","juli","aug","sept","okt","nov","dec"];
   const dm=x=>{ const d=new Date(x*864e5); return d.getUTCDate()+"/"+(d.getUTCMonth()+1); };
-  const kast=maakEl("div","dash");
+  const kast=maakEl("div","dash"); kast.style.setProperty("--dashrij",rijHoogte+"px");
+  const binnen=maakEl("div","dash-binnen"); kast.appendChild(binnen);
+  const vlakBreedte=breedteZoom?Math.round((einde-begin)/30.44*breedteZoom):0;      // in pixels; nul is passend op het scherm
+  if(vlakBreedte)binnen.style.minWidth="calc(var(--dashnaam,240px) + "+vlakBreedte+"px)";
   /* de as: dezelfde indeling als de tijdbalken van een werf (maand, jaar eronder, een lijn per maand) */
   const kop=maakEl("div","dash-rij dash-kop"); kop.appendChild(maakEl("div","dash-naam"));
   const as=maakEl("div","dash-vlak dash-as");
+  if(vlakBreedte){ as.style.flex="none"; as.style.width=vlakBreedte+"px"; }
   for(let y=eerste.getUTCFullYear(),m=eerste.getUTCMonth();Date.UTC(y,m,1)/864e5<einde;m++){
     if(m>11){m=0;y++;}
     const k=maakEl("span","gantt-maand"+(m===0||as.children.length===0?" jaarstart":""));
-    const dun=(einde-begin)>420&&m%3!==0&&as.children.length>0;      // bij meer dan veertien maanden een naam per kwartaal, anders staan ze over elkaar; de lijnen blijven per maand
+    const dun=(breedteZoom?breedteZoom<80:(einde-begin)>420)&&m%3!==0&&as.children.length>0;      // bij meer dan veertien maanden een naam per kwartaal, anders staan ze over elkaar; de lijnen blijven per maand
     if(!dun)k.appendChild(maakEl("span","gantt-mnaam",MAANDEN[m]));
     if(m===0||as.children.length===0)k.appendChild(maakEl("span","gantt-jaar",String(y)));
     k.style.left=pct(Date.UTC(y,m,1)/864e5);
     as.appendChild(k);
   }
-  kop.appendChild(as); kast.appendChild(kop);
+  kop.appendChild(as); binnen.appendChild(kop);
   rijen.forEach(r=>{
     const rij=maakEl("button","dash-rij"+(r.p.id===actief?" actief":"")); rij.type="button";
     const naam=maakEl("div","dash-naam");
@@ -27984,6 +28816,7 @@ function toonDashboard(){
     naam.appendChild(maakEl("span","dash-fase",r.nu+" \u00B7 "+r.nuNaam));
     rij.appendChild(naam);
     const vlak=maakEl("div","dash-vlak");
+    if(vlakBreedte){ vlak.style.flex="none"; vlak.style.width=vlakBreedte+"px"; }
     for(let y=eerste.getUTCFullYear(),m=eerste.getUTCMonth();Date.UTC(y,m,1)/864e5<einde;m++){
       if(m>11){m=0;y++;}
       const l=maakEl("span","dash-maandlijn"); l.style.left=pct(Date.UTC(y,m,1)/864e5); vlak.appendChild(l);
@@ -27998,31 +28831,18 @@ function toonDashboard(){
     r.facturen.forEach(x=>{ const t=maakEl("span","gantt-factuur dash-factuur"); t.style.left=pct(x.dag); t.title=dm(x.dag)+" \u00B7 "+x.fase+(x.naam?" \u00B7 "+x.naam:""); vlak.appendChild(t); });
     rij.appendChild(vlak);
     rij.onclick=async()=>{ if(r.p.id!==actief)await wisselProject(r.p.id); toonVergaderingen(r.nu); };
-    kast.appendChild(rij);
+    binnen.appendChild(rij);
   });
   /* vandaag: één lijn over alle rijen */
-  const lijn=maakEl("span","dash-vandaag"); lijn.style.left="calc(var(--dashnaam,240px) + (100% - var(--dashnaam,240px)) * "+((vandaagD-begin)/(einde-begin)).toFixed(4)+")";
+  const lijn=maakEl("span","dash-vandaag"); const deel=(vandaagD-begin)/(einde-begin);
+  lijn.style.left=vlakBreedte?"calc(var(--dashnaam,240px) + "+(deel*vlakBreedte).toFixed(1)+"px)":"calc(var(--dashnaam,240px) + (100% - var(--dashnaam,240px)) * "+deel.toFixed(4)+")";
   lijn.appendChild(maakEl("span","dash-vandaag-t","vandaag"));
-  kast.appendChild(lijn);
+  binnen.appendChild(lijn);
   body.appendChild(kast);
+  if(vlakBreedte)kast.scrollLeft=Math.max(0,deel*vlakBreedte-kast.clientWidth*0.35);      // vandaag staat in beeld
   /* de heatmap: waar je de meeste bezoeken hebt */
   body.appendChild(maakEl("h3","contact-werf","Heatmap"));
   heatBlok(body);
-  /* alle facturatiemomenten op datum */
-  const alleF=[]; rijen.forEach(r=>r.facturen.forEach(x=>alleF.push({r,x})));
-  alleF.sort((a,b)=>a.x.dag-b.x.dag);
-  body.appendChild(maakEl("h3","contact-werf","Facturatiemomenten"));
-  if(!alleF.length){ body.appendChild(maakEl("p","inv-uitleg","Nog geen facturatiemomenten ingevuld. Je voegt ze toe bij Verslag, per fase.")); return; }
-  const lijst=maakEl("div","heat-lijst");
-  alleF.forEach(({r,x})=>{
-    const rg=maakEl("div","heat-rij"+(x.dag<vandaagD?" voorbij":""));
-    rg.appendChild(maakEl("span","dash-fdatum",dm(x.dag)+"/"+String(new Date(x.dag*864e5).getUTCFullYear()).slice(2)));
-    rg.appendChild(maakEl("span","heat-rijnaam",r.p.naam+(x.naam?" \u00B7 "+x.naam:"")));
-    rg.appendChild(maakEl("span","heat-rijtel",x.fase));
-    rg.appendChild(maakEl("span","heat-rijdag",x.dag<vandaagD?"voorbij":(x.dag-vandaagD)+" dagen"));
-    lijst.appendChild(rg);
-  });
-  body.appendChild(lijst);
 }
 function gaNaarEigen(naam,doe){
   if(menuNu()===naam)return;
