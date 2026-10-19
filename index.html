@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-1DxewJBMqWaURAgmg//Fwog/mWPbODBJeGddoJxohRE=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-LQsmWsaTRFvUXQraqPZ6i/8vRj4foBAr/0fWAoYzqb8='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-QGhlK/oPG4ndnqoOeDL5OPKmsGdSFpYko4Nn+gnAkUE=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-Pk1C0Ufu3dDUjpQRXKhkmB3KSfS9AWIi07dEY8szGtQ='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3426,6 +3426,103 @@
   .steno-chip.urgent,.steno-chip.verbod{background:#d9453b;color:#fff;box-shadow:none}
   .steno-chip.onbekend{opacity:.6}
   .steno-x{border:0;background:none;color:inherit;font-size:16px;line-height:1;padding:0 6px;cursor:pointer;opacity:.7}
+  /* === begin autoaanvullen === */
+  #fichedlg .dlg-body>.fiche-aanvul{order:1}
+  .fiche-aanvul{display:flex;flex-wrap:nowrap;gap:6px;align-items:center;padding:2px 4px 4px;overflow-x:auto;scrollbar-width:none}
+  .fiche-aanvul::-webkit-scrollbar{display:none}
+  .fiche-aanvul[hidden]{display:none}
+  .aanvul-chip{flex:none;max-width:60vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border:0;padding:6px 12px;border-radius:12px;font:inherit;font-size:14px;color:var(--ink);background:rgba(255,255,255,.7);box-shadow:inset 0 0 0 1px rgba(255,255,255,.8),0 1px 6px rgba(40,50,30,.08);cursor:pointer}
+  .aanvul-chip:active{opacity:.7}
+  /* === einde autoaanvullen === */
+/* === begin verzenden-per-bestemmeling-css === */
+  .verz-kies{display:flex;align-items:flex-start;gap:10px;padding:9px 0;cursor:pointer}
+  .verz-kies input{margin-top:3px;flex:0 0 auto}
+  .verz-kies small{display:block;color:var(--muted,#6b6b6b)}
+  .verz-kies small.verz-let{color:#b45309}
+  .verz-go{margin:12px 0}
+  .verz-ok{color:#2e7d32;font-weight:600}
+/* === einde verzenden-per-bestemmeling-css === */
+/* === begin plekvoorstel === */
+.steno-chip.plek.voorstel{border-style:dashed;gap:4px}
+.steno-chip.plek.voorstel .steno-voorstel{all:unset;cursor:pointer;font:inherit;color:inherit}
+/* === einde plekvoorstel === */
+/* === begin uitvoerder-keuze === */
+  #uitvoerderdlg{width:min(94vw,560px);max-width:94vw}
+  #uitvoerderdlg .uv-fasen{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 6px}
+  #uitvoerderdlg .uv-fase{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:14px;padding:7px 12px;font-size:13px;min-height:36px;cursor:pointer}
+  #uitvoerderdlg .uv-fase.aan{background:var(--ink);border-color:var(--ink);color:var(--ground);font-weight:650}
+  #uitvoerderdlg .uv-fasenaam{margin:0 0 12px;font-size:var(--tk);color:var(--ink-soft)}
+  #uitvoerderdlg .uv-rij{padding:10px 0;border-top:1px solid var(--line-soft)}
+  #uitvoerderdlg .uv-hs{font-size:var(--tm);font-weight:650;margin:0 0 6px}
+  #uitvoerderdlg .uv-chips{display:flex;flex-wrap:wrap;gap:6px}
+  #uitvoerderdlg .uv-chip{border:1px solid var(--line);background:var(--surface);color:var(--ink-soft);border-radius:14px;padding:7px 12px;font-size:13px;min-height:36px;cursor:pointer}
+  #uitvoerderdlg .uv-chip.aan{background:var(--ink);border-color:var(--ink);color:var(--ground)}
+  #uitvoerderdlg .uv-chip.erft{background:var(--surface);color:var(--ink);border-style:dashed;border-color:var(--ink)}
+  #uitvoerderdlg .uv-wis{margin-top:6px;border:0;background:none;color:var(--ink-soft);font-size:var(--tk);text-decoration:underline;padding:6px 0;cursor:pointer}
+  #uitvoerderdlg .uv-leeg{color:var(--ink-soft);font-size:var(--tm)}
+  #uitvoerderdlg .uv-tekstbak{margin-top:14px;border-top:1px solid var(--line-soft);padding-top:10px}
+  #uitvoerderdlg .uv-tekstbak summary{cursor:pointer;color:var(--ink-soft);font-size:var(--tm);padding:6px 0}
+  #uitvoerderdlg textarea{width:100%;min-height:150px;border:1px solid var(--line);border-radius:var(--radius);padding:10px;font:var(--tinvoer)/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--surface);color:var(--ink);resize:vertical;box-sizing:border-box}
+  #uitvoerderdlg .uv-tekstbak button{margin-top:8px}
+  #uitvoerderdlg .inv-ok{background:var(--ink);border-color:var(--ink);color:var(--ground);font-weight:650}
+  /* === einde uitvoerder-keuze === */
+  /* === begin tellers === */
+  /* DE TELLER PER GROEP (de opdrachtgever, 19/10/2026): een kleine bol met het aantal open punten, en bij een urgent punt een rode stip in de hoek. Bij nul staat er niets. Rustig: een zachte tint, geen kleur voor het getal zelf. */
+  .tel-bol{position:relative;display:inline-flex;align-items:center;justify-content:center;flex:none;box-sizing:border-box;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:rgba(22,26,30,.09);color:var(--ink);font:600 11px/1 -apple-system,system-ui,sans-serif;letter-spacing:0;font-variant-numeric:tabular-nums}
+  .tel-bol.zacht{background:rgba(22,26,30,.05);color:var(--ink-soft);font-weight:500}
+  .tel-urgent{position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:50%;background:#d9453b;box-shadow:0 0 0 1.5px var(--ground,#fff)}
+  .fiche-hoofdstuk > .tel-bol{margin-left:2px}
+  .pt-blok > .tel-bol{margin-left:10px;vertical-align:middle;top:-1px}
+  .zone-btn > .tel-bol{position:absolute;top:2px;right:2px;min-width:15px;height:15px;padding:0 4px;border-radius:8px;font-size:9.5px}
+  .zone-btn > .tel-bol .tel-urgent{width:6px;height:6px;top:-2px;right:-2px}
+  /* === einde tellers === */
+  /* === begin oordeel-in-verslag === */
+  /* Het oordeel in het verslag (vlag VERSLAGOORDEEL). Het woord draagt de betekenis; de lijn links is alleen hulp en valt op zwart-wit weg zonder iets te verliezen. Een voorstel van de app is gestippeld en cursief: het ziet er niet uit als een vaststelling. */
+  .af-oordeel{margin:2px 0 0;font-size:11px;line-height:1.35;padding-left:6px;border-left:2px solid #444}
+  .af-oordeel-woord{font-weight:600;text-transform:uppercase;letter-spacing:.03em;font-size:10px}
+  .af-oordeel-nok{border-left-color:#b3322a}
+  .af-oordeel-ok{border-left-color:#2b7d56}
+  .af-oordeel-voorstel{border-left:2px dotted #666;font-style:italic;font-weight:400}
+  /* === einde oordeel-in-verslag === */
+  /* === begin dicteren === */
+  /* Zonder spraakherkenning in de browser is er geen microfoonknop (merkSpraakknoppen). */
+  .geen-spraak{display:none !important}
+  dialog.dicteer-uitleg{max-width:min(92vw,420px);padding:18px 18px 14px;border:0;border-radius:14px;background:var(--ground,#fff);color:var(--ink,#161a1e);box-shadow:0 10px 40px rgba(0,0,0,.25)}
+  dialog.dicteer-uitleg::backdrop{background:rgba(0,0,0,.35)}
+  dialog.dicteer-uitleg h3{margin:0 0 8px;font-size:17px}
+  dialog.dicteer-uitleg p{margin:0 0 10px;font-size:14px;line-height:1.4}
+  .dicteer-knoppen{display:flex;gap:10px;justify-content:flex-end;margin-top:6px}
+  .dicteer-knoppen button{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--ink,#161a1e);background:transparent;color:inherit;font:inherit;font-weight:600}
+  .dicteer-knoppen .dicteer-ja{background:var(--ink,#161a1e);color:var(--ground,#fff)}
+  /* === einde dicteren === */
+  /* === begin bestekcontrole-css === */
+  #keetdlg .keet-controle{margin:6px 0;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.6);box-shadow:inset 0 0 0 1px rgba(255,255,255,.8),0 1px 6px rgba(40,50,30,.08);font-size:14px;line-height:1.35}
+  #keetdlg .keet-controle[hidden]{display:none}
+  #keetdlg .keet-controle.voorstel{box-shadow:inset 0 0 0 1px rgba(150,150,150,.5);border:1px dashed rgba(120,120,120,.6)}
+  #keetdlg .kc-zin{font-weight:600}
+  #keetdlg .kc-reden{color:var(--muted,#6b6b6b);margin-top:2px}
+  #keetdlg .keet-controle.z-gok .kc-reden,#keetdlg .keet-controle.z-twijfel .kc-reden{color:#b45309}
+  #keetdlg .kc-let{color:#b45309;margin-top:4px}
+  #keetdlg .kc-eis{margin-top:6px;white-space:pre-wrap}
+  #keetdlg .kc-eis.kc-leeg{color:var(--muted,#6b6b6b);font-style:italic}
+  #keetdlg .kc-knoppen{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+  #keetdlg .kc-knoppen button{min-height:44px;padding:8px 14px;border:0;border-radius:12px;font:inherit;background:rgba(255,255,255,.8);box-shadow:inset 0 0 0 1px rgba(120,120,120,.35);cursor:pointer}
+  /* === einde bestekcontrole-css === */
+  /* === begin formaten === */
+  /* Tikdoelen van minstens 44 px (gemeten 19/10/2026 op 375, 393, 768, 1024 en 1180). De stip van het oordeel is 20 px zichtbaar, het tikveld eromheen 44. */
+  .oordeel-stip::after{inset:-12px}
+  .fiche-x,#fichedlg .fiche-x{width:44px;height:44px}
+  #fichedlg .fiche-x{top:-10px;right:0}
+  .fiche-micknop{width:44px;height:44px}
+  #fichedlg .fiche-knoprij{min-height:44px}
+  #keetdlg button,#keetdlg select,#keetdlg input:not([type=checkbox]):not([type=radio]):not([type=file]),#keetdlg .keet-vouw,#keetdlg .verg-kop{min-height:44px}
+  #keetdlg .kaartpunt{min-height:0}
+  #keetdlg .teken-balk #keet-vorige,#keetdlg .teken-balk #keet-volgende,#keetdlg .spreker-knop{min-width:44px}
+  .dash-groep button,.afdruk-knoppen button,.loc-opnieuw{min-height:44px}
+  .fase-veld input,.fase-edit-rij input,.fase-edit-weg,.fase-edit-plus{min-height:44px}
+  /* een lang woord in een smalle tegel (iPad, 768 en 1024) valt anders over de rand */
+  .slim-sub,.slim-label{overflow-wrap:anywhere}
+  /* === einde formaten === */
 </style>
 </head>
 <body>
@@ -3702,6 +3799,7 @@
         <textarea class="fiche-veld" id="fiche-tekst" rows="4" placeholder="Schrijf één gedachte…"
                   autocomplete="off" enterkeyhint="done" aria-label="Beschrijving"></textarea>
       </div>
+      <div class="fiche-aanvul" id="fiche-aanvul" hidden aria-label="Aanvullingen"></div>
       <div class="fiche-steno" id="fiche-steno" hidden></div>
       <!-- De volgorde was die van de opdrachtgever op 28/09/2026: vaststelling, toewijzen aan, categorie,
            punt of lokaal -- van wat je zelf zegt naar wat de app erbij weet. Op 30/09 draaide hij
@@ -3780,6 +3878,7 @@
     <div class="bestekstrook" id="bestekstrook" hidden aria-live="polite"></div>
     <!-- Eén regel, en typen is zowel noteren als opzoeken. Een schakelaar zou een tik kosten
          vóór je weet wat je gaat doen, en dat weet je op een werf vaak pas terwijl je typt. -->
+    <div class="fiche-aanvul" id="aanvulrij" hidden aria-label="Aanvullingen"></div>
     <div class="invoerrij">
       <div class="prompt">
         <button class="pmeer" id="meerknop" type="button" aria-expanded="false" title="Doc, schets, snel en de plek">+</button>
@@ -3940,6 +4039,25 @@
   </div>
 </dialog>
 
+<dialog id="uitvoerderdlg">
+  <div class="dlg-kop"><h2>Uitvoerders per hoofdstuk</h2></div>
+  <div class="dlg-body">
+    <p class="inv-uitleg">Tik per hoofdstuk wie het uitvoert. Meer dan één mag. De app stelt die uitvoerder voor bij elk punt over dat hoofdstuk dat niet in orde is. Een code in de regel zelf (&gt;AB) wint altijd. Een tik bewaart meteen.</p>
+    <div id="uv-fasen" class="uv-fasen"></div>
+    <p class="uv-fasenaam" id="uv-fasenaam"></p>
+    <div id="uv-lijst"></div>
+    <details id="uv-tekstbak" class="uv-tekstbak">
+      <summary>tekst</summary>
+      <p class="inv-uitleg">Eén regel per hoofdstuk: <code>07 dak = AB+DW</code>. Voor één fase: <code>07@NZ = DW</code>. Een regel met een onbekende code bewaart de rest en laat de bestaande uitvoerder staan.</p>
+      <textarea id="uv-tekst" rows="8" autocorrect="off" autocapitalize="off" spellcheck="false" autocomplete="off"></textarea>
+      <button type="button" id="uv-pas">tekst toepassen</button>
+    </details>
+  </div>
+  <div class="dlg-voet">
+    <button type="button" id="uv-klaar" class="inv-ok">Klaar</button>
+  </div>
+</dialog>
+
 <dialog id="invoerdlg">
   <div class="dlg-kop"><h2 id="inv-titel">Invoer</h2></div>
   <div class="dlg-body">
@@ -3986,9 +4104,9 @@
         <div class="dagboek">
           <label id="rdg-soort-label" hidden>soort</label><div class="keet-knoppen" id="rdg-soort" hidden></div>
           <label for="rdg-uur" id="rdg-uur-label" hidden>uur</label><input id="rdg-uur" placeholder="09:15" inputmode="numeric" autocomplete="off" hidden>
-          <label for="weer">W:</label><div class="weerveld"><input id="weer" placeholder="droog, 19°, wind matig" autocomplete="off"><button type="button" id="weerknop" title="Weer ophalen via locatie">ophalen</button></div>
-          <label for="bezetting" id="bezetting-label">BZ:</label><input id="bezetting" placeholder="6 man — 2 dakwerkers, 3 schilders" autocomplete="off">
-          <label id="rdg-bz-label" hidden>BZ:</label><div class="rdg-bz" id="rdg-bz" hidden><div id="rdg-bz-rijen"></div><div class="aw-chips" id="rdg-bz-chips"></div></div>
+          <label for="weer">Weer:</label><div class="weerveld"><input id="weer" placeholder="droog, 19°, wind matig" autocomplete="off"><button type="button" id="weerknop" title="Weer ophalen via locatie">ophalen</button></div>
+          <label for="bezetting" id="bezetting-label">Bezetting:</label><input id="bezetting" placeholder="6 man — 2 dakwerkers, 3 schilders" autocomplete="off">
+          <label id="rdg-bz-label" hidden>Bezetting:</label><div class="rdg-bz" id="rdg-bz" hidden><div id="rdg-bz-rijen"></div><div class="aw-chips" id="rdg-bz-chips"></div></div>
           <p class="weerinfo" id="weerinfo"></p>
           <label for="rdg-act" id="rdg-act-label" hidden>activiteit</label><textarea id="rdg-act" rows="2" placeholder="dakisolatie wordt gelegd, chape verdieping 2" hidden></textarea>
         </div>
@@ -4015,6 +4133,7 @@
               title="De hoofdstukken van dit project aanpassen">hoofdstukken aanpassen</button>
       <div class="keet-kast" id="keet-kast" hidden></div>
     </div>
+    <div class="keet-controle" id="keet-controle" hidden></div>
     <div class="keet-blok">
       <button type="button" class="keet-vouw" id="keet-vouwwoorden">Vaststelling ▾</button>
       <button type="button" class="keet-vouw" id="keet-woordbeheer">woorden aanpassen</button>
@@ -4037,7 +4156,7 @@
         <button type="button" id="keet-oordeel">Oordeel</button>
         <button type="button" id="keet-verbod">Verbod</button>
         <button type="button" id="keet-bezig">In behandeling</button>
-        <button type="button" id="keet-klaarpunt">✓ Verholpen</button>
+        <button type="button" id="keet-klaarpunt">✓ Opgelost</button>
         <button type="button" id="keet-nvt">— N.v.t.</button>
       </div>
     </div>
@@ -4398,7 +4517,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v735";
+const VERSIE="v737";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -8545,30 +8664,160 @@ function bewaarHoofdstukken(){
 function hoofdstukVan(nr){return hoofdstukken.find(h=>h.nr===nr)||null;}
 /* DE UITVOERDER PER HOOFDSTUK (de opdrachtgever, 19/10/2026: "de onderaannemer per hoofdstuk"): per werf zeg je één keer welk contact welk bestekhoofdstuk uitvoert (dak is deze firma, schilderwerk die). Bij een punt over dat hoofdstuk stelt de app die uitvoerder voor. De vaste toewijzing wint van wat de app leerde, en een code in de regel (>AB) wint van alles. */
 const HSAANSLEUTEL="werfpunten-hoofdstukaan";
-function leesHoofdstukUitvoerders(){ try{ const o=JSON.parse(localStorage.getItem(pk(HSAANSLEUTEL))||"{}"); return (o&&typeof o==="object")?o:{}; }catch(e){ return {}; } }
-function hoofdstukUitvoerders(nr){
+/* De opslag is één object per werf. De oude vorm is {"07":["AB"]}: per hoofdstuk de codes, voor alle fasen. De uitgebreide vorm voegt één sleutel toe, "_fase": {"07":{"NZ":["DW"]}}, een uitzondering per hoofdstuk en per fase (de opdrachtgever, 19/10/2026: "tijdens de uitvoering is hoofdstuk 07 van firma X, maar in de nazorg van firma Y"). Een oude waarde blijft dus gewoon gelden, en `hoofdstukUitvoerders(nr)` zonder fase leest alleen het algemene deel. */
+const HSFASESLEUTEL="_fase";
+function leesHoofdstukUitvoerders(){ try{ const o=JSON.parse(localStorage.getItem(pk(HSAANSLEUTEL))||"{}"); return (o&&typeof o==="object"&&!Array.isArray(o))?o:{}; }catch(e){ return {}; } }
+function uitvoerderCodes(l){ return (Array.isArray(l)?l:(l?[l]:[])).map(String).filter(Boolean); }
+function uitvoerderUitzonderingen(o){ const f=o&&o[HSFASESLEUTEL]; return (f&&typeof f==="object"&&!Array.isArray(f))?f:{}; }
+/* Zonder fase: de algemene lijst. Met fase: de lijst van die fase als die er is (en nog een bestaand contact bevat), anders de algemene. Alleen contacten die nog bestaan worden voorgesteld. */
+function hoofdstukUitvoerders(nr,fase){
   if(!nr)return [];
-  const l=leesHoofdstukUitvoerders()[nr];
-  return (Array.isArray(l)?l:(l?[l]:[])).filter(c=>contacten.some(x=>x.code===c));      // alleen contacten die nog bestaan
-}
-async function beheerUitvoerders(){
   const o=leesHoofdstukUitvoerders();
-  const huidig=hoofdstukken.map(h=>h.nr+" "+(h.naam||"")+" = "+((Array.isArray(o[h.nr])?o[h.nr]:(o[h.nr]?[o[h.nr]]:[])).join("+"))).join("\n");
-  const lijst=contacten.length?contacten.map(c=>c.code+" = "+c.naam+(c.vak?" ("+c.vak+")":"")).join("\n"):"Nog geen contacten: voeg ze eerst toe.";
-  const nieuw=await vraagTekst("Uitvoerders per hoofdstuk",
-    "Per hoofdstuk de code van het contact dat het uitvoert, na het =-teken. Meer dan één: ze met + verbinden (AB+DW). Laat leeg als er niemand vaststaat.\n\nDe app stelt die uitvoerder voor bij elk punt over dat hoofdstuk. Een code in de regel zelf (>AB) wint altijd.\n\nContacten:\n"+lijst, huidig);
-  if(nieuw===null)return;
-  const uit={}, onbekend=[];
-  nieuw.split("\n").forEach(r=>{
-    const i=r.indexOf("="); if(i<0)return;
-    const nr=r.slice(0,i).trim().split(/\s+/)[0]; if(!nr)return;
+  const bestaand=l=>uitvoerderCodes(l).filter(c=>contacten.some(x=>x.code===c));
+  if(fase){
+    const f=uitvoerderUitzonderingen(o)[nr];
+    const s=(f&&typeof f==="object")?bestaand(f[fase]):[];
+    if(s.length)return s;
+  }
+  return bestaand(o[nr]);
+}
+/* Wat er echt gebeurt als een lijst bewaard wordt: de lege lijst wist, en een lege uitzondering of lege kast verdwijnt ook. Geeft false als het toestel niet kon bewaren. */
+function zetHoofdstukUitvoerders(nr,codes,fase){
+  if(!hoofdstukVan(nr))return false;
+  const o=leesHoofdstukUitvoerders();
+  const lijst=uitvoerderCodes(codes);
+  if(!fase){ if(lijst.length)o[nr]=lijst; else delete o[nr]; }
+  else{
+    const f=uitvoerderUitzonderingen(o);
+    const h=(f[nr]&&typeof f[nr]==="object")?f[nr]:{};
+    if(lijst.length)h[fase]=lijst; else delete h[fase];
+    if(Object.keys(h).length)f[nr]=h; else delete f[nr];
+    if(Object.keys(f).length)o[HSFASESLEUTEL]=f; else delete o[HSFASESLEUTEL];
+  }
+  return bewaarVeilig(pk(HSAANSLEUTEL),JSON.stringify(o),"de uitvoerders per hoofdstuk");
+}
+/* Wat het scherm toont voor één hoofdstuk: de lijst die geldt voor de gekozen fase, en of die een eigen uitzondering is of de algemene erft. */
+function uitvoerderStand(nr,fase){
+  const o=leesHoofdstukUitvoerders();
+  const alg=uitvoerderCodes(o[nr]).filter(c=>contacten.some(x=>x.code===c));
+  if(!fase)return {codes:alg,eigen:false};
+  const f=uitvoerderUitzonderingen(o)[nr];
+  const s=(f&&typeof f==="object")?uitvoerderCodes(f[fase]).filter(c=>contacten.some(x=>x.code===c)):[];
+  return s.length?{codes:s,eigen:true}:{codes:alg,eigen:false};
+}
+/* Eén tik op een keuzechip: de code erbij of eraf, en meteen bewaard. Bij een fase zonder uitzondering begint de uitzondering vanuit de algemene lijst. Geeft de nieuwe lijst terug, of null als het niet kon (onbekend hoofdstuk of contact, of niet bewaard). */
+function wisselHoofdstukUitvoerder(nr,code,fase){
+  if(!hoofdstukVan(nr)||!contacten.some(x=>x.code===code))return null;
+  const nu=uitvoerderStand(nr,fase).codes.slice();
+  const i=nu.indexOf(code);
+  if(i<0)nu.push(code); else nu.splice(i,1);
+  if(fase&&!nu.length){ zetHoofdstukUitvoerders(nr,[],fase); return uitvoerderStand(nr,fase).codes; }      // de laatste code van een uitzondering weg: de uitzondering verdwijnt, de algemene lijst geldt weer
+  return zetHoofdstukUitvoerders(nr,nu,fase)?nu:null;
+}
+function uitvoerderTekstVan(){
+  const o=leesHoofdstukUitvoerders();
+  const alg=hoofdstukken.map(h=>h.nr+" "+(h.naam||"")+" = "+uitvoerderCodes(o[h.nr]).join("+"));
+  const f=uitvoerderUitzonderingen(o), uit=[];
+  hoofdstukken.forEach(h=>{ const x=f[h.nr]; if(x&&typeof x==="object")Object.keys(x).forEach(fc=>{ if(uitvoerderCodes(x[fc]).length)uit.push(h.nr+"@"+fc+" "+(h.naam||"")+" = "+uitvoerderCodes(x[fc]).join("+")); }); });
+  return alg.concat(uit).join("\n");
+}
+/* De tekstweg: regels `07 dak = AB+DW`, en `07@NZ = DW` voor één fase. Een regel die niet klopt, laat het bestaande van dat hoofdstuk staan en zegt waarom ze overgeslagen werd; "bewaard" telt alleen wat echt bewaard is. Een regel met een leeg stuk na het =-teken wist de toewijzing van dat hoofdstuk, met opzet. */
+function verwerkUitvoerderTekst(tekst){
+  const overgeslagen=[]; let toegepast=0;
+  const o=leesHoofdstukUitvoerders();
+  const f=uitvoerderUitzonderingen(o);
+  const zet=(nr,fase,lijst)=>{
+    if(!fase){ if(lijst.length)o[nr]=lijst; else delete o[nr]; return; }
+    const h=(f[nr]&&typeof f[nr]==="object")?f[nr]:{};
+    if(lijst.length)h[fase]=lijst; else delete h[fase];
+    if(Object.keys(h).length)f[nr]=h; else delete f[nr];
+  };
+  String(tekst||"").split("\n").map(r=>r.trim()).filter(r=>r&&r[0]!=="#").forEach(r=>{
+    const i=r.indexOf("=");
+    if(i<0){ overgeslagen.push("«"+r.slice(0,40)+"» heeft geen =-teken"); return; }
+    const kop=r.slice(0,i).trim().split(/\s+/)[0]||"";
+    const [nrRuw,faseRuw]=kop.split("@");
+    const nr=hoofdstukVan(nrRuw)?nrRuw:((/^\d$/.test(nrRuw)&&hoofdstukVan("0"+nrRuw))?"0"+nrRuw:null);
+    if(!nr){ overgeslagen.push(nrRuw?("hoofdstuk "+nrRuw+" bestaat niet in dit bestek"):"een regel zonder hoofdstuknummer"); return; }
+    let fase=null;
+    if(faseRuw){
+      fase=fasen.map(x=>x.code).find(c=>c.toUpperCase()===faseRuw.toUpperCase())||null;
+      if(!fase){ overgeslagen.push("hoofdstuk "+nr+": fase "+faseRuw+" bestaat niet"); return; }
+    }
     const codes=r.slice(i+1).split(/[+,;\s]+/).map(x=>x.trim().toUpperCase()).filter(Boolean);
-    const goed=codes.filter(c=>contacten.some(x=>String(x.code).toUpperCase()===c)).map(c=>contacten.find(x=>String(x.code).toUpperCase()===c).code);
-    codes.forEach(c=>{ if(!contacten.some(x=>String(x.code).toUpperCase()===c))onbekend.push(c); });
-    if(goed.length)uit[nr]=goed;
+    const goed=[], onbekend=[];
+    codes.forEach(c=>{ const k=contacten.find(x=>String(x.code).toUpperCase()===c); if(k){ if(!goed.includes(k.code))goed.push(k.code); } else onbekend.push(c); });
+    if(codes.length&&!goed.length){ overgeslagen.push("hoofdstuk "+nr+(fase?"@"+fase:"")+": onbekende code "+onbekend.join(", ")+", de bestaande uitvoerder blijft staan"); return; }
+    if(onbekend.length)overgeslagen.push("hoofdstuk "+nr+(fase?"@"+fase:"")+": onbekende code "+onbekend.join(", ")+" overgeslagen, de rest bewaard");
+    zet(nr,fase,goed); toegepast++;
   });
-  bewaarVeilig(pk(HSAANSLEUTEL),JSON.stringify(uit),"de uitvoerders per hoofdstuk");
-  melding(onbekend.length?("Onbekende code overgeslagen: "+onbekend.join(", ")):"Uitvoerders per hoofdstuk bewaard");
+  let bewaard=false;
+  if(toegepast){
+    if(Object.keys(f).length)o[HSFASESLEUTEL]=f; else delete o[HSFASESLEUTEL];
+    bewaard=bewaarVeilig(pk(HSAANSLEUTEL),JSON.stringify(o),"de uitvoerders per hoofdstuk");
+  }
+  const aantal=hoofdstukken.filter(h=>uitvoerderCodes(o[h.nr]).length).length;
+  const uitz=Object.keys(f).filter(n=>hoofdstukVan(n)).reduce((s,n)=>s+Object.keys(f[n]).length,0);
+  let bericht;
+  if(!toegepast)bericht="Niets bewaard"+(overgeslagen.length?"":": er stond geen regel in het tekstvak");
+  else if(!bewaard)bericht="Niet bewaard: het geheugen van dit toestel liet het niet toe";
+  else bericht=aantal+(aantal===1?" hoofdstuk":" hoofdstukken")+" met uitvoerder bewaard"+(uitz?(", "+uitz+(uitz===1?" uitzondering":" uitzonderingen")+" per fase"):"");
+  if(overgeslagen.length)bericht+=". Overgeslagen: "+overgeslagen.join("; ");
+  return {aantal,uitzonderingen:uitz,toegepast,bewaard,overgeslagen,bericht};
+}
+/* DE KEUZE: alle hoofdstukken van de werf onder elkaar, per hoofdstuk de contacten als chips. Bovenaan kies je voor welke fase je kiest: "alle fasen", of een fase waarin dat hoofdstuk een andere firma heeft. Een tik bewaart meteen. */
+async function beheerUitvoerders(){
+  const dlg=document.getElementById("uitvoerderdlg");
+  const lijstEl=document.getElementById("uv-lijst"), faseEl=document.getElementById("uv-fasen");
+  const tekstEl=document.getElementById("uv-tekst"), tekstBak=document.getElementById("uv-tekstbak");
+  let fase=null;
+  const teken=()=>{
+    const top=document.querySelector("#uitvoerderdlg .dlg-body").scrollTop;
+    faseEl.textContent="";
+    const kies=(code,naam)=>{
+      const b=maakEl("button","uv-fase"+(fase===code?" aan":""),naam); b.type="button";
+      b.setAttribute("aria-pressed",fase===code?"true":"false");
+      b.onclick=()=>{ fase=code; teken(); };
+      faseEl.appendChild(b);
+    };
+    kies(null,"alle fasen");
+    zichtbareFasen().forEach(x=>kies(x.code,x.code));
+    document.getElementById("uv-fasenaam").textContent=fase?("Voor de fase "+faseRecord(fase).naam+": kies wie een hoofdstuk uitvoert als dat anders is dan voor alle fasen."):"Voor alle fasen. Staat er bij een fase een uitzondering, dan gaat die voor.";
+    lijstEl.textContent="";
+    if(!contacten.length){ lijstEl.appendChild(maakEl("p","uv-leeg","Nog geen contacten: voeg ze eerst toe bij Mensen en taal, contacten.")); return; }
+    hoofdstukken.forEach(h=>{
+      const st=uitvoerderStand(h.nr,fase);
+      const rij=maakEl("div","uv-rij");
+      rij.appendChild(maakEl("div","uv-hs",h.nr+" "+(h.naam||"")));
+      const chips=maakEl("div","uv-chips");
+      contacten.forEach(c=>{
+        const aan=st.codes.includes(c.code);
+        const b=maakEl("button","uv-chip"+(aan?" aan":"")+(aan&&fase&&!st.eigen?" erft":""),c.code+" "+(c.naam||"")); b.type="button";
+        b.setAttribute("aria-pressed",aan?"true":"false"); b.title=c.naam||c.code;
+        b.onclick=()=>{ const r=wisselHoofdstukUitvoerder(h.nr,c.code,fase); if(r===null)melding("Niet bewaard"); teken(); };
+        chips.appendChild(b);
+      });
+      rij.appendChild(chips);
+      if(fase&&st.eigen){
+        const w=maakEl("button","uv-wis","uitzondering voor "+fase+" wissen"); w.type="button";
+        w.onclick=()=>{ zetHoofdstukUitvoerders(h.nr,[],fase); teken(); };
+        rij.appendChild(w);
+      }
+      lijstEl.appendChild(rij);
+    });
+    document.querySelector("#uitvoerderdlg .dlg-body").scrollTop=top;
+  };
+  tekstEl.value=uitvoerderTekstVan();
+  tekstBak.open=false;
+  document.getElementById("uv-pas").onclick=()=>{
+    const r=verwerkUitvoerderTekst(tekstEl.value);
+    meldingLang(r.bericht,r.overgeslagen.length?12000:undefined);
+    tekstEl.value=uitvoerderTekstVan();
+    teken();
+  };
+  document.getElementById("uv-klaar").onclick=()=>dlg.close();
+  teken();
+  dlg.showModal();
 }
 
 /* Een eigen categorie, in de keet. De opdrachtgever, 30/09/2026 (avond): "indien geen bestek toegevoegd,
@@ -10821,6 +11070,8 @@ try{
    balk — de verdieping aanklikken is dezelfde handeling waar je ook staat, en twee lijsten die
    hetzelfde bedoelen lopen vroeg of laat uit elkaar. */
 function tekenZones(){
+  /* Per blad het aantal open punten, als kleine bol in de hoek (de opdrachtgever, 19/10/2026): zo zie je op de balk zelf op welk blad werk zit. Bij nul niets. Vroeg bij het opstarten kan het archief er nog niet zijn; dan staan er nog geen bollen. */
+  let telZ=new Map(); try{ telZ=telOpen(werfWerkPunten(),p=>p.zone); }catch(e){}
   ["zones","planzones"].forEach(waar=>{
     const nav=document.getElementById(waar);
     if(!nav)return;
@@ -10855,6 +11106,8 @@ function tekenZones(){
          moet de lezer zelf uitzoeken dat dat hetzelfde is. */
       const etiket=zoneNaam(z);
       b.textContent=etiket;
+      b.dataset.zone=z;
+      { const bol=telBol(telZ.get(z)); if(bol)b.appendChild(bol); }
       b.title=(etiket===z?"Zone "+z:"Zone "+z+" — "+etiket)+(heeftPlan?" — er ligt een plan onder":"");
       /* Het actieve blad met lagen draagt het laaggebaar en de vulling; de ring in de laagkleur
          die hier tot 28/09/2026 werd aangemaakt is weg (zie de opmaak: "geen kader meer"). */
@@ -10928,6 +11181,21 @@ function tekenZones(){
         e.stopPropagation(); e.preventDefault(); nav._geslikt=false;
       },true);
     }
+  });
+}
+
+/* De bollen verversen zonder de balk opnieuw te tekenen: een punt erbij, afgevinkt of in orde gezet verandert de tellers, maar de band mag daarbij niet terugspringen. */
+function verversZoneTellers(){
+  let tel; try{ tel=telOpen(werfWerkPunten(),p=>p.zone); }catch(e){ return; }
+  ["zones","planzones"].forEach(waar=>{
+    const nav=document.getElementById(waar);
+    if(!nav||!nav.querySelectorAll)return;
+    nav.querySelectorAll(".zone-btn").forEach(b=>{
+      const oud=b.querySelector?b.querySelector(".tel-bol"):null;
+      if(oud)oud.remove();
+      const bol=telBol(tel.get(b.dataset.zone));
+      if(bol)b.appendChild(bol);
+    });
   });
 }
 
@@ -11051,7 +11319,7 @@ const ZOEKCHIPS=[
   {sleutel:"gevraagd",  naam:()=>"gevraagd",  past:p=>isDocpunt(p)&&!docOntvangen(p)},
   {sleutel:"ontvangen", naam:()=>"ontvangen", past:p=>docOntvangen(p)},
   {sleutel:"verholpen",
-   naam:()=>faseAard(faseVan(staat))==="werf"?"✓ verholpen":"✓ afgewerkt",
+   naam:()=>faseAard(faseVan(staat))==="werf"?"✓ opgelost":"✓ afgewerkt",
    past:p=>isKlaar(p)&&!docOntvangen(p)},
   {sleutel:"zonderplek",naam:()=>"zonder plek",
    past:p=>!p.plek, alleenWerf:true},
@@ -11454,7 +11722,7 @@ async function tekenLijst(){
       u.title="Deze versie kwam uit een back-up en verschilde van wat hier stond — allebei bewaard";
       kop.appendChild(u);}
     if(isKlaar(p)){const v=document.createElement("span");v.className="verholpen";
-      v.textContent=faseAard(faseVan(staat))==="werf"?"✓ verholpen":"✓ afgewerkt";
+      v.textContent=faseAard(faseVan(staat))==="werf"?"✓ opgelost":"✓ afgewerkt";
       v.title="Afgehandeld in dit verslag";kop.appendChild(v);}
     if(p.status==="bezig"){const v=document.createElement("span");v.className="bezig";
       v.textContent="in behandeling";v.title="Er wordt aan gewerkt — telt nog als open";
@@ -11609,6 +11877,7 @@ async function tekenLijst(){
     m.appendChild(doos);
   }
   zetLijstmeer();
+  verversZoneTellers();
   /* De stippen op de ondergrond gaan mee met de lijst: wat de punten verandert — bewaren,
      afvinken, wissen — tekent altijd de lijst opnieuw, en dan hoort de kaart niet achter te
      lopen. Goedkoop, want het zijn een handvol elementjes. */
@@ -13333,11 +13602,12 @@ async function keetToon(){
   };
   const rijen=[{nr:"\u2014", naam:"geen hoofdstuk", gekozen:!p.hoofdstuk,
                 doe:()=>zetKop(null)}];
+  const telHs=telOpen(werfWerkPunten(),hoofdstukSleutel);      // waar op de werf nog werk zit, per hoofdstuk
   hoofdstukken.forEach(h=>{
     const art=bestek.filter(a=>kopVan(a.nr)===h.nr);
     const isKop=p.hoofdstuk===h.nr;
     rijen.push({
-      nr:h.nr, naam:h.naam, gekozen:isKop,
+      nr:h.nr, naam:h.naam, gekozen:isKop, tel:telHs.get(h.nr),
       lade:art.length>0,
       open:isKop&&art.length>0&&!keet.kopDicht,
       doe:()=>{ if(!isKop)return zetKop(h.nr);
@@ -13356,6 +13626,7 @@ async function keetToon(){
      op de werf. Thuis is Beheer > hoofdstukken; hier is het de laatste regel van de kast. */
   rijen.push({nr:"+", naam:"nieuwe categorie\u2026", doe:()=>nieuweCategorie(p)});
   bouwBestekkast(kast,rijen);
+  tekenBestekControle(p);
 
   const ta=document.getElementById("keet-tekst");
   ta.value=p.tekst||"";
@@ -13698,6 +13969,37 @@ function puntZekerheid(p){
   if(gok.length)return {kleur:"oranje",redenen:gok};
   return uit;
 }
+
+/* DE TELLER PER GROEP (de opdrachtgever, 19/10/2026, uit de analyse van ArchiSnapper: "tellers per categorie of fase als kleine bol, zodat je ziet waar werk zit"). Per groep (een zone, een bestekhoofdstuk, een verslag) het aantal punten dat nog werk is, en hoeveel daarvan urgent zijn. Werk is wat open staat én niet in orde is: een punt dat je in orde vaststelde (oordeelVan) loopt niet door en geeft niemand een opdracht, dus het hoort ook niet in de bol. Eén plaats, zodat de zonebalk, de kast van hoofdstukken en het verslagenvenster hetzelfde tellen. `sleutelVan(p)` geeft de groep van een punt; geen sleutel, geen groep. */
+function isWerk(p){ return isOpen(p) && oordeelVan(p)!=="ok"; }
+function telOpen(punten,sleutelVan){
+  const uit=new Map();
+  (punten||[]).forEach(p=>{
+    if(!isWerk(p))return;
+    const k=sleutelVan(p);
+    if(k===undefined||k===null||k==="")return;
+    const t=uit.get(k)||{open:0,urgent:0};
+    t.open++;
+    if(p.urgent)t.urgent++;
+    uit.set(k,t);
+  });
+  return uit;
+}
+/* De bol zelf: niets bij nul ("lege waarden niet tonen"), anders het getal, en bij een urgent punt een kleine rode stip erachter. Het woord staat in de aria-label, want een kleur en een getal alleen zeggen een schermlezer niets. */
+function telBol(t){
+  if(!t||!t.open)return null;
+  const b=maakEl("span","tel-bol"+(t.urgent?" met-urgent":""),String(t.open));
+  if(t.urgent)b.appendChild(maakEl("span","tel-urgent"));
+  b.setAttribute("role","img");
+  b.setAttribute("aria-label",t.open+(t.open===1?" open punt":" open punten")+(t.urgent?", "+t.urgent+" urgent":""));
+  return b;
+}
+/* Een groep met een aantal tussen haakjes, maar niet als het aantal nul is: "Hoofdstuk 05 (0)" zegt niets dat de lege lijst eronder niet al zegt. */
+/* Onder welk bestekhoofdstuk een punt hangt: het hoofdstuk zelf, anders de kop van zijn post. */
+function hoofdstukSleutel(p){ const h=p&&(p.hoofdstuk||p.post); return h?String(h).split(".")[0]:""; }
+function metAantal(naam,n){ return n?naam+" ("+n+")":naam; }
+/* Wat er op de werf nog werk is, over de verslagen heen: de punten van dit verslag en wat van vorige keren openstaat. */
+function werfWerkPunten(){ return (staat.punten||[]).concat(openPunten()); }
 
 function openKeet(begin){
   if(!staat.punten.length){melding("Nog geen punten om af te werken");return;}
@@ -14481,6 +14783,72 @@ function ficheArtikel(tekst){
   return onzeker ? {...eerste, onzeker} : eerste;
 }
 
+/* === begin bestekcontrole === */
+/* DE BESTEKCONTROLE VAN EEN PUNT. Leerpunt uit PermiPro (docs/PERMIPRO-leerpunten.md): een toets
+   is een voorstel met reden en zekerheid, dat jij bevestigt of overschrijft, met het artikel erbij.
+   Hier voor één vraag: naar welk artikel van het bestek wijst dit punt, en hoe zeker is de app?
+   Ze zegt NIET of het werk aan het bestek voldoet: dat blijft jouw oordeel, met het artikel als
+   verwijzing. Ook de tekst van het artikel wordt maar getoond als ze ingelezen is.
+   Zuiver: geen opslag, geen netwerk. Wat je kiest gaat via bevestigBestekControle. */
+const BESTEKZEKERHEID={
+  goed:"alle woorden van je zin staan in dit artikel",
+  matig:"je woorden staan midden in de titel, een ander artikel kan ook",
+  twijfel:"een artikel in een ander hoofdstuk past even goed",
+  gok:"alleen het hoofdstuk staat vast, het artikel is een gok",
+  vast:"door jou gekozen",
+};
+function bestekControle(p){
+  if(!p||!String(p.tekst||"").trim()||!bestek.length)return null;
+  const kopVan=nr=>String(nr||"").split(".")[0];
+  const gekozen=p.post?bestek.find(a=>a.nr===p.post):null;
+  let a=gekozen, zeker="vast", voorstel=false;
+  if(!a){
+    const g=ficheArtikel(p.tekst);
+    if(!g)return {toestand:"geen"};
+    a=bestek.find(x=>x.nr===g.nr)||g; voorstel=true;
+    zeker=g.onzeker==="artikel"?"gok":g.onzeker==="middenin"?"matig":g.onzeker==="gedeeld"?"twijfel":"goed";
+  }
+  const kop=kopVan(a.nr);
+  const afwijking=!!(p.hoofdstuk&&p.hoofdstuk!==kop);
+  const eis=String(a.tekst||"").trim().slice(0,400);
+  return {toestand:voorstel?"voorstel":"gekozen", nr:a.nr, titel:a.titel||"", kop, zekerheid:zeker,
+          reden:BESTEKZEKERHEID[zeker], afwijking, eis,
+          zin:(voorstel?"Voorstel van de app, niet vastgesteld: artikel ":"Volgens artikel ")+a.nr+(a.titel?" "+a.titel:"")};
+}
+/* Neemt het voorstel over: het artikel en zijn hoofdstuk, en de twijfel is weg want jij keek. */
+function bevestigBestekControle(p){
+  const c=bestekControle(p);
+  if(!p||!c||c.toestand!=="voorstel")return false;
+  if(p.hoofdstuk!==c.kop)postBijKop(p,c.kop);
+  p.hoofdstuk=c.kop; keet.hoofdstuk=c.kop;
+  p.post=c.nr; delete p.hoofdstukOnzeker;
+  raakAan(p); bewaarStaat();
+  return true;
+}
+function tekenBestekControle(p){
+  const doos=document.getElementById("keet-controle");
+  if(!doos)return;
+  doos.innerHTML="";
+  const c=BESTEKCONTROLE?bestekControle(p):null;
+  if(!c||c.toestand==="geen"){doos.hidden=true;return;}
+  doos.hidden=false;
+  doos.className="keet-controle "+c.toestand+" z-"+c.zekerheid;
+  doos.appendChild(maakEl("div","kc-zin",c.zin));
+  doos.appendChild(maakEl("div","kc-reden","Zekerheid: "+c.zekerheid+" \u00B7 "+c.reden));
+  if(c.afwijking)doos.appendChild(maakEl("div","kc-let","Dit artikel hoort onder hoofdstuk "+c.kop+", het punt staat onder "+p.hoofdstuk+"."));
+  if(c.eis)doos.appendChild(maakEl("div","kc-eis",c.eis));
+  else doos.appendChild(maakEl("div","kc-eis kc-leeg","De tekst van dit artikel is niet ingelezen: kijk zelf in het bestek."));
+  if(c.toestand==="voorstel"){
+    const rij=maakEl("div","kc-knoppen");
+    const ja=maakEl("button",null,"Klopt: artikel "+c.nr); ja.type="button";
+    ja.onclick=()=>{ bevestigBestekControle(p); keetToon(); };
+    const ander=maakEl("button",null,"Ander artikel"); ander.type="button";
+    ander.onclick=()=>{ keet.kastOpen=true; keetToon(); };
+    rij.appendChild(ja); rij.appendChild(ander); doos.appendChild(rij);
+  }
+}
+const BESTEKCONTROLE=true;
+/* === einde bestekcontrole === */
 /* Wat er op de fiche staat. Wat de app zelf weet, staat er al in; leeg blijven alleen de twee
    dingen die ze niet kan weten — de foto en de plek op het plan. Die tweede leegte is
    opzettelijk: je typt in de keet of in de gang, niet noodzakelijk bij de plint, en een
@@ -14765,6 +15133,31 @@ function plekUitLokaal(code){
     return {zone:plan.zone,x:+(+l.x).toFixed(2),y:+(+l.y).toFixed(2),lokaal:l.nr,naam:l.naam||"",laag:planLaag(),lokaalLaag:lokaalHerkomst(plan,planLaag())};
   }catch(e){ return null; }
 }
+/* DE PLEK ALS VOORSTEL (de opdrachtgever, 19/10/2026: "ik wil niet op het plan hoeven tikken"). Geldt er geen plek, dan kan de app er een voorstellen. Het blijft een voorstel: de app verzint nooit een plek, want een gegokte plek is erger dan geen. Volgorde van zekerheid: (a) een lokaal in de tekst (@3.16) is jouw keuze en wint altijd; (b) de positie van het toestel op het open plan, als de meting beter is dan PLEKVOORSTELNAUW, het plan gekoppeld is (`georef`, geen plaatselijk raam) en je erop staat, afgerond op het dichtstbijzijnde lokaal als er lokalen zijn; (c) anders niets. Zuiver: de positie komt mee in `hier` ({X,Y} in Lambert, of {lat,lon}), de functie vraagt zelf niets aan het toestel en roept geen netwerk aan. Binnen is de GPS slecht (muren, geen zicht op de lucht): daarom 15 m, strenger dan de 60 m van de blauwe bol, en strenger dan niets zeggen kan niet. */
+const PLEKVOORSTELNAUW=15;
+function plekVoorstel(o){
+  o=o||{};
+  if(o.plek||o.tekstPlek||o.afgewezen)return null;      // er geldt al een plek, of je typte er een, of je wees dit voorstel af
+  const pn=o.plan, h=o.hier;
+  if(!pn||!h||!pn.georef||pn.georef.plaatselijk||!pn.georef.eenheid_m||!pn.breedte||!pn.hoogte)return null;
+  const nauw=+h.nauw;
+  if(!isFinite(nauw)||nauw<=0||nauw>PLEKVOORSTELNAUW)return null;      // geen nauwkeurigheid bekend is ook niet goed genoeg
+  if(h.tijd!=null&&o.nu!=null&&(o.nu-h.tijd)>=HIERVERS)return null;      // een oude meting zegt niets over waar je nu staat
+  let X=h.X, Y=h.Y;
+  if(!isFinite(X)||!isFinite(Y)){
+    if(!isFinite(h.lat)||!isFinite(h.lon))return null;
+    const L=wgsNaarLambert(h.lat,h.lon); X=L.x; Y=L.y;
+  }
+  const q=naarBeeld(pn,X,Y);
+  if(!q||!isFinite(q.x)||!isFinite(q.y)||q.x<0||q.x>100||q.y<0||q.y>100)return null;      // buiten het blad: dan weet de app het niet
+  const laag=o.laag===undefined?null:o.laag;
+  const lok=lokaalBij(q.x,q.y,pn,laag);
+  const plek={zone:o.zone||pn.zone, x:+(lok?+lok.x:q.x).toFixed(2), y:+(lok?+lok.y:q.y).toFixed(2),
+              lokaal:lok?lok.nr:null, naam:lok?(lok.naam||""):"", laag:laag, lokaalLaag:lok?lokaalHerkomst(pn,laag):null};
+  const m=Math.max(1,Math.round(nauw));
+  return {plek, nauw:m, lokaal:lok?lok.nr:null, zekerheid:nauw<=5?"goed":"matig",
+          reden:"uit de GPS, \u00B1 "+m+" m"+(lok?"":" (geen lokaal dichtbij)")};
+}
 /* De chips onder het schrijfvak. Een chip is een besluit dat jij met één teken nam; het kruisje haalt het teken uit de tekst. Zonder tekens staat er een korte wenk zolang het vak leeg is. */
 function ficheStenoTeken(){
   const bak=document.getElementById("fiche-steno"), veld=document.getElementById("fiche-tekst");
@@ -14789,7 +15182,17 @@ function ficheStenoTeken(){
   /* De plek en het artikel die de app kent, zodat je alles wat ze herkende in één oogopslag ziet. */
   if(!r.tokens.some(k=>k.soort==="plek")){
     const pk=wachtendePlek;
-    bak.appendChild(maakEl("span","steno-chip plek"+(pk?"":" mist"),pk?("plek "+(pk.lokaal||"op het plan")):"plek: nog niet op het plan"));
+    const vs=pk?null:plekVoorstel({plek:wachtendePlek,tekstPlek:false,plan:kaartPlan,zone:kaartZone,laag:kaartLaag,hier:hierVers(),nu:Date.now(),afgewezen:fiche.plekAf});
+    if(vs){
+      /* Een voorstel uit de GPS: tik de chip om het aan te nemen (dan is het een gewone plek die jij koos), het kruisje wijst het af. Zolang je niets doet, wordt er niets bewaard. */
+      const vc=maakEl("span","steno-chip plek voorstel");
+      const vt=maakEl("button","steno-voorstel","plek "+(vs.lokaal||"op het plan")+" \u00B7 voorstel "+vs.reden);
+      vt.type="button"; vt.title="Tik om deze plek aan te nemen voor dit punt en de volgende.";
+      vt.onclick=()=>{ wachtendePlek=vs.plek; fiche.plekAf=false; try{ merkPlanknop(); tekenKaartPunten(); }catch(e){} melding("Plek "+(vs.lokaal||"op het plan")+" aangenomen"); ficheStenoTeken(); };
+      const vx=maakEl("button","steno-x","\u00D7"); vx.type="button"; vx.setAttribute("aria-label","Dit plekvoorstel niet");
+      vx.onclick=()=>{ fiche.plekAf=true; ficheStenoTeken(); };
+      vc.appendChild(vt); vc.appendChild(vx); bak.appendChild(vc);
+    }else bak.appendChild(maakEl("span","steno-chip plek"+(pk?"":" mist"),pk?("plek "+(pk.lokaal||"op het plan")):"plek: nog niet op het plan"));
   }
   if(fiche.keuze){
     const g=(typeof bestek!=="undefined"&&Array.isArray(bestek))?bestek.find(x=>x.nr===fiche.keuze):null;
@@ -14837,6 +15240,7 @@ function zetVaststelling(t,van){
   if(van!=="regel")tekstEl.value=t;
   if(blad&&van!=="blad")blad.value=t;
   try{ ficheStenoTeken(); }catch(e){}
+  if(van===undefined)aanvulWis();      // een tekst die niet door typen kwam, krijgt geen aanvulling
   const d=document.getElementById("fichedlg");
   if(d&&d.open){
     fiche.tekst=String(t||"").trim();
@@ -14854,7 +15258,7 @@ function zetVaststelling(t,van){
   merkGo(); tekenBestektreffers();
   try{ bewaarConcept(); }catch(e){}
 }
-tekstEl.oninput=()=>{ zetVaststelling(tekstEl.value,"regel"); };
+tekstEl.oninput=()=>{ zetVaststelling(tekstEl.value,"regel"); aanvulToon(tekstEl); };
 /* Enter bewaart. Op een telefoon is dat de knop rechtsonder op het toetsenbord, en die staat
    er toch al — hem niets laten doen is een tik weggooien. */
 tekstEl.onkeydown=e=>{ if(e.key==="Enter"){ e.preventDefault(); goDrukken(); } };
@@ -14864,6 +15268,132 @@ tekstEl.onkeydown=e=>{ if(e.key==="Enter"){ e.preventDefault(); goDrukken(); } }
    browser spraakherkenning wél kent, doet ze het zelf. In beide gevallen belandt er alleen
    tekst in het veld — het oordeel blijft van jou, de app vult alleen aan wat je zelf zegt. */
 let luisteraar=null;
+/* GESPROKEN STENO (de opdrachtgever, 19/10/2026: "plint los in de keuken, voor de schilder, dringend, tegen vrijdag"). Wat de spraakherkenning terugstuurt gaat langs dezelfde lezer als getypte tekst; deze functie zet alleen de gesproken woorden om in de tekens die die lezer kent (zie STENO.md). Zuiver: geen netwerk, geen microfoon, geen toestand. Wat onzeker is blijft gewone tekst:
+     dringend, urgent, spoed, uitroepteken     ->  !                (niet na "niet", "geen", "minder")
+     voor/aan (de) <rol of voornaam>          ->  >code            (alleen als de lezer dat kent: een rol mét contact, of een unieke voornaam; anders blijft het woord staan)
+     tegen/uiterlijk/voor/tot 28 augustus     ->  ... 28/08        (de woorden tegen vrijdag, morgen, ... verstaat de lezer zelf)
+     deadline vrijdag                         ->  tegen vrijdag
+     binnen twee weken                        ->  binnen 2 weken
+     komma, vraagteken, puntkomma, dubbele punt, punt (alleen als laatste woord)  ->  , ? ; : .
+     twee komma vijf                          ->  2,5
+     nieuwe regel                             ->  een regelsprong
+     verbod dubbele punt (vooraan)            ->  VERBOD:
+   `nu` is het moment van spreken (voor "tegen vandaag"); `opties` ({contacten, rollen}) is er voor de proef, anders gelden die van de app. */
+function spraakNaarSteno(tekst,nu,opties){
+  const o=opties||{};
+  let kont=[], rollen=[];
+  try{ kont=Array.isArray(o.contacten)?o.contacten:(typeof contacten!=="undefined"&&Array.isArray(contacten)?contacten:[]); }catch(e){}
+  try{ rollen=Array.isArray(o.rollen)?o.rollen:(typeof ROLLEN!=="undefined"&&Array.isArray(ROLLEN)?ROLLEN:[]); }catch(e){}
+  const fold=s=>String(s).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+  const T=String(tekst==null?"":tekst).split(/\s+/).filter(Boolean).map(w=>{
+    const m=/^([\s\S]*?)([.,;:!?]*)$/.exec(w);
+    return {w:m[1],p:m[2],c:fold(m[1])};
+  });
+  const EENHEID=["een","twee","drie","vier","vijf","zes","zeven","acht","negen"];
+  const NUMW={tien:10,elf:11,twaalf:12,dertien:13,veertien:14,vijftien:15,zestien:16,zeventien:17,achttien:18,negentien:19,twintig:20,dertig:30,eenendertig:31};
+  EENHEID.forEach((u,i)=>{ NUMW[u]=i+1; NUMW[u+"entwintig"]=21+i; });
+  const getal=c=>/^\d{1,3}$/.test(c)?+c:(Object.prototype.hasOwnProperty.call(NUMW,c)?NUMW[c]:null);
+  const MAAND={januari:1,februari:2,maart:3,april:4,mei:5,juni:6,juli:7,augustus:8,september:9,oktober:10,november:11,december:12};
+  const MAXDAG=[31,29,31,30,31,30,31,31,30,31,30,31];
+  const DAGEN=["maandag","dinsdag","woensdag","donderdag","vrijdag","zaterdag","zondag"];
+  const LIDW=["de","het","mijn","onze"];
+  const DET=["het","dit","dat","een","elk","ieder","ander","andere","zelfde","volgend","vorig","nieuw","zwak","hoogste","laagste"];
+  const NEE=["niet","geen","minder","weinig","nooit"];
+  const VERSTERK=["heel","zeer","erg","super","uiterst","extra"];
+  const CODE=/^[A-Za-z][A-Za-z0-9]{0,11}$/;
+  const tweecijfer=n=>String(n).padStart(2,"0");
+  const nuOk=!!nu&&typeof nu.getTime==="function"&&!isNaN(nu.getTime());
+  /* wie wordt hier bedoeld, in een vorm die de lezer verstaat? een rol mét contact, of een voornaam die maar bij één contact past */
+  const bekend=c=>{
+    if(!c||LIDW.includes(c))return null;
+    const r=rollen.find(x=>x&&(fold(x.sleutel||"")===c||fold(x.naam||"")===c));
+    if(r&&CODE.test(String(r.sleutel||""))&&kont.some(x=>x&&x.rol===r.sleutel))return r.sleutel;
+    const gelijk=kont.filter(x=>x&&CODE.test(String(x.code||""))&&fold(String(x.naam||"").split(/\s+/)[0])===c);
+    return gelijk.length===1?gelijk[0].code:null;
+  };
+  const uit=[];
+  const duw=(t,c)=>uit.push({t:t,c:c===undefined?fold(t):c});
+  const hang=teken=>{ const v=uit[uit.length-1]; if(!v||v.t==="\n")return false; v.t+=teken; return true; };
+  for(let i=0;i<T.length;i++){
+    const k=T[i], n=T[i+1], n2=T[i+2], n3=T[i+3];
+    const vorig=uit[uit.length-1];
+    if(k.c==="nieuwe"&&n&&(n.c==="regel"||n.c==="lijn"||n.c==="alinea")){ duw("\n","\n"); i++; continue; }
+    if(k.c==="dubbele"&&n&&n.c==="punt"&&vorig&&vorig.t!=="\n"){
+      if(uit.length===1&&vorig.c==="verbod")vorig.t="VERBOD:"; else vorig.t+=":";
+      i++; continue;
+    }
+    if(k.c==="puntkomma"&&hang(";"))continue;
+    if(k.c==="vraagteken"&&hang("?"))continue;
+    if(k.c==="uitroepteken"){ if(!(vorig&&vorig.t==="!"))duw("!"); continue; }
+    if(k.c==="komma"&&vorig&&vorig.t!=="\n"){
+      const a=getal(vorig.c), b=n?getal(n.c):null;
+      if(a!==null&&b!==null&&vorig.c!=="een"&&n.c!=="een"){ vorig.t=String(a)+","+String(b); vorig.c="#"; i++; continue; }
+      hang(","); continue;
+    }
+    if(k.c==="punt"&&i===T.length-1&&vorig&&vorig.t!=="\n"&&!DET.includes(vorig.c)){ hang("."); continue; }
+    if(["dringend","urgent","spoed"].includes(k.c)&&!(vorig&&NEE.includes(vorig.c))){
+      if(k.c==="spoed"&&vorig&&vorig.c==="met")uit.pop();
+      while(uit.length&&VERSTERK.includes(uit[uit.length-1].c))uit.pop();
+      if(!(uit.length&&uit[uit.length-1].t==="!"))duw("!");
+      continue;
+    }
+    if(k.c==="aan"||k.c==="voor"){
+      let j=i+1; if(T[j]&&LIDW.includes(T[j].c))j++;
+      const x=T[j], code=x?bekend(x.c):null;
+      if(code){ duw(">"+code+x.p,">"); i=j; continue; }
+    }
+    if(k.c==="deadline"&&n&&(DAGEN.includes(n.c)||["morgen","overmorgen","vandaag"].includes(n.c)||(getal(n.c)!==null&&n.c!=="een"&&n2&&MAAND[n2.c]))){
+      T[i]={w:"tegen",p:"",c:"tegen"}; i--; continue;
+    }
+    if(["tegen","uiterlijk","voor","tot"].includes(k.c)&&n){
+      if(n.c==="vandaag"&&nuOk){ duw(k.w); duw(tweecijfer(nu.getDate())+"/"+tweecijfer(nu.getMonth()+1)+n.p); i++; continue; }
+      const dag=getal(n.c), mnd=n2?MAAND[n2.c]:undefined;
+      /* een jaartal erachter ("28 augustus 2027") laat de lezer niet toe: dan blijft het gewone tekst */
+      if(dag!==null&&n.c!=="een"&&mnd&&dag>=1&&dag<=MAXDAG[mnd-1]&&!(n3&&/^\d{4}$/.test(n3.c))){
+        duw(k.w); duw(tweecijfer(dag)+"/"+tweecijfer(mnd)+n2.p); i+=2; continue;
+      }
+    }
+    if(k.c==="binnen"&&n&&n2){
+      const a=getal(n.c);
+      if(a!==null&&a>=1&&/^(dag|dagen|week|weken|maand|maanden)$/.test(n2.c)){ duw(k.w); duw(String(a)); duw(n2.w+n2.p); i+=2; continue; }
+    }
+    duw(k.w+k.p,k.c);
+  }
+  return uit.map(x=>x.t).join(" ").replace(/ *\n */g,"\n").trim();
+}
+
+/* HET DICTEREN: toestemming, knop, voorstel. De browser doet de spraakherkenning, en een browser kan het geluid daarvoor naar een externe dienst sturen (Safari naar Apple, Chrome naar Google). De app maakt zelf geen netwerkaanroep en bewaart geen geluid; de knop doet niets tot je dat gelezen en aanvaard hebt, en de uitleg komt één keer. De sleutel is lokaal. */
+const DICTEERSLEUTEL="werfpunten-dicteer-ok";
+function spraakHerkenner(w){ const v=w||window; return (v&&(v.SpeechRecognition||v.webkitSpeechRecognition))||null; }
+/* Zonder spraakherkenning in de browser is er geen knop: wie op iOS het toetsenbord gebruikt, dicteert daar. */
+function merkSpraakknoppen(w){
+  const kan=!!spraakHerkenner(w);
+  ["micknop","fiche-mic"].forEach(id=>{
+    const k=document.getElementById(id);
+    if(k)k.classList.toggle("geen-spraak",!kan);
+  });
+  return kan;
+}
+function dicteerToegestaan(){ try{ return localStorage.getItem(DICTEERSLEUTEL)==="1"; }catch(e){ return false; } }
+function zetDicteerToestemming(ja){
+  try{ if(ja)localStorage.setItem(DICTEERSLEUTEL,"1"); else localStorage.removeItem(DICTEERSLEUTEL); }catch(e){}
+}
+function vraagDicteerToestemming(daarna){
+  const d=document.createElement("dialog"); d.className="dicteer-uitleg";
+  d.appendChild(maakEl("h3",null,"Dicteren: eerst dit"));
+  d.appendChild(maakEl("p",null,"Dicteren gebruikt de spraakherkenning van je browser. Die kan je stem naar een externe spraakdienst sturen (bij Safari naar Apple, bij Chrome naar Google). Gridveld zelf stuurt niets weg en bewaart geen geluid."));
+  d.appendChild(maakEl("p",null,"Wat je zegt komt als voorstel in het schrijfvak. Je ziet het, past het aan, en pas dan bewaar je."));
+  const rij=maakEl("div","dicteer-knoppen");
+  const ja=maakEl("button","dicteer-ja","Aanvaarden en dicteren"); ja.type="button";
+  const nee=maakEl("button","dicteer-nee","Niet nu"); nee.type="button";
+  const sluit=()=>{ try{ d.close(); }catch(e){} try{ d.remove(); }catch(e){} };
+  ja.onclick=()=>{ zetDicteerToestemming(true); sluit(); if(daarna)daarna(); };
+  nee.onclick=sluit;
+  rij.appendChild(ja); rij.appendChild(nee); d.appendChild(rij);
+  document.body.appendChild(d);
+  try{ d.showModal(); }catch(e){}
+  return d;
+}
 /* Het merk op de microfoon, op beide knoppen tegelijk -- zie merkFotoknop voor de reden. */
 function merkMicknop(luistert){
   ["micknop","fiche-mic"].forEach(id=>{
@@ -14882,10 +15412,13 @@ function dicteer(){
     return;
   }
   if(luisteraar){ luisteraar.stop(); luisteraar=null; return; }
+  /* Eerst de uitleg, één keer: de browser kan het geluid naar een externe spraakdienst sturen. Zonder ja start er niets. */
+  if(!dicteerToegestaan()){ vraagDicteerToestemming(dicteer); return; }
   const h=new Herken();
   h.lang="nl-BE"; h.interimResults=false; h.continuous=false;
   h.onresult=e=>{
-    const woorden=e.results[0][0].transcript.trim();
+    /* Wat je zegt gaat langs spraakNaarSteno en komt als voorstel in het veld: niets wordt bewaard, jij leest het na. */
+    const woorden=spraakNaarSteno(e.results[0][0].transcript,new Date());
     zetVaststelling((tekstEl.value.trim()+" "+woorden).trim());
   };
   h.onerror=()=>{ melding("Dicteren lukte niet"); };
@@ -14894,6 +15427,7 @@ function dicteer(){
 }
 document.getElementById("micknop").onclick=dicteer;
 document.getElementById("fiche-mic").onclick=dicteer;
+merkSpraakknoppen(window);
 /* Een tik op rij 1 opent het tekstvak en zet de cursor erin; nog een tik sluit het weer. De
    microfoon in de rij opent het ook, want wat je dicteert komt erin terecht. */
 function wisselTekstvak(open){
@@ -15111,7 +15645,8 @@ async function bewaarPunt(veld){
   // Het beeld ná het punt in de rij (raakAan kwam hierboven al), en alleen als het er echt staat.
   if(wachtendeFoto&&await zetFoto(id,wachtendeFoto))wachtMerk("beeld",id);
   zorgVoorPuntnummer(punt);staat.punten.push(punt);bewaarStaat();
-  el.value=""; if(el!==tekstEl)tekstEl.value="";
+  try{ leerAanvul(punt.tekst); }catch(e){}      // de woorden van dit punt komen hoger in de aanvullingen; alleen de tekst, niets anders
+  el.value=""; if(el!==tekstEl)tekstEl.value=""; aanvulWis();
   wachtendeFoto=null;wachtendeBijlage=null;wachtendeAanduiding=null;
   isScan=false;
   if(scanVoorbeeld){ try{ URL.revokeObjectURL(scanVoorbeeld); }catch(e){} scanVoorbeeld=null; }
@@ -15219,6 +15754,8 @@ function bouwBestekkast(bak,koppen,opties){
     if(k.gekozen)rij.classList.add("gekozen");
     rij.appendChild(maakEl("span","fiche-anr",k.nr||""));
     rij.appendChild(maakEl("span","fiche-atitel",k.naam||""));
+    /* De bol met het aantal open punten onder deze kop; bij nul staat er niets (k.tel is {open,urgent}). */
+    { const bol=telBol(k.tel); if(bol)rij.appendChild(bol); }
     /* Het vinkje van een gekozen kop. Op het blad komt dat niet voor -- daar is het hoofdstuk
        een lade en het artikel de keuze -- maar in de keet is de kop zélf de keuze, en dan hoort
        ze hetzelfde merk te dragen als een gekozen artikel en een gekozen naam: één vinkje. */
@@ -15323,10 +15860,11 @@ function vulFiche(opties){
     const open = fiche.kop!==null ? fiche.kop
                : fiche.keuze ? kopVan(fiche.keuze)
                : g.artikel ? kopVan(g.artikel.nr) : "";
+    const telFiche=telOpen(werfWerkPunten(),hoofdstukSleutel);
     bouwBestekkast(lijst, koppen.map(k=>{
       const hfd=hoofdstukVan(k);
       return {
-        nr:k, naam:hfd?hfd.naam:("hoofdstuk "+k), open:open===k, lade:true,
+        nr:k, naam:hfd?hfd.naam:("hoofdstuk "+k), open:open===k, lade:true, tel:telFiche.get(k),
         doe:()=>{ fiche.kop=(open===k)?"":k; vulFiche({behoudVeld:true}); },
         /* Pas uitgerekend als de lade opengaat: vulFiche hertekent bij élke aanslag, en een
            filter over het hele bestek maal veertien hoofdstukken is dan niet gratis. */
@@ -15404,13 +15942,13 @@ function vulFiche(opties){
     /* Alleen bij een punt dat niet in orde is: wie iets in orde vaststelt of neutraal noteert, geeft niemand een opdracht. De vaste uitvoerder van het hoofdstuk wint van wat de app leerde. */
     const oordeel=fiche.oordeel||stenoLees(fiche.tekst).oordeel;
     const hsNr=fiche.keuze?hoofdstukNr(fiche.keuze):null;
-    const vast=(oordeel==="nok"&&hsNr)?hoofdstukUitvoerders(hsNr):[];
+    const vast=(oordeel==="nok"&&hsNr)?hoofdstukUitvoerders(hsNr,faseVan(staat)):[];
     const v=oordeel==="nok"?(vast.length?vast:aanVoorstellen(fiche.tekst)):[];
     if(v.length){ fiche.aan=v[0]; fiche.aanOok=vast.length?v.slice(1):[]; fiche.aanGeraden=!vast.length; fiche.aanBron=vast.length?"hoofdstuk":"geleerd"; }
     else if(fiche.aanGeraden||fiche.aanBron){ fiche.aan=null; fiche.aanOok=[]; fiche.aanGeraden=false; fiche.aanBron=null; }
   }
   const wieAllen=aanSet(fiche).map(code=>{const c=contacten.find(x=>x.code===code);return c?c.naam:code;});
-  zetWaarde("fiche-persoon-waarde", wieAllen.length?wieAllen.join(", ")+(fiche.aanGeraden&&!fiche.aanHand?" \u00B7 suggestie":""):"niemand", !wieAllen.length, !!(fiche.aanGeraden&&!fiche.aanHand));
+  zetWaarde("fiche-persoon-waarde", wieAllen.length?wieAllen.join(", ")+(fiche.aanGeraden&&!fiche.aanHand?" \u00B7 suggestie":""):((fiche.oordeel||stenoLees(fiche.tekst).oordeel)==="nok"?"niemand":""), !wieAllen.length, !!(fiche.aanGeraden&&!fiche.aanHand));
   const pers=document.getElementById("fiche-persoon");
   if(pers)pers.setAttribute("aria-expanded",fiche.uit.persoon?"true":"false");
   const bak=document.getElementById("fiche-aan");
@@ -15466,8 +16004,13 @@ function zetAanSet(o,lijst){
 /* Eén tik zet een naam erbij of haalt hem eruit; `niemand` haalt ze allemaal weg. */
 function wisselAan(o,code){
   const l=aanSet(o);
-  if(code===null)return zetAanSet(o,[]);
+  if(code===null){ delete o.aanGeraden; return zetAanSet(o,[]); }
   const i=l.indexOf(code);
+  /* Een voorgestelde naam bevestig je met één tik: de eerste tik op wat de app gokte zegt "ja, dat is hij" en haalt
+     het voorstel-merk weg (het punt wordt dan niet meer oranje); pas een tweede tik laat los. Elke andere tik is een keuze
+     van jou en heft het merk ook op. */
+  if(i>=0&&o.aanGeraden){ delete o.aanGeraden; try{ leerAan(o&&o.tekst,code,1); }catch(e){} return l; }
+  delete o.aanGeraden;
   /* Wat je kiest, leert de app; wat je weer weghaalt, leert ze nog sterker af. */
   if(i<0){ l.push(code); try{ leerAan(o&&o.tekst,code,1); }catch(e){} }
   else { l.splice(i,1); try{ leerAan(o&&o.tekst,code,-2); }catch(e){} }
@@ -15635,13 +16178,164 @@ function toonGeleerd(){
 }
 function vergeetGeleerd(laag,woord,code,veld){
   const o=leesGeleerd(laag);
-  if(woord===undefined){ try{ localStorage.removeItem(leerSleutel(laag)); }catch(e){} return true; }
+  if(woord===undefined){ try{ localStorage.removeItem(leerSleutel(laag)); localStorage.removeItem(aanvulSleutel(laag)); }catch(e){} aanvulBronCache=null; return true; }
   const tab=o[veld||"aan"]||{};
   if(tab[woord]){
     if(code===undefined)delete tab[woord]; else delete tab[woord][code];
     if(tab[woord]&&!Object.keys(tab[woord]).length)delete tab[woord];
   }
   return bewaarGeleerd(laag,o);
+}
+/* ---- AUTOAANVULLEN VAN DE VASTSTELLING ----
+   de opdrachtgever, 19/10/2026: "terwijl je typt stelt de app na twee letters een aanvulling voor". Geen tweede woordenboek: de
+   kandidaten komen uit wat de app al kent (de soortenwoorden, "jouw woorden", de hoofdstuknamen en de bestektitels van de
+   werf) en uit wat jij zelf eerder schreef. Dat laatste is een kleine teller van woorden en woordparen uit afgesloten
+   punten, per werf en per gebruiker zoals het leren (twee lagen), met een plafond. Er staat alleen de tekst van het punt
+   zelf in -- zonder de steno-tekens, nooit een foto of een naam: een hoofdletterwoord midden in de zin, of een woord met
+   een cijfer, blijft eruit. Een aanvulling bewaart niets zolang jij niet bewaart. */
+const AANVULSLEUTEL="werfpunten-aanvul", AANVULIKSLEUTEL="werfpunten-aanvul-ik", AANVULMAX=300, AANVULPERPUNT=40;
+const aanvulNormMemo=new Map();
+function aanvulNorm(s){
+  let n=aanvulNormMemo.get(s);
+  if(n===undefined){
+    if(aanvulNormMemo.size>20000)aanvulNormMemo.clear();
+    n=String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+    aanvulNormMemo.set(s,n);
+  }
+  return n;
+}
+/* De beste drie aanvullingen voor het laatste woord (of de laatste twee) van `begin`. `bronnen`: {gebruik:{zin:aantal}|[[zin,aantal]],
+   werftaal:[zin], bestek:[zin]}. Geeft [{tekst, vervang:1|2, bron, n}]: `tekst` komt in de plaats van de laatste `vervang` woorden.
+   Rangschikking: eerst wat je zelf het vaakst gebruikte, dan de kortste. Niets na een teken (>, @, !, een cijfer, DL), niets bij
+   één letter. Hoofdletters en accenten tellen niet mee. */
+function aanvullingen(begin,bronnen){
+  const b=String(begin||"");
+  const m=b.match(/(?:^|(\S+)\s+)(\S+)$/);
+  if(!m)return [];
+  const tok=m[2], voor=m[1]||"";
+  if(!/^[A-Za-zÀ-ÿ]{2,}$/.test(tok))return [];            // een teken, een cijfer of een leesteken: geen aanvulling
+  if(/^(DL|VERBOD)$/i.test(tok))return [];
+  if(/^[>@!]/.test(voor)||/^DL$/i.test(voor))return [];     // het woord na een teken is een code of een datum
+  const nt=aanvulNorm(tok), np=/^[A-Za-zÀ-ÿ]{2,}$/.test(voor)?aanvulNorm(voor):"";
+  const kand=[];
+  const gebruik=bronnen&&bronnen.gebruik;
+  (Array.isArray(gebruik)?gebruik:Object.entries(gebruik||{})).forEach(([t,n])=>kand.push({t:String(t),n:+n||0,bron:"gebruikt"}));
+  ((bronnen&&bronnen.werftaal)||[]).forEach(t=>kand.push({t:String(t),n:0,bron:"werftaal"}));
+  ((bronnen&&bronnen.bestek)||[]).forEach(t=>kand.push({t:String(t),n:0,bron:"bestek"}));
+  const best=new Map();
+  kand.forEach(c=>{
+    const nc=aanvulNorm(c.t);
+    let vervang=0, sleutel="";
+    if(np&&nc.startsWith(np+" "+nt)&&nc.length>np.length+1+nt.length){ vervang=2; sleutel=nc; }
+    else if(nc.startsWith(nt)&&nc.length>nt.length){ vervang=1; sleutel=np?np+" "+nc:nc; }
+    if(!vervang)return;
+    const o=best.get(sleutel);
+    if(!o||c.n>o.n||(c.n===o.n&&c.t.length<o.tekst.length)){
+      let tekst=c.t;
+      if(/[A-ZÀ-Þ]/.test((vervang===2?voor:tok)[0])&&!/[A-ZÀ-Þ]/.test(tekst[0]))tekst=tekst[0].toUpperCase()+tekst.slice(1);
+      best.set(sleutel,{tekst,vervang,bron:c.bron,n:c.n});
+    }
+  });
+  return [...best.values()].sort((x,y)=>(y.n-x.n)||(x.tekst.length-y.tekst.length)||(x.vervang-y.vervang)).slice(0,3);
+}
+/* Wat uit een punt in de teller komt: losse woorden (vier letters of meer, geen stopwoord) en paren van aangrenzende woorden. */
+function aanvulStukken(tekst){
+  const uit=new Set();
+  String(tekst||"").split(/[.;:!?\n()]+/).forEach(zin=>{
+    let vorig=null, eerste=true;
+    String(zin).replace(/[^\s]+/g,(woord,i,vol)=>{
+      const kaal=woord.replace(/^[,"'“„]+|[,"'”]+$/g,"");
+      const goed=/^[A-Za-zÀ-ÿ]{3,}$/.test(kaal)&&!(/[A-ZÀ-Þ]/.test(kaal[0])&&!eerste);      // een cijfer of een naam midden in de zin breekt de keten
+      eerste=false;
+      if(!goed){ vorig=null; return woord; }
+      const l=kaal.toLowerCase();
+      if(l.length>=4&&!LEERSTOP.has(l))uit.add(l);
+      if(vorig)uit.add(vorig+" "+l);
+      vorig=l;
+      return woord;
+    });
+  });
+  return [...uit].slice(0,AANVULPERPUNT);
+}
+function aanvulSleutel(laag){ return laag==="ik"?AANVULIKSLEUTEL:pk(AANVULSLEUTEL); }
+function leesAanvul(laag){
+  try{
+    const o=JSON.parse(localStorage.getItem(aanvulSleutel(laag))||"null");
+    return (o&&o.n&&typeof o.n==="object")?o:{v:1,n:{}};
+  }catch(e){ return {v:1,n:{}}; }
+}
+/* Het plafond: boven AANVULMAX valt eerst weg wat het minst gebruikt werd, bij gelijk het oudste. */
+function aanvulKap(n){
+  const sl=Object.keys(n);
+  if(sl.length<=AANVULMAX)return n;
+  sl.map((s,i)=>[s,n[s],i]).sort((a,b)=>(a[1]-b[1])||(a[2]-b[2])).slice(0,sl.length-AANVULMAX).forEach(([s])=>{ delete n[s]; });
+  return n;
+}
+/* Bij het bewaren van een punt: de stukken van haar tekst tellen één keer op, in beide lagen. De demo en `leren uit` leren niets. */
+function leerAanvul(tekst){
+  if(!lerenAan()||!actief||actief===DEMOID)return false;
+  const st=aanvulStukken(tekst);
+  if(!st.length)return false;
+  ["werf","ik"].forEach(laag=>{
+    const o=leesAanvul(laag);
+    st.forEach(s=>{ const nu=(o.n[s]||0)+1; delete o.n[s]; o.n[s]=nu; });      // opnieuw achteraan: het nieuwste blijft het langst staan
+    aanvulKap(o.n);
+    bewaarVeilig(aanvulSleutel(laag),JSON.stringify(o),"je veelgebruikte woorden");
+  });
+  aanvulBronCache=null;
+  return true;
+}
+let aanvulBronCache=null;
+/* De bronnen van dit moment, één keer samengesteld per aanslag-reeks. Wat de app al kent wordt hergebruikt, niet nagemaakt. */
+function aanvulBronnen(){
+  if(aanvulBronCache&&aanvulBronCache.bestek===bestek&&aanvulBronCache.hs===hoofdstukken)return aanvulBronCache.uit;
+  const gebruik={};
+  if(lerenAan()){
+    ["werf","ik"].forEach(laag=>{ const n=leesAanvul(laag).n; Object.keys(n).forEach(s=>{ gebruik[s]=Math.max(gebruik[s]||0,n[s]); }); });
+  }
+  const werftaal=new Set();
+  (SOORTEN||[]).forEach(s=>(s.woorden||[]).forEach(w=>werftaal.add(String(w).toLowerCase())));
+  (synoniemen||[]).forEach(s=>{ if(s.woord)werftaal.add(String(s.woord).toLowerCase()); });
+  (hoofdstukken||[]).forEach(h=>{ if(h&&h.naam)werftaal.add(String(h.naam).toLowerCase()); });
+  const bst=new Set();
+  try{ bestekVocabulaire().set.forEach(w=>bst.add(w)); }catch(e){}
+  (bestek||[]).forEach(a=>{ const k=String(a.titel||"").split(" - ")[0].trim().toLowerCase(); if(k&&k.length<=40&&bst.size<4000)bst.add(k); });
+  const uit={gebruik,werftaal:[...werftaal],bestek:[...bst]};
+  aanvulBronCache={bestek,hs:hoofdstukken,uit};
+  return uit;
+}
+/* De chips: één rij bij het schrijfvak van het blad, één boven de invoerregel. Alleen de rij van het veld waarin je typt. */
+function aanvulRij(veld){ return document.getElementById(veld&&veld.id==="fiche-tekst"?"fiche-aanvul":"aanvulrij"); }
+function aanvulWis(){
+  ["fiche-aanvul","aanvulrij"].forEach(id=>{ const r=document.getElementById(id); if(r){ r.innerHTML=""; r.hidden=true; } });
+}
+function aanvulToon(veld){
+  aanvulWis();
+  const rij=aanvulRij(veld);
+  if(!rij||!veld)return [];
+  const eind=(typeof veld.selectionStart==="number"&&veld.selectionStart>0)?veld.selectionStart:String(veld.value||"").length;
+  let lijst=[];
+  try{ lijst=aanvullingen(String(veld.value||"").slice(0,eind),aanvulBronnen()); }catch(e){ lijst=[]; }
+  lijst.forEach(a=>{
+    const b=maakEl("button","aanvul-chip",a.tekst); b.type="button";
+    b.title=a.bron==="gebruikt"?"Eerder door jou gebruikt":a.bron==="bestek"?"Uit het bestek":"Uit de werftaal";
+    b.onmousedown=b.onpointerdown=e=>{ e.preventDefault(); };      // het toetsenbord blijft open en de cursor blijft staan
+    b.onclick=()=>aanvulToepas(veld,a);
+    rij.appendChild(b);
+  });
+  rij.hidden=!lijst.length;
+  return lijst;
+}
+function aanvulToepas(veld,a){
+  const w=String(veld.value||"");
+  const eind=(typeof veld.selectionStart==="number"&&veld.selectionStart>0)?veld.selectionStart:w.length;
+  const voor=w.slice(0,eind), na=w.slice(eind);
+  const nieuw=voor.replace(a.vervang===2?/\S+\s+\S+$/:/\S+$/,a.tekst)+(/^\s/.test(na)?"":" ");
+  veld.value=nieuw+na;
+  try{ veld.setSelectionRange(nieuw.length,nieuw.length); }catch(e){}
+  zetVaststelling(veld.value,veld.id==="fiche-tekst"?"blad":"regel");
+  aanvulWis();
+  try{ veld.focus(); }catch(e){}
 }
 /* VOORSTELLEN UIT DE VASTSTELLING. De opdrachtgever, 30/09/2026: "stel vaststelling = plinten →
    hoofdaannemer, onderaannemer afwerking, maar kan ook opdrachtgever (bv beslissen over kleur)
@@ -15751,7 +16445,7 @@ function openFiche(tekst,opties){
   const o=opties||{};
   /* Wie terugkomt van het plan, komt terug bij zijn eigen punt: dan blijft de toewijzing staan,
      om dezelfde reden als de keuze hierboven. Elke andere ingang is een nieuw punt. */
-  if(!o.behoudKeuze){ fiche.aan=null; fiche.aanOok=[]; fiche.aanHand=false; fiche.aanGeraden=false; fiche.aanBron=null; fiche.oordeel=null; fiche.negeer=null; fiche.uit={cat:false, persoon:false, tekst:false}; }
+  if(!o.behoudKeuze){ fiche.aan=null; fiche.aanOok=[]; fiche.aanHand=false; fiche.aanGeraden=false; fiche.aanBron=null; fiche.oordeel=null; fiche.negeer=null; fiche.plekAf=false; fiche.uit={cat:false, persoon:false, tekst:false}; }
   /* Waar de zin vandaan kwam. Alleen een dienst zegt {via:"ai"}; elke andere ingang is een zin
      van jezelf, en die draagt geen teken. Zie de kop "de AI-modus". */
   if(!o.behoudKeuze)fiche.via=(o.via==="ai")?"ai":null;
@@ -15850,7 +16544,7 @@ function pasVeldHoogte(){
   v.style.height=h+"px";
   return h;
 }
-document.getElementById("fiche-tekst").oninput=function(){ zetVaststelling(this.value,"blad"); pasVeldHoogte(); };
+document.getElementById("fiche-tekst").oninput=function(){ zetVaststelling(this.value,"blad"); pasVeldHoogte(); aanvulToon(this); };
 document.getElementById("fiche-tekst").onfocus=pasVeldHoogte;
 document.getElementById("fiche-tekst").onblur=pasVeldHoogte;
 document.getElementById("fiche-tekst").onkeydown=e=>{
@@ -16393,7 +17087,7 @@ function ficheWeggooien(){
   isScan=false;
   if(scanVoorbeeld){ try{ URL.revokeObjectURL(scanVoorbeeld); }catch(e){} scanVoorbeeld=null; }
   wachtendeHaal=null; wachtendeAan=null; wachtendeAanOok=[]; wachtendeVia=null;
-  fiche.keuze=null; fiche.onzeker=null; fiche.aan=null; fiche.aanOok=[]; fiche.aanHand=false; fiche.aanGeraden=false; fiche.aanBron=null; fiche.oordeel=null; fiche.negeer=null; fiche.via=null; fiche.kop=null;
+  fiche.keuze=null; fiche.onzeker=null; fiche.aan=null; fiche.aanOok=[]; fiche.aanHand=false; fiche.aanGeraden=false; fiche.aanBron=null; fiche.oordeel=null; fiche.negeer=null; fiche.plekAf=false; fiche.via=null; fiche.kop=null;
   try{ toonWachtendeFoto(); }catch(e){}
   sluitFiche();
   return true;
@@ -20291,6 +20985,17 @@ function vermelding(p){
    plaatsen geschreven worden — de punten zonder rondgang en die van elk blok — moest het eruit.
    Twee kopieën van deze regel is twee keer kunnen vergeten: wie er een merk bij zet, zet het dan
    in de ene lus wel en in de andere niet, en het verwerkingsscript leest twee vormen. */
+/* HET OORDEEL IN HET VERLAG (voorstel, de opdrachtgever beslist; vlag UIT tot hij ze aanzet). Het oordeel van een punt (oordeelVan) staat nu op de stip en in de keet, maar niet in het verslag. Een verslag is bewijs in twee richtingen, dus er gelden drie regels. Eén: alleen een oordeel dat op het punt ZELF staat telt. Het afgeleide "open = niet in orde" van oudere punten (oordeelVan zonder p.oordeel) is een vermoeden van de app en geen vaststelling; dat komt er niet in. Twee: een oordeel dat de app uit de tekst las (p.oordeelGeraden) staat er nooit als feit maar als "voorstel van de app, niet vastgesteld"; één tik op de stip bevestigt het en haalt de vlag weg. Drie: een neutraal punt, en een punt dat al opgelost, vervallen of doorgeschoven is, krijgt niets (dat zegt de rest van het verslag al). Het woord staat er voluit en niet enkel als kleur, zodat het ook op zwart-wit leest. Eén plaats voor de tekstvorm en de afdruk. */
+const VERSLAGOORDEEL=false;
+function verslagOordeel(p){
+  if(!VERSLAGOORDEEL||!p)return null;
+  if(p.oordeel!=="ok"&&p.oordeel!=="nok")return null;
+  if(isKlaar(p)||isVervallen(p)||isDoorgeschoven(p))return null;
+  const woord=p.oordeel==="nok"?"niet in orde":"in orde";
+  const voorstel=!!p.oordeelGeraden;
+  return {oordeel:p.oordeel, woord, voorstel,
+    zin:voorstel?"voorstel van de app, niet vastgesteld: "+woord:woord};
+}
 function puntRegel(p){
   /* Hoeveel foto's er bij dit punt horen. "F" is er één, "F3" zijn er drie — het
      verwerkingsscript koppelt ze op tijdstempel en moet dus weten hoeveel het er mag nemen.
@@ -20341,6 +21046,7 @@ function puntRegel(p){
   // ontvanger het niet in een aparte mail hoeft terug te zoeken.
   if(p.doc&&veiligeLink(p.doc.box)) l+=" BOX <"+p.doc.box+">";
   beelden.filter(b=>!b.beeld).forEach(b=>{ l+=" ["+(b.naam||"document")+"]"; });
+  { const vo=verslagOordeel(p); if(vo)l+=" OORDEEL{"+vo.zin+"}"; }
   return l;
 }
 
@@ -20744,6 +21450,13 @@ function afdrukPunt(p,m,opties){
     kop.appendChild(maakEl("span","af-gevolg",punt+gz));
   }
   body.appendChild(kop);
+  { const vo=verslagOordeel(p);
+    if(vo){
+      const ol=maakEl("p","af-oordeel"+(vo.voorstel?" af-oordeel-voorstel":" af-oordeel-"+vo.oordeel));
+      ol.appendChild(maakEl("span","af-oordeel-woord",vo.voorstel?"Voorstel van de app, niet vastgesteld:":"Oordeel:"));
+      ol.appendChild(document.createTextNode(" "+vo.woord));
+      body.appendChild(ol);
+    } }
   const meta=afdrukMeta(p,m,o);
   if(meta)body.appendChild(maakEl("p","af-meta",meta));
   rij.appendChild(body);
@@ -23059,7 +23772,8 @@ async function toonVergaderingen(faseCode){
   const naamVan=(v,loopt)=>datumKort(v.datum)+(v.titel?" \u00B7 "+v.titel:"")+" \u00B7 "+(loopt?"loopt":(v.verslagstatus||(v.afgesloten?"definitief":"concept")))+" \u00B7 "+nrVan(v);
   const koppen=[];
   if(faseVan(staat)===gekozen){
-    koppen.push({nr:nrVan(staat),naam:naamVan(staat,true),lade:true,doe:()=>{ dlg.close(); openVerslag(); }});
+    /* Het lopende verslag draagt de bol met wat er op de werf nog openstaat (dit verslag en vorige keren samen); bij nul niets. */
+    koppen.push({nr:nrVan(staat),naam:naamVan(staat,true),lade:true,tel:telOpen(werfWerkPunten(),()=>"werf").get("werf"),doe:()=>{ dlg.close(); openVerslag(); }});
   }
   const eerder=archief.filter(v=>faseVan(v)===gekozen)
     .sort((a,b)=>String(b.datum).localeCompare(String(a.datum)));
@@ -24532,6 +25246,334 @@ function toonAfdrukVoor(){
   dlg.showModal();
 }
 
+/* === begin verzenden-per-bestemmeling === */
+/* VERZENDEN PER BESTEMMELING, EEN GESCHIEDENIS, EN DE WEEKMAIL. Wat ArchiSnapper doet (nota
+   ARCHISNAPPER-leerpunten-steno, 2 en 6): drie standen van verzenden, een voorstel van ontvangers,
+   een geschiedenis en een weekmail met wat openstaat. Wat deze app daar NIET van overneemt: zelf
+   versturen. De app maakt een concept — een mailto-link met onderwerp en tekst, of het
+   deelvenster van het toestel, of een kopie — en de opdrachtgever opent en verstuurt het zelf. Hier zit
+   geen enkele netwerkaanroep in, en geen klok die iets laat vertrekken.
+
+   De geschiedenis zegt dus alleen wat er gebeurde aan deze kant: dat een concept gemaakt werd, en
+   dat de gebruiker daarna aangaf dat het verstuurd was. De app kan niet weten of een mail echt
+   vertrok, en beweert dat ook niet: bij een concept dat niet bevestigd werd staat "concept",
+   niet "verstuurd". Ze staat lokaal, per werf (`pk`), en reist niet mee naar de database. */
+const VERZENDSLEUTEL="werfpunten-verzendgeschiedenis";
+const VERZENDMAX=200;               // een geschiedenis die blijft aangroeien is geen geschiedenis
+const MAILTOMAX=1800;               // een langere mailto-link breekt op sommige toestellen; dan het deelvenster
+const VERZENDSTANDEN=[
+  {sleutel:"alles",kop:"Het hele verslag naar iedereen",
+   uitleg:"één concept, met alle punten, naar alle aangevinkte ontvangers"},
+  {sleutel:"alles+per",kop:"Het hele verslag, en per ontvanger een gefilterd verslag",
+   uitleg:"één concept met alles, en daarbovenop voor elke ontvanger een concept met enkel zijn punten"},
+  {sleutel:"per",kop:"Enkel per ontvanger een gefilterd verslag",
+   uitleg:"voor elke ontvanger een concept met alleen de punten waar hij bij staat"}];
+
+function verzendMailGeldig(a){ return /^[^\s@,;]+@[^\s@,;]+\.[^\s@,;]+$/.test((a||"").trim()); }
+function verzendWerfNaam(){ const pr=projecten.find(x=>x.id===actief); return (pr&&pr.naam)||""; }
+
+/* Het voorstel van ontvangers: wie in dit verslag iets toegewezen kreeg (aanSet, dus wat in orde
+   is telt niet) en hoeveel dat er zijn. Wie geen e-mailadres heeft blijft in de lijst, mét een
+   waarschuwing: het punt is er toch, en de opdrachtgever kan het concept via het deelvenster of een kopie
+   alsnog kwijt. Wie niets kreeg staat er niet. */
+function verzendVoorstel(m){
+  return contacten.map(c=>{
+    const v=verslagVoor(m,c.code);
+    const mail=(c.email||"").trim();
+    return {code:c.code,naam:c.naam||c.code,email:verzendMailGeldig(mail)?mail:"",
+            zonderMail:!verzendMailGeldig(mail),n:v.punten.length+v.open.length};
+  }).filter(o=>o.n);
+}
+
+function verzendTekst(m,code,naam){
+  const ref=verslagRef(staat);
+  const v=verslagVoor(m,code);
+  const punten=v.punten.concat(v.open);
+  const titel="Werfverslag "+ref+(code?" — gefilterd voor "+naam:"");
+  const toel=code
+    ? "Dit is een gefilterd verslag: enkel de punten voor jou werden weerhouden. De nummers zijn die van het volledige verslag, daarom ontbreken er nummers."
+    : "Het volledige verslag als pdf voeg je zelf toe (Afdrukken, dan als PDF bewaren); hieronder de punten als lijst.";
+  const tekst=doorstuurTekst(titel,toel,punten,m,code||undefined);
+  return {punten,tekst:"Dag "+(code?naam:"allemaal")+",\n\n"+tekst};
+}
+
+/* De concepten voor een stand en een keuze van ontvangers (`codes`). Elk concept: wie, welk
+   adres (of adressen), onderwerp, tekst, en de punten (voor de foto's in het deelvenster). */
+function verzendConcepten(m,stand,codes){
+  const voorstel=verzendVoorstel(m).filter(o=>(codes||[]).includes(o.code));
+  const werf=verzendWerfNaam();
+  const onderwerp=(extra)=>"Werfverslag "+verslagRef(staat)+(werf?" — "+werf:"")+(extra||"");
+  const uit=[];
+  if(stand==="alles"||stand==="alles+per"){
+    const t=verzendTekst(m,null,"");
+    uit.push({code:null,naam:"Iedereen",email:voorstel.filter(o=>o.email).map(o=>o.email).join(","),
+              onderwerp:onderwerp(),tekst:t.tekst,punten:t.punten,
+              zonderMail:voorstel.every(o=>!o.email)});
+  }
+  if(stand==="alles+per"||stand==="per"){
+    voorstel.forEach(o=>{
+      const t=verzendTekst(m,o.code,o.naam);
+      uit.push({code:o.code,naam:o.naam,email:o.email,
+                onderwerp:onderwerp(" — punten voor "+o.naam),tekst:t.tekst,punten:t.punten,
+                zonderMail:o.zonderMail});
+    });
+  }
+  return uit;
+}
+
+function mailtoLink(c){
+  const aan=(c.email||"").split(",").filter(Boolean).map(a=>encodeURIComponent(a).replace(/%40/g,"@")).join(",");
+  return "mailto:"+aan+"?subject="+encodeURIComponent(c.onderwerp||"")+
+         "&body="+encodeURIComponent((c.tekst||"").replace(/\n/g,"\r\n"));
+}
+
+/* ---- de weekmail ----
+   Per contact wat er nog openstaat en waar hij bij staat: de open punten van vorige verslagen
+   (openPunten) en die van het lopende verslag die nog open zijn (isOpen), gezeefd op aanSet — wat
+   in orde is geeft niemand een opdracht, wat opgelost is staat er niet meer in. Dit is een
+   TEKST. Er hangt geen planning aan: een app die niet draait stuurt toch niets, en de opdrachtgever
+   verstuurt zelf. */
+function weekmailPunten(code){
+  const gezien=new Set(), uit=[];
+  const voeg=(p,datum)=>{
+    if(!isOpen(p)||!aanSet(p).includes(code)||gezien.has(p.id))return;
+    gezien.add(p.id); uit.push({...p,datum:p.datum||datum});
+  };
+  openPunten().forEach(p=>voeg(p,p.datum));
+  (staat.punten||[]).forEach(p=>voeg(p,staat.datum));
+  return uit;
+}
+function weekmailRegel(p,nu){
+  const een=(p.tekst||"[geen notitie]").replace(/\s+/g," ").trim();
+  const vandaagG=dagGetal(nu), dl=p.deadline||null;
+  const open=dagGetal(p.datum);
+  const dagen=open===null||vandaagG===null?null:Math.max(0,vandaagG-open);
+  const wanneer=dagen===null?"":(dagen===0?"vandaag vastgesteld":"al "+stuks(dagen,"dag","dagen")+" open");
+  const termijn=dl?("deadline "+dl+(dagGetal(dl)!==null&&dagGetal(dl)<vandaagG?" (over tijd)":"")):"geen deadline";
+  return "- "+(p.nummer?p.nummer+"  ":"")+een+"  ("+[termijn,wanneer].filter(Boolean).join(", ")+")";
+}
+function weekmailVoorstel(){
+  return contacten.map(c=>{
+    const mail=(c.email||"").trim();
+    return {code:c.code,naam:c.naam||c.code,email:verzendMailGeldig(mail)?mail:"",
+            zonderMail:!verzendMailGeldig(mail),n:weekmailPunten(c.code).length};
+  }).filter(o=>o.n);
+}
+function weekmailTekst(code,naam,nu){
+  const l=weekmailPunten(code);
+  const r=["Dag "+naam+",","","Dit zijn de punten die nog openstaan en waar jij bij staat, op "+
+    datumLang(nu)+":",""];
+  l.forEach(p=>r.push(weekmailRegel(p,nu)));
+  r.push("","Laat het weten als er iets van opgelost is.");
+  return {punten:l,tekst:r.join("\n")};
+}
+function weekmailConcepten(codes,nu){
+  const werf=verzendWerfNaam();
+  const dag=nu||vandaag();
+  return weekmailVoorstel().filter(o=>(codes||[]).includes(o.code)).map(o=>{
+    const t=weekmailTekst(o.code,o.naam,dag);
+    return {code:o.code,naam:o.naam,email:o.email,zonderMail:o.zonderMail,punten:t.punten,tekst:t.tekst,
+            onderwerp:"Openstaande punten"+(werf?" — "+werf:"")+" — "+datumKort(dag)};
+  });
+}
+
+/* ---- de geschiedenis ---- */
+function verzendLees(){
+  try{ const r=JSON.parse(localStorage.getItem(pk(VERZENDSLEUTEL))||"[]");
+       return Array.isArray(r)?r.filter(x=>x&&x.id):[]; }
+  catch(e){ return []; }
+}
+function verzendBewaar(l){
+  try{ localStorage.setItem(pk(VERZENDSLEUTEL),JSON.stringify(l.slice(-VERZENDMAX))); return true; }
+  catch(e){ return false; }
+}
+function verzendTijd(d){
+  const t=d||new Date();
+  return dagVan(t)+" "+String(t.getHours()).padStart(2,"0")+":"+String(t.getMinutes()).padStart(2,"0");
+}
+let verzendTeller=0;
+/* Een concept is gemaakt. `verstuurd` blijft leeg tot de gebruiker het zelf zegt. */
+function verzendNoteer(c,stand,hoe,tijd){
+  const l=verzendLees();
+  const item={id:"z"+Date.now().toString(36)+(++verzendTeller),verslag:verslagSleutel(staat),
+              ref:verslagRef(staat),code:c.code||null,naam:c.naam,stand:stand,hoe:hoe,
+              tijd:tijd||verzendTijd(),verstuurd:null};
+  l.push(item); verzendBewaar(l);
+  return item;
+}
+function verzendBevestig(id,tijd){
+  const l=verzendLees(), it=l.find(x=>x.id===id);
+  if(!it)return false;
+  it.verstuurd=tijd||verzendTijd();
+  return verzendBewaar(l);
+}
+function verzendVan(verslag){ return verzendLees().filter(x=>x.verslag===verslag); }
+const VERZENDSTAND_NAAM={"alles":"hele verslag","alles+per":"hele verslag en gefilterd","per":"gefilterd","weekmail":"weekmail"};
+
+/* Een concept openen: de mailto-link, tenzij die te lang wordt (dan het deelvenster). Of de mail
+   daarna echt vertrekt, weet de app niet. */
+function verzendOpenLink(link){ try{ location.href=link; return true; }catch(e){ return false; } }
+async function verzendDeel(c){
+  const bestanden=await bestandenVan(c.punten||[]);
+  const kan=f=>{try{return navigator.canShare&&navigator.canShare(f)}catch(e){return false}};
+  if(navigator.share){
+    if(bestanden.length&&kan({files:bestanden})){
+      try{ await navigator.share({title:c.onderwerp,text:c.tekst,files:bestanden}); return "gedeeld"; }
+      catch(e){ if(e&&e.name==="AbortError")return "afgebroken"; }
+    }
+    try{
+      await navigator.share({title:c.onderwerp,text:c.tekst});
+      if(bestanden.length)melding("Zonder de "+bestanden.length+" foto's — dit toestel deelt geen bestanden");
+      return "gedeeld";
+    }catch(e){ if(e&&e.name==="AbortError")return "afgebroken"; }
+  }
+  if(await kopieer(c.onderwerp+"\n\n"+c.tekst)){ melding("Gekopieerd — dit toestel heeft geen deelvenster"); return "gekopieerd"; }
+  melding("Delen én kopiëren lukken niet in deze browser");
+  return "mislukt";
+}
+async function verzendConcept(c,stand,hoe){
+  let uitslag;
+  if(hoe==="mail"){
+    const link=mailtoLink(c);
+    if(link.length>MAILTOMAX){ melding("Te lang voor een mail-link — het deelvenster doet het"); uitslag=await verzendDeel(c); }
+    else uitslag=verzendOpenLink(link)?"mail":await verzendDeel(c);
+  }else uitslag=await verzendDeel(c);
+  if(uitslag!=="afgebroken"&&uitslag!=="mislukt")verzendNoteer(c,stand,uitslag);
+  return uitslag;
+}
+
+/* De geschiedenis als element: een lijst die zichzelf bijwerkt zodra je "verstuurd" tikt. */
+function verzendGeschiedenisEl(verslag){
+  const el=maakEl("div","verz-gesch");
+  el.vul=()=>{
+    el.innerHTML="";
+    const l=verzendVan(verslag).slice().reverse();
+    if(!l.length){ return; }
+    el.appendChild(maakEl("h4",null,"Verzendgeschiedenis"));
+    el.appendChild(maakEl("p","inv-uitleg","Wat de app bijhoudt: dat er een concept gemaakt werd en wat jij daarna aangaf. "+
+      "Of een mail echt vertrok, weet de app niet."));
+    l.forEach(it=>{
+      const rij=maakEl("div","door-rij verz-rij");
+      const links=maakEl("div","door-wat");
+      links.appendChild(maakEl("b",null,it.naam));
+      links.appendChild(maakEl("span",null,(VERZENDSTAND_NAAM[it.stand]||it.stand)+" · "+
+        (it.hoe==="mail"?"mail":it.hoe==="gedeeld"?"deelvenster":"kopie")+" · concept "+it.tijd+
+        (it.verstuurd?" · verstuurd "+it.verstuurd:"")));
+      rij.appendChild(links);
+      if(!it.verstuurd){
+        const b=maakEl("button",null,"Verstuurd");b.type="button";
+        b.onclick=()=>{ verzendBevestig(it.id); el.vul(); };
+        rij.appendChild(b);
+      }else rij.appendChild(maakEl("span","verz-ok","✓"));
+      el.appendChild(rij);
+    });
+  };
+  el.vul();
+  return el;
+}
+
+function verzendConceptRijen(body,concepten,stand,gesch){
+  if(!concepten.length){ body.appendChild(maakEl("p","inv-uitleg","Er is niets om voor te bereiden: vink minstens één ontvanger aan.")); return; }
+  concepten.forEach(c=>{
+    const rij=maakEl("div","door-rij");
+    const links=maakEl("div","door-wat");
+    links.appendChild(maakEl("b",null,c.naam));
+    links.appendChild(maakEl("span",null,(c.email||"geen e-mailadres — kies Delen")+" · "+
+      stuks(c.punten.length,"punt","punten")));
+    rij.appendChild(links);
+    ["mail","deel"].forEach(hoe=>{
+      const b=maakEl("button",null,hoe==="mail"?"Mail":"Delen");b.type="button";
+      b.onclick=async()=>{ await verzendConcept(c,stand,hoe); gesch.vul(); };
+      rij.appendChild(b);
+    });
+    body.appendChild(rij);
+  });
+}
+
+/* Het scherm: de stand, het voorstel van ontvangers (aan te vinken), en dan de concepten. */
+function verzendKies(voorstel,keuze,eenheid){
+  voorstel.forEach(o=>{
+    const l=maakEl("label","verz-kies");
+    const i=maakEl("input");i.type="checkbox";i.checked=keuze.codes.has(o.code);
+    i.onchange=()=>{ if(i.checked)keuze.codes.add(o.code); else keuze.codes.delete(o.code); };
+    l.appendChild(i);
+    const t=maakEl("span");t.appendChild(maakEl("b",null,o.naam));
+    t.appendChild(maakEl("small",o.zonderMail?"verz-let":null,
+      stuks(o.n,eenheid[0],eenheid[1])+" · "+(o.zonderMail?"geen e-mailadres bij dit contact":o.email)));
+    l.appendChild(t); keuze.lijst.appendChild(l);
+  });
+}
+function toonVerzenden(){
+  const m=verslagModel();
+  const voorstel=verzendVoorstel(m);
+  const keuze={stand:"alles+per",codes:new Set(voorstel.filter(o=>!o.zonderMail).map(o=>o.code))};
+  const dlg=document.getElementById("dlg");
+  document.getElementById("dlg-titel").textContent="Verslag verzenden";
+  const body=document.getElementById("dlg-body");
+  const teken=(concepten)=>{
+    body.innerHTML="";
+    body.appendChild(maakEl("p","inv-uitleg","De app verstuurt zelf niets. Ze maakt een concept per ontvanger; "+
+      "jij opent het en verstuurt het."));
+    body.appendChild(maakEl("h4",null,"Wat gaat er mee"));
+    VERZENDSTANDEN.forEach(s=>{
+      const l=maakEl("label","verz-kies");
+      const i=maakEl("input");i.type="radio";i.name="verz-stand";i.checked=keuze.stand===s.sleutel;
+      i.onchange=()=>{ keuze.stand=s.sleutel; };
+      l.appendChild(i);
+      const t=maakEl("span");t.appendChild(maakEl("b",null,s.kop));t.appendChild(maakEl("small",null,s.uitleg));
+      l.appendChild(t); body.appendChild(l);
+    });
+    body.appendChild(maakEl("h4",null,"Ontvangers"));
+    if(!voorstel.length)body.appendChild(maakEl("p","inv-uitleg","Nog geen punt is aan iemand toegewezen, of alles is in orde. "+
+      "Je kunt het hele verslag nog wel voorbereiden; zonder ontvangers blijft het adres leeg."));
+    keuze.lijst=body;
+    verzendKies(voorstel,keuze,["punt","punten"]);
+    const go=maakEl("button","verz-go","Concepten voorbereiden");go.type="button";
+    go.onclick=()=>{ teken(verzendConcepten(verslagModel(),keuze.stand,[...keuze.codes])); };
+    body.appendChild(go);
+    const gesch=verzendGeschiedenisEl(verslagSleutel(staat));
+    if(concepten){
+      body.appendChild(maakEl("h4",null,"Concepten"));
+      verzendConceptRijen(body,concepten,keuze.stand,gesch);
+    }
+    body.appendChild(gesch);
+  };
+  teken(null);
+  document.getElementById("dlg-kopieer").style.display="none";
+  dlg.showModal();
+}
+
+function toonWeekmail(){
+  const voorstel=weekmailVoorstel();
+  const keuze={codes:new Set(voorstel.filter(o=>!o.zonderMail).map(o=>o.code))};
+  const dlg=document.getElementById("dlg");
+  document.getElementById("dlg-titel").textContent="Weekmail met openstaande punten";
+  const body=document.getElementById("dlg-body");
+  const teken=(concepten)=>{
+    body.innerHTML="";
+    body.appendChild(maakEl("p","inv-uitleg","Per contact een concept met wat nog openstaat en waar hij bij staat. "+
+      "De app verstuurt niets en plant niets: jij opent het concept en verstuurt het zelf."));
+    if(!voorstel.length)body.appendChild(maakEl("p","inv-uitleg","Niemand heeft nog een open punt."));
+    keuze.lijst=body;
+    verzendKies(voorstel,keuze,["open punt","open punten"]);
+    if(voorstel.length){
+      const go=maakEl("button","verz-go","Weekmail voorbereiden");go.type="button";
+      go.onclick=()=>{ teken(weekmailConcepten([...keuze.codes])); };
+      body.appendChild(go);
+    }
+    const gesch=verzendGeschiedenisEl(verslagSleutel(staat));
+    if(concepten){
+      body.appendChild(maakEl("h4",null,"Concepten"));
+      verzendConceptRijen(body,concepten,"weekmail",gesch);
+    }
+    body.appendChild(gesch);
+  };
+  teken(null);
+  document.getElementById("dlg-kopieer").style.display="none";
+  dlg.showModal();
+}
+/* === einde verzenden-per-bestemmeling === */
+
 /* Eén knop waar het verslag de app verlaat, in vijf vormen. Dit is keetwerk, niet werfwerk —
    hier telt volledigheid, niet het aantal tikken. */
 /* ---- het nazicht ----
@@ -25054,7 +26096,7 @@ function lbOpmerkingenLijst(){
   const bal=maakEl("div","lb-bronnen");
   const nBlad=Object.keys(lbBladw).length;
   [["alles","Alles"],["opmerking","Opmerkingen"],["aanpassing","Aanpassingen"],["blad","Bladwijzers"]].forEach(([k,t])=>{
-    const b=maakEl("button","lb-bron"+(k===lbOpmFilter?" actief":""),t+(k==="alles"?" ("+alle.length+")":k==="blad"?" ("+nBlad+")":" ("+alle.filter(x=>(x.n.soort||"opmerking")===k).length+")")); b.type="button";
+    const b=maakEl("button","lb-bron"+(k===lbOpmFilter?" actief":""),metAantal(t,k==="alles"?alle.length:k==="blad"?nBlad:alle.filter(x=>(x.n.soort||"opmerking")===k).length)); b.type="button";
     b.onclick=()=>{ lbOpmFilter=k; dossierTeken(true); };
     bal.appendChild(b);
   });
@@ -26311,7 +27353,7 @@ function lbSub(){
         const kd=maakEl("button","fiche-hoofdstuk lb-hoofd lb-deel"+(dopen?" open":"")); kd.type="button";
         kd.setAttribute("aria-expanded",dopen?"true":"false");
         kd.appendChild(maakEl("span","fiche-anr",d.label!==undefined?d.label:d.nr));
-        kd.appendChild(maakEl("span","fiche-atitel",d.naam+" ("+d.aantal+")"));
+        kd.appendChild(maakEl("span","fiche-atitel",metAantal(d.naam,d.aantal)));
         kd.appendChild(maakEl("span","fiche-hoofdstuk-pijl","\u2192"));
         kd.onclick=()=>{ const doe=()=>{ lb.deel=dopen?null:d.deel; lb.open=null; teken(); }; if(dopen)doe(); else lbOmhoog(kd,doe); };
         /* De opdrachtgever, 14/10/2026: bij het omhoog scrollen bleef 'Onderbouw' vaststaan terwijl 'Bovenbouw' eronder wegschoof. Elke titel staat nu met zijn eigen inhoud in één omhulling (sectie), zodat
@@ -26326,7 +27368,7 @@ function lbSub(){
           const k=maakEl("button","fiche-hoofdstuk lb-hoofd lb-hfst"+(open?" open":"")); k.type="button";
           k.setAttribute("aria-expanded",open?"true":"false");
           k.appendChild(maakEl("span","fiche-anr",lbL(h)));
-          k.appendChild(maakEl("span","fiche-atitel",h.naam+" ("+lijstH.length+")"));
+          k.appendChild(maakEl("span","fiche-atitel",metAantal(h.naam,lijstH.length)));
           k.appendChild(maakEl("span","fiche-hoofdstuk-pijl","\u2192"));
           k.onclick=()=>{ const doe=()=>{ lb.open=open?null:h.nr; teken(); }; if(open)doe(); else lbOmhoog(k,doe); };
           const sh=maakEl("div","lb-sectie"); n1.appendChild(sh); if(!h.virtueel)sh.appendChild(k);
@@ -27849,7 +28891,7 @@ function locSnelBlok(d){
     const stand=navigator.onLine===false?"Geen verbinding"+(fouten.length?": wacht op "+fouten.map(locLaadNaam).join(", "):""):
       (fouten.length?"Onvolledig, verbinding weg of geen antwoord: "+fouten.map(locLaadNaam).join(", "):"Compleet");
     meta.appendChild(maakEl("div","loc-vak-klein",Math.max(0,tot-fouten.length)+" van "+tot+" onderdelen binnen \u00B7 "+stand));
-    if(fouten.length){ const u=maakEl("button","loc-opnieuw","Update"); u.type="button"; u.onclick=e=>{ if(e&&e.stopPropagation)e.stopPropagation(); locUpdate(); }; meta.appendChild(u); }
+    if(fouten.length){ const u=maakEl("button","loc-opnieuw","Bijwerken"); u.type="button"; u.onclick=e=>{ if(e&&e.stopPropagation)e.stopPropagation(); locUpdate(); }; meta.appendChild(u); }
   }
   meta.appendChild(maakEl("div","loc-vak-klein","tik om opnieuw op te halen"));
   meta.setAttribute("role","button"); meta.tabIndex=0; meta.setAttribute("aria-label","Versie V"+(d.dl||1)+": opnieuw ophalen");
@@ -28105,6 +29147,10 @@ function openVerslag(){
   knop("Afdrukken per bestemmeling",
        "hetzelfde verslag, enkel de punten voor één partij; de nummers blijven die van het geheel",
        "Kiezen",toonAfdrukVoor);
+  knop("Verzenden per bestemmeling",
+       "een concept per ontvanger, in drie standen; jij verstuurt het zelf","Kiezen",toonVerzenden);
+  knop("Weekmail met openstaande punten",
+       "per contact een concept met wat nog openstaat; de app verstuurt niets","Voorbereiden",toonWeekmail);
   knop("Doorsturen per rol",
        "elk blok naar wie er iets mee moet, met zijn foto's","Kiezen",()=>toonDoorsturen("rol"));
   knop("Doorsturen per bestekhoofdstuk",
@@ -28123,6 +29169,7 @@ function openVerslag(){
   knop("Vergadering afsluiten",
        "naar het archief; wat openstaat komt de volgende keer terug","Afsluiten",
        ()=>sluitVergadering());
+  body.appendChild(verzendGeschiedenisEl(verslagSleutel(staat)));
   document.getElementById("dlg-kopieer").style.display="none";
   dlg.showModal();
 }
@@ -28344,12 +29391,16 @@ async function puntenTeken(){
   body.innerHTML="";
   const r=puntenRegels();
   const kop=maakEl("div","loc-kop pt-samen");
-  kop.appendChild(maakEl("div","loc-kop-rij",r.open.length+" open \u00B7 "+r.klaar.length+" opgelost"+(r.ok.length?" \u00B7 "+r.ok.length+" in orde":"")+(r.nvt.length?" \u00B7 "+r.nvt.length+" niet meer relevant":"")));
+  kop.appendChild(maakEl("div","loc-kop-rij",r.open.length+" open"+(r.klaar.length?" \u00B7 "+r.klaar.length+" opgelost":"")+(r.ok.length?" \u00B7 "+r.ok.length+" in orde":"")+(r.nvt.length?" \u00B7 "+r.nvt.length+" niet meer relevant":"")));
   kop.appendChild(maakEl("div","loc-kop-rij pt-hint","Het laatst toegevoegde punt staat bovenaan."));
   body.appendChild(kop);
   const blok=(titel,lijst,soort,leeg)=>{
     if(!lijst.length&&!leeg)return;
-    body.appendChild(maakEl("h3","pt-blok",titel+" ("+lijst.length+")"));
+    /* Het aantal als kleine bol achter de kop, en bij nul niets ("Open (0)" las als een fout, en "Niets open." eronder zegt het al). Bij Open staat er een rode stip als er een urgent punt tussen zit. */
+    const kopje=maakEl("h3","pt-blok",titel);
+    const bol=telBol({open:lijst.length,urgent:soort==="open"?lijst.filter(e=>e.p.urgent).length:0});
+    if(bol){ if(soort!=="open")bol.classList.add("zacht"); kopje.appendChild(bol); }
+    body.appendChild(kopje);
     if(!lijst.length){ body.appendChild(maakEl("p","pt-leeg",leeg)); return; }
     lijst.forEach(e=>body.appendChild(puntenRij(e,soort)));
   };
@@ -28728,12 +29779,12 @@ function slimDashboard(body,rijen,standen){
   });
   komend.sort((a,b)=>a.x.dag-b.x.dag);
   const in30=komend.filter(k=>k.x.dag-nu<=30);
-  const tegel=(getal,label,sub,alarm)=>{ const t=maakEl("div","slim-tegel"+(alarm?" alarm":"")); t.appendChild(maakEl("span","slim-getal",String(getal))); t.appendChild(maakEl("span","slim-label",label)); t.appendChild(maakEl("span","slim-sub",sub||"")); return t; };
+  const tegel=(getal,label,sub,alarm)=>{ const t=maakEl("div","slim-tegel"+(alarm?" alarm":"")); t.appendChild(maakEl("span","slim-getal",String(getal))); t.appendChild(maakEl("span","slim-label",label)); if(sub)t.appendChild(maakEl("span","slim-sub",sub)); return t; };
   const tegels=maakEl("div","slim-tegels");
-  tegels.appendChild(tegel(rijen.length,rijen.length===1?"werf":"werven",standen.filter(x=>x.open.length).length+" met open punten"));
-  tegels.appendChild(tegel(openTotaal,"open punten",urgentTotaal+" urgent",urgentTotaal>0));
+  tegels.appendChild(tegel(rijen.length,rijen.length===1?"werf":"werven",standen.filter(x=>x.open.length).length?standen.filter(x=>x.open.length).length+" met open punten":""));
+  tegels.appendChild(tegel(openTotaal,"open punten",urgentTotaal?urgentTotaal+" urgent":"",urgentTotaal>0));
   tegels.appendChild(tegel(in30.length,"facturatie, 30 dagen",komend.length?"eerstvolgende "+dm(komend[0].x.dag)+" \u00B7 "+komend[0].r.p.naam:"niets gepland"));
-  tegels.appendChild(tegel(conceptTotaal,"lopende verslagen",conceptTotaal?"oudste "+oudsteConcept+" dagen":"geen",oudsteConcept>=7));
+  tegels.appendChild(tegel(conceptTotaal,"lopende verslagen",conceptTotaal?"oudste "+oudsteConcept+" dagen":"",oudsteConcept>=7));
   tegels.appendChild(tegel(bezoeken30,"bezoeken, 30 dagen",laatsteBezoek?"laatst "+dm(laatsteBezoek.d)+" \u00B7 "+laatsteBezoek.w.naam:"nog geen bezoek"));
   tegels.appendChild(tegel(vertraagd,"fasen over de einddatum",vertraagd?"zie aandacht":"alles op schema",vertraagd>0));
   body.appendChild(tegels);
