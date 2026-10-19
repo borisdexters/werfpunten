@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-PyQSICkSLkGsQMb0gV6YCNGkhf5JN3GQUvLHS/zxCbc=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-8B7eNrjmFRDpMTYxfauX0Wov0esRnpv9WdDw94Tn9lE='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-o/ftHeWhPuqsjR7WrzhWgDmY92d+E0mCMsopYiKg/xc=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-fpuFdFlrBMHmtXoEB/M7q2aUfOHRm8g9uZU5KHR2bBg='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2666,12 +2666,12 @@
   .pt-meta{margin:0 0 10px;font-size:var(--tk);color:var(--ink-soft)}
   .pt-knoppen{display:flex;flex-wrap:wrap;gap:8px}
   /* De bevindingen als tegels (de opdrachtgever, 18/10/2026, met een voorbeeld): een groot, licht getal met pillen eronder, daaronder afgeronde grijze tegels, twee naast elkaar of over de hele breedte: de titel met een punt linksboven, een klein label rechtsboven, de waarde linksonder. Het lettertype en de maat zijn die van de app; alleen de getallen zijn groot en licht. */
-  .loc-snel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px;margin:14px 0 0;color:#000}
+  .loc-snel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px;margin:14px 0 0;color:var(--titel-navy)}
   .loc-vak{position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:18px;min-width:0;min-height:112px;padding:14px 14px 15px;border-radius:18px;background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 14px rgba(40,50,30,.05);overflow:hidden}      /* glas: doorzichtig wit met vervaging, op het verloop erachter (de opdrachtgever, 18/10/2026) */
   .loc-vak.breed{grid-column:1 / -1;min-height:0}
   .loc-vak>*{position:relative}
-  .loc-lab{font-size:var(--tm);line-height:1.2;color:#000;padding-right:70px}
-  .loc-chip{display:inline-block;font-size:11px;line-height:1;padding:4px 8px;border-radius:8px;background:rgba(255,255,255,.9);color:#000;white-space:nowrap}
+  .loc-lab{font-size:var(--tm);line-height:1.2;color:var(--titel-navy);padding-right:70px}
+  .loc-chip{display:inline-block;font-size:11px;line-height:1;padding:4px 8px;border-radius:8px;background:rgba(255,255,255,.9);color:var(--titel-navy);white-space:nowrap}
   .loc-vak>.loc-chip{position:absolute;right:12px;top:12px}
   .loc-vak-klein,.loc-vak-waarde{font-size:var(--tm);line-height:1.3;overflow-wrap:anywhere}      /* één lettertype, stijl en grootte voor alle info (de opdrachtgever, 16/10/2026) */
   .loc-vak-klein{font-size:var(--tk);margin-top:-8px}
@@ -2697,7 +2697,7 @@
   .loc-vak.loc-opgehaald>*:not(.loc-vul){z-index:1}
   .loc-laden{display:flex;flex-direction:column;gap:0;align-items:flex-start;grid-column:2}
   .loc-laden .loc-opnieuw{margin-top:6px}
-  .loc-laadstand{color:#000}
+  .loc-laadstand{color:var(--titel-navy)}
   .loc-groot{position:absolute;inset:0;z-index:28;background:var(--surface);display:flex;flex-direction:column}
   .loc-groot-kaart{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 var(--marge)}
   .loc-groot-kaart .loc-contour{max-width:none;width:100%;height:auto;flex:1;min-height:0;margin:0}
@@ -3271,7 +3271,7 @@
     .gantt-week{position:absolute;top:0;bottom:0;width:0;border-left:var(--haar) solid var(--line-soft);opacity:.7}
     .gantt-rij{display:block;position:relative;width:100%;height:40px;border:0;background:none;padding:0;text-align:left;color:var(--ink);cursor:pointer}
     .gantt-balk{position:absolute;top:0;height:30px;mix-blend-mode:multiply}
-    .gantt-naam{position:absolute;top:6px;font-size:var(--tk);color:#000;white-space:nowrap;padding:0 12px;z-index:3}
+    .gantt-naam{position:absolute;top:6px;font-size:var(--tk);color:var(--titel-navy);white-space:nowrap;padding:0 12px;z-index:3}
   }
   @media (max-width:699px){.fase-gantt{display:none}}
   .gantt-factuur{position:absolute;top:8px;width:12px;height:12px;margin-left:-6px;background:var(--ink);transform:rotate(45deg);border:0;z-index:2}      /* de mijlpaal zonder wit randje (de opdrachtgever, 18/10/2026) */
@@ -3295,10 +3295,10 @@
     html.zij-klein .zijbalk .zij-naam,html.zij-klein .zijbalk-thuis .zij-naam,html.zij-klein .zijbalk .zij-nr,html.zij-klein .zijbalk-thuis .zij-nr{display:none}
     html.zij-klein .zijbalk .zij-ico,html.zij-klein .zijbalk-thuis .zij-ico{display:flex}
     html.zij-klein .zijbalk button:not(.zij-wissel),html.zij-klein .zijbalk-thuis button:not(.zij-wissel){width:52px;height:52px;padding:0;justify-content:center;border-radius:50%;background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);color:var(--ink);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 14px rgba(40,50,30,.05)}      /* glas, zoals alle tegels */
-    html.zij-klein #dlg[data-pagina="punten"] .zijbalk [data-naam="punten"],html.zij-klein #dlg[data-pagina="verslagen"] .zijbalk [data-naam="verslagen"],html.zij-klein #dlg[data-pagina="dossier"] .zijbalk [data-naam="dossier"],html.zij-klein #dlg[data-pagina="locatie"] .zijbalk [data-naam="locatie"],html.zij-klein #beheerdlg .zijbalk [data-naam="instel"],html.zij-klein .zijbalk-thuis [data-naam="begin"]{background:#111;color:#fff}
-    html.zij-klein .zijbalk-thuis button[data-naam="begin"]:not(.zij-wissel){background:#111;color:#fff}      /* op het plan is Plan de gekozen knop */
+    html.zij-klein #dlg[data-pagina="punten"] .zijbalk [data-naam="punten"],html.zij-klein #dlg[data-pagina="verslagen"] .zijbalk [data-naam="verslagen"],html.zij-klein #dlg[data-pagina="dossier"] .zijbalk [data-naam="dossier"],html.zij-klein #dlg[data-pagina="locatie"] .zijbalk [data-naam="locatie"],html.zij-klein #beheerdlg .zijbalk [data-naam="instel"],html.zij-klein .zijbalk-thuis [data-naam="begin"]{background:var(--titel-navy);color:#fff}
+    html.zij-klein .zijbalk-thuis button[data-naam="begin"]:not(.zij-wissel){background:var(--titel-navy);color:#fff}      /* op het plan is Plan de gekozen knop */
     html.zij-klein body:has(#aikaart:not([hidden])) .zijbalk-thuis button[data-naam="begin"]:not(.zij-wissel){background:rgba(255,255,255,.42);color:var(--ink)}
-    html.zij-klein body:has(#aikaart:not([hidden])) .zijbalk-thuis button[data-naam="ai"]:not(.zij-wissel){background:#111;color:#fff}
+    html.zij-klein body:has(#aikaart:not([hidden])) .zijbalk-thuis button[data-naam="ai"]:not(.zij-wissel){background:var(--titel-navy);color:#fff}
   }
   /* DE BESTEKTEKST NIET TE BREED (de opdrachtgever, 18/10/2026: "dit is veel te breed"): met de kleine rail of liggend liep een regel over 1000 punten, te lang om te lezen. De leestekst blijft op ongeveer 65 tekens per regel; de titels en rijen erboven blijven de volle breedte. */
   @media (min-width:700px){
@@ -3321,9 +3321,9 @@
   .heat-rijtel{font-weight:700}
   .heat-rijdag{font-size:var(--tk);opacity:.7}
   #dlg[data-pagina="heatmap"] .zijbalk [data-naam="heatmap"],#dlg[data-pagina="projecten"] .zijbalk [data-naam="projecten"],#dlg[data-pagina="contacten-alle"] .zijbalk [data-naam="contacten-alle"]{background:rgba(255,255,255,.88);font-weight:650}
-  html.zij-klein #dlg[data-pagina="heatmap"] .zijbalk button[data-naam="heatmap"]:not(.zij-wissel),html.zij-klein #dlg[data-pagina="projecten"] .zijbalk button[data-naam="projecten"]:not(.zij-wissel),html.zij-klein #dlg[data-pagina="contacten-alle"] .zijbalk button[data-naam="contacten-alle"]:not(.zij-wissel){background:#111;color:#fff}
+  html.zij-klein #dlg[data-pagina="heatmap"] .zijbalk button[data-naam="heatmap"]:not(.zij-wissel),html.zij-klein #dlg[data-pagina="projecten"] .zijbalk button[data-naam="projecten"]:not(.zij-wissel),html.zij-klein #dlg[data-pagina="contacten-alle"] .zijbalk button[data-naam="contacten-alle"]:not(.zij-wissel){background:var(--titel-navy);color:#fff}
   #dlg[data-pagina="dashboard"] .zijbalk [data-naam="dashboard"]{background:rgba(255,255,255,.88);font-weight:650}
-  html.zij-klein #dlg[data-pagina="dashboard"] .zijbalk button[data-naam="dashboard"]:not(.zij-wissel){background:#111;color:#fff}
+  html.zij-klein #dlg[data-pagina="dashboard"] .zijbalk button[data-naam="dashboard"]:not(.zij-wissel){background:var(--titel-navy);color:#fff}
   .slim-tegels{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:10px;margin:6px 0 18px}
   .slim-tegel{display:flex;flex-direction:column;gap:3px;padding:16px 18px;border-radius:18px;background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 14px rgba(40,50,30,.05)}
   .slim-getal{font-size:calc(var(--tg) * 1.5);line-height:1;font-weight:300}
@@ -3344,7 +3344,7 @@
   .dash-groep{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
   .dash-groeplabel{font-size:var(--tk);opacity:.65;margin-right:2px}
   .dash-groep button{font:400 var(--tk)/1.2 -apple-system,system-ui,sans-serif;color:var(--ink);background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);border:0;border-radius:12px;padding:8px 13px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.7)}
-  .dash-groep button.actief{background:#111;color:#fff}
+  .dash-groep button.actief{background:var(--titel-navy);color:#fff}
   .dash-rij{display:flex;align-items:stretch;width:100%;border:0;background:none;padding:0;text-align:left;color:var(--ink);cursor:pointer;border-top:var(--haar) solid var(--line-soft)}
   .dash-kop{cursor:default;border-top:0}
   .dash-naam{flex:none;width:var(--dashnaam);box-sizing:border-box;padding:calc(var(--dashrij) * .18) 12px calc(var(--dashrij) * .18) 0;display:flex;flex-direction:column;gap:3px;justify-content:center;position:sticky;left:0;z-index:6;background:rgba(236,239,232,.9);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
@@ -3356,11 +3356,11 @@
   .dash-vlak .gantt-maand{padding-left:6px}
   .dash-maandlijn{position:absolute;top:0;bottom:0;width:0;border-left:var(--haar) solid var(--line-soft)}
   .dash-balk{position:absolute;top:calc(var(--dashrij) * .26);height:calc(var(--dashrij) * .42);mix-blend-mode:multiply}
-  .dash-balktekst{position:absolute;top:calc(var(--dashrij) * .72);font-size:calc(var(--tk) - 2px);color:#000}
+  .dash-balktekst{position:absolute;top:calc(var(--dashrij) * .72);font-size:calc(var(--tk) - 2px);color:var(--titel-navy)}
   .dash-factuur{top:calc(var(--dashrij) * .26 + var(--dashrij) * .21 - 6px)}
   .dash-leeg{position:absolute;left:6px;top:calc(var(--dashrij) * .34);font-size:var(--tk);opacity:.55}
-  .dash-vandaag{position:absolute;top:0;bottom:0;width:0;border-left:2px solid #111;pointer-events:none;z-index:4}
-  .dash-vandaag-t{position:absolute;top:-2px;left:4px;font-size:calc(var(--tk) - 2px);color:#111}
+  .dash-vandaag{position:absolute;top:0;bottom:0;width:0;border-left:2px solid var(--titel-navy);pointer-events:none;z-index:4}
+  .dash-vandaag-t{position:absolute;top:-2px;left:4px;font-size:calc(var(--tk) - 2px);color:var(--titel-navy)}
   .dash-fdatum{flex:none;font-weight:700;min-width:5.5em}
   .heat-rij.voorbij{opacity:.5}
   .proj-rij{width:100%;border:0;text-align:left;color:var(--ink);cursor:pointer}
@@ -3736,14 +3736,14 @@
   /* === einde keet-bol-uitlijning-css === */
   /* === begin keet-gebruik-kleur-css === */
   /* Elke gebruiksknop een eigen zachte kleur (de opdrachtgever, 19/10/2026, naar een scherm met ronde knoppen in zand, lavendel, saliegroen en roze): donker pictogram op een pastelkleur. */
-  #keetdlg .keet-bijrij .bij-foto::before{background-color:#a9bf98;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231d1b18' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 8.5h3.2L8 6h8l1.8 2.5H21v11H3z'/%3E%3Ccircle cx='12' cy='14' r='3.4'/%3E%3C/svg%3E")}
-  #keetdlg .keet-bijrij .bij-scan::before{background-color:#d9c9a3;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231d1b18' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 8V5.5A1.5 1.5 0 015.5 4H8M16 4h2.5A1.5 1.5 0 0120 5.5V8M20 16v2.5a1.5 1.5 0 01-1.5 1.5H16M8 20H5.5A1.5 1.5 0 014 18.5V16M4 12h16'/%3E%3C/svg%3E")}
-  #keetdlg .keet-bijrij .bij-aantekening::before{background-color:#c7bde6;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231d1b18' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20l1-4L16.5 4.5a2.1 2.1 0 013 3L8 19z'/%3E%3Cpath d='M14.5 6.5l3 3'/%3E%3C/svg%3E")}
+  #keetdlg .keet-bijrij .bij-foto::before{background-color:#a9bf98;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231b2a5e' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 8.5h3.2L8 6h8l1.8 2.5H21v11H3z'/%3E%3Ccircle cx='12' cy='14' r='3.4'/%3E%3C/svg%3E")}
+  #keetdlg .keet-bijrij .bij-scan::before{background-color:#d9c9a3;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231b2a5e' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 8V5.5A1.5 1.5 0 015.5 4H8M16 4h2.5A1.5 1.5 0 0120 5.5V8M20 16v2.5a1.5 1.5 0 01-1.5 1.5H16M8 20H5.5A1.5 1.5 0 014 18.5V16M4 12h16'/%3E%3C/svg%3E")}
+  #keetdlg .keet-bijrij .bij-aantekening::before{background-color:#c7bde6;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231b2a5e' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20l1-4L16.5 4.5a2.1 2.1 0 013 3L8 19z'/%3E%3Cpath d='M14.5 6.5l3 3'/%3E%3C/svg%3E")}
   #keetdlg .keet-bijrij .keet-beeldbij::before{box-shadow:inset 0 0 0 1px rgba(255,255,255,.55),0 6px 16px rgba(40,50,30,.16)}
   /* === einde keet-gebruik-kleur-css === */
   /* === begin keet-fluo-css === */
   /* Fluo (de opdrachtgever, 19/10/2026): het puntnummer in fluogeel; van de gebruiksknoppen is Foto geel en zijn Scan en Aantekening magenta; en de glazen tegel staat weer achter de drie knoppen. */
-  #keetdlg .kaart-kop .loc-chip{background:#f3ff3a;color:#1d1b18;font-weight:600;box-shadow:0 2px 10px rgba(180,190,0,.25)}
+  #keetdlg .kaart-kop .loc-chip{background:#f3ff3a;color:var(--titel-navy);font-weight:600;box-shadow:0 2px 10px rgba(180,190,0,.25)}
   #keetdlg .keet-bijrij .bij-foto::before{background-color:#ffe93d}
   #keetdlg .keet-bijrij .bij-scan::before,#keetdlg .keet-bijrij .bij-aantekening::before{background-color:#f25cc4}
   #keetdlg .keet-bijrij{padding:16px 12px;border-radius:18px;background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 14px rgba(40,50,30,.05)}
@@ -3765,7 +3765,7 @@
   /* === begin keet-status-pil-css === */
   /* De status als pil (de opdrachtgever, 19/10/2026): fluorood als er nog iets te doen valt, fluogroen als alles gezet is, wit bij de rest (even nakijken, genoteerd). */
   #keetdlg .kk-kopregel .kk-stip{display:none}
-  #keetdlg .kk-kopregel .kk-woord{display:inline-block;padding:9px 20px;border-radius:999px;font-size:17px;font-weight:700;line-height:1.1;color:#1d1b18;background:#fff;box-shadow:0 2px 10px rgba(40,50,30,.1)}
+  #keetdlg .kk-kopregel .kk-woord{display:inline-block;padding:9px 20px;border-radius:999px;font-size:17px;font-weight:700;line-height:1.1;color:var(--titel-navy);background:#fff;box-shadow:0 2px 10px rgba(40,50,30,.1)}
   #keetdlg .keet-kern.k-rood .kk-kopregel .kk-woord{background:#ff4b5c;box-shadow:0 2px 12px rgba(255,75,92,.35)}
   #keetdlg .keet-kern.k-groen .kk-kopregel .kk-woord{background:#46ff86;box-shadow:0 2px 12px rgba(70,255,134,.35)}
   /* === einde keet-status-pil-css === */
@@ -3813,9 +3813,9 @@
   #keetdlg .kk-chips .keet-bol:nth-of-type(2){grid-column:3;grid-row:1}
   #keetdlg .keet-kern .kk-reden{grid-column:1 / -1;order:0}
   #keetdlg .keet-bol .bol-waarde,#keetdlg .keet-bol .bol-waarde.leeg{font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  #keetdlg .keet-bijrij .bij-foto::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231d1b18' stroke-width='1.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 8.5h3.2L8 6h8l1.8 2.5H21v11H3z'/%3E%3Ccircle cx='12' cy='14' r='3.4'/%3E%3C/svg%3E")}
-  #keetdlg .keet-bijrij .bij-scan::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231d1b18' stroke-width='1.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 8V5.5A1.5 1.5 0 015.5 4H8M16 4h2.5A1.5 1.5 0 0120 5.5V8M20 16v2.5a1.5 1.5 0 01-1.5 1.5H16M8 20H5.5A1.5 1.5 0 014 18.5V16M4 12h16'/%3E%3C/svg%3E")}
-  #keetdlg .keet-bijrij .bij-aantekening::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231d1b18' stroke-width='1.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20l1-4L16.5 4.5a2.1 2.1 0 013 3L8 19z'/%3E%3Cpath d='M14.5 6.5l3 3'/%3E%3C/svg%3E")}
+  #keetdlg .keet-bijrij .bij-foto::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231b2a5e' stroke-width='1.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 8.5h3.2L8 6h8l1.8 2.5H21v11H3z'/%3E%3Ccircle cx='12' cy='14' r='3.4'/%3E%3C/svg%3E")}
+  #keetdlg .keet-bijrij .bij-scan::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231b2a5e' stroke-width='1.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 8V5.5A1.5 1.5 0 015.5 4H8M16 4h2.5A1.5 1.5 0 0120 5.5V8M20 16v2.5a1.5 1.5 0 01-1.5 1.5H16M8 20H5.5A1.5 1.5 0 014 18.5V16M4 12h16'/%3E%3C/svg%3E")}
+  #keetdlg .keet-bijrij .bij-aantekening::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231b2a5e' stroke-width='1.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20l1-4L16.5 4.5a2.1 2.1 0 013 3L8 19z'/%3E%3Cpath d='M14.5 6.5l3 3'/%3E%3C/svg%3E")}
   /* === einde keet-uitlijning-3-css === */
   /* === begin kaartpunten-kleur-css === */
   /* De punten op het plan (de opdrachtgever, 19/10/2026): zonder zwart randje, lichtjes doorzichtig en in kleur naar het oordeel: blauw (neutraal), groenblauw (in orde), oranjerood (niet in orde). Het gekozen punt krijgt een witte ring in plaats van een zwarte rand. */
@@ -3872,9 +3872,9 @@
   /* === einde keet-icoon-grijs-css === */
   /* === begin keet-icoon-zwart-tegel-grijs-css === */
   /* Zwarte pictogrammen op lichtgrijze tegels (de opdrachtgever, 19/10/2026). */
-  #keetdlg .keet-bijrij .bij-foto::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111111' stroke-width='1.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 8.5h3.2L8 6h8l1.8 2.5H21v11H3z'/%3E%3Ccircle cx='12' cy='14' r='3.4'/%3E%3C/svg%3E")}
-  #keetdlg .keet-bijrij .bij-scan::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111111' stroke-width='1.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 8V5.5A1.5 1.5 0 015.5 4H8M16 4h2.5A1.5 1.5 0 0120 5.5V8M20 16v2.5a1.5 1.5 0 01-1.5 1.5H16M8 20H5.5A1.5 1.5 0 014 18.5V16M4 12h16'/%3E%3C/svg%3E")}
-  #keetdlg .keet-bijrij .bij-aantekening::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111111' stroke-width='1.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20l1-4L16.5 4.5a2.1 2.1 0 013 3L8 19z'/%3E%3Cpath d='M14.5 6.5l3 3'/%3E%3C/svg%3E")}
+  #keetdlg .keet-bijrij .bij-foto::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231b2a5e' stroke-width='1.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 8.5h3.2L8 6h8l1.8 2.5H21v11H3z'/%3E%3Ccircle cx='12' cy='14' r='3.4'/%3E%3C/svg%3E")}
+  #keetdlg .keet-bijrij .bij-scan::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231b2a5e' stroke-width='1.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 8V5.5A1.5 1.5 0 015.5 4H8M16 4h2.5A1.5 1.5 0 0120 5.5V8M20 16v2.5a1.5 1.5 0 01-1.5 1.5H16M8 20H5.5A1.5 1.5 0 014 18.5V16M4 12h16'/%3E%3C/svg%3E")}
+  #keetdlg .keet-bijrij .bij-aantekening::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231b2a5e' stroke-width='1.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20l1-4L16.5 4.5a2.1 2.1 0 013 3L8 19z'/%3E%3Cpath d='M14.5 6.5l3 3'/%3E%3C/svg%3E")}
   #keetdlg .keet-bijrij .keet-beeldbij{background:rgba(214,217,212,.62);box-shadow:inset 0 0 0 1px rgba(255,255,255,.55),0 2px 12px rgba(40,50,30,.06)}
   #keetdlg .keet-bijrij .keet-beeldbij:active{background:rgba(196,200,194,.8)}
   /* === einde keet-icoon-zwart-tegel-grijs-css === */
@@ -3890,7 +3890,7 @@
   /* De drie tegels Foto, Scan en Aantekening zijn weg; onderaan staan de fotobol en de plus van het algemene menu. */
   #keetdlg .keet-bijrij{display:none}
   #keetdlg .keet-nav{gap:6px;padding-left:8px;padding-right:8px}
-  #keetdlg .keet-nav .keet-camknop{background:#1d1b18;color:#fff;box-shadow:none;padding:0;display:inline-flex;align-items:center;justify-content:center}
+  #keetdlg .keet-nav .keet-camknop{background:var(--titel-navy);color:#fff;box-shadow:none;padding:0;display:inline-flex;align-items:center;justify-content:center}
   #keetdlg .keet-nav .keet-camknop svg{width:22px;height:22px}
   #keetdlg .keet-nav .keet-plusknop{font-size:26px;font-weight:300;padding:0}
   @media (max-width:699px){
@@ -3978,6 +3978,12 @@
   :root{--titel-navy:#1b2a5e}
   .dlg-kop h2,#hoofdtitel,#beheertitel,.plan-leeg .leeg-kop,.kaartleeg.kaartleeg-kop,#dlg:not([data-pagina]) #dlg-titel{color:var(--titel-navy)}
   /* === einde titels-navy-css === */
+  /* === begin zwart-naar-navy-css === */
+  /* De opdrachtgever, 19/10/2026: "kan je alles wat in zwart is eens in hetzelfde navy blue zetten?" De tekstkleur (--ink) en de harde lijn van de lichte stijl worden navy; de donkere stijl houdt zijn lichte tekst. Wat tekening is (de zwarte pen, het afdrukblad, de maskers) blijft zoals het is. */
+  :root{--titel-navy:#1b2a5e}
+  @media (prefers-color-scheme:light){ :root:not([data-theme="dark"]){--ink:#1b2a5e;--lijn-hard:#1b2a5e;--gekozen-ink:#1b2a5e} }
+  :root[data-theme="light"]{--ink:#1b2a5e;--lijn-hard:#1b2a5e;--gekozen-ink:#1b2a5e}
+  /* === einde zwart-naar-navy-css === */
 </style>
 </head>
 <body>
@@ -5003,7 +5009,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v750";
+const VERSIE="v751";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
