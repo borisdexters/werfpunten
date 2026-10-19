@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-7psG5XFReX/brXFOw7dKTLlaaySFd8foDOYJi5L+hjU=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-VzwjURnC2GLV3FK8xIBgbc8v5Jp201xbEWJaA1d1Oxw='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-kuNkvxtHRWGJEedHoHON486mrYsECZy7HEY1p96ypbI=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-GBlgdBpsiFAQl1S3eK6xfiL8VxNm+dDAsk0B9Ho3ClQ='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3567,7 +3567,7 @@
   /* De rest van het punt in glasstijl: dezelfde doorzichtige tegels en pills als de andere pagina's. Het gekozen knopje blijft donker glas. */
   #keetdlg .keet-vlak textarea,#keetdlg .keet-vlak input[type=date],#keetdlg .keet-vlak input[type=text]{border:0;border-radius:18px;background:rgba(255,255,255,.6);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 14px rgba(40,50,30,.05)}
   #keetdlg .keet-vlak textarea{padding:14px}
-  #keetdlg .keet-vlak .keet-knoppen button,#keetdlg .keet-vlak .sprekers button,#keetdlg .keet-vlak .keet-vouw{border:0;border-radius:22px;background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 14px rgba(40,50,30,.05);color:var(--ink)}
+  #keetdlg .keet-vlak .keet-knoppen button,#keetdlg .keet-vlak .sprekers button,#keetdlg .keet-vlak .keet-vouw{border:0;border-radius:999px;background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 14px rgba(40,50,30,.05);color:var(--ink)}
   #keetdlg .keet-vlak .keet-knoppen button.actief,#keetdlg .keet-vlak .keet-knoppen button.gekozen{background:var(--ink);color:var(--ground);box-shadow:none}
   #keetdlg .keet-vlak .keet-knoppen button.voorgesteld:not(.actief){box-shadow:inset 0 0 0 1px rgba(112,145,92,.7),0 2px 14px rgba(40,50,30,.05)}
   #keetdlg .keet-vlak .keet-label{font-size:var(--tk,14px);color:var(--ink-soft,#555);margin:0 0 6px 4px}
@@ -3579,24 +3579,42 @@
   /* === einde keet-glas-css === */
   /* === begin keet-bij-css === */
   #keetdlg .keet-bijrij{display:flex;gap:8px;flex-wrap:wrap}
-  #keetdlg .keet-bijrij .keet-beeldbij{flex:1 1 0;min-width:96px;min-height:44px;border:0;border-radius:22px;background:rgba(255,255,255,.42);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 14px rgba(40,50,30,.05);color:var(--ink);font:inherit;cursor:pointer}
+  #keetdlg .keet-bijrij .keet-beeldbij{flex:1 1 0;min-width:96px;min-height:44px;border:0;border-radius:999px;background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 14px rgba(40,50,30,.05);color:var(--ink);font:inherit;cursor:pointer}
   #keetdlg .keet-kaart>textarea{border:0;border-radius:18px;background:rgba(255,255,255,.6);padding:14px}
   #keetdlg .keet-kaart>.sprekers{display:none}      /* de snelknoppen met de aanwezigen (de opdrachtgever, 19/10/2026: weg uit het punt) */
   /* === einde keet-bij-css === */
   /* === begin keet-bollen-css === */
   /* Wie, Tegen en Aard zitten in het punt zelf: drie ronde knoppen onder de status. Een tik klapt de keuzes van dat vak eronder open. */
-  #keetdlg .kk-chips .keet-bol{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:6px 16px;border:0;border-radius:999px;font:inherit;cursor:pointer;color:var(--ink);
-    background:radial-gradient(circle at 30% 24%,rgba(255,255,255,.95) 0,rgba(255,255,255,0) 55%),radial-gradient(circle at 80% 90%,rgba(112,145,92,.30) 0,rgba(112,145,92,0) 65%),rgba(255,255,255,.5);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.8),0 4px 14px rgba(60,80,40,.10);font-size:var(--tm,15px);line-height:1}
+  #keetdlg .kk-chips{flex-wrap:nowrap;gap:8px}
+  #keetdlg .kk-chips .keet-bol{flex:1 1 0;min-width:0;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:52px;padding:6px 8px;text-align:center;border:0;border-radius:999px;font:inherit;cursor:pointer;color:var(--ink);
+    background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 14px rgba(40,50,30,.05);font-size:var(--tm,15px);line-height:1}
   #keetdlg .keet-bol .bol-label{font-size:12px;color:var(--ink-soft,#555)}
-  #keetdlg .keet-bol .bol-waarde{font-weight:600;max-width:9em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #keetdlg .keet-bol .bol-waarde{font-weight:600;font-size:14px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   #keetdlg .keet-bol.open{box-shadow:inset 0 0 0 2px var(--ink),0 4px 14px rgba(60,80,40,.16)}
-  #keetdlg .keet-bolblok:not(.open){display:none}
+  #keetdlg .keet-bol{touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+  #keetdlg .keet-pop{position:fixed;z-index:60;min-width:220px;max-width:calc(100vw - 16px);max-height:calc(100dvh - 90px);overflow-y:auto;padding:8px;border-radius:22px;display:flex;flex-direction:column;gap:2px;
+    background:rgba(247,248,244,.88);-webkit-backdrop-filter:blur(24px) saturate(1.4);backdrop-filter:blur(24px) saturate(1.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.8),0 12px 36px rgba(40,50,30,.22)}
+  #keetdlg .pop-optie{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;min-height:44px;padding:6px 14px;border:0;border-radius:16px;background:transparent;text-align:left;font:inherit;color:var(--ink);cursor:pointer;line-height:1.2}
+  #keetdlg .pop-optie .pop-sub{font-size:12px;color:var(--ink-soft,#555)}
+  #keetdlg .pop-optie.actief{background:var(--ink);color:var(--ground)}
+  #keetdlg .pop-optie.actief .pop-sub{color:inherit;opacity:.75}
+  #keetdlg .pop-optie.hover{background:rgba(112,145,92,.28)}
+  #keetdlg .pop-optie.actief.hover{background:var(--ink);box-shadow:inset 0 0 0 2px rgba(255,255,255,.5)}
+  #keetdlg .keet-bolblok{display:none}
   /* === einde keet-bollen-css === */
   /* === begin dagboek-vooraan-css === */
   #keetdlg .keet-verg{display:none}
   #dlg #dagboekblok{margin:0 0 14px;padding:12px 14px;border-radius:18px;background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 14px rgba(40,50,30,.05)}
   /* === einde dagboek-vooraan-css === */
+  /* === begin keet-nav-css === */
+  #keetdlg .teken-balk{justify-content:flex-end}
+  #keetdlg .keet-nav{flex:0 0 auto;display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));
+    background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 -2px 14px rgba(40,50,30,.05)}
+  #keetdlg .keet-nav button{min-width:44px;min-height:44px;border:0;border-radius:22px;background:rgba(255,255,255,.6);box-shadow:inset 0 0 0 1px rgba(255,255,255,.8);font:inherit;font-size:20px;color:var(--ink);cursor:pointer}
+  #keetdlg .keet-nav .keet-voortgang{display:flex;align-items:center;gap:10px;flex:0 0 auto;margin:0}
+  #keetdlg .keet-nav .keet-alleen{min-height:44px;font-size:14px;padding:0 14px;border-radius:22px;background:rgba(255,255,255,.6);color:var(--ink)}
+  /* === einde keet-nav-css === */
 </style>
 </head>
 <body>
@@ -4152,9 +4170,6 @@
 
 <dialog id="keetdlg">
   <div class="teken-balk">
-    <button type="button" id="keet-vorige" aria-label="Vorige">‹</button>
-    <span class="keet-voortgang" id="keet-voortgang"></span>
-    <button type="button" id="keet-volgende" aria-label="Volgende">›</button>
     <button type="button" id="keet-klaar" class="tk-klaar">Klaar</button>
   </div>
   <!-- Het plan naast het punt. Alleen breed: op een telefoon wordt de keet niet gebruikt
@@ -4273,6 +4288,12 @@
     </div>
     </details>
   </div>
+  </div>
+  <!-- DE NAVIGATIE ONDERAAN, GECENTREERD (de opdrachtgever, 19/10/2026): vorige, waar je bent, volgende. -->
+  <div class="keet-nav" id="keet-nav">
+    <button type="button" id="keet-vorige" aria-label="Vorige">‹</button>
+    <span class="keet-voortgang" id="keet-voortgang"></span>
+    <button type="button" id="keet-volgende" aria-label="Volgende">›</button>
   </div>
 </dialog>
 
@@ -4609,7 +4630,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v741";
+const VERSIE="v742";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -13545,6 +13566,7 @@ function keetDatum(dagen){
 }
 
 async function keetToon(){
+  keetPopSluit();
   const p=keetPunt();
   const vg=document.getElementById("keet-voortgang");
   if(!p){document.getElementById("keetdlg").close();return;}
@@ -14975,23 +14997,132 @@ function keetBolWaarde(p,welke){
   if(p.status==="bezig")return "In behandeling";
   return ({ok:"In orde",nok:"Niet in orde",neutraal:"Neutraal"})[oordeelVan(p)]||"Neutraal";
 }
+/* De keuzes achter een bol, als gegevens: per keuze een woord, of ze nu geldt, en wat er gebeurt. Elke keuze bewaart meteen en tekent het punt opnieuw. */
+function keetBolOpties(p,welke){
+  if(!p)return [];
+  const klaar=()=>{ raakAan(p); bewaarStaat(); keetToon(); };
+  const uit=[];
+  if(welke==="wie"){
+    uit.push({label:"niemand",actief:aanSet(p).length===0,doe:()=>{ wisselAan(p,null); klaar(); }});
+    contacten.forEach(c=>{
+      const rolnaam=c.rol?((ROLLEN.find(o=>o.sleutel===c.rol)||{}).naam||c.rol):"";
+      uit.push({label:c.naam,sub:[rolnaam,c.vak||""].filter(Boolean).join(" \u00B7 "),actief:aanSet(p).includes(c.code),
+                doe:()=>{ wisselAan(p,c.code); klaar(); }});
+    });
+  }else if(welke==="tegen"){
+    [["geen",null],["+1 week",7],["+2 weken",14],["+1 maand",30]].forEach(([l,d])=>{
+      const w=d===null?null:keetDatum(d);
+      uit.push({label:l,actief:(p.deadline||null)===w,doe:()=>{ p.deadline=w; klaar(); }});
+    });
+    uit.push({label:"datum\u2026",actief:false,doe:async()=>{
+      const tekst=await vraagTekst("Tegen wanneer","Dag en maand, bijvoorbeeld 28/10.",p.deadline||"");
+      if(tekst===null)return;
+      p.deadline=tekst.trim()||null; klaar();
+    }});
+  }else{
+    const eff=oordeelVan(p);
+    const zet=w=>()=>{ p.oordeel=w; delete p.oordeelGeraden; klaar(); };
+    uit.push({label:"In orde",actief:eff==="ok",doe:zet("ok")});
+    uit.push({label:"Niet in orde",actief:eff==="nok",doe:zet("nok")});
+    uit.push({label:"Neutraal",actief:eff==="neutraal",doe:zet("neutraal")});
+    uit.push({label:"Urgent",actief:!!p.urgent,doe:()=>{ p.urgent=!p.urgent; klaar(); }});
+    uit.push({label:"Verbod",actief:!!p.verbod,doe:()=>{ p.verbod=!p.verbod; klaar(); }});
+    uit.push({label:"In behandeling",actief:p.status==="bezig",doe:()=>document.getElementById("keet-bezig").onclick()});
+    uit.push({label:faseAard(faseVan(staat))==="werf"?"Verholpen":"Afgewerkt",actief:isKlaar(p),doe:()=>document.getElementById("keet-klaarpunt").onclick()});
+    uit.push({label:"N.v.t.",actief:isVervallen(p),doe:()=>document.getElementById("keet-nvt").onclick()});
+  }
+  return uit;
+}
+/* DRUKKEN, KIEZEN, LOSLATEN (de opdrachtgever, 19/10/2026): je drukt op een bol, de keuzes verschijnen boven de bol, je schuift naar een keuze en laat los: de keuze is gemaakt en
+   het menu is weg. Laat je buiten de keuzes los, dan verdwijnt het menu en verandert er niets. Een korte tik laat het menu staan tot je een keuze aantikt of ernaast tikt. */
+let keetPop=null;
+function keetPopSluit(){
+  if(!keetPop)return;
+  const pop=keetPop; keetPop=null;
+  if(pop.el&&pop.el.parentNode)pop.el.parentNode.removeChild(pop.el);
+  if(pop.bol&&pop.bol.classList)pop.bol.classList.remove("open");
+  if(pop.buiten&&document.removeEventListener)document.removeEventListener("pointerdown",pop.buiten,true);
+  if(pop.scroll&&document.removeEventListener)document.removeEventListener("scroll",pop.scroll,true);
+}
+function keetPopOpen(bol,welke,p){
+  keetPopSluit();
+  const opties=keetBolOpties(p,welke);
+  if(!opties.length)return null;
+  const dlg=document.getElementById("keetdlg");
+  const el=document.createElement("div");
+  el.className="keet-pop"; el.setAttribute("role","menu");
+  const knoppen=opties.map(o=>{
+    const b=document.createElement("button");
+    b.type="button"; b.className="pop-optie"+(o.actief?" actief":"");
+    b.appendChild(maakEl("span","pop-woord",o.label));
+    if(o.sub)b.appendChild(maakEl("span","pop-sub",o.sub));
+    b.onclick=e=>{ if(e&&e.stopPropagation)e.stopPropagation(); keetPopSluit(); o.doe(); };
+    el.appendChild(b);
+    return b;
+  });
+  dlg.appendChild(el);
+  bol.classList.add("open");
+  // boven de bol, binnen het scherm; past het daar niet, dan eronder
+  const r=bol.getBoundingClientRect(), br=el.getBoundingClientRect();
+  const H=br.height||opties.length*48+16, B=br.width||220;
+  let top=r.top-H-8; if(top<64)top=Math.min(r.bottom+8,(window.innerHeight||800)-H-8);
+  let left=Math.max(8,Math.min(r.left,(window.innerWidth||400)-B-8));
+  el.style.top=Math.max(8,top)+"px"; el.style.left=left+"px";
+  keetPop={el,bol,welke,opties,knoppen,sticky:false,buiten:null,scroll:null};
+  /* Scrollt de pagina erachter, dan is dat een andere handeling en sluit het menu; scrollen in het menu zelf niet. */
+  keetPop.scroll=ev=>{ const x=ev.target; if(x&&x.closest&&x.closest(".keet-pop"))return; keetPopSluit(); };
+  if(document.addEventListener)document.addEventListener("scroll",keetPop.scroll,true);
+  return keetPop;
+}
+function keetPopOnder(x,y){
+  if(!keetPop||typeof document.elementFromPoint!=="function")return -1;
+  const el=document.elementFromPoint(x,y);
+  const b=el&&el.closest?el.closest(".pop-optie"):null;
+  return b?keetPop.knoppen.indexOf(b):-1;
+}
 function tekenKeetBollen(p,doel){
   const rij=doel||document.getElementById("keet-bollen");
   if(!rij)return;
   rij.innerHTML="";
   KEETBOLLEN.forEach(([sl,naam])=>{
-    const open=keet.bol===sl;
-    const b=maakEl("button","loc-chip kk-chip keet-bol"+(open?" open":""));
+    const b=maakEl("button","loc-chip kk-chip keet-bol");
     b.type="button";
     b.appendChild(maakEl("span","bol-label",naam));
     b.appendChild(maakEl("span","bol-waarde",keetBolWaarde(p,sl)));
-    b.setAttribute("aria-expanded",open?"true":"false");
-    b.onclick=e=>{ if(e&&e.stopPropagation)e.stopPropagation(); keet.bol=open?null:sl; tekenKeetBollen(keetPunt(),rij); };
+    b.setAttribute("aria-haspopup","menu");
+    let t0=0, bewogen=false, klaarMet=0;
+    b.onpointerdown=e=>{
+      if(e.button!==undefined&&e.button>0)return;
+      t0=Date.now(); bewogen=false;
+      if(keetPop&&keetPop.sticky&&keetPop.bol===b){ keetPopSluit(); klaarMet=Date.now(); return; }
+      const pop=keetPopOpen(b,sl,keetPunt());
+      if(!pop)return;
+      try{ b.setPointerCapture(e.pointerId); }catch(x){}
+      if(e.preventDefault)e.preventDefault();
+    };
+    b.onpointermove=e=>{
+      if(!keetPop||keetPop.bol!==b||keetPop.sticky)return;
+      bewogen=true;
+      const i=keetPopOnder(e.clientX,e.clientY);
+      keetPop.knoppen.forEach((k,n)=>k.classList.toggle("hover",n===i));
+    };
+    b.onpointerup=e=>{
+      if(!keetPop||keetPop.bol!==b||keetPop.sticky)return;
+      klaarMet=Date.now();
+      const i=keetPopOnder(e.clientX,e.clientY);
+      if(i>=0){ const o=keetPop.opties[i]; keetPopSluit(); o.doe(); return; }
+      /* Loslaten naast de keuzes sluit het menu niet: het blijft staan, zodat je erin kunt scrollen en kiezen. Het verdwijnt pas als je een andere handeling
+         begint of ergens anders op het scherm drukt. */
+      keetPop.knoppen.forEach(k=>k.classList.remove("hover"));
+      keetPop.sticky=true;
+      keetPop.buiten=ev=>{ if(!keetPop)return; const x=ev.target; if(x&&x.closest&&x.closest(".keet-pop"))return; if(x===b||(x&&b.contains&&b.contains(x)))return; keetPopSluit(); };
+      document.addEventListener("pointerdown",keetPop.buiten,true);
+    };
+    b.onpointercancel=()=>{ if(keetPop&&keetPop.bol===b&&!keetPop.sticky)keetPopSluit(); };
+    b.oncontextmenu=e=>{ if(e&&e.preventDefault)e.preventDefault(); };
+    // met het toetsenbord (of een schermlezer) zonder aanwijzer: Enter laat het menu staan
+    b.onclick=()=>{ if(Date.now()-klaarMet<600)return; const pop=keetPopOpen(b,sl,keetPunt()); if(pop){ pop.sticky=true; } };
     rij.appendChild(b);
-  });
-  KEETBOLLEN.forEach(([sl])=>{
-    const blok=document.getElementById("bolblok-"+sl);
-    if(blok)blok.classList.toggle("open",keet.bol===sl);
   });
 }
 /* === einde keet-bollen === */
@@ -15019,7 +15150,6 @@ function tekenKeetKern(p){
     kop.innerHTML="";
     kop.className="kaart-kop loc-chips";
     kop.appendChild(maakEl("span","loc-chip",p&&p.nummer?p.nummer:"Punt"));
-    kop.appendChild(maakEl("span","loc-chip",(keet.i+1)+" / "+(keet.lijst?keet.lijst.length:1)));
   }
   if(!doos)return;
   doos.innerHTML="";
@@ -15039,7 +15169,7 @@ function tekenKeetKern(p){
   tekenKeetBollen(p,chips);
   doos.onclick=()=>{
     if(!k.redenen.length)return;
-    if(k.redenen.some(r=>/toegewezen/.test(r))){ keet.bol="wie"; tekenKeetBollen(p); return; }
+    if(k.redenen.some(r=>/toegewezen/.test(r))){ const wie=chips.children[0]; if(wie&&wie.onclick)wie.onclick(); return; }
     const m=document.getElementById("keet-meer"); if(m)m.open=true;
   };
 }
