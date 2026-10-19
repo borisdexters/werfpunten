@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-lRRl0EUMIAvUcS7BaRbnlDUgDx+50C2k7UvgeanhODw=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-NobkZbxQxhFSSyU/ZJgcs8/TA5QNsgQbb/i5KCpgW0k='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-PyQSICkSLkGsQMb0gV6YCNGkhf5JN3GQUvLHS/zxCbc=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-8B7eNrjmFRDpMTYxfauX0Wov0esRnpv9WdDw94Tn9lE='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3910,6 +3910,74 @@
   #keetdlg .kaart-kop .keet-voortgang{display:flex;align-items:center;gap:10px;margin:0 4px 0 auto;font-size:16px}
   #keetdlg .kaart-kop .keet-alleen{min-height:36px;font-size:14px;padding:0 14px;border-radius:18px;border:0;font-family:inherit;background:rgba(255,255,255,.6);color:var(--ink)}
   /* === einde keet-stand-onder-css === */
+  /* === begin algemene-tekst-css === */
+  /* De opdrachtgever, 19/10/2026, met een voorbeeld (een studiosite): de algemene teksten krijgen een grote, vette kop met schreef en daaronder een kleine tekst in vaste letterbreedte, links uitgelijnd; de knoppen zijn onderstreepte regels. Alleen de lettervorm en de uitlijning komen over; de kleuren blijven die van de app. */
+  .plan-leeg,.kaartleeg{align-items:flex-start;justify-content:center;text-align:left;padding:24px 30px;gap:6px}
+  .plan-leeg .leeg-tekst{max-width:30em}
+  .plan-leeg .leeg-kop{margin:0 0 18px;font:700 clamp(28px,8vw,40px)/1.1 "Iowan Old Style","Charter","Georgia",serif;letter-spacing:-.01em;color:var(--ink)}
+  .plan-leeg .leeg-tekst p,.kaartleeg{margin:0 0 12px;font:400 14px/1.6 ui-monospace,"SF Mono",Menlo,Consolas,monospace;color:var(--ink-soft)}
+  .plan-leeg code,.plan-leeg b{font:inherit;font-weight:700;color:var(--ink)}
+  #plandlg .plan-leeg button,.plan-leeg button{background:none;border:0;border-radius:0;box-shadow:none;padding:6px 0;min-height:44px;font:400 14px/1.4 ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-weight:400;color:var(--ink);text-decoration:underline;text-underline-offset:4px;text-align:left}
+  .kaartleeg{max-width:30em}
+  /* === einde algemene-tekst-css === */
+  /* === begin algemene-tekst-kaart-css === */
+  /* Het lege plan op het hoofdscherm in dezelfde lijn: de zin is de kop, links uitgelijnd. */
+  .kaart.leeg{align-items:flex-start;padding:0 30px}
+  .kaartleeg.kaartleeg-kop{margin:0 0 8px;padding:0;font:700 clamp(28px,8vw,40px)/1.1 "Iowan Old Style","Charter","Georgia",serif;letter-spacing:-.01em;color:var(--ink);text-align:left}
+  .kaart.leeg .kaartgrb{background:none;border:0;border-radius:0;box-shadow:none;padding:6px 0;min-height:44px;font:400 14px/1.4 ui-monospace,"SF Mono",Menlo,Consolas,monospace;color:var(--ink);text-decoration:underline;text-underline-offset:4px;text-align:left}
+  /* === einde algemene-tekst-kaart-css === */
+  /* === begin algemene-tekst-vragen-css === */
+  /* Dezelfde lijn voor de vragen en meldingen (het venster zonder pagina): vette kop met schreef, kleine tekst in vaste letterbreedte, knoppen als onderstreepte regels (de opdrachtgever, 19/10/2026: "deze ook"). */
+  #dlg:not([data-pagina]) #dlg-titel{font-family:"Iowan Old Style","Charter","Georgia",serif;font-weight:700;letter-spacing:-.01em;line-height:1.1}
+  #dlg:not([data-pagina]) #dlg-body p,#dlg:not([data-pagina]) #dlg-body .inv-uitleg{font:400 14px/1.6 ui-monospace,"SF Mono",Menlo,Consolas,monospace;color:var(--ink-soft)}
+  #dlg:not([data-pagina]) #dlg-body p b,#dlg:not([data-pagina]) #dlg-body p strong{font-weight:700;color:var(--ink)}
+  #dlg:not([data-pagina]) #dlg-body button{background:none;border:0;border-radius:0;box-shadow:none;padding:6px 14px 6px 0;min-height:44px;font:400 14px/1.4 ui-monospace,"SF Mono",Menlo,Consolas,monospace;color:var(--ink);text-decoration:underline;text-underline-offset:4px}
+  #dlg:not([data-pagina]) #dlg-body button.primair,#dlg:not([data-pagina]) #dlg-body button[style*="bold"]{font-weight:700}
+  /* === einde algemene-tekst-vragen-css === */
+  /* === begin algemene-tekst-letter-css === */
+  /* De regel "body *{font-family:... !important}" (13/10/2026: een lettertype overal) laat geen andere letter toe; voor deze teksten heeft de opdrachtgever op 19/10/2026 om een andere gevraagd (kop met schreef, tekst in vaste letterbreedte), dus hier staat de letter met dezelfde kracht en een hogere specificiteit. */
+  .plan-leeg .leeg-kop,.kaartleeg.kaartleeg-kop,#dlg:not([data-pagina]) #dlg-titel{font-family:"Iowan Old Style","Charter","Georgia",serif !important}
+  .plan-leeg .leeg-tekst p,.plan-leeg .leeg-tekst code,.plan-leeg .leeg-tekst b,.plan-leeg button,.kaart.leeg .kaartgrb,#dlg:not([data-pagina]) #dlg-body p,#dlg:not([data-pagina]) #dlg-body p b,#dlg:not([data-pagina]) #dlg-body p strong,#dlg:not([data-pagina]) #dlg-body .inv-uitleg,#dlg:not([data-pagina]) #dlg-body button{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace !important}
+  /* === einde algemene-tekst-letter-css === */
+  /* === begin algemene-tekst-layout-css === */
+  /* De indeling van het voorbeeld (de opdrachtgever, 19/10/2026: "bekijk ook de layout"): veel lucht boven en onder de grote kop, de tekst eronder op volle breedte, en de keuzes als een stapeltje onderstreepte regels dat in de tweede kolom begint, zoals het menu rechtsboven in het voorbeeld. */
+  .plan-leeg{justify-content:flex-start;padding-top:max(56px,12vh);gap:0}
+  .plan-leeg .leeg-kop{font-size:clamp(34px,10.5vw,48px);line-height:1.05;margin:0 0 clamp(32px,7vh,64px)}
+  .plan-leeg .leeg-tekst p{margin:0 0 16px}
+  .plan-leeg button{display:block;margin-left:42%;min-height:40px;padding:4px 0}
+  .plan-leeg .leeg-tekst{margin-bottom:clamp(28px,6vh,56px)}
+  #dlg:not([data-pagina]) .dlg-kop{padding-bottom:clamp(20px,4vh,40px)}
+  #dlg:not([data-pagina]) #dlg-body{padding-top:8px}
+  #dlg:not([data-pagina]) #dlg-body p{margin:0 0 16px}
+  #dlg:not([data-pagina]) #dlg-body button{margin-top:12px}
+  .kaart.leeg{justify-content:flex-start;padding-top:max(88px,16vh);gap:0}
+  .kaartleeg.kaartleeg-kop{font-size:clamp(34px,10.5vw,48px);margin:0 0 clamp(32px,7vh,64px)}
+  .kaart.leeg .kaartgrb{margin-left:0}
+  /* === einde algemene-tekst-layout-css === */
+  /* === begin algemene-tekst-lucht-css === */
+  /* Meer lucht (de opdrachtgever, 19/10/2026: "meer whitespace, bekijk de voorbeelden"): in het voorbeeld ligt tussen de kopregel en de grote kop ruim een vijfde van het scherm, en dezelfde ruimte nog eens tussen de kop en de tekst. */
+  .kaart.leeg,.plan-leeg{padding-top:max(140px,24vh);padding-left:var(--marge,20px);padding-right:var(--marge,20px)}
+  .kaartleeg.kaartleeg-kop,.plan-leeg .leeg-kop{margin-bottom:clamp(56px,12vh,112px)}
+  .plan-leeg .leeg-tekst{margin-bottom:clamp(40px,9vh,88px)}
+  .plan-leeg .leeg-tekst p{margin:0 0 24px;line-height:1.75}
+  #dlg:not([data-pagina]) .dlg-kop{padding-top:clamp(24px,6vh,56px);padding-bottom:clamp(48px,10vh,96px)}
+  #dlg:not([data-pagina]) #dlg-body p{margin:0 0 24px;line-height:1.75}
+  #dlg:not([data-pagina]) #dlg-body button{margin-top:28px}
+  /* === einde algemene-tekst-lucht-css === */
+  /* === begin titels-schreef-css === */
+  /* Alle paginatitels in de kop met schreef van het voorbeeld (de opdrachtgever, 19/10/2026: "geef deze titels ook allemaal zo een lettertype"): Plan, Dossier, Locatie, Instellingen, de titel van elk venster. Zelfde uitzondering op de regel van 13/10 als bij de lege toestanden. */
+  .dlg-kop h2,#hoofdtitel,#beheertitel,.loc-groot .dlg-kop h2{font-family:"Iowan Old Style","Charter","Georgia",serif !important;font-weight:700;letter-spacing:-.01em}
+  /* === einde titels-schreef-css === */
+  /* === begin vaste-lucht-css === */
+  /* Eén vaste ruimte onder de titel op elk blad (de opdrachtgever, 19/10/2026: "zoek een vaste space voor elk blad, de titels op dezelfde hoogte overal en de whitespace even groot"): de maat van Locatie en Dossier (--pg-ruimte) geldt nu ook voor het Dashboard, de Punten, de Projecten, de Heatmap en de Instellingen. De titel zelf staat overal in dezelfde kop, dus op dezelfde hoogte. */
+  #dlg[data-pagina="dashboard"] #dlg-body,#dlg[data-pagina="punten"] #dlg-body,#dlg[data-pagina="projecten"] #dlg-body,#dlg[data-pagina="heatmap"] #dlg-body{padding-top:calc(var(--pg-ruimte) - 14px)}
+  #beheerdlg .beheer-body{padding-top:calc(var(--pg-ruimte) - 14px)}
+  /* === einde vaste-lucht-css === */
+  /* === begin titels-navy-css === */
+  /* De titels in navy blue (de opdrachtgever, 19/10/2026: "geef die titels nu eens een navy blue kleur"). */
+  :root{--titel-navy:#1b2a5e}
+  .dlg-kop h2,#hoofdtitel,#beheertitel,.plan-leeg .leeg-kop,.kaartleeg.kaartleeg-kop,#dlg:not([data-pagina]) #dlg-titel{color:var(--titel-navy)}
+  /* === einde titels-navy-css === */
 </style>
 </head>
 <body>
@@ -4726,9 +4794,10 @@
       <button type="button" id="pl-heel" aria-label="Hele plan">⤢</button>
     </div>
     <div class="plan-leeg" id="pl-leeg" hidden>
-      <div>Nog geen plan op dit toestel.<br>Laad een <code>.werfplan</code>-bestand;
-        het blijft daarna offline beschikbaar.<br>Nog geen plan bij de hand? Laad de
-        <b>demo</b> — negen bladen om op te oefenen.</div>
+      <div class="leeg-tekst"><h2 class="leeg-kop">Nog geen plan op dit toestel.</h2>
+        <p>Laad een <code>.werfplan</code>-bestand;
+        het blijft daarna offline beschikbaar.</p><p>Nog geen plan bij de hand? Laad de
+        <b>demo</b> — negen bladen om op te oefenen.</p></div>
       <button type="button" id="pl-laad">Plan laden</button>
       <button type="button" id="pl-demo">Demo laden</button>
       <button type="button" id="pl-omtrek">Omtrek uit het GRB</button>
@@ -4934,7 +5003,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v747";
+const VERSIE="v750";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -22882,6 +22951,7 @@ async function tekenKaart(){
       ? "Geen plan voor "+zone+". Kies een zone waar er een ligt, of laad er een."
       : "Nog geen plan op dit toestel.";
     doos.appendChild(p);
+    p.classList.add("kaartleeg-kop");
     // Het GRB van je plek is het plan van een zone zonder plan (de opdrachtgever, 08/10/2026): één tik, ook op het hoofdscherm.
     if(ZONES.includes(zone)){
       const kn=document.createElement("button");
@@ -27872,13 +27942,13 @@ if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)&&/[?&]laad=tijdlijn\b/.t
 /* ALLES INVULLEN OM TE TESTEN (de opdrachtgever, 18/10/2026: "vul alles in: fictieve werven, bezoeken, fictieve verslagen, lastenboek zodat we kunnen testen"): ?laad=alles, alleen op localhost, vult dit toestel met de demo, de drie voorbeeldbestekken, zes verzonnen werven (met een eigen tijdlijn, fase, facturatiemomenten, contacten, bezoeken, afgesloten verslagen met punten en een lopend verslag) en opent het dashboard. Er staat niets van een echt dossier in: de werven en teksten zijn verzonnen. Wat er al staat blijft staan. */
 const TESTPUNTEN=[["voeg in de vloer loopt niet door aan de noordzijde","nietconform","12"],["waterdichting aan de opstand nazien voor de volgende ronde","gebrek","07"],["bijkomende sparing gevraagd voor de technieken aan de westzijde","onafgewerkt","05"],["stalen ligger wijkt af van het uitvoeringsplan","nietconform","03"],["bouwplaatsafsluiting beschadigd, te herstellen","beschadiging","00"],["kleurstalen van de gevelsteen nog niet ter goedkeuring voorgelegd","onafgewerkt","09"],["scheur in de pleisterlaag boven het raam","gebrek","14"],["afwerking van de trapneus is onregelmatig","esthetiek","16"],["vocht zichtbaar aan de binnenzijde van de kelderwand","gebrek","02"],["dakrandprofiel loszittend aan de oostzijde","gebrek","07"],["leidingen zonder brandwerende doorvoer","nietconform","11"],["steigers niet verankerd volgens het veiligheidsplan","nietconform","00"]];
 const TESTMENSEN=[
-  {naam:"An Verhoeven",code:"AV",rol:"architect",functie:"Architect",bedrijf:"Studio Aarde",email:"an.verhoeven@studio-aarde.example.test",gsm:"0470 00 00 01"},
-  {naam:"Koen Peeters",code:"KP",rol:"aannemer",functie:"Projectleider",bedrijf:"Bouwbedrijf Delta",email:"koen.peeters@delta.example.test",gsm:"0470 00 00 02"},
-  {naam:"Sofie Claes",code:"SC",rol:"architect",functie:"Ingenieur stabiliteit",bedrijf:"Ingenieursbureau Nova",email:"sofie.claes@nova.example.test",gsm:"0470 00 00 03"},
-  {naam:"Jan De Smet",code:"JD",rol:"opdrachtgever",functie:"Bouwheer",bedrijf:"Stad Proefstad",email:"jan.desmet@proefstad.example.test",gsm:"0470 00 00 04"},
-  {naam:"Lien Maes",code:"LM",rol:"aannemer",functie:"Werfleider",bedrijf:"Bouwbedrijf Delta",email:"lien.maes@delta.example.test",gsm:"0470 00 00 05"},
-  {naam:"Tom Willems",code:"TW",rol:"architect",functie:"Veiligheidscoordinator",bedrijf:"Prevent Plus",email:"tom.willems@preventplus.example.test",gsm:"0470 00 00 06"},
-  {naam:"Eva Jacobs",code:"EJ",rol:"opdrachtgever",functie:"Dossierbeheerder",bedrijf:"Woonmaatschappij Proef",email:"eva.jacobs@woonmaatschappij-proef.example.test",gsm:"0470 00 00 07"}
+  {naam:"Architect (proef)",code:"AV",rol:"architect",functie:"Architect",bedrijf:"Proefbureau A",email:"architect@proef.example.test",gsm:"0470 00 00 01"},
+  {naam:"Projectleider aannemer (proef)",code:"KP",rol:"aannemer",functie:"Projectleider",bedrijf:"Proefbouw B",email:"projectleider@proef.example.test",gsm:"0470 00 00 02"},
+  {naam:"Ingenieur stabiliteit (proef)",code:"SC",rol:"architect",functie:"Ingenieur stabiliteit",bedrijf:"Proefingenieurs C",email:"stabiliteit@proef.example.test",gsm:"0470 00 00 03"},
+  {naam:"Bouwheer (proef)",code:"JD",rol:"opdrachtgever",functie:"Bouwheer",bedrijf:"Proefopdrachtgever D",email:"bouwheer@proef.example.test",gsm:"0470 00 00 04"},
+  {naam:"Werfleider aannemer (proef)",code:"LM",rol:"aannemer",functie:"Werfleider",bedrijf:"Proefbouw B",email:"werfleider@proef.example.test",gsm:"0470 00 00 05"},
+  {naam:"Veiligheidscoordinator (proef)",code:"TW",rol:"architect",functie:"Veiligheidscoordinator",bedrijf:"Proefpreventie E",email:"veiligheid@proef.example.test",gsm:"0470 00 00 06"},
+  {naam:"Dossierbeheerder (proef)",code:"EJ",rol:"opdrachtgever",functie:"Dossierbeheerder",bedrijf:"Proefopdrachtgever D",email:"dossier@proef.example.test",gsm:"0470 00 00 07"}
 ];
 async function vulTestgegevens(){
   const verschuif=(t,n)=>new Date(dagGetal(t)*864e5+n*864e5).toISOString().slice(0,10);
@@ -27888,12 +27958,12 @@ async function vulTestgegevens(){
   const oorspronkelijk=actief;
   const codes=STANDAARDFASEN.map(f=>f.code);
   const WERVEN=[
-    ["proefA","Proefwerf Antwerpen","P-2601",-27,"UIT",51.22,4.40,14,true],
-    ["proefB","Proefwerf Namen","P-2602",180,"VERG",50.47,4.87,6,true],
-    ["proefC","Proefwerf Brugge","P-2603",138,"BA",51.21,3.22,9,true],
-    ["proefD","Proefwerf Gent","P-2604",229,"VO",51.05,3.72,11,true],
-    ["proefE","Proefwerf Hasselt","P-2605",260,"PO",50.93,5.34,4,true],
-    ["proefF","Proefwerf Luik","P-2606",-104,"VOPL",50.63,5.57,7,true],
+    ["proefA","Proefwerf Paviljoen A","P-2601",-27,"UIT",41.3711,2.1496,14,true],
+    ["proefB","Proefwerf Paviljoen B","P-2602",180,"VERG",41.3750,2.1530,6,true],
+    ["proefC","Proefwerf Paviljoen C","P-2603",138,"BA",41.3680,2.1450,9,true],
+    ["proefD","Proefwerf Paviljoen D","P-2604",229,"VO",41.3730,2.1580,11,true],
+    ["proefE","Proefwerf Paviljoen E","P-2605",260,"PO",41.3660,2.1540,4,true],
+    ["proefF","Proefwerf Paviljoen F","P-2606",-104,"VOPL",41.3770,2.1470,7,true],
     [DEMOID,null,null,0,"UIT",null,null,0,false]
   ];
   let teller=0;
@@ -27902,6 +27972,7 @@ async function vulTestgegevens(){
     if(!p&&eigen){ p={id:id,naam:naam,nummer:nummer,plekken:[],gemaakt:new Date().toISOString()}; projecten.push(p); }
     if(!p)continue;
     if(eigen){
+      p.naam=naam; p.nummer=nummer;      // een eerdere vulling met andere namen wordt gelijkgetrokken
       p.bezoeken=Array.from({length:aantal},(_,i)=>({dag:verschuif("2026-03-02",i*9+(Math.abs(n)%7)),lat:+(la+((i%3)-1)*0.012).toFixed(5),lon:+(lo+((i%2)-0.5)*0.016).toFixed(5)}));
       const kz=[[0,1,3],[2,4,6],[0,4,3],[2,1,6],[0,5,3],[5,1,6]][WERVEN.findIndex(x=>x[0]===id)]||[0,1,3];
       localStorage.setItem(CONTACTSLEUTEL+":"+id,JSON.stringify(kz.map(ix=>TESTMENSEN[ix])));
@@ -27964,7 +28035,7 @@ if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)&&/[?&]laad=dashboard\b/.
         localStorage.setItem(FASESLEUTEL+":"+id,JSON.stringify(fl));
         localStorage.setItem(SLEUTEL+":"+id,JSON.stringify({datum:vandaag(),weer:"",bezetting:"",zone:"N3",punten:[],rondgangen:[],fase:fase,nr:1,titel:"",verslagstatus:"concept"}));
       };
-      const WERVEN=[["proefA","Proefwerf Antwerpen",-150,"UIT",51.22,4.40,14],["proefB","Proefwerf Namen",120,"VERG",50.47,4.87,6],["proefC","Proefwerf Brugge",-60,"BA",51.21,3.22,9],["proefD","Proefwerf Gent",30,"VO",51.05,3.72,11],["proefE","Proefwerf Hasselt",200,"PO",50.93,5.34,4],["proefF","Proefwerf Luik",-200,"VOPL",50.63,5.57,7]];
+      const WERVEN=[["proefA","Proefwerf Paviljoen A",-150,"UIT",41.3711,2.1496,14],["proefB","Proefwerf Paviljoen B",120,"VERG",41.3750,2.1530,6],["proefC","Proefwerf Paviljoen C",-60,"BA",41.3680,2.1450,9],["proefD","Proefwerf Paviljoen D",30,"VO",41.3730,2.1580,11],["proefE","Proefwerf Paviljoen E",200,"PO",41.3660,2.1540,4],["proefF","Proefwerf Paviljoen F",-200,"VOPL",41.3770,2.1470,7]];
       WERVEN.forEach(([id,naam,n,fase,la,lo,aantal])=>{
         maak(id,naam,n,fase);
         const p=projecten.find(x=>x.id===id);
