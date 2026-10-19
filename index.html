@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-+JWI+DfCZzLC0xbNaXdNt5epLxQGNmGN8P3PIuuNKiY=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-5xxr86HH23G76L/yjvoOXhUjLty3Su0KP+bIkbKtYMw='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-ntGsbGyMByWLzN6OQFL6oXI1/SVL8ds1kAJQ/ERemWw=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-NobkZbxQxhFSSyU/ZJgcs8/TA5QNsgQbb/i5KCpgW0k='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3905,6 +3905,11 @@
   #keetdlg .teken-balk .keet-alleen{min-height:36px;font-size:14px;padding:0 14px;border-radius:18px;border:0;font-family:inherit;background:rgba(255,255,255,.6);color:var(--ink)}
   #keetdlg .teken-balk .tk-klaar{width:44px;height:44px;min-width:44px;padding:0;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-left:0}
   /* === einde keet-boven-css === */
+  /* === begin keet-stand-onder-css === */
+  #keetdlg .kaart-kop{display:flex;align-items:center;gap:10px}
+  #keetdlg .kaart-kop .keet-voortgang{display:flex;align-items:center;gap:10px;margin:0 4px 0 auto;font-size:16px}
+  #keetdlg .kaart-kop .keet-alleen{min-height:36px;font-size:14px;padding:0 14px;border-radius:18px;border:0;font-family:inherit;background:rgba(255,255,255,.6);color:var(--ink)}
+  /* === einde keet-stand-onder-css === */
 </style>
 </head>
 <body>
@@ -4460,7 +4465,6 @@
 
 <dialog id="keetdlg">
   <div class="teken-balk">
-    <span class="keet-voortgang" id="keet-voortgang"></span>
     <button type="button" id="keet-klaar" class="tk-klaar" aria-label="Klaar" title="Klaar"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
   </div>
   <!-- Het plan naast het punt. Alleen breed: op een telefoon wordt de keet niet gebruikt
@@ -4482,7 +4486,7 @@
          plan in een eigen lijst, wat erbij hoort (foto, scan, schets) en daaronder een tabel met lijnen: wat er te doen valt, wie, tegen
          wanneer, het oordeel. -->
     <section class="keet-kaart" id="keet-kaart">
-      <div class="kaart-kop" id="keet-kaartkop"></div>
+      <div class="kaart-kop" id="keet-kaartkop"><span class="keet-voortgang" id="keet-voortgang"></span></div>
       <textarea id="keet-tekst" rows="3" placeholder="Wat stel je vast?"></textarea>
     <!-- Wie aanwezig is, als snelknop onder de tekst: "AB:" vooraan je zin maakt er een
          uitspraak van. Hier en niet op de werf — zie de invoerregel. -->
@@ -15631,13 +15635,17 @@ function keetKern(p){
           wie:wie.length?wie.join(", "):"niemand", wanneer:p.deadline||"geen termijn",
           oordeel:({ok:"in orde",nok:"niet in orde",neutraal:"neutraal"})[oordeel]||"neutraal"};
 }
+let keetVgEl=null;
 function tekenKeetKern(p){
   const doos=document.getElementById("keet-kern");
   const kop=document.getElementById("keet-kaartkop");
   if(kop){
+    /* De stand (1 / 42, onaf) staat op de regel van het puntnummer, rechts (de opdrachtgever, 19/10/2026: "naar onder"): het element blijft bestaan terwijl de kop opnieuw getekend wordt. */
+    if(!keetVgEl)keetVgEl=document.getElementById("keet-voortgang");
     kop.innerHTML="";
     kop.className="kaart-kop loc-chips";
     kop.appendChild(maakEl("span","loc-chip",p&&p.nummer?p.nummer:"Punt"));
+    if(keetVgEl)kop.appendChild(keetVgEl);
   }
   if(!doos)return;
   doos.innerHTML="";
