@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-/23wBCzG6n5UbB0HtsKmwIvdI6gCeRCytYQWcsOQ/RQ=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-9g5apj5Os+IboliG9y2YUSas12S22MfQdWnHyFLMy+Y='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-OxFvUdPq6NePMMHFcbtMxDd6AM+ze7SzWk2UXYrZsdw=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-hHWM04zwp1qxN+eYwNUlT3Z8UuPbXkERG3Bz5p6fbic='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3989,6 +3989,19 @@
   .zij-ico svg{stroke-width:1.1}
   .menubol svg,#keetdlg .keet-camknop svg{stroke-width:1.1}
   /* === einde pictogrammen-dun-css === */
+  /* === begin keet-lijst-liggend-css === */
+  /* Een liggende iPad (de opdrachtgever, 19/10/2026: "onderzoek de iPad Pro lijst"): de lijst kreeg een vaste hoogte van 520 px en kwam in de kolom onder de rest van het punt te liggen, dus buiten beeld; alleen de kop "Punten" was te zien. Nu vult ze de ruimte die er in de kolom nog over is, met minstens 230 px (een stuk of vier punten); de kolom schuift als dat niet past. */
+  @media (min-width:700px) and (orientation:landscape){
+    #keetdlg.breed .keet-vlak>.keet-lijstkaart{height:auto;max-height:none;flex:1 1 0;min-height:230px;overflow:hidden}
+  }
+  /* === einde keet-lijst-liggend-css === */
+  /* === begin keet-oog-rechts-css === */
+  /* De opdrachtgever, 19/10/2026: "verplaats de close-up naar rechts". Op de staande iPad stond de close-up onderaan de linkerkolom en werd afgesneden door het plan; nu staat hij boven de puntenlijst, in de rechterkolom, waar ruimte over was. */
+  @media (min-width:700px) and (orientation:portrait){
+    #keetdlg.breed .keet-vlak>.keet-onder{grid-column:2;grid-row:1}
+    #keetdlg.breed .keet-vlak>.keet-lijstkaart{grid-column:2;grid-row:2 / span 4;align-self:stretch;height:auto;min-height:200px;max-height:none}
+  }
+  /* === einde keet-oog-rechts-css === */
 </style>
 </head>
 <body>
@@ -5014,7 +5027,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v752";
+const VERSIE="v753";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -11339,7 +11352,7 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&menuGlas)menuEinde
   /* MINIMALISEERBAAR (de opdrachtgever, 18/10/2026, met een voorbeeld van een smalle donkere balk met pictogrammen: "maak een minimaliseerbaar menu"): een knop bovenaan de zijbalk maakt hem een smalle donkere rail met alleen pictogrammen, en weer terug. De keuze blijft bewaard op dit toestel en geldt voor elke zijbalk tegelijk. */
   const ZIJKLEIN="werfpunten-zij-klein";
   try{ document.documentElement.classList.toggle("zij-klein",localStorage.getItem(ZIJKLEIN)==="1"); }catch(e){}
-  const ZIJICO={begin:'<path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/>',punten:'<path d="M12 21s-6-5.4-6-10a6 6 0 0112 0c0 4.6-6 10-6 10z"/><circle cx="12" cy="11" r="2"/>',verslagen:'<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M9 12h6M9 16h6"/>',dossier:'<path d="M3 7h6l2 2h10v10H3z"/>',locatie:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>',instel:'<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>',ai:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/>',dashboard:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="4" rx="1.5"/><rect x="13" y="10" width="7" height="10" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/>',projecten:'<path d="M4 8l8-4 8 4-8 4z"/><path d="M4 12l8 4 8-4M4 16l8 4 8-4"/>','contacten-alle':'<circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6"/>',heatmap:'<circle cx="9" cy="10" r="4"/><circle cx="16.5" cy="14.5" r="3"/><circle cx="7" cy="18" r="1.4"/>'};
+  const ZIJICO={keet:'<rect x="6" y="4" width="12" height="16" rx="2"/><path d="M9 12.5l2.2 2.2L15.5 10"/>',begin:'<path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/>',punten:'<path d="M12 21s-6-5.4-6-10a6 6 0 0112 0c0 4.6-6 10-6 10z"/><circle cx="12" cy="11" r="2"/>',verslagen:'<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M9 12h6M9 16h6"/>',dossier:'<path d="M3 7h6l2 2h10v10H3z"/>',locatie:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>',instel:'<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>',ai:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/>',dashboard:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="4" rx="1.5"/><rect x="13" y="10" width="7" height="10" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/>',projecten:'<path d="M4 8l8-4 8 4-8 4z"/><path d="M4 12l8 4 8-4M4 16l8 4 8-4"/>','contacten-alle':'<circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6"/>',heatmap:'<circle cx="9" cy="10" r="4"/><circle cx="16.5" cy="14.5" r="3"/><circle cx="7" cy="18" r="1.4"/>'};
   const zijIcoon=(naam,klas)=>{ const sp=maakEl("span",klas); sp.setAttribute("aria-hidden","true"); sp.innerHTML='<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+ZIJICO[naam]+'</svg>'; return sp; };
   const bouwZij=()=>{
     const z=maakEl("nav","zijbalk"); z.setAttribute("aria-label","Pagina's");
