@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-QGhlK/oPG4ndnqoOeDL5OPKmsGdSFpYko4Nn+gnAkUE=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-Pk1C0Ufu3dDUjpQRXKhkmB3KSfS9AWIi07dEY8szGtQ='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-7psG5XFReX/brXFOw7dKTLlaaySFd8foDOYJi5L+hjU=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-VzwjURnC2GLV3FK8xIBgbc8v5Jp201xbEWJaA1d1Oxw='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3523,6 +3523,80 @@
   /* een lang woord in een smalle tegel (iPad, 768 en 1024) valt anders over de rand */
   .slim-sub,.slim-label{overflow-wrap:anywhere}
   /* === einde formaten === */
+  /* === begin keet-kern-css === */
+  /* De kaart van het punt in de stijl van de andere pagina's: dezelfde achtergrond, glastegels met dezelfde afronding (zoals .loc-vak) en dezelfde pills (.loc-chip). */
+  #keetdlg{background:radial-gradient(120% 55% at 12% 0%,#e6ebe0 0%,rgba(230,235,224,0) 64%),radial-gradient(90% 48% at 100% 26%,#d5ddc6 0%,rgba(213,221,198,0) 66%),radial-gradient(110% 55% at 0% 76%,#e3ddc8 0%,rgba(227,221,200,0) 68%),radial-gradient(100% 52% at 100% 100%,#d6dfd2 0%,rgba(214,223,210,0) 68%),#eff1e9}
+  #keetdlg .keet-kaart{display:flex;flex-direction:column;gap:4px;padding:0}
+  #keetdlg .kaart-kop{margin:0}
+  #keetdlg .kaart-beeld,#keetdlg .keet-kaart .keet-beelden,#keetdlg .keet-kern{border-radius:18px;background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 14px rgba(40,50,30,.05)}
+  #keetdlg .kaart-beeld{padding:8px;overflow:hidden}
+  #keetdlg .kaart-beeld:has(.keet-oog[hidden]){display:none}
+  #keetdlg .keet-kaart .keet-beelden{padding:10px;overflow-x:auto}
+  #keetdlg .keet-kern{margin:0;padding:14px;cursor:default;display:flex;flex-direction:column;gap:8px}
+  #keetdlg .keet-kern[hidden]{display:none}
+  #keetdlg .kk-kopregel{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  #keetdlg .kk-links{display:flex;align-items:center;gap:10px;min-width:0}
+  #keetdlg .kk-woord{font-size:var(--tm,17px);font-weight:600}
+  #keetdlg .kk-stip{width:14px;height:14px;border-radius:50%;background:#2e7d32;flex:none}
+  #keetdlg .keet-kern.k-oranje .kk-stip{background:#e08a1e}
+  #keetdlg .keet-kern.k-rood .kk-stip{background:#d9453b}
+  #keetdlg .kk-reden{font-size:var(--tk,14px);color:var(--ink-soft,#555)}
+  #keetdlg .keet-kern.k-rood .kk-reden{cursor:pointer}
+  #keetdlg .kk-chips{margin:0}
+  #keetdlg .keet-meer{border-top:1px solid rgba(120,120,120,.25);padding-top:8px}
+  #keetdlg .keet-meer>summary{min-height:44px;display:flex;align-items:center;cursor:pointer;color:var(--muted,#6b6b6b);font-size:15px}
+  #keetdlg .keet-meer[open]>summary{margin-bottom:8px}
+  #keetdlg .keet-meer>*:not(summary){margin-top:12px}
+  /* === einde keet-kern-css === */
+  /* === begin aan-knop-css === */
+  .aan-knop{display:inline-flex;flex-direction:column;align-items:flex-start;justify-content:center;text-align:left;line-height:1.2;padding:6px 12px;min-height:44px;max-width:100%}
+  .aan-knop[data-rol]::after{content:attr(data-rol);display:block;font-size:12px;opacity:.7;font-weight:400}
+  /* === einde aan-knop-css === */
+  /* === begin keet-oog-css === */
+  #keetdlg .keet-oog{margin:0}
+  #keetdlg .keet-oog[hidden]{display:none}
+  #keetdlg .oog-kader{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:12px;background:#fff}
+  #keetdlg .oog-blad{position:absolute;max-width:none;transform-origin:50% 50%;pointer-events:none}
+  #keetdlg .oog-stippen{position:absolute;inset:0;pointer-events:none}
+  @media (min-width:700px){#keetdlg .oog-kader{aspect-ratio:21/9}}
+  /* === einde keet-oog-css === */
+  /* === begin keet-een-kolom-css === */
+  #keetdlg:not(.breed) .keet-vlak{width:100%;max-width:760px;margin:0 auto;box-sizing:border-box}
+  /* === einde keet-een-kolom-css === */
+  /* === begin keet-glas-css === */
+  /* De rest van het punt in glasstijl: dezelfde doorzichtige tegels en pills als de andere pagina's. Het gekozen knopje blijft donker glas. */
+  #keetdlg .keet-vlak textarea,#keetdlg .keet-vlak input[type=date],#keetdlg .keet-vlak input[type=text]{border:0;border-radius:18px;background:rgba(255,255,255,.6);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 14px rgba(40,50,30,.05)}
+  #keetdlg .keet-vlak textarea{padding:14px}
+  #keetdlg .keet-vlak .keet-knoppen button,#keetdlg .keet-vlak .sprekers button,#keetdlg .keet-vlak .keet-vouw{border:0;border-radius:22px;background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 14px rgba(40,50,30,.05);color:var(--ink)}
+  #keetdlg .keet-vlak .keet-knoppen button.actief,#keetdlg .keet-vlak .keet-knoppen button.gekozen{background:var(--ink);color:var(--ground);box-shadow:none}
+  #keetdlg .keet-vlak .keet-knoppen button.voorgesteld:not(.actief){box-shadow:inset 0 0 0 1px rgba(112,145,92,.7),0 2px 14px rgba(40,50,30,.05)}
+  #keetdlg .keet-vlak .keet-label{font-size:var(--tk,14px);color:var(--ink-soft,#555);margin:0 0 6px 4px}
+  #keetdlg .keet-meer{border-top:0;padding-top:0}
+  #keetdlg .keet-meer>summary{padding:0 16px;border-radius:22px;background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 14px rgba(40,50,30,.05);list-style:none}
+  #keetdlg .keet-meer>summary::-webkit-details-marker{display:none}
+  #keetdlg .keet-meer .keet-blok,#keetdlg .keet-meer .verg,#keetdlg .keet-meer .keet-controle{border-radius:18px}
+  #keetdlg .keet-meer .verg-kop{background:rgba(255,255,255,.42);border-radius:18px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.7)}
+  /* === einde keet-glas-css === */
+  /* === begin keet-bij-css === */
+  #keetdlg .keet-bijrij{display:flex;gap:8px;flex-wrap:wrap}
+  #keetdlg .keet-bijrij .keet-beeldbij{flex:1 1 0;min-width:96px;min-height:44px;border:0;border-radius:22px;background:rgba(255,255,255,.42);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 14px rgba(40,50,30,.05);color:var(--ink);font:inherit;cursor:pointer}
+  #keetdlg .keet-kaart>textarea{border:0;border-radius:18px;background:rgba(255,255,255,.6);padding:14px}
+  #keetdlg .keet-kaart>.sprekers{display:none}      /* de snelknoppen met de aanwezigen (de opdrachtgever, 19/10/2026: weg uit het punt) */
+  /* === einde keet-bij-css === */
+  /* === begin keet-bollen-css === */
+  /* Wie, Tegen en Aard zitten in het punt zelf: drie ronde knoppen onder de status. Een tik klapt de keuzes van dat vak eronder open. */
+  #keetdlg .kk-chips .keet-bol{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:6px 16px;border:0;border-radius:999px;font:inherit;cursor:pointer;color:var(--ink);
+    background:radial-gradient(circle at 30% 24%,rgba(255,255,255,.95) 0,rgba(255,255,255,0) 55%),radial-gradient(circle at 80% 90%,rgba(112,145,92,.30) 0,rgba(112,145,92,0) 65%),rgba(255,255,255,.5);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.8),0 4px 14px rgba(60,80,40,.10);font-size:var(--tm,15px);line-height:1}
+  #keetdlg .keet-bol .bol-label{font-size:12px;color:var(--ink-soft,#555)}
+  #keetdlg .keet-bol .bol-waarde{font-weight:600;max-width:9em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #keetdlg .keet-bol.open{box-shadow:inset 0 0 0 2px var(--ink),0 4px 14px rgba(60,80,40,.16)}
+  #keetdlg .keet-bolblok:not(.open){display:none}
+  /* === einde keet-bollen-css === */
+  /* === begin dagboek-vooraan-css === */
+  #keetdlg .keet-verg{display:none}
+  #dlg #dagboekblok{margin:0 0 14px;padding:12px 14px;border-radius:18px;background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 2px 14px rgba(40,50,30,.05)}
+  /* === einde dagboek-vooraan-css === */
 </style>
 </head>
 <body>
@@ -4095,7 +4169,48 @@
          Het stond op het beginscherm en kostte daar ruimte de hele vergadering lang, terwijl je
          het één keer invult — en dat doe je hier, als je afwerkt. Het weer haalt de app zelf op
          bij het eerste punt; dit veld is er voor als dat niet lukt of niet klopt. -->
-    <div class="verg keet-verg">
+    <!-- EENVOUD IN HET PUNT (de opdrachtgever, 19/10/2026): in een oogopslag zien wat er moet gebeuren. Bovenaan wat er nog te doen valt,
+         daaronder de zin, wie het doet, tegen wanneer en de aard. Al het andere (dagboek, foto's, plek, bestekhoofdstuk,
+         vaststelling, document) zit onder Meer, en gaat open als je op een punt in de strook tikt. -->
+    <!-- DE KAART VAN HET PUNT (de opdrachtgever, 19/10/2026, een voorbeeld ter illustratie, de stijl blijft die van de app): een kader met een kopregel, de close-up van het
+         plan in een eigen lijst, wat erbij hoort (foto, scan, schets) en daaronder een tabel met lijnen: wat er te doen valt, wie, tegen
+         wanneer, het oordeel. -->
+    <section class="keet-kaart" id="keet-kaart">
+      <div class="kaart-kop" id="keet-kaartkop"></div>
+      <div class="kaart-beeld">
+        <div class="keet-oog" id="keet-oog" hidden></div>
+      </div>
+      <div class="keet-beelden" id="keet-beelden"></div>
+      <textarea id="keet-tekst" rows="3" placeholder="Wat stel je vast?"></textarea>
+    <!-- Wie aanwezig is, als snelknop onder de tekst: "AB:" vooraan je zin maakt er een
+         uitspraak van. Hier en niet op de werf — zie de invoerregel. -->
+    <div class="sprekers" id="sprekers"></div>
+      <div class="keet-kern" id="keet-kern"></div>
+    </section>
+    <!-- BOLLEN (de opdrachtgever, 19/10/2026): wie, termijn en aard als drie ronde menu's. Een bol toont de stand; een tik klapt de keuzes eronder open, een tweede tik sluit ze. -->
+    <div class="keet-blok keet-bolblok" id="bolblok-wie">
+      <span class="keet-label">Wie moet er iets mee</span>
+      <div class="keet-knoppen" id="keet-aan"></div>
+      <span class="keet-uitleg" id="keet-uitleg"></span>
+    </div>
+    <div class="keet-blok keet-bolblok" id="bolblok-tegen">
+      <span class="keet-label">Tegen wanneer</span>
+      <div class="keet-knoppen" id="keet-deadline"></div>
+    </div>
+    <div class="keet-blok keet-bolblok" id="bolblok-aard">
+      <span class="keet-label">Aard</span>
+      <div class="keet-knoppen">
+        <button type="button" id="keet-urgent">Urgent</button>
+        <button type="button" id="keet-oordeel">Oordeel</button>
+        <button type="button" id="keet-verbod">Verbod</button>
+        <button type="button" id="keet-bezig">In behandeling</button>
+        <button type="button" id="keet-klaarpunt">✓ Opgelost</button>
+        <button type="button" id="keet-nvt">— N.v.t.</button>
+      </div>
+    </div>
+    <details class="keet-meer" id="keet-meer">
+      <summary>Meer: plek, hoofdstuk, vaststelling</summary>
+    <div class="verg keet-verg" id="dagboekblok">
       <button type="button" class="verg-kop" id="vergknop" aria-expanded="true" aria-controls="verg-body">
         <span class="verg-tekst" id="verg-tekst"></span>
         <span class="verg-pijl" id="verg-pijl">▴</span>
@@ -4120,7 +4235,6 @@
         <button type="button" class="keet-vouw rdg-erbij" id="rdg-erbij">+ nog een rondgang vandaag</button>
       </div>
     </div>
-    <div class="keet-beelden" id="keet-beelden"></div>
     <div class="keet-plek" id="keet-plek"></div>
     <!-- HET HOOFDSTUK ALS KAST, zoals onder Categorie op het blad. Hier stond tot 01/10/2026
          een keuzelijst — de laatste van de app — en daarin zag je het bestek niet: je koos een
@@ -4139,27 +4253,7 @@
       <button type="button" class="keet-vouw" id="keet-woordbeheer">woorden aanpassen</button>
       <div class="keet-woorden" id="keet-woorden"></div>
     </div>
-    <textarea id="keet-tekst" rows="3" placeholder="Wat stel je vast?"></textarea>
-    <!-- Wie aanwezig is, als snelknop onder de tekst: "AB:" vooraan je zin maakt er een
-         uitspraak van. Hier en niet op de werf — zie de invoerregel. -->
-    <div class="sprekers" id="sprekers"></div>
     <div class="keet-gevolg" id="keet-gevolg"></div>
-    <div class="keet-blok">
-      <span class="keet-label">Wie moet er iets mee</span>
-      <div class="keet-knoppen" id="keet-aan"></div>
-      <span class="keet-uitleg" id="keet-uitleg"></span>
-    </div>
-    <div class="keet-blok">
-      <span class="keet-label">Aard</span>
-      <div class="keet-knoppen">
-        <button type="button" id="keet-urgent">Urgent</button>
-        <button type="button" id="keet-oordeel">Oordeel</button>
-        <button type="button" id="keet-verbod">Verbod</button>
-        <button type="button" id="keet-bezig">In behandeling</button>
-        <button type="button" id="keet-klaarpunt">✓ Opgelost</button>
-        <button type="button" id="keet-nvt">— N.v.t.</button>
-      </div>
-    </div>
     <!-- Alleen zichtbaar bij een documentpunt: een gevraagd stuk en datzelfde stuk als het
          binnen is, zijn één punt in twee toestanden. -->
     <div class="keet-blok" id="keet-docblok" hidden>
@@ -4170,10 +4264,6 @@
       </div>
       <span class="keet-uitleg" id="keet-docuitleg"></span>
     </div>
-    <div class="keet-blok">
-      <span class="keet-label">Tegen wanneer</span>
-      <div class="keet-knoppen" id="keet-deadline"></div>
-    </div>
     <!-- Naast de termijn en niet erboven: het zijn twee bepalingen bij dezelfde toewijzing.
          Het blok verdwijnt als er niemand is aangewezen — zonder toewijzing is er niemand die
          iets gevraagd kan worden. -->
@@ -4181,11 +4271,13 @@
       <span class="keet-label">Wat er gevraagd wordt</span>
       <div class="keet-knoppen" id="keet-gevraagd"></div>
     </div>
+    </details>
   </div>
   </div>
 </dialog>
 
 <input type="file" id="keetfoto" accept="image/*" hidden>
+<input type="file" id="keetscan" accept="image/*,application/pdf" hidden>
 
 <dialog id="sneldlg">
   <video id="snelbeeld" playsinline muted autoplay></video>
@@ -4517,7 +4609,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v737";
+const VERSIE="v741";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -13360,7 +13452,10 @@ let keetPlanZone=null, keetPlan=null;
    omdat een iPad die draait niets afvuurt waar JS op luistert. Een proef leest daarom de bron en
    legt vast dat de twee getallen gelijk zijn. */
 const KEETBREED=700;
-function keetPlanKan(){ return (window.innerWidth||0)>=KEETBREED; }
+/* Geen zijvenster (de opdrachtgever, 19/10/2026): het plan staat niet meer als kolom naast het punt; de close-up bovenaan het punt vervangt het. De schakelaar laat de
+   kolom bestaan voor wie ze terug wil; uit, dan is de keet op elk scherm één kolom. */
+const KEETZIJVENSTER=false;
+function keetPlanKan(){ return KEETZIJVENSTER&&(window.innerWidth||0)>=KEETBREED; }
 
 async function keetPlanToon(){
   const dlg=document.getElementById("keetdlg"), doos=document.getElementById("keet-plan");
@@ -13525,11 +13620,14 @@ async function keetToon(){
     }
     bv.appendChild(vak);
   }
-  const bijknop=document.createElement("button");
-  bijknop.type="button";bijknop.className="keet-beeldbij";
-  bijknop.textContent=beelden.length?"+ foto":"+ foto erbij";
-  bijknop.onclick=()=>document.getElementById("keetfoto").click();
-  bv.appendChild(bijknop);
+  /* Wat je bij het punt kunt voegen, in één rij pills: een foto, een scan (of een pdf) en een aantekening. De aantekening is een tekening op een foto van dit punt;
+     zonder foto zegt de app dat er eerst een foto nodig is. */
+  const bijrij=document.createElement("div"); bijrij.className="keet-bijrij";
+  const bijpil=(woord,doe)=>{ const b=document.createElement("button"); b.type="button"; b.className="keet-beeldbij"; b.textContent=woord; b.onclick=doe; bijrij.appendChild(b); return b; };
+  bijpil("Foto",()=>document.getElementById("keetfoto").click());
+  bijpil("Scan",()=>document.getElementById("keetscan").click());
+  bijpil("Aantekening",()=>keetAantekening());
+  bv.appendChild(bijrij);
 
   const pk=document.getElementById("keet-plek");
   pk.innerHTML="";
@@ -13627,6 +13725,8 @@ async function keetToon(){
   rijen.push({nr:"+", naam:"nieuwe categorie\u2026", doe:()=>nieuweCategorie(p)});
   bouwBestekkast(kast,rijen);
   tekenBestekControle(p);
+  tekenKeetOog(p);
+  tekenKeetKern(p);
 
   const ta=document.getElementById("keet-tekst");
   ta.value=p.tekst||"";
@@ -14026,6 +14126,34 @@ document.getElementById("keetfoto").onchange=async e=>{
   melding(beeldenVan(p).length+" beelden bij dit punt");
 };
 
+/* === begin keet-bij === */
+/* Een scan of een pdf bij het punt. Een afbeelding wordt verkleind zoals een foto; een pdf blijft zoals ze is en staat als document bij het punt. */
+document.getElementById("keetscan").onchange=async e=>{
+  const f=e.target.files[0]; e.target.value="";
+  const p=keetPunt();
+  if(!f||!p)return;
+  const isAfb=/^image\//.test(f.type||"");
+  const blob=isAfb?await verkleinFoto(f):f;
+  const id=nieuwBeeldId(p);
+  if(!await zetFoto(id,blob)){melding("Opslag weigert \u2014 ruimte vol?");return;}
+  zetBeelden(p,beeldenVan(p).concat([{id,beeld:isAfb,naam:isAfb?"scan":(f.name||"scan.pdf")}]));
+  raakAan(p);wachtMerk("beeld",id);bewaarStaat();
+  await keetToon();await tekenLijst();
+  melding("Scan erbij \u2014 "+beeldenVan(p).length+" bij dit punt");
+};
+/* De aantekening: tekenen op de laatste foto van dit punt, via hetzelfde tekenscherm als een tik op de foto zelf. */
+async function keetAantekening(){
+  const p=keetPunt(); if(!p)return false;
+  const laatste=beeldenVan(p).filter(b=>b.beeld).pop();
+  if(!laatste){melding("Neem eerst een foto of scan, dan kun je erop tekenen");return false;}
+  const b=await haalFoto(laatste.id);
+  if(!b){melding("Die foto staat niet meer op dit toestel");return false;}
+  keetBewaarTekst();
+  tekenTerug=p.id;
+  document.getElementById("keetdlg").close(); openTekenscherm(b,laatste.id,laatste);
+  return true;
+}
+/* === einde keet-bij === */
 document.getElementById("rdg-erbij").onclick=rondgangErbij;
 document.getElementById("keet-vouwkast").onclick=()=>{
   keet.kastOpen=!keet.kastOpen;
@@ -14783,6 +14911,139 @@ function ficheArtikel(tekst){
   return onzeker ? {...eerste, onzeker} : eerste;
 }
 
+/* === begin keet-oog === */
+/* HET OOG: een uitsnede van het plan, ingezoomd op de plek van het punt, met de stip in het midden. Zuivere som in keetOogStijl: de plek is
+   een percentage van het blad, het blad kan gedraaid staan (draaiVan), en het punt moet in het midden van het kader komen. */
+const KEETOOGZOOM=3.5;
+function keetOogStijl(x,y,draai,bladB,bladH,W,H,zoom){
+  if(!(W>0&&H>0&&bladB>0&&bladH>0)||typeof x!=="number"||typeof y!=="number")return null;
+  const z=zoom||KEETOOGZOOM;
+  const bw=W*z, bh=bw*bladH/bladB;
+  const t=(draai||0)*Math.PI/180, c=Math.cos(t), s=Math.sin(t);
+  const u=x/100*bw-bw/2, w=y/100*bh-bh/2;
+  const ru=u*c-w*s, rw=u*s+w*c;
+  return {width:bw, height:bh, left:W/2-ru-bw/2, top:H/2-rw-bh/2, draai:draai||0, midX:W/2, midY:H/2};
+}
+let keetOogPlan=null, keetOogZone=null;
+async function tekenKeetOog(p){
+  const doos=document.getElementById("keet-oog");
+  if(!doos)return;
+  const zone=p&&p.plek?p.plek.zone:null;
+  if(!KEETOOG||!p||!p.plek||typeof p.plek.x!=="number"||!zone){ doos.hidden=true; doos.innerHTML=""; return; }
+  let plan=(zone===keetPlanZone&&keetPlan)?keetPlan:(zone===keetOogZone?keetOogPlan:null);
+  if(!plan&&planLijst.includes(zone)){
+    plan=await haalPlan(zone);
+    if(keetPunt()!==p)return;                     // intussen naar een ander punt gebladerd
+    keetOogZone=zone; keetOogPlan=plan;
+  }
+  if(!plan||!plan.beeld){ doos.hidden=true; doos.innerHTML=""; return; }
+  doos.hidden=false; doos.innerHTML="";
+  const kader=maakEl("div","oog-kader");
+  doos.appendChild(kader);
+  const r=kader.getBoundingClientRect();
+  const W=r.width||360, H=r.height||(W*9/16);
+  const st=keetOogStijl(p.plek.x,p.plek.y,draaiVan(plan),plan.breedte,plan.hoogte,W,H);
+  if(!st){ doos.hidden=true; return; }
+  const img=document.createElement("img");
+  img.alt=""; img.className="oog-blad"; img.src=laagBeeld(plan,laagVan(staat,plan))||plan.beeld;
+  img.style.width=st.width+"px"; img.style.height=st.height+"px";
+  img.style.left=st.left+"px"; img.style.top=st.top+"px";
+  img.style.transform="rotate("+st.draai+"deg)";
+  kader.appendChild(img);
+  const laag=maakEl("div","kaartpunten oog-stippen");
+  const stip=document.createElement("button");
+  stip.type="button";
+  stip.className="kaartpunt nu oog-stip oordeel-"+oordeelVan(p);
+  stip.style.setProperty("--px",Math.round(st.midX)+"px"); stip.style.setProperty("--py",Math.round(st.midY)+"px");
+  { const nr=puntenInZone(zone).findIndex(q=>q.id===p.id); stip.textContent=String(nr>=0?nr+1:(keet.i||0)+1); }       // hetzelfde nummer als op het blad ernaast
+  stip.setAttribute("aria-label","de plek van dit punt op het plan");
+  laag.appendChild(stip);
+  kader.appendChild(laag);
+}
+const KEETOOG=true;
+/* === einde keet-oog === */
+/* === begin keet-bollen === */
+/* Drie ronde menu's: Wie, Tegen, Aard. Een bol toont wat er nu staat; een tik zet de keuzes van die bol open onder de bollen (er staat er hooguit één open). */
+const KEETBOLLEN=[["wie","Wie"],["tegen","Tegen"],["aard","Aard"]];
+function keetBolWaarde(p,welke){
+  if(!p)return "";
+  if(welke==="wie"){ const l=aanSet(p); return l.length?l.join(", "):"niemand"; }
+  if(welke==="tegen")return p.deadline||"geen";
+  if(isKlaar(p))return "Opgelost";
+  if(p.verbod)return "Verbod";
+  if(p.urgent)return "Urgent";
+  if(p.status==="bezig")return "In behandeling";
+  return ({ok:"In orde",nok:"Niet in orde",neutraal:"Neutraal"})[oordeelVan(p)]||"Neutraal";
+}
+function tekenKeetBollen(p,doel){
+  const rij=doel||document.getElementById("keet-bollen");
+  if(!rij)return;
+  rij.innerHTML="";
+  KEETBOLLEN.forEach(([sl,naam])=>{
+    const open=keet.bol===sl;
+    const b=maakEl("button","loc-chip kk-chip keet-bol"+(open?" open":""));
+    b.type="button";
+    b.appendChild(maakEl("span","bol-label",naam));
+    b.appendChild(maakEl("span","bol-waarde",keetBolWaarde(p,sl)));
+    b.setAttribute("aria-expanded",open?"true":"false");
+    b.onclick=e=>{ if(e&&e.stopPropagation)e.stopPropagation(); keet.bol=open?null:sl; tekenKeetBollen(keetPunt(),rij); };
+    rij.appendChild(b);
+  });
+  KEETBOLLEN.forEach(([sl])=>{
+    const blok=document.getElementById("bolblok-"+sl);
+    if(blok)blok.classList.toggle("open",keet.bol===sl);
+  });
+}
+/* === einde keet-bollen === */
+/* === begin keet-kern === */
+/* DE STROOK BOVENAAN HET PUNT. Eén blik: wat moet er nog gebeuren, wie doet het, tegen wanneer, hoe staat het. Alles komt uit
+   wat de app al weet (puntZekerheid, aanSet, oordeelVan); er wordt niets bijgeschreven of bewaard. */
+const KEETKERN=true;
+function keetKern(p){
+  if(!p)return null;
+  const z=puntZekerheid(p);
+  const klaar=isKlaar(p), vervallen=typeof isVervallen==="function"&&isVervallen(p);
+  const wie=aanSet(p);
+  const oordeel=oordeelVan(p);
+  /* Groen betekent dat de app niets te raden of aan te vullen heeft, niet dat het werk goed is: een punt dat niet in orde is en een uitvoerder heeft, wordt opgevolgd. */
+  const kop=klaar?"Opgelost":vervallen?"Vervallen":z.kleur==="rood"?"Nog te doen":z.kleur==="oranje"?"Even nakijken"
+           :oordeel==="ok"?"In orde":(oordeel==="nok"&&isOpen(p))?"Wordt opgevolgd":"Genoteerd";
+  return {kleur:klaar||vervallen?"groen":z.kleur, kop, redenen:klaar||vervallen?[]:z.redenen.slice(),
+          wie:wie.length?wie.join(", "):"niemand", wanneer:p.deadline||"geen termijn",
+          oordeel:({ok:"in orde",nok:"niet in orde",neutraal:"neutraal"})[oordeel]||"neutraal"};
+}
+function tekenKeetKern(p){
+  const doos=document.getElementById("keet-kern");
+  const kop=document.getElementById("keet-kaartkop");
+  if(kop){
+    kop.innerHTML="";
+    kop.className="kaart-kop loc-chips";
+    kop.appendChild(maakEl("span","loc-chip",p&&p.nummer?p.nummer:"Punt"));
+    kop.appendChild(maakEl("span","loc-chip",(keet.i+1)+" / "+(keet.lijst?keet.lijst.length:1)));
+  }
+  if(!doos)return;
+  doos.innerHTML="";
+  const k=KEETKERN?keetKern(p):null;
+  if(!k){doos.hidden=true;return;}
+  doos.hidden=false;
+  doos.className="keet-kern k-"+k.kleur;
+  const kopRij=maakEl("div","kk-kopregel");
+  const kopLinks=maakEl("span","kk-links");
+  kopLinks.appendChild(maakEl("span","kk-stip",""));
+  kopLinks.appendChild(maakEl("span","kk-woord",k.kop));
+  kopRij.appendChild(kopLinks);
+  doos.appendChild(kopRij);
+  k.redenen.forEach(reden=>doos.appendChild(maakEl("div","kk-reden",reden)));
+  const chips=maakEl("div","loc-chips kk-chips"); chips.id="keet-bollen";
+  doos.appendChild(chips);
+  tekenKeetBollen(p,chips);
+  doos.onclick=()=>{
+    if(!k.redenen.length)return;
+    if(k.redenen.some(r=>/toegewezen/.test(r))){ keet.bol="wie"; tekenKeetBollen(p); return; }
+    const m=document.getElementById("keet-meer"); if(m)m.open=true;
+  };
+}
+/* === einde keet-kern === */
 /* === begin bestekcontrole === */
 /* DE BESTEKCONTROLE VAN EEN PUNT. Leerpunt uit PermiPro (docs/PERMIPRO-leerpunten.md): een toets
    is een voorstel met reden en zekerheid, dat jij bevestigt of overschrijft, met het artikel erbij.
@@ -16385,9 +16646,12 @@ function aanKnoppen(bak,huidig,kies,tekst){
   const set=Array.isArray(huidig)?huidig.filter(Boolean):(huidig?[huidig]:[]);
   const voorstel=aanVoorstellen(tekst);
   const geleerd=geleerdeAan(tekst);
-  const maak=(label,code,titel,voorgesteld)=>{
+  const maak=(label,code,titel,voorgesteld,naam,rest)=>{
     const b=document.createElement("button");
-    b.type="button"; b.textContent=label; if(titel)b.title=titel;
+    b.type="button"; b.classList.add("aan-knop"); if(titel)b.title=titel;
+    /* Compact: de naam in de knop, rol en vak klein eronder (via data-rol en CSS). De volledige tekst blijft de toegankelijke naam. */
+    b.textContent=rest?naam:label;
+    if(rest){ b.setAttribute("data-rol",rest); b.ariaLabel=label; }
     /* Met `classList` en niet met `className=`: een toewijzing overschrijft alles wat er staat,
        en dan is de klasse afhankelijk van de volgorde waarin er geschreven wordt. Twee namen,
        want de keet merkt met `.actief` en het blad met `.gekozen`. */
@@ -16402,9 +16666,12 @@ function aanKnoppen(bak,huidig,kies,tekst){
   /* De voorgestelde namen eerst, in de volgorde van het voorstel; dan de rest zoals ze staan. */
   const volgorde=[...voorstel.map(code=>contacten.find(c=>c.code===code)).filter(Boolean),
                   ...contacten.filter(c=>!voorstel.includes(c.code))];
-  volgorde.forEach(c=>maak(c.naam+(c.rol?" · "+rolnaam(c.rol):"")+(c.vak?" · "+c.vak:""),c.code,
-    c.rol?"":"deze contactpersoon heeft nog geen rol — het punt valt dan onder “Op te volgen”",
-    voorstel.includes(c.code)));
+  volgorde.forEach(c=>{
+    const rest=[c.rol?rolnaam(c.rol):"",c.vak||""].filter(Boolean).join(" \u00B7 ");
+    maak(c.naam+(c.rol?" · "+rolnaam(c.rol):"")+(c.vak?" · "+c.vak:""),c.code,
+      c.rol?(rest||""):"deze contactpersoon heeft nog geen rol — het punt valt dan onder “Op te volgen”",
+      voorstel.includes(c.code),c.naam,rest);
+  });
   /* De stand in een klasse en niet in een stijl, zodat de opmaak op één plaats staat en een
      proef de beslissing kan nalezen -- dezelfde regel als bij `keetPlanKan`. De naam is niet
      "leeg": die klasse bestaat al in deze app en draagt `padding:32px` met gecentreerde grijze
@@ -27057,6 +27324,10 @@ async function vulTestgegevens(){
 if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)&&/[?&]laad=alles\b/.test(location.search)){
   setTimeout(async()=>{ try{ await vulTestgegevens(); toonDashboard(); melding("Testgegevens ingevuld: demo, bestekken, zes werven met verslagen en bezoeken"); }catch(e){ try{ melding("Testgegevens invullen mislukt: "+(e&&e.message)); }catch(x){} } },3000);
 }
+/* Alleen om te bekijken op de eigen computer: ?laad=keet vult dezelfde testgegevens in als ?laad=alles en opent daarna meteen een punt in de keet (het eerste punt met een plek midden op het plan), om het punt in elk toestelformaat naast elkaar te zien. */
+if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)&&/[?&]laad=keet\b/.test(location.search)){
+  setTimeout(async()=>{ try{ await vulTestgegevens(); const i=staat.punten.findIndex(p=>p.tekst&&p.plek&&p.plek.x>30&&p.plek.x<70&&p.plek.y>30&&p.plek.y<70); openKeet(i<0?0:i); }catch(e){ try{ melding("Keet openen mislukt: "+(e&&e.message)); }catch(x){} } },3000);
+}
 /* Alleen om te bekijken op de eigen computer: ?laad=dashboard zet twee verzonnen werven naast de werf die openstaat, elk met een eigen tijdlijn, fase en facturatiemomenten, en opent het dashboard. */
 if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)&&/[?&]laad=dashboard\b/.test(location.search)){
   setTimeout(()=>{
@@ -29118,12 +29389,18 @@ function toonLocatie(){
   if(navigator.onLine!==false)locHaal(false);
 }
 
+/* === begin dagboek-vooraan === */
+const DAGBOEKBLOK=document.getElementById("dagboekblok");
+/* === einde dagboek-vooraan === */
 function openVerslag(){
   const m=verslagModel();
   const dlg=document.getElementById("dlg");
   document.getElementById("dlg-titel").textContent="Verslag";
   const body=document.getElementById("dlg-body");
   body.innerHTML="";
+  /* Het dagboek (weer, bezetting, aanwezigen) hoort bij het verslag, één keer en vooraan, en niet bij elk punt. Het blok staat in de keet als verborgen
+     bewaarplaats; hier komt het voor één keer vooraan. De verwijzing blijft bewaard, want andere pagina's wissen deze body. */
+  if(DAGBOEKBLOK){ body.appendChild(DAGBOEKBLOK); try{ tekenDagboek(); tekenVergaderregel(); }catch(e){} }
   const zonderwoorden=(staat.punten||[]).filter(p=>!(p.tekst||"").trim()).length;
   const samen=stuks((staat.punten||[]).length,"punt","punten")+" van vandaag"+
     (m.open.length?(", "+stuks(m.open.length,"punt","punten")+" nog open van vorige keren"):"");
