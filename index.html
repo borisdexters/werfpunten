@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-OxFvUdPq6NePMMHFcbtMxDd6AM+ze7SzWk2UXYrZsdw=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-hHWM04zwp1qxN+eYwNUlT3Z8UuPbXkERG3Bz5p6fbic='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-f2kKUMhUr+15MNFMJJtD9hAnEAax4zrGuQ5Yao8U26g=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-C6SUvnqWLtnWs01XL2DGExSoHbQbObgeXscArdnnvzQ='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4002,6 +4002,28 @@
     #keetdlg.breed .keet-vlak>.keet-lijstkaart{grid-column:2;grid-row:2 / span 4;align-self:stretch;height:auto;min-height:200px;max-height:none}
   }
   /* === einde keet-oog-rechts-css === */
+  /* === begin keet-oog-liggend-css === */
+  /* Liggend (de opdrachtgever, 19/10/2026: "zet de close-up ook rechts bij liggend"): rechts bovenaan de close-up, daaronder het plan; links blijft ruimte voor het punt en de lijst. */
+  @media (min-width:700px) and (orientation:landscape){
+    #keetdlg.breed .keet-oogrechts{position:absolute;z-index:2;top:12px;right:12px;left:calc(var(--zijb) + min(440px,46vw) + 40px);height:min(30vh,240px);overflow:hidden;border-radius:24px}
+    #keetdlg.breed .keet-oogrechts[hidden]{display:none}
+    #keetdlg.breed .keet-oogrechts .keet-onder{height:100%}
+    #keetdlg.breed .keet-oogrechts .kaart-beeld{display:block;height:100%}
+    #keetdlg.breed .keet-plan{top:calc(12px + min(30vh,240px) + 10px)}
+  }
+  /* === einde keet-oog-liggend-css === */
+  /* === begin kruis-overal-css === */
+  /* De opdrachtgever, 19/10/2026: "het kruis moet overal hetzelfde zijn zoals in het eerste voorbeeld": in de keet dezelfde grote X zonder bol als op de pagina's (.blad-x), op dezelfde plek. */
+  #keetdlg .teken-balk{padding:14px var(--marge);justify-content:flex-end}
+  #keetdlg .teken-balk .blad-x{margin:-14px -14px -14px auto;background:none;border:0;box-shadow:none;border-radius:0}
+  /* de close-up rechts op een liggend scherm: helemaal te zien, het plan eronder */
+  @media (min-width:700px) and (orientation:landscape){
+    #keetdlg.breed .keet-oogrechts{top:76px;height:min(36vh,320px);overflow-y:auto}
+    #keetdlg.breed .keet-oogrechts .keet-onder{height:auto}
+    #keetdlg.breed .keet-oogrechts .kaart-beeld{height:auto;flex:none}
+    #keetdlg.breed .keet-plan{top:calc(76px + min(36vh,320px) + 10px)}
+  }
+  /* === einde kruis-overal-css === */
 </style>
 </head>
 <body>
@@ -4557,7 +4579,7 @@
 
 <dialog id="keetdlg">
   <div class="teken-balk">
-    <button type="button" id="keet-klaar" class="tk-klaar" aria-label="Klaar" title="Klaar"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <button type="button" id="keet-klaar" class="blad-x" aria-label="Klaar" title="Klaar"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>
   </div>
   <!-- Het plan naast het punt. Alleen breed: op een telefoon wordt de keet niet gebruikt
        (PLANFIRST §6a), en daar zou een plan de ruimte van het punt opeten. De grens is
@@ -4566,6 +4588,7 @@
        deze kolom voor bedoeld is. De opdrachtgever, 01/10/2026: "splitsen". -->
   <div class="keet-lijf">
   <div class="keet-plan" id="keet-plan" hidden></div>
+  <div class="keet-oogrechts" id="keet-oogrechts" hidden></div>
   <div class="keet-vlak">
     <!-- Wie er was, hoeveel man er stond en welk weer het was: dagboekplicht, maar geen werfwerk.
          Het stond op het beginscherm en kostte daar ruimte de hele vergadering lang, terwijl je
@@ -5027,7 +5050,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v753";
+const VERSIE="v754";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -13985,7 +14008,19 @@ function keetDatum(dagen){
   return String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0");
 }
 
+/* De close-up staat op een liggend scherm rechts, boven het plan (de opdrachtgever, 19/10/2026), anders in de kolom van het punt. Hetzelfde element verhuist; wie het opzoekt met zijn id vindt het op beide plaatsen. */
+function keetOogPlaats(){
+  const o=document.getElementById("keet-onder"), r=document.getElementById("keet-oogrechts");
+  const v=document.querySelector("#keetdlg .keet-vlak"), l=document.getElementById("keet-lijstkaart");
+  if(!o||!r||!v)return;
+  let liggend=false;
+  try{ liggend=!!(window.matchMedia&&matchMedia("(min-width:700px) and (orientation:landscape)").matches); }catch(e){}
+  if(liggend){ if(o.parentNode!==r)r.appendChild(o); r.hidden=false; }
+  else{ if(o.parentNode!==v)v.insertBefore(o,l&&l.parentNode===v?l:null); r.hidden=true; }
+}
+try{ window.addEventListener("resize",keetOogPlaats); }catch(e){}
 async function keetToon(){
+  keetOogPlaats();
   keetPopSluit();
   const p=keetPunt();
   const vg=document.getElementById("keet-voortgang");
