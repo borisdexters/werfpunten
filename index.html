@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-Q/hNkPfsI0YzBRnVxt0my8L64aOsZK/5m6+sUaT7fts=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-NioUTaQ1CPGD40PU07Wbo1VJ8bAL6FLX4hp6DqH9JGk='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-tXmUMm6DFUdIF+R/eb432OOfYId16X3H6n67Js6OnvQ=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-NioUTaQ1CPGD40PU07Wbo1VJ8bAL6FLX4hp6DqH9JGk='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -5184,7 +5184,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v756";
+const VERSIE="v758";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -14117,6 +14117,10 @@ function keetPlanStippen(){
   });
   const zl=doos.querySelector(".kp-zoom");
   (zl&&zl.className==="kp-zoom"?zl:doos).appendChild(laag);
+  /* Staand (of zonder brede keet) is er geen volg-zoom: een zoomstand van een liggend scherm blijft niet hangen na het draaien (de opdrachtgever, 19/10/2026: "wat is dit?" -- het blad stond ingezoomd en opzij geschoven in het staande kader). */
+  let liggend=false;
+  try{ liggend=!!(window.matchMedia&&matchMedia("(min-width:700px) and (orientation:landscape)").matches); }catch(e){}
+  if(!liggend)keetZoom={z:1,x:0,y:0};
   keetPlanVolg(nu,b);
   keetZoomZet();
 }
@@ -14187,7 +14191,15 @@ function keetOogPlaats(){
   if(liggend){ if(o.parentNode!==v||o.nextSibling)v.appendChild(o); }
   else{ if(o.parentNode!==v||o.nextSibling!==(l&&l.parentNode===v?l:null))v.insertBefore(o,l&&l.parentNode===v?l:null); }
 }
-try{ window.addEventListener("resize",keetOogPlaats); }catch(e){}
+try{
+  const naDraaien=()=>{
+    keetOogPlaats();
+    const d=document.getElementById("keetdlg");
+    if(d&&d.open){ keetZoom={z:1,x:0,y:0}; try{ keetPlanToon(); }catch(e){} }      // na het draaien het blad opnieuw leggen
+  };
+  window.addEventListener("resize",naDraaien);
+  window.addEventListener("orientationchange",()=>setTimeout(naDraaien,250));      // sommige toestellen melden het draaien pas een tel later met de nieuwe maat
+}catch(e){}
 async function keetToon(){
   keetOogPlaats();
   keetPopSluit();
@@ -28338,13 +28350,14 @@ if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)&&/[?&]laad=alles\b/.test
 /* Alleen om te bekijken op de eigen computer: ?laad=keet vult dezelfde testgegevens in als ?laad=alles en opent daarna meteen een punt in de keet (het eerste punt met een plek midden op het plan), om het punt in elk toestelformaat naast elkaar te zien. */
 /* Alleen om te testen: elk punt zonder plek krijgt een plek op het blad van het eerste punt met een plek, verspreid over het gebouw, zodat het plan met alle punten te beproeven is (de opdrachtgever, 19/10/2026: "waar zijn de andere punten, simuleer ze"). Het zit in de testgegevens van dit toestel; op een ander adres dan localhost gebeurt er niets. */
 function simuleerPlekken(){
-  const z0=((staat.punten.find(p=>p&&p.plek&&p.plek.zone)||{}).plek||{}).zone;
-  if(!z0)return 0;
+  /* De testpunten staan verspreid over alle bladen van de demo (de opdrachtgever, 19/10/2026: punt 8 op verdieping 1, punt 9 op de gevel, punt 10 op het gelijkvloers, enz.): de eerste drie punten houden hun eigen plek, de rest krijgt om de beurt een blad en een plek in het gebouw. Wie een punt kiest, ziet het blad verspringen. */
+  const bladen=planLijst.filter(z=>typeof z==="string");
+  if(!bladen.length)return 0;
   let n=0;
-  staat.punten.forEach(p=>{
-    if(!p||p.plek)return;
+  staat.punten.forEach((p,i)=>{
+    if(!p||i<3)return;
     const c=n++;
-    p.plek={zone:z0,x:Math.round((14+(c*17)%72)*10)/10,y:Math.round((22+(c*29)%56)*10)/10};
+    p.plek={zone:bladen[c%bladen.length],x:Math.round((14+(c*17)%72)*10)/10,y:Math.round((22+(c*29)%56)*10)/10};
   });
   if(n)bewaarStaat();
   return n;
