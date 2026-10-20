@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-Sl7m1uxYelH2RELfQNNxZFo6kg7xvtm/XExTPXLwFfQ=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-Q9b3IIHJShpGd+vZdmR0nBNBUwEXTF9sayRaitiRdqs='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-asX7JXoRyvitTh4gvH84LaDURvm+n5ph+3Xa3t/5AcI=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-ZAyg1lmlLqjoOazrzwv1vuamOMHAIshHPxQYmLio00A='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3649,13 +3649,13 @@
   /* === begin keet-staand-css === */
   /* Een staande iPad (de opdrachtgever, 19/10/2026): het plan komt onderaan, over de volle breedte; de kaarten van het punt staan erboven. */
   @media (min-width:700px) and (orientation:portrait){
-    #keetdlg.breed .keet-vlak{left:calc(var(--zijb) + 12px);right:12px;width:auto;bottom:calc(84px + min(40vh,440px) + 12px)}
-    #keetdlg.breed .keet-plan{inset:auto 12px 84px calc(var(--zijb) + 12px);height:min(40vh,440px)}
-    #keetdlg.breed .keet-nav{left:calc((100% + var(--zijb))/2)}
+    #keetdlg.breed:not(.opkaart) .keet-vlak{left:calc(var(--zijb) + 12px);right:12px;width:auto;bottom:calc(84px + min(40vh,440px) + 12px)}
+    #keetdlg.breed:not(.opkaart) .keet-plan{inset:auto 12px 84px calc(var(--zijb) + 12px);height:min(40vh,440px)}
+    #keetdlg.breed:not(.opkaart) .keet-nav{left:calc((100% + var(--zijb))/2)}
     /* Het punt links, de lijst met punten ernaast: twee kolommen in plaats van één breed uitgerekte kolom. */
-    #keetdlg.breed .keet-vlak{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);column-gap:12px;row-gap:4px;align-content:start;grid-template-rows:min-content min-content min-content 1fr}
-    #keetdlg.breed .keet-vlak>*{grid-column:1}
-    #keetdlg.breed .keet-vlak>.keet-lijstkaart{grid-column:2;grid-row:1 / span 4;align-self:start;max-height:calc(100dvh - 108px - min(40vh,440px) - 12px);overflow-y:auto}
+    #keetdlg.breed:not(.opkaart) .keet-vlak{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);column-gap:12px;row-gap:4px;align-content:start;grid-template-rows:min-content min-content min-content 1fr}
+    #keetdlg.breed:not(.opkaart) .keet-vlak>*{grid-column:1}
+    #keetdlg.breed:not(.opkaart) .keet-vlak>.keet-lijstkaart{grid-column:2;grid-row:1 / span 4;align-self:start;max-height:calc(100dvh - 108px - min(40vh,440px) - 12px);overflow-y:auto}
   }
   /* === einde keet-staand-css === */
   /* === begin keet-rond-css === */
@@ -3678,7 +3678,7 @@
   #keetdlg.breed .kl-lijst{height:auto;flex:1;min-height:0;padding:0;box-sizing:border-box}
   #keetdlg.breed .kl-lijst::before,#keetdlg.breed .kl-lijst::after{content:"";display:block;height:40%}
   @media (min-width:700px) and (orientation:portrait){
-    #keetdlg.breed .keet-lijstkaart{height:calc(100dvh - 108px - min(40vh,440px) - 12px);max-height:none}
+    #keetdlg.breed:not(.opkaart) .keet-lijstkaart{height:calc(100dvh - 108px - min(40vh,440px) - 12px);max-height:none}
   }
   /* === einde keet-carrousel-css === */
   /* === begin keet-bol-een-css === */
@@ -3991,20 +3991,20 @@
   /* === einde pictogrammen-dun-css === */
   /* === begin keet-lijst-liggend-css === */
   /* Een liggende iPad (de opdrachtgever, 19/10/2026: "onderzoek de iPad Pro lijst"): de lijst kreeg een vaste hoogte van 520 px en kwam in de kolom onder de rest van het punt te liggen, dus buiten beeld; alleen de kop "Punten" was te zien. Nu vult ze de ruimte die er in de kolom nog over is, met minstens 230 px (een stuk of vier punten); de kolom schuift als dat niet past. */
-  @media (min-width:700px) and (orientation:landscape){
+  @media (min-width:700px){
     #keetdlg.breed .keet-vlak>.keet-lijstkaart{height:auto;max-height:none;flex:1 1 0;min-height:230px;overflow:hidden}
   }
   /* === einde keet-lijst-liggend-css === */
   /* === begin keet-oog-rechts-css === */
   /* De opdrachtgever, 19/10/2026: "verplaats de close-up naar rechts". Op de staande iPad stond de close-up onderaan de linkerkolom en werd afgesneden door het plan; nu staat hij boven de puntenlijst, in de rechterkolom, waar ruimte over was. */
   @media (min-width:700px) and (orientation:portrait){
-    #keetdlg.breed .keet-vlak>.keet-onder{grid-column:2;grid-row:1}
-    #keetdlg.breed .keet-vlak>.keet-lijstkaart{grid-column:2;grid-row:2 / span 4;align-self:stretch;height:auto;min-height:200px;max-height:none}
+    #keetdlg.breed:not(.opkaart) .keet-vlak>.keet-onder{grid-column:2;grid-row:1}
+    #keetdlg.breed:not(.opkaart) .keet-vlak>.keet-lijstkaart{grid-column:2;grid-row:2 / span 4;align-self:stretch;height:auto;min-height:200px;max-height:none}
   }
   /* === einde keet-oog-rechts-css === */
   /* === begin keet-oog-liggend-css === */
   /* Liggend (de opdrachtgever, 19/10/2026: "zet de close-up ook rechts bij liggend"): rechts bovenaan de close-up, daaronder het plan; links blijft ruimte voor het punt en de lijst. */
-  @media (min-width:700px) and (orientation:landscape){
+  @media (min-width:700px){
     #keetdlg.breed .keet-oogrechts{position:absolute;z-index:2;top:12px;right:12px;left:calc(var(--zijb) + var(--keetkol) + 40px);height:min(30vh,240px);overflow:hidden;border-radius:24px}
     #keetdlg.breed .keet-oogrechts[hidden]{display:none}
     #keetdlg.breed .keet-oogrechts .keet-onder{height:100%}
@@ -4017,7 +4017,7 @@
   #keetdlg .teken-balk{padding:14px var(--marge);justify-content:flex-end}
   #keetdlg .teken-balk .blad-x{margin:-14px -14px -14px auto;background:none;border:0;box-shadow:none;border-radius:0}
   /* de close-up rechts op een liggend scherm: helemaal te zien, het plan eronder */
-  @media (min-width:700px) and (orientation:landscape){
+  @media (min-width:700px){
     #keetdlg.breed .keet-oogrechts{top:76px;height:min(36vh,320px);overflow-y:auto}
     #keetdlg.breed .keet-oogrechts .keet-onder{height:auto}
     #keetdlg.breed .keet-oogrechts .kaart-beeld{height:auto;flex:none}
@@ -4031,7 +4031,7 @@
   /* === einde keet-alle-punten-css === */
   /* === begin keet-plan-boven-css === */
   /* Liggend (de opdrachtgever, 19/10/2026: "zet bovenaan en zonder glas scherm errond"): het plan staat rechts bovenaan, zonder glazen kader, en de close-up eronder. */
-  @media (min-width:700px) and (orientation:landscape){
+  @media (min-width:700px){
     #keetdlg.breed .keet-plan{top:76px;bottom:calc(84px + min(34vh,300px) + 10px);background:none;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none;border-radius:12px}
     #keetdlg.breed .keet-oogrechts{top:auto;bottom:84px;height:min(34vh,300px)}
   }
@@ -4039,7 +4039,7 @@
   /* === begin keet-liggend-indeling-css === */
   /* Liggend (de opdrachtgever, 19/10/2026, met een schets: "middenkolom smaller, kaart groter, eronder een schets en/of een foto, meerdere foto's"): de kolom van het punt wordt smaller, het plan krijgt de rest van de ruimte, en eronder staan naast elkaar de close-up (de schets) en de foto's, die je zijwaarts doorloopt. */
   #keetdlg{--keetkol:min(440px,46vw)}
-  @media (min-width:700px) and (orientation:landscape){
+  @media (min-width:700px){
     #keetdlg{--keetkol:min(340px,34vw)}
     #keetdlg.breed .keet-plan{top:76px;bottom:calc(84px + min(30vh,260px) + 10px)}
     #keetdlg.breed .keet-oogrechts{top:auto;bottom:84px;height:min(30vh,260px);overflow:hidden}
@@ -4051,7 +4051,7 @@
   /* === einde keet-liggend-indeling-css === */
   /* === begin keet-plan-achtergrond-css === */
   /* Liggend: het plan vult het hele scherm achter de glazen tegels; een tik op het plan schuift de tegels weg (klasse kaartvol). */
-  @media (min-width:700px) and (orientation:landscape){
+  @media (min-width:700px){
     #keetdlg.breed .keet-plan{inset:0 0 0 var(--zijb);border-radius:0;bottom:0;top:0}
     #keetdlg.breed .keet-vlak,#keetdlg.breed .keet-oogrechts{transition:transform .38s cubic-bezier(.4,.1,.2,1),opacity .3s}
     #keetdlg.breed .keet-nav{transition:transform .38s cubic-bezier(.4,.1,.2,1),opacity .3s}
@@ -4082,7 +4082,7 @@
   /* === einde keet-glas-grijs-css === */
   /* === begin keet-oog-rechtsboven-css === */
   /* Liggend (de opdrachtgever, 19/10/2026: de close-up "naar rechtsboven"): de close-up staat als eigen vak rechtsboven op het plan, onder het kruis; de foto's blijven rechtsonder. */
-  @media (min-width:700px) and (orientation:landscape){
+  @media (min-width:700px){
     #keetdlg.breed .keet-oogrechts{top:0;bottom:0;right:0;height:auto;overflow:visible;pointer-events:none;border-radius:0}
     #keetdlg.breed .keet-oogrechts .keet-onder{position:static;display:block;height:auto}
     #keetdlg.breed .keet-oogrechts .kaart-beeld{position:absolute;top:76px;right:12px;width:min(36vw,440px);height:min(30vh,260px);flex:none;pointer-events:auto;overflow:hidden}
@@ -4091,7 +4091,7 @@
   /* === einde keet-oog-rechtsboven-css === */
   /* === begin keet-tegels-vast-css === */
   /* Vaste maten (de opdrachtgever, 19/10/2026: "maak vaste groottes van de tekeningen en foto's zodat ze steeds passen in de glazen tegels"): liggend zijn de close-up en de foto's twee tegels van dezelfde breedte; de tegel is zo hoog als zijn inhoud, de tekening heeft een vaste hoogte en past er helemaal in. */
-  @media (min-width:700px) and (orientation:landscape){
+  @media (min-width:700px){
     #keetdlg.breed .keet-oogrechts .kaart-beeld,#keetdlg.breed .keet-oogrechts .keet-beelden{width:380px;height:auto;box-sizing:border-box;padding:8px;overflow:hidden}
     #keetdlg.breed .keet-oogrechts .keet-beeldrij{height:auto;gap:8px;overflow-x:auto;padding:0}
     #keetdlg.breed .keet-oogrechts .keet-beeldrij .keet-beeld{flex:0 0 100%;min-width:0}
@@ -4100,7 +4100,7 @@
   /* === einde keet-tegels-vast-css === */
   /* === begin keet-tegels-rechthoek-css === */
   /* Meer rechthoekig (de opdrachtgever, 19/10/2026): de tegels voor de close-up en de foto's zijn geen brede strook meer maar een staande rechthoek, zo'n 10 breed op 11 hoog; de breedte volgt de hoogte van het scherm, zodat ze er twee onder elkaar op passen. */
-  @media (min-width:700px) and (orientation:landscape){
+  @media (min-width:700px){
     #keetdlg{--tw:clamp(220px,30vh,320px)}
     #keetdlg.breed .keet-oogrechts .kaart-beeld,#keetdlg.breed .keet-oogrechts .keet-beelden{width:var(--tw)}
     #keetdlg.breed .keet-oogrechts .oog-kader{aspect-ratio:10/11}
@@ -4109,7 +4109,7 @@
   /* === einde keet-tegels-rechthoek-css === */
   /* === begin keet-onder-kolom-css === */
   /* Liggend: de close-up en de foto's zitten onderaan de kolom van het punt, in tegels met een vaste verhouding (4 op 3) waar de tekening helemaal in past. */
-  @media (min-width:700px) and (orientation:landscape){
+  @media (min-width:700px){
     #keetdlg.breed .keet-vlak>.keet-onder .oog-kader{aspect-ratio:4/3}
     #keetdlg.breed .keet-vlak>.keet-onder .keet-beeldrij .keet-beeld{flex:0 0 100%;min-width:0}
     #keetdlg.breed .keet-vlak>.keet-onder .keet-beeldrij .keet-beeld img{width:100%;height:calc((var(--keetkol) - 16px) * .75);max-width:none;object-fit:contain;background:#fff;border-radius:12px;display:block}
@@ -4118,17 +4118,17 @@
   /* === einde keet-onder-kolom-css === */
   /* === begin keet-meer-weg-css === */
   /* "Meer: plek, hoofdstuk, vaststelling" is weg (de opdrachtgever, 19/10/2026: "weg"). Het blok blijft in de code, alleen niet zichtbaar. */
-  #keetdlg .keet-meer{display:none !important}
+  #keetdlg .keet-meer{display:block}
   /* === einde keet-meer-weg-css === */
   /* === begin keet-plan-groot-css === */
   /* Het plan zo groot mogelijk (de opdrachtgever, 19/10/2026: "maximaal maken"): liggend loopt het blad tot de bovenrand, de rechterrand en achter de zijbalk; een A3-blad past dan bijna precies op het scherm. */
-  @media (min-width:700px) and (orientation:landscape){
+  @media (min-width:700px){
     #keetdlg.breed .keet-plan{inset:0}
   }
   /* === einde keet-plan-groot-css === */
   /* === begin keet-plan-wit-css === */
   /* Liggend is het hele vlak achter het plan wit (de opdrachtgever, 19/10/2026: "maak bij het plan het hele blad wit"). */
-  @media (min-width:700px) and (orientation:landscape){
+  @media (min-width:700px){
     #keetdlg.breed .keet-plan{background:#fff}
     #keetdlg.breed .teken-balk{background:transparent}
     #keetdlg.breed,#keetdlg.breed .keet-lijf{background:#fff !important}
@@ -4160,7 +4160,7 @@
   /* === einde zijbalk-keet-gekozen-css === */
   /* === begin keet-paneel-liggend-css === */
   /* Liggend een rustig paneel (de opdrachtgever, 19/10/2026: "dit moet beter opgelost, het is niet overzichtelijk en duidelijk"): de kolom links is één aaneengesloten lichtgrijs paneel in plaats van losse tegels waar de tekening van het plan tussendoor schemert. In het paneel staan de rijen onder elkaar: het nummer en de stand, de tekst in een vak van vaste hoogte (een lange tekst schuift), de status, de lijst die de rest van de hoogte vult, en daaronder (na scrollen) de close-up en de foto's. */
-  @media (min-width:700px) and (orientation:landscape){
+  @media (min-width:700px){
     #keetdlg.breed .keet-vlak{display:flex;flex-direction:column;gap:10px;padding:12px;background:rgba(236,238,234,.97);border-radius:22px;box-shadow:0 6px 28px rgba(30,40,30,.18);overflow-y:auto;overflow-x:hidden;bottom:84px}
     #keetdlg.breed .keet-vlak textarea{height:92px;min-height:92px;max-height:92px;resize:none;overflow-y:auto}
     #keetdlg.breed .keet-vlak .keet-kern,#keetdlg.breed .keet-vlak>.keet-onder .kaart-beeld,#keetdlg.breed .keet-vlak>.keet-onder .keet-beelden{background:rgba(255,255,255,.62);-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none}
@@ -4179,9 +4179,9 @@
   #keetdlg.opkaart .keet-vlak,#keetdlg.opkaart .keet-nav,#keetdlg.opkaart .zijbalk-keet,#keetdlg.opkaart .keet-oogrechts{pointer-events:auto}
   html.keet-opkaart #menubalk{display:none}
   html.keet-opkaart #hoofdtitel{visibility:hidden}
-  @media (min-width:700px) and (orientation:landscape){ #keetdlg.opkaart.breed .keet-vlak{bottom:var(--keet-bodem,84px)} }
+  @media (min-width:700px){ #keetdlg.opkaart.breed .keet-vlak{bottom:var(--keet-bodem,84px)} }
   /* In de zijbalk is Plan de gekozen knop, en Keet bestaat daar niet meer als aparte plek. */
-  @media (min-width:700px) and (orientation:landscape){
+  @media (min-width:700px){
     .zijbalk [data-naam="keet"],.zijbalk-thuis [data-naam="keet"]{display:none !important}
     #keetdlg.opkaart .zijbalk-thuis [data-naam="begin"]{background:rgba(255,255,255,.88);font-weight:650}
     html.zij-klein #keetdlg.opkaart .zijbalk-thuis button[data-naam="begin"]:not(.zij-wissel){background:var(--titel-navy);color:#fff}
@@ -4196,6 +4196,20 @@
   html.keet-opkaart .kaartpunt.opk.aan.k-oranje::after{border-color:#e08a1e}
   html.keet-opkaart .kaartpunt.opk.aan.k-rood::after{border-color:#d9453b}
   /* === einde keet-op-kaart-css === */
+  /* === begin punten-pagina-weg-css === */
+  /* De Punten-pagina is een uitschuiffunctie van het Plan geworden (de opdrachtgever, 20/10/2026): het paneel toont elk punt, en de lijst staat erin. In de zijbalk is ze er niet meer. */
+  @media (min-width:700px){
+    .zijbalk [data-naam="punten"],.zijbalk-thuis [data-naam="punten"]{display:none !important}
+  }
+  /* === einde punten-pagina-weg-css === */
+  /* === begin keet-info-css === */
+  #keetdlg .keet-info{display:flex;flex-direction:column;gap:6px;padding:4px 6px 0}
+  #keetdlg .keet-info .ki-meta{margin:0;font-size:13px;line-height:1.4;color:var(--ink)}
+  #keetdlg .keet-info .ki-periode{margin:0;font-size:13px;line-height:1.4;color:var(--ink);opacity:.75}
+  #keetdlg .keet-info .ki-knoppen{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+  #keetdlg .keet-info .ki-knop{min-height:40px;padding:0 14px;border:0;border-radius:999px;background:rgba(255,255,255,.7);box-shadow:inset 0 0 0 1px rgba(255,255,255,.8);font:inherit;font-size:13px;color:var(--ink);cursor:pointer}
+  #keetdlg .keet-info .ki-knop:active{background:rgba(255,255,255,.95)}
+  /* === einde keet-info-css === */
 </style>
 </head>
 <body>
@@ -4781,6 +4795,7 @@
       <!-- DE KNOPPEN ONDER HET INVOERVAK (de opdrachtgever, 19/10/2026): Foto, Scan en Aantekening staan direct onder de beschrijving en zijn altijd in beeld. -->
       <div class="keet-bijrij" id="keet-bijrij"></div>
       <div class="keet-kern" id="keet-kern"></div>
+      <div class="keet-info" id="keet-info"></div>
     </section>
     <!-- BOLLEN (de opdrachtgever, 19/10/2026): wie, termijn en aard als drie ronde menu's. Een bol toont de stand; een tik klapt de keuzes eronder open, een tweede tik sluit ze. -->
     <div class="keet-blok keet-bolblok" id="bolblok-wie">
@@ -4804,7 +4819,7 @@
       </div>
     </div>
     <details class="keet-meer" id="keet-meer">
-      <summary>Meer: plek, hoofdstuk, vaststelling</summary>
+      <summary>Meer: plek, hoofdstuk, vaststelling, dagboek</summary>
     <div class="verg keet-verg" id="dagboekblok">
       <button type="button" class="verg-kop" id="vergknop" aria-expanded="true" aria-controls="verg-body">
         <span class="verg-tekst" id="verg-tekst"></span>
@@ -5222,7 +5237,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v761";
+const VERSIE="v762";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -11180,7 +11195,7 @@ function menuDoe(naam){
   keetVerlaatVoorMenu();
   /* Er is geen invoerregel meer: een vaststelling maak je op de fiche (het blad met het veld, de camera en het plan). Foto opent de camera meteen als je al op het Plan staat; vanaf een pagina
      gaat het eerst naar het Plan en opent de camera met een tik op de fiche, want een camera mag alleen starten op een tik. */
-  const doe={vaststelling:()=>openFiche(""),foto:direct=>{ openFiche(""); if(direct)fotoDrukken(); }}[naam];
+  const doe={vaststelling:()=>{ if(keetOpKaart())keetNieuwPunt(); else openFiche(""); },foto:direct=>{ openFiche(""); if(direct)fotoDrukken(); }}[naam];
   if(!doe)return;
   const nu=menuNu();
   if(nu==="begin"){ doe(true); return; }
@@ -14164,7 +14179,7 @@ function keetPlanStippen(){
   (zl&&zl.className==="kp-zoom"?zl:doos).appendChild(laag);
   /* Staand (of zonder brede keet) is er geen volg-zoom: een zoomstand van een liggend scherm blijft niet hangen na het draaien (de opdrachtgever, 19/10/2026: "wat is dit?" -- het blad stond ingezoomd en opzij geschoven in het staande kader). */
   let liggend=false;
-  try{ liggend=!!(window.matchMedia&&matchMedia("(min-width:700px) and (orientation:landscape)").matches); }catch(e){}
+  try{ liggend=!!(window.matchMedia&&matchMedia("(min-width:700px)").matches); }catch(e){}
   if(!liggend)keetZoom={z:1,x:0,y:0};
   keetPlanVolg(nu,b);
   keetZoomZet();
@@ -14175,7 +14190,7 @@ function keetPlanVolg(nu,b){
     if(!nu||!nu.plek||!keetPlan||!b||!b.width)return;
     const dlg=document.getElementById("keetdlg");
     if(!dlg||!dlg.classList.contains("breed")||dlg.classList.contains("kaartvol"))return;
-    if(!(window.matchMedia&&matchMedia("(min-width:700px) and (orientation:landscape)").matches))return;
+    if(!(window.matchMedia&&matchMedia("(min-width:700px)").matches))return;
     const q=plekOpBeeld(nu.plek.x,nu.plek.y,b.width,b.height,keetPlan.breedte,keetPlan.hoogte,draaiVan(keetPlan));
     if(!q)return;
     const vl=document.querySelector("#keetdlg .keet-vlak");
@@ -14206,7 +14221,7 @@ try{ setTimeout(()=>{ try{ keetPaneelStart(); }catch(e){} },2000); }catch(e){}
 /* HET PANEEL OP HET PLAN (de opdrachtgever, 19/10/2026: "eigenlijk zijn beide pagina's te combineren; de eerste pagina is gewoon het in en uitklappen van de punten"): op een liggend scherm staat het
    paneel van de keet (het punt, de lijst, de close-up en de foto's) niet meer in een eigen scherm maar als een niet-modaal venster over het Plan. Het plan zelf is dan het kaartvlak van het
    hoofdscherm, met zijn bladtabs en projectbalk; de stippen volgen de kleur van de lijst, een stip aantikken kiest het punt, en een tik op het blad klapt het paneel in of uit. */
-function keetOpKaartKan(){ try{ return !!(KEETZIJVENSTER&&window.matchMedia&&matchMedia("(min-width:700px) and (orientation:landscape)").matches); }catch(e){ return false; } }
+function keetOpKaartKan(){ try{ return !!(KEETZIJVENSTER&&window.matchMedia&&matchMedia("(min-width:700px)").matches); }catch(e){ return false; } }
 function keetOpKaart(){ try{ const d=document.getElementById("keetdlg"); return !!(d&&d.open&&d.classList.contains("opkaart")); }catch(e){ return false; } }
 let keetPaneelBezig=false, keetPaneelTimer=null;
 async function keetPaneelStart(){
@@ -14220,6 +14235,7 @@ async function keetPaneelStart(){
       return;
     }
     if(d.open&&!d.classList.contains("opkaart"))return;      // de gewone, modale keet staat open
+    try{ keetNieuwOpruimen(); }catch(e){}
     if(!(staat.punten&&staat.punten.length))return;
     if(!d.open){
       d.classList.add("opkaart"); document.documentElement.classList.add("keet-opkaart");
@@ -14276,12 +14292,113 @@ async function keetKaartVolg(){
 }
 /* === einde keet-op-kaart === */
 
+/* === begin keet-info === */
+/* ALLE INFO BIJ HET PUNT, in het paneel (de opdrachtgever, 20/10/2026: "waar is nu alle info bij het punt? het blad Punten is weg, maar de info moet gekoppeld worden aan de punten"): wat de Punten-pagina
+   bij een uitgeklapt punt toonde -- nummer en verslag, zone en tijdstip, hoe lang het openstaat, en de handelingen (op het plan, verzetten, niet meer relevant, verwijderen) -- staat nu
+   onder het punt zelf. Plek, bestekhoofdstuk en vaststelling staan eronder bij Meer. */
+function tekenKeetInfo(p){
+  const doos=document.getElementById("keet-info");
+  if(!doos)return;
+  doos.innerHTML="";
+  if(!p){ doos.hidden=true; return; }
+  doos.hidden=false;
+  const e={p:p,vanEerder:false};
+  const soort=isKlaar(p)?"klaar":isVervallen(p)?"nvt":(p.oordeel==="ok"?"ok":"open");
+  const regel=[];
+  if(p.nummer)regel.push(p.nummer);
+  try{ regel.push(puntenVerslag(e)); }catch(x){}
+  if(p.zone)regel.push(zoneNaam(p.zone));
+  if(p.tijd)regel.push(p.tijd);
+  if(p.uit&&p.uit.ref)regel.push("vermelding uit "+p.uit.ref);
+  doos.appendChild(maakEl("p","ki-meta",regel.join(" \u00B7 ")));
+  try{ doos.appendChild(maakEl("p","ki-periode",puntenPeriode(e,soort))); }catch(x){}
+  const knoppen=maakEl("div","ki-knoppen");
+  const knop=(woord,doe)=>{ const b=maakEl("button","ki-knop",woord); b.type="button"; b.onclick=doe; knoppen.appendChild(b); return b; };
+  if(p.plek&&p.plek.zone)knop("Op het plan",()=>{ keetKaartVolg(); });
+  if(p.plek&&!isKlaar(p))knop("Verzet op het plan",()=>{ keetBewaarTekst(); keetPlekZetten(p); });
+  if(!p.plek)knop("Plek op het plan zetten",()=>{ keetBewaarTekst(); keetPlekZetten(p); });
+  if(!isDocpunt(p)&&!isDoorgeschoven(p)){
+    knop(isVervallen(p)?"Weer relevant":"Niet meer relevant",async()=>{
+      keetBewaarTekst();
+      if(isVervallen(p)){ delete p.status; delete p.afgehandeld; } else { p.status="nvt"; p.afgehandeld=vandaag(); }
+      raakAan(p); bewaarStaat(); await keetToon(); try{ tekenLijst(); }catch(x){}
+    });
+  }
+  knop("Verwijder",async()=>{
+    keetBewaarTekst();
+    const i=keet.i;
+    await verwijderPunt(p.id);
+    keet.lijst=staat.punten;
+    if(!keet.lijst.length){ keetPaneelVerfris(); return; }
+    keet.i=Math.max(0,Math.min(i,keet.lijst.length-1));
+    await keetToon();
+  });
+  doos.appendChild(knoppen);
+}
+/* === einde keet-info === */
+
+/* === begin keet-nieuw-punt === */
+/* EEN NIEUW PUNT IN HETZELFDE PANEEL (de opdrachtgever, 20/10/2026: "het aanmaken en het aanklikken van een bestaand punt moet er hetzelfde uitzien; het ene bevat nog geen info, het andere de reeds ingevulde"):
+   op het plan met het paneel maakt de plus, of een lange druk op het plan, een leeg punt aan en toont het in het paneel waar elk punt in staat. De plek volgt met een tik op het plan, of
+   hoort er al bij als je lang gedrukt hebt. Blijft het punt leeg als je naar een ander punt gaat, dan verdwijnt het weer. */
+function keetNieuwOpruimen(){
+  if(!staat.punten)return;
+  let weg=false;
+  for(let i=staat.punten.length-1;i>=0;i--){
+    const p=staat.punten[i];
+    if(!p||!p._nieuw)continue;
+    const leeg=!(p.tekst||"").trim()&&!(typeof beeldenVan==="function"?beeldenVan(p):(p.beelden||[])).length&&!p.aantekening;
+    if(leeg){ if(verzetPunt===p.id){ try{ stopVerzet(); }catch(e){ verzetPunt=null; } } staat.punten.splice(i,1); weg=true; }
+    else delete p._nieuw;
+  }
+  if(weg){ keet.lijst=staat.punten; keet.i=Math.max(0,Math.min(keet.i,keet.lijst.length-1)); bewaarStaat(); }
+}
+function keetPlekZetten(p){
+  verzetPunt=p.id;
+  const k=document.getElementById("kaart"); if(k)k.classList.add("verzet");
+  const kn=document.getElementById("kaartverzet"); if(kn)kn.hidden=false;
+  const vl=document.getElementById("vulling"); if(vl)vl.classList.add("verzet");
+  melding("Tik op het plan waar dit punt ligt");
+  clearTimeout(verzetTimer);
+  verzetTimer=setTimeout(()=>{ if(verzetPunt===p.id)stopVerzet(); },60000);
+}
+async function keetNieuwPunt(tik){
+  if(!keetOpKaart())return false;
+  try{ keetBewaarTekst(); }catch(e){}
+  keetNieuwOpruimen();
+  const id="p"+Date.now();
+  const rondgangId=zorgVoorRondgang();
+  const punt=raakAan({id,zone:staat.zone,tekst:"",spreker:null,tijd:new Date().toTimeString().slice(0,5),beelden:[],plek:null,rondgang:rondgangId});
+  punt._nieuw=true;
+  zorgVoorPuntnummer(punt);
+  staat.punten.push(punt); bewaarStaat();
+  keet.lijst=staat.punten; keet.i=staat.punten.length-1;
+  const d=document.getElementById("keetdlg"); if(d)d.classList.remove("kaartvol");
+  /* Een lange druk op het plan weet al waar het punt ligt; de plus laat je dat daarna aanwijzen. */
+  let geplaatst=false;
+  if(tik&&tik.sx!=null){
+    const c=plekUitKaart(tik.sx,tik.sy);
+    if(c){
+      const lok=lokaalBij(c.x,c.y,kaartPlan,kaartLaag);
+      zetPlekOpPunt(punt,{zone:kaartZone,x:c.x,y:c.y,lokaal:lok?lok.nr:null,naam:lok?lok.naam:"",laag:kaartLaag,lokaalLaag:lok?lokaalHerkomst(kaartPlan,kaartLaag):null});
+      geplaatst=true;
+    }
+  }
+  await keetToon();
+  try{ tekenKaartPunten(); }catch(e){}
+  if(!geplaatst)keetPlekZetten(punt);
+  setTimeout(()=>{ try{ const ta=document.getElementById("keet-tekst"); if(ta)ta.focus(); }catch(e){} },350);
+  return true;
+}
+/* === einde keet-nieuw-punt === */
+
 function keetSpringNaar(id){
   const i=(keet.lijst||[]).findIndex(p=>p&&p.id===id);
   if(i<0)return false;
   { const d=document.getElementById("keetdlg"); if(d)d.classList.remove("kaartvol"); }
   keetBewaarTekst();
-  keet.i=i;
+  keetNieuwOpruimen();
+  { const j=(keet.lijst||[]).findIndex(p=>p&&p.id===id); if(j<0)return false; keet.i=j; }
   keetToon();
   /* Een stip op het plan aanwijzen brengt je meteen bij het punt in de lijst (de opdrachtgever, 19/10/2026: "ook omgekeerd"): de kolom schuift zo dat de lijst in beeld is, en de rij licht even op. */
   setTimeout(()=>{
@@ -14306,7 +14423,7 @@ function keetOogPlaats(){
   const v=document.querySelector("#keetdlg .keet-vlak"), l=document.getElementById("keet-lijstkaart");
   if(!o||!r||!v)return;
   let liggend=false;
-  try{ liggend=!!(window.matchMedia&&matchMedia("(min-width:700px) and (orientation:landscape)").matches); }catch(e){}
+  try{ liggend=!!(window.matchMedia&&matchMedia("(min-width:700px)").matches); }catch(e){}
   /* Liggend staan de close-up en de foto's onderaan de kolom van het punt, na de lijst: je komt erbij door te scrollen (de opdrachtgever, 19/10/2026: "zet hieronder, komt na scrollen"). Staand blijven ze boven de lijst. */
   r.hidden=true;
   if(liggend){ if(o.parentNode!==v||o.nextSibling)v.appendChild(o); }
@@ -14508,6 +14625,7 @@ async function keetToon(){
   tekenBestekControle(p);
   tekenKeetOog(p);
   tekenKeetKern(p);
+  try{ tekenKeetInfo(p); }catch(e){}
   tekenKeetLijstkaart(p);
 
   const ta=document.getElementById("keet-tekst");
@@ -14755,6 +14873,7 @@ function keetBewaarTekst(){
 
 function keetGa(stap){
   keetBewaarTekst();
+  { const huidig=keetPunt(); keetNieuwOpruimen(); if(huidig&&keet.lijst&&keet.lijst.indexOf(huidig)<0){ keet.i=Math.max(0,Math.min(keet.i-(stap>0?1:0),keet.lijst.length-1)); } }
   let n=keet.i+stap;
   // In de werklijststand slaan we over wat al af is. Het punt waar je nú staat telt niet mee:
   // je werkt het net af, en dan zou het onder je vingers wegspringen.
@@ -16081,7 +16200,7 @@ function keetZoomGrens(w,h,ruim){
   let ruimte=0;
   try{
     const d=document.getElementById("keetdlg"), vl=document.querySelector("#keetdlg .keet-vlak"), pl=document.getElementById("keet-plan");
-    if(d&&d.classList.contains("breed")&&vl&&pl&&window.matchMedia&&matchMedia("(min-width:700px) and (orientation:landscape)").matches)
+    if(d&&d.classList.contains("breed")&&vl&&pl&&window.matchMedia&&matchMedia("(min-width:700px)").matches)
       ruimte=Math.max(0,vl.getBoundingClientRect().right-pl.getBoundingClientRect().left);
   }catch(e){}
   /* Bij het volgen van een punt (ruim) mag het blad ook ver genoeg doorschuiven om een stip aan de rand in het midden te zetten; wit is het toch. */
@@ -24875,10 +24994,17 @@ function kaartBedrading(){
     return b?{breed:b.width, hoog:b.height}:{breed:0, hoog:0};
   };
 
+  let langTimer=null, langGedaan=false;
   v.onpointerdown=e=>{
     kaartRaakt=true;
     x0=e&&e.clientX; y0=e&&e.clientY; bewogen=false;
     if(!e)return;
+    /* Een lange druk op een leeg stuk van het plan, met het paneel erbij, maakt daar een nieuw punt. */
+    clearTimeout(langTimer); langTimer=null;
+    if(keetOpKaart()&&kaartPlan&&!verzetPunt&&!(e.target&&e.target.closest&&e.target.closest(".kaartknop"))&&e.isPrimary!==false){
+      const sx0=e.clientX, sy0=e.clientY;
+      langTimer=setTimeout(()=>{ langTimer=null; if(bewogen||wijzers.size>1||kaartPuntGeraakt(sx0,sy0))return; langGedaan=true; keetNieuwPunt({sx:sx0,sy:sy0}); },550);
+    }
     /* Een tik op een knop óp de kaart -- de oud-knop, het laagwoord -- is geen gebaar op de
        kaart. Wie hier de wijzer vangt, vangt ook de click: die valt dan op de vulling en niet
        op de knop, en de knop doet niets terwijl de kaart eronder prikt. Gemeten op 30/09/2026
@@ -24929,7 +25055,7 @@ function kaartBedrading(){
   };
 
   const losLaten=e=>{
-    kaartRaakt=false; clearTimeout(noordTimer); noordTimer=null;
+    kaartRaakt=false; clearTimeout(noordTimer); noordTimer=null; clearTimeout(langTimer); langTimer=null;
     if(e)wijzers.delete(e.pointerId);
     if(wijzers.size<2)knijp=null;
     if(wijzers.size===0&&kaartGedraaid){ kaartGedraaid=false; kaartBewaarDraai(); }      // de draai blijft bij het plan, zoals bij Plan draaien
@@ -24965,6 +25091,7 @@ function kaartBedrading(){
   });
 
   v.onclick=e=>{
+    if(langGedaan){ langGedaan=false; x0=null; y0=null; bewogen=false; return; }      // het loslaten na de lange druk is geen tik
     const veegde=bewogen;
     const sx=(e&&e.clientX!=null)?e.clientX:x0, sy=(e&&e.clientY!=null)?e.clientY:y0;
     x0=null; y0=null; bewogen=false;
