@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-peXCvj6VzvisCLMG3xTWh6LEnk3RIWLN7x8Yq5HX3gI=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-Q9b3IIHJShpGd+vZdmR0nBNBUwEXTF9sayRaitiRdqs='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-Sl7m1uxYelH2RELfQNNxZFo6kg7xvtm/XExTPXLwFfQ=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-Q9b3IIHJShpGd+vZdmR0nBNBUwEXTF9sayRaitiRdqs='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -5222,7 +5222,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v760";
+const VERSIE="v761";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -14248,6 +14248,7 @@ function keetPaneelSchakel(){
   const d=document.getElementById("keetdlg");
   if(!d||!keetOpKaart())return;
   d.classList.toggle("kaartvol");
+  keetKaartVolg();      // in- of uitgeklapt: het punt komt in het midden van wat dan vrij is (de opdrachtgever, 20/10/2026)
 }
 /* Het gekozen punt op het kaartvlak van het hoofdscherm: het blad van zijn zone, en het punt in het midden van het vrije deel (rechts van het paneel). */
 async function keetKaartVolg(){
@@ -14265,7 +14266,7 @@ async function keetKaartVolg(){
     const b=doos.getBoundingClientRect();
     if(!b.width||!b.height)return;
     const d=document.getElementById("keetdlg"), vl=document.querySelector("#keetdlg .keet-vlak");
-    const kol=(vl&&!d.classList.contains("kaartvol"))?Math.max(0,vl.getBoundingClientRect().right-b.left):0;
+    const kol=(vl&&!d.classList.contains("kaartvol"))?Math.max(0,vl.offsetLeft+vl.offsetWidth-b.left):0;      // layout-maat: de schuifbeweging van het paneel telt niet mee
     const q=plekOpBeeld(p.plek.x,p.plek.y,b.width,b.height,kaartPlan.breedte,kaartPlan.hoogte,draaiVan(kaartPlan));
     if(!q)return;
     const s=Math.max(kaartKijk.schaal,SPRONGSCHAAL);
