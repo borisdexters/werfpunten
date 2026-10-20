@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-asX7JXoRyvitTh4gvH84LaDURvm+n5ph+3Xa3t/5AcI=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-ZAyg1lmlLqjoOazrzwv1vuamOMHAIshHPxQYmLio00A='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-20txoWvHwjr4PzO+ROUwCVcP17+kTPqI/m6IcC7EGJk=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-XNy0T5bgM1Esj4c+ecSsA2ihwekpO39tUY+Mjt82yhM='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4210,6 +4210,9 @@
   #keetdlg .keet-info .ki-knop{min-height:40px;padding:0 14px;border:0;border-radius:999px;background:rgba(255,255,255,.7);box-shadow:inset 0 0 0 1px rgba(255,255,255,.8);font:inherit;font-size:13px;color:var(--ink);cursor:pointer}
   #keetdlg .keet-info .ki-knop:active{background:rgba(255,255,255,.95)}
   /* === einde keet-info-css === */
+  /* === begin keet-lijst-groepen-css === */
+  #keetdlg .kl-groep{flex:none;padding:10px 12px 2px;font-size:12px;letter-spacing:.02em;color:var(--ink);opacity:.7}
+  /* === einde keet-lijst-groepen-css === */
 </style>
 </head>
 <body>
@@ -5237,7 +5240,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v762";
+const VERSIE="v763";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
@@ -14456,7 +14459,7 @@ async function keetToon(){
   const onaf=keet.lijst.filter(keetOnaf).length;
   vg.innerHTML="";
   const tel=document.createElement("span");
-  tel.textContent=(keet.i+1)+" / "+keet.lijst.length;
+  { const vp=keetVolgorde().punten, pp=vp.indexOf(keetPunt()); tel.textContent=((pp<0?keet.i:pp)+1)+" / "+keet.lijst.length; }
   vg.appendChild(tel);
   // Alleen wat werk vraagt: op een vergadering met dertig punten is dat het verschil tussen
   // aflopen en zoeken.
@@ -14873,17 +14876,23 @@ function keetBewaarTekst(){
 
 function keetGa(stap){
   keetBewaarTekst();
-  { const huidig=keetPunt(); keetNieuwOpruimen(); if(huidig&&keet.lijst&&keet.lijst.indexOf(huidig)<0){ keet.i=Math.max(0,Math.min(keet.i-(stap>0?1:0),keet.lijst.length-1)); } }
-  let n=keet.i+stap;
+  const voor=keetPunt();
+  keetNieuwOpruimen();
+  /* Bladeren volgt de volgorde van de lijst: dit blad eerst, dan de andere bladen. */
+  const volg=keetVolgorde().punten;
+  let pos=volg.indexOf(voor);
+  if(pos<0)pos=Math.max(0,Math.min(keet.i,volg.length-1));
+  let n=pos+stap;
   // In de werklijststand slaan we over wat al af is. Het punt waar je nú staat telt niet mee:
   // je werkt het net af, en dan zou het onder je vingers wegspringen.
   if(keet.alleen){
-    while(n>=0&&n<keet.lijst.length&&!keetOnaf(keet.lijst[n]))n+=stap;
+    while(n>=0&&n<volg.length&&!keetOnaf(volg[n]))n+=stap;
   }
-  if(n<0||n>=keet.lijst.length){
+  if(n<0||n>=volg.length){
     if(keet.alleen)melding("Niets meer dat werk vraagt");
     return;
   }
+  n=keet.lijst.indexOf(volg[n]);
   /* Elke vouwstand valt terug op haar regel bij het volgende punt: een kast die openbleef
      omdat het vórige punt geen kop had, staat anders open boven een punt dat er wél een heeft. */
   keet.i=n;keet.gebrek=null;keet.onderdeel=null;keet.woordenOpen=null;
@@ -15938,19 +15947,50 @@ const KEETOOG=true;
 /* === einde keet-oog === */
 /* === begin keet-lijstkaart === */
 /* Een kaart met alle punten van deze lijst, voor de brede keet: een stip in de kleur van het punt, het nummer en het begin van de tekst. Een tik springt naar dat punt. */
+/* DE VOLGORDE VAN DE LIJST (de opdrachtgever, 20/10/2026: de punten uit het scherm Punten zijn de punten die op het plan aangeduid zijn): eerst de punten van het blad dat je ziet, met de naam van het blad als kop,
+   dan de punten van de andere bladen, elk onder hun eigen kop, en als laatste wat nergens ligt. Binnen een groep blijft de volgorde van het verslag. Met één groep, of zonder één plek, staat er
+   geen kop. De pijltjes volgen dezelfde volgorde als de lijst. */
+function keetVolgorde(){
+  const lijst=(keet&&keet.lijst)||[];
+  const huidig=staat.zone;
+  const metPlek=lijst.some(q=>q&&q.plek&&q.plek.zone);
+  const groepen=new Map();
+  lijst.forEach(q=>{
+    if(!q)return;
+    const z=(q.plek&&q.plek.zone)||"";
+    if(!groepen.has(z))groepen.set(z,[]);
+    groepen.get(z).push(q);
+  });
+  const volgorde=[];
+  if(groepen.has(huidig))volgorde.push(huidig);
+  (ZONES||[]).forEach(z=>{ if(z!==huidig&&groepen.has(z))volgorde.push(z); });
+  [...groepen.keys()].forEach(z=>{ if(z&&!volgorde.includes(z))volgorde.push(z); });
+  if(groepen.has(""))volgorde.push("");
+  const kopjes=metPlek&&volgorde.length>1;
+  const rijen=[], punten=[];
+  volgorde.forEach(z=>{
+    if(kopjes)rijen.push({kop:z===""?"Zonder plek op een plan":((z===huidig?"Dit blad \u00B7 ":"")+zoneNaam(z))});
+    groepen.get(z).forEach(q=>{ rijen.push({p:q}); punten.push(q); });
+  });
+  return {rijen:rijen,punten:punten};
+}
+function keetLijstLabel(q,i){ return q.nummer?String(q.nummer).split(".").pop():String(i+1); }
 function tekenKeetLijstkaart(p){
   const doos=document.getElementById("keet-lijstkaart");
   if(!doos)return;
   const lijst=keet.lijst||[];
   if(lijst.length<2){ doos.hidden=true; doos.innerHTML=""; doos._ids=null; doos._bak=null; return; }
   doos.hidden=false;
-  const ids=lijst.map(q=>q.id).join("|");
+  const volg=keetVolgorde();
+  const ids=volg.rijen.map(r=>r.kop?("#"+r.kop):r.p.id).join("|");
   /* De lijst blijft staan zolang de punten dezelfde zijn: dan kan ze zacht doorschuiven in plaats van opnieuw te beginnen. */
   if(doos._ids!==ids||!doos._bak){
     doos.innerHTML=""; doos._ids=ids;
     doos.appendChild(maakEl("div","kl-kop","Punten \u00B7 "+lijst.length));
     const bak=maakEl("div","kl-lijst");
-    lijst.forEach((q,i)=>{
+    volg.rijen.forEach(r=>{
+      if(r.kop){ bak.appendChild(maakEl("div","kl-groep",r.kop)); return; }
+      const q=r.p;
       const rij=maakEl("button","kl-rij"); rij.type="button";
       rij.appendChild(maakEl("span","kl-stip",""));
       rij.appendChild(maakEl("span","kl-nr",""));
@@ -15961,24 +16001,28 @@ function tekenKeetLijstkaart(p){
     doos.appendChild(bak); doos._bak=bak;
   }
   const bak=doos._bak;
-  const aan=lijst.findIndex(q=>p&&q.id===p.id);
-  lijst.forEach((q,i)=>{
-    const rij=bak.children[i]; if(!rij)return;
+  const aanPos=volg.punten.findIndex(q=>p&&q.id===p.id);
+  let pos=-1, aanEl=null;
+  volg.rijen.forEach((r,k)=>{
+    if(r.kop)return;
+    pos++;
+    const q=r.p, rij=bak.children[k]; if(!rij)return;
     const z=puntZekerheid(q);
-    rij.className="kl-rij"+(i===aan?" aan":"");
+    rij.className="kl-rij"+(pos===aanPos?" aan":"");
+    if(pos===aanPos)aanEl=rij;
     rij.children[0].className="kl-stip k-"+(isKlaar(q)?"groen":z.kleur);
-    rij.children[1].textContent=q.nummer?String(q.nummer).split(".").pop():String(i+1);
+    rij.children[1].textContent=keetLijstLabel(q,pos);
     rij.children[2].textContent=String(q.tekst||"zonder woorden").slice(0,60);
     // hoe verder van het gekozen punt, hoe vager: een carrousel met het gekozen punt in het midden
-    const d=aan<0?0:Math.abs(i-aan);
+    const d=aanPos<0?0:Math.abs(pos-aanPos);
     rij.style.opacity=String(d===0?1:Math.max(.3,1-d*.22));
   });
-  keetLijstMidden(bak,aan);
+  keetLijstMidden(bak,aanEl||aanPos);
 }
 /* Het gekozen punt in het midden van het kader, met het vorige en het volgende punt erboven en eronder. */
 function keetLijstMidden(bak,aan){
-  if(!bak||aan<0)return;
-  const rij=bak.children[aan]; if(!rij)return;
+  if(!bak||aan===-1||aan===null||aan===undefined)return;
+  const rij=(typeof aan==="number")?bak.children[aan]:aan; if(!rij)return;
   const doel=Math.max(0,rij.offsetTop-(bak.clientHeight-rij.offsetHeight)/2);
   if(typeof bak.scrollTo==="function"&&bak.clientHeight>0)bak.scrollTo({top:doel,behavior:"smooth"});
   else bak.scrollTop=doel;
@@ -24561,7 +24605,7 @@ function tekenKaartPunten(){
     if(opk){
       /* Met het paneel erbij (de opdrachtgever, 19/10/2026: "beide pagina's te combineren") hebben de stippen de kleur en het nummer van de lijst, staan alle punten van het blad erop, en pulseert het gekozen punt. */
       const nu=keetPunt(), li=(keet.lijst||[]).findIndex(x=>x&&x.id===p.id);
-      zet(p,"nu opk k-"+(isKlaar(p)?"groen":puntZekerheid(p).kleur)+(nu&&nu.id===p.id?" aan":""),String(li>=0?li+1:i+1));
+      zet(p,"nu opk k-"+(isKlaar(p)?"groen":puntZekerheid(p).kleur)+(nu&&nu.id===p.id?" aan":""),li>=0?keetLijstLabel((keet.lijst||[])[li],li):String(i+1));
     }else if(kaartToont(p,rid))zet(p,"nu",String(i+1));
   });
   /* En jij zelf, bovenop alles. */
