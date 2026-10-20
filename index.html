@@ -6,7 +6,7 @@
      mogen draaien, herkend aan hun SHA-256. Verandert er iets aan een script of aan de stijl, dan
      moet de vingerafdruk mee; de proef over de Content-Security-Policy zegt welke. GitHub Pages zet
      geen eigen headers, dus staat het beleid hier. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-kF4qqFitJSuzSAaGM1wN/K2vRa8zoFwuF/OqRbrpS6g=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-4uglepQVERMOnVNYvE9W+AD0uJG6l0QFEsUhEgH44Bo='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-Q/hNkPfsI0YzBRnVxt0my8L64aOsZK/5m6+sUaT7fts=' 'sha256-VOjEXIDiGDC3hdxoBzYN5HjWbUjoIS43ftPqvlPBsxQ='; style-src 'sha256-NioUTaQ1CPGD40PU07Wbo1VJ8bAL6FLX4hp6DqH9JGk='; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self' https://api.dropboxapi.com https://content.dropboxapi.com https://geo.api.vlaanderen.be https://www.mercator.vlaanderen.be https://www.dov.vlaanderen.be https://inspirepub.waterinfo.be https://api.open-meteo.com https://fjwagsqmifqmmxehyroz.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3639,7 +3639,7 @@
   #keetdlg.breed .teken-balk{background:transparent;border-bottom:0}
   /* === einde keet-breed-css === */
   /* === begin keet-menu-css === */
-  #keetdlg .zijbalk-keet{visibility:visible;padding-top:76px}
+  #keetdlg .zijbalk-keet{visibility:visible}      /* de zijbalk staat in de keet net zo hoog als op het plan en op elke pagina (132 px): eerst stond ze hier 56 px hoger en sprong ze bij het wisselen (de opdrachtgever, 19/10/2026) */
   #keetdlg .keet-menuknop{width:44px;min-width:44px}
   @media (min-width:700px){ #keetdlg .keet-menuknop{display:none} }
   /* === einde keet-menu-css === */
@@ -4149,6 +4149,15 @@
   @keyframes kl-flits{0%{box-shadow:0 0 0 0 rgba(27,42,94,.55),inset 0 0 0 2px rgba(27,42,94,.55)}100%{box-shadow:0 0 0 14px rgba(27,42,94,0),inset 0 0 0 2px rgba(27,42,94,0)}}
   @media (prefers-reduced-motion:reduce){ #keetdlg .kl-rij.flits{animation:none} }
   /* === einde keet-lijst-flits-css === */
+  /* === begin zijbalk-keet-gekozen-css === */
+  /* In de keet is Keet de gekozen knop in de zijbalk, niet Plan (de opdrachtgever, 19/10/2026: "bij overgang gebeurt er iets vreemd"): de zijbalk in de keet was een kopie van die op het plan en liet Plan donker staan, dus bij het wisselen sprong de donkere knop twee keer. */
+  @media (min-width:700px){
+    #keetdlg .zijbalk-thuis [data-naam="begin"]{background:rgba(255,255,255,.42);font-weight:400}
+    #keetdlg .zijbalk-thuis [data-naam="keet"]{background:rgba(255,255,255,.88);font-weight:650}
+    html.zij-klein #keetdlg .zijbalk-thuis button[data-naam="begin"]:not(.zij-wissel){background:rgba(255,255,255,.42);color:var(--ink)}
+    html.zij-klein #keetdlg .zijbalk-thuis button[data-naam="keet"]:not(.zij-wissel){background:var(--titel-navy);color:#fff}
+  }
+  /* === einde zijbalk-keet-gekozen-css === */
 </style>
 </head>
 <body>
@@ -5175,7 +5184,7 @@ const RUBRIEKENVANGNET=[
   {code:"ACTIE",naam:"Acties en deadlines"}
 ];
 const SLEUTEL="werfpunten-v1";
-const VERSIE="v755";
+const VERSIE="v756";
 /* Vandaag, als ISO-dag. Sinds zet 5 is het werkblad het lopende verslag van de bron en draagt
    staat.datum de vergaderdag -- en die mag in het verleden liggen. Een feit dat je nu vaststelt
    draagt dus niet de dag van het blad maar de dag van vandaag. Daarvoor is deze hulp. */
